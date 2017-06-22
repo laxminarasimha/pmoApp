@@ -1,0 +1,58 @@
+var express = require("express"),
+ router = express.Router(),
+ resourceDAO = require("../models/resourceDAO.js");
+ 
+router.get("/", function(req, res) {
+ resourceDAO.find({}, function(err, data) {
+ if (err) {
+ res.send("error");
+ return;
+ }
+ res.send(data);
+ });
+}).get("/:id", function(req, res) {
+ var id = req.params.id;
+ resourceDAO.find({ _id: id }, function(err, data) {
+ if (err) {
+ res.send("error");
+ return;
+ }
+ res.send(data[0]);
+ });
+}).post("/", function(req, res) {
+ var obj = req.body;
+ var model = new resourceDAO(obj);
+ model.save(function(err) {
+ if (err) {
+ console.log(err);
+ res.send("error");
+ return;
+ }
+ res.send("created");
+ });
+}).put("/:id", function(req, res) {
+ var id = req.params.id;
+ var obj = req.body;
+ 
+resourceDAO.findByIdAndUpdate(id, { resourcename: obj.resourcename,alias: obj.alias,kinId: obj.kinId}, 
+function(err) {
+ if (err) {
+ res.send("error");
+ return;
+ }
+ res.send("updated");
+ });
+}).delete("/:id", function(req, res) {
+ var id = req.params.id;
+ resourceDAO.findByIdAndRemove(id, function(err) {
+ if (err) {
+ res.send("error");
+ return;
+ }
+ res.send("deleted");
+ });
+});
+ 
+module.exports = router;
+
+

@@ -1,0 +1,69 @@
+<span class="label label-primary" style="height: 100%;font:bold;font: 15px arial, sans-serif;" >Designation</span>
+
+
+<div ng-controller="designationCtrl">
+<form name="designationForm" ng-submit="createDesignation(designation)" novalidate class="form-horizontal">
+<div class="well well-md">
+<h2 ng-show="designation._id!=null">Edit</h2>
+<h2 ng-hide="designation._id!=null">Create</h2>
+<div class="row">
+ 		
+	
+ 			  <div style="padding-right:25px; padding-left:35px">
+              <label>Designation Name:</label>&nbsp;&nbsp;&nbsp;
+              <input type="text" ng-model="designation.designationname" name="designationname" ng-required="true" class="form-control" style="width:300px"/>
+              <p ng-show="designationForm.designationname.$error.required && (designationForm.$submitted)" class="text-danger">Please Enter Designation</p>
+        </div>
+			 
+			
+			
+	</div>
+
+  
+      
+      <div align="right"> 
+            <input type="submit" value="Update" ng-click="saveData(designation)" class="btn btn-primary" ng-show="designation._id!=null"/>
+            <input type="submit" value="Create" class="btn btn-primary" ng-hide="designation._id!=null"/>             
+            <button class="btn btn-warning" ng-click="clearFields()" type="button">Clear</button>                  
+      </div>
+</div>
+
+</form> 
+<div class="well well-md" style="border: 1px">
+			<div class="panel panel-default panel-table">
+
+				<div class="table-responsive">
+					<table class="table" cellspacing="0" width="100%">
+						<thead>
+							<tr style="background-color:grey">
+                <th >Serial No.</th>
+								<th >Designation</th>
+                <th >Action</th>				   
+							</tr>
+              </thead>
+              <tbody>
+              <tr ng-repeat="x in mongoDesignationData">
+                <td>{{ $index + 1 }}</td>
+                <td>{{ x.designationname }}</td>
+                <td>
+                      <a  ng-click="editDesignation(x._id)">Edit</a> |
+                      <a  ng-click="deleteDesignation(x._id)">Delete</a>
+                </td>
+              </tr>
+						  </tbody>
+					</table>
+					
+				</div>
+		   </div>
+</div>
+
+</div>    
+
+<style>
+     /* tr:nth-of-type(odd) {
+      background-color:#FCF8E3;
+    } */
+    tr:nth-of-type(even) {
+      background-color:#FCF8E3;
+    } 
+</style>

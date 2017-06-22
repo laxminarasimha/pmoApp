@@ -1,0 +1,32 @@
+[
+{
+"id" : "1",
+"name" : "Home",
+"submenu" : []
+},
+{
+"id" : "2",
+"name" : "User" ,
+"submenu" : []
+},
+{
+"id" : "3",
+"name" : "Allocation",
+"submenu" : []
+},
+{
+"id" : "4",
+"name" : "Data" ,
+"submenu" : [{"id":"1", "name":"IdleTime"},{"id":"2", "name":"Utilisation"},{"id":"3", "name":"AvailableActualMandays"}]
+},
+{
+"id" : "5",
+"name" : "Graphs",
+"submenu" : [{"id":"1", "name":"SwedenGraph"},{"id":"1", "name":"FinlandGraph"}]
+},
+{
+"id" : "6",
+"name" : "Admin",
+"submenu" : [{"id":"1", "name":"SkillSet"},{"id":"2", "name":"Resource"},{"id":"3", "name":"Status"},{"id":"4", "name":"Designation"},{"id":"5", "name":"Role"},{"id":"6", "name":"Region"},{"id":"7", "name":"Location"},{"id":"8", "name":"Holiday List"},{"id":"9", "name":"Project"},{"id":"10", "name":"Leave"}]
+}
+]

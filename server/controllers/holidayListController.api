@@ -1,0 +1,58 @@
+var express = require("express"),
+ router = express.Router(),
+ holidayListDAO = require("../models/holidayListDAO.js");
+ 
+router.get("/", function(req, res) {
+ holidayListDAO.find({},null, {sort:{ locationname: 1}}, function(err, data) {
+ if (err) {
+ res.send("error");
+ return;
+ }
+ res.send(data);
+ });
+}).get("/:id", function(req, res) {
+ var id = req.params.id;
+ holidayListDAO.find({ _id: id }, function(err, data) {
+ if (err) {
+ res.send("error");
+ return;
+ }
+ res.send(data[0]);
+ });
+}).post("/", function(req, res) {
+ var obj = req.body;
+ var model = new holidayListDAO(obj);
+ model.save(function(err) {
+ if (err) {
+ console.log(err);
+ res.send("error");
+ return;
+ }
+ res.send("created");
+ });
+}).put("/:id", function(req, res) {
+ var id = req.params.id;
+ var obj = req.body;
+ 
+holidayListDAO.findByIdAndUpdate(id, { locationname: obj.locationname, holidayDate: obj.holidayDate}, 
+function(err) {
+ if (err) {
+ res.send("error");
+ return;
+ }
+ res.send("updated");
+ });
+}).delete("/:id", function(req, res) {
+ var id = req.params.id;
+ holidayListDAO.findByIdAndRemove(id, function(err) {
+ if (err) {
+ res.send("error");
+ return;
+ }
+ res.send("deleted");
+ });
+});
+ 
+module.exports = router;
+
+

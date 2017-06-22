@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <base href="/">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+   <title>::Demand & Capacity::</title>
+  <!-- Cascade Style Sheets -->
+  <link href="assets/css/bootstrap.css" rel="stylesheet"> 
+  <link href="assets/css/animate.css" rel="stylesheet">
+  <link href="assets/css/style.css" rel="stylesheet">
+  <link rel = "stylesheet" href = "assets/css/jquery-ui.css"><!-- For calender -->
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="assets/js/jquery-3.2.1.min.js"></script>
+    <script src="assets/js/jquery-ui.js"></script><!-- For calender --> 
+
+	<!-- Mian Angular Files -->
+  <script src="assets/js/angular.min.js"></script>
+	<script src="assets/js/angular-route.min.js"></script>
+  <script src="assets/js/angular-animate.min.js"></script>
+
+  <!-- Angular Config/routes -->
+  <script src="app/app.js"></script>
+  <script src="app/routes.js"></script>
+
+  <!-- Angular Controllers -->
+  <script src="app/controllers/mainCtrl.js"></script>
+  <script src="app/controllers/userCtrl.js"></script>
+  <script src="app/controllers/menuCtrl.js"></script>
+  <script src="app/controllers/skillSetCtrl.js"></script>
+  <script src="app/controllers/projectCtrl.js"></script>
+  <script src="app/controllers/designationCtrl.js"></script>
+  <script src="app/controllers/holidayListCtrl.js"></script>
+  <script src="app/controllers/locationCtrl.js"></script>
+  <script src="app/controllers/regionCtrl.js"></script>
+  <script src="app/controllers/resourceCtrl.js"></script>
+  <script src="app/controllers/roleCtrl.js"></script>
+  <script src="app/controllers/statusCtrl.js"></script>
+  <script src="app/controllers/leaveCtrl.js"></script>
+
+  <!-- Angular Services -->
+  <script src="app/services/userservice.js"></script>
+  <script src="app/services/authServices.js"></script>
+  <script src="app/services/skillSetService.js"></script>
+  <script src="app/services/projectService.js"></script>
+  <script src="app/services/designationService.js"></script>
+  <script src="app/services/holidayListService.js"></script>
+  <script src="app/services/statusService.js"></script>
+  <script src="app/services/roleService.js"></script>
+  <script src="app/services/resourceService.js"></script>
+  <script src="app/services/regionService.js"></script>
+  <script src="app/services/locationService.js"></script>
+  <script src="app/services/leaveService.js"></script>
+
+
+  <script src="app/constants/appConstants.js"></script>
+
+  </head>
+  <body ng-app="pmoApp" ng-controller="mainCtrl as main"   ng-cloak>
+
+  <div id="main" ng-controller="menuCtrl" class="container">
+
+<div class="masthead">
+      <div class="row">
+        <div class="col-md-8"><img src="assets\images\capgemini_header.jpg" alt="Capgemini"></div>
+        <div class="col-md-4"><img src="assets\images\dandmlogo.png" alt="Demand & Capacity" class="pull-right img-responsive"></div>         
+      </div>
+
+<nav class="navbar navbar-default"  ng-show="main.isLoggedIn">
+      <div class="container-fluid">    
+        <div class="collapse navbar-collapse" id="myNavbar">
+              <ul class="nav navbar-nav">
+                <li style="font-size:20px" ng-repeat="menu in menuData"><a class="text-white" href="/{{menu.name}}"  data-toggle="{{ menu.submenu.length > 0 ? 'dropdown' : 'undefined'}}">{{menu.name}} <b ng-if="menu.submenu.length > 0" class="caret"></b></a>
+                  <ul class="dropdown-menu">
+                     <li ng-repeat="subMenuData in menu.submenu"><a href="/{{subMenuData.name}}">{{subMenuData.name}}</a></li>
+                  </ul> 
+                                    
+                </li>                           
+                
+              </ul>
+              <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><img src="assets\images\person.png" width="25" height="25"><b> Welcome {{main.username}}</b><span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                  <li><a  href="/register" role="button">Register</a></li>
+                  <li><a  href="/profile" role="button">Profile</a></li>
+                  <li> <a href="#" ng-click="main.logout();" ng-show="main.isLoggedIn" role="button">Logout</a></li>
+                </ul>
+                </li>
+              </ul>          
+        </div>    
+      </div>
+    </nav>
+    
+</div>
+
+
+
+    <div ng-view>
+      
+    </div>
+    <div ng-controller="footerCtrl">
+      <footer class="container-fluid text-center" >
+        <p><span ng-bind="rightToReserveMsg"></span></p>
+      </footer>
+    </div>
+   </div>
+
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="assets/js/bootstrap.min.js"></script>
+  </body>
+</html>

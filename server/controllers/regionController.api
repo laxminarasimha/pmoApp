@@ -1,0 +1,58 @@
+var express = require("express"),
+ router = express.Router(),
+ regionDAO = require("../models/regionDAO.js");
+ 
+router.get("/", function(req, res) {
+ regionDAO.find({}, function(err, data) {
+ if (err) {
+ res.send("error");
+ return;
+ }
+ res.send(data);
+ });
+}).get("/:id", function(req, res) {
+ var id = req.params.id;
+ regionDAO.find({ _id: id }, function(err, data) {
+ if (err) {
+ res.send("error");
+ return;
+ }
+ res.send(data[0]);
+ });
+}).post("/", function(req, res) {
+ var obj = req.body;
+ var model = new regionDAO(obj);
+ model.save(function(err) {
+ if (err) {
+ console.log(err);
+ res.send("error");
+ return;
+ }
+ res.send("created");
+ });
+}).put("/:id", function(req, res) {
+ var id = req.params.id;
+ var obj = req.body;
+ 
+ regionDAO.findByIdAndUpdate(id, { regionname: obj.regionname}, 
+function(err) {
+ if (err) {
+ res.send("error");
+ return;
+ }
+ res.send("updated");
+ });
+}).delete("/:id", function(req, res) {
+ var id = req.params.id;
+ regionDAO.findByIdAndRemove(id, function(err) {
+ if (err) {
+ res.send("error");
+ return;
+ }
+ res.send("deleted");
+ });
+});
+ 
+module.exports = router;
+
+

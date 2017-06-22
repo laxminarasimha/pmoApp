@@ -1,0 +1,67 @@
+<span class="label label-primary" style="height: 100%;font:bold;font: 15px arial, sans-serif;" >Location</span>
+
+
+<div ng-controller="locationCtrl">
+<form name="locationForm" ng-submit="createLocation(location)" novalidate class="form-horizontal">
+<div class="well well-md">
+<h2 ng-show="location._id!=null">Edit</h2>
+<h2 ng-hide="location._id!=null">Create</h2>
+<div class="row">
+ 		
+	
+ 		<div style="padding-right:25px; padding-left:35px">
+              <label>Location:</label>&nbsp;&nbsp;&nbsp;
+              <input type="text" ng-model="location.locationname" name="locationname" ng-required="true" class="form-control" style="width:300px"/>
+              <p ng-show="locationForm.locationname.$error.required && (locationForm.$submitted)" class="text-danger">Please Enter Location Name</p>
+        </div>
+			 
+			
+			
+	</div>
+
+      <div align="right"> 
+            <input type="submit" value="Update" ng-click="saveData(location)" class="btn btn-primary" ng-show="location._id!=null"/>
+            <input type="submit" value="Create" class="btn btn-primary" ng-hide="location._id!=null"/>             
+            <button class="btn btn-warning" ng-click="clearFields()" type="button">Clear</button>                  
+      </div>
+</div>
+
+</form> 
+<div class="well well-md" style="border: 1px">
+			<div class="panel panel-default panel-table">
+
+				<div class="table-responsive">
+					<table class="table" cellspacing="0" width="100%">
+						<thead>
+							<tr style="background-color:grey">
+								<th >Serial No.</th>
+								<th >Location name</th>
+								<th >Action</th>				   
+							</tr>
+              </thead>
+              <tbody>
+              <tr ng-repeat="x in mongoLocationData">
+                <td>{{ $index + 1 }}</td>
+                <td>{{ x.locationname }}</td>
+                <td>
+                      <a  ng-click="editLocation(x._id)">Edit</a> |
+                      <a  ng-click="deleteLocation(x._id)">Delete</a>
+                </td>
+              </tr>
+						  </tbody>
+					</table>
+					
+				</div>
+		   </div>
+</div>
+
+</div>    
+
+<style>
+     /* tr:nth-of-type(odd) {
+      background-color:#FCF8E3;
+    } */
+    tr:nth-of-type(even) {
+      background-color:#FCF8E3;
+    } 
+</style>

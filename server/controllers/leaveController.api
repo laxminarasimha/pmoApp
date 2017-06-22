@@ -1,0 +1,58 @@
+var express = require("express"),
+ router = express.Router(),
+ leaveDAO = require("../models/leaveDAO.js");
+ 
+router.get("/", function(req, res) {
+ leaveDAO.find({}, function(err, data) {
+ if (err) {
+ res.send("error");
+ return;
+ }
+ res.send(data);
+ });
+}).get("/:id", function(req, res) {
+ var id = req.params.id;
+ leaveDAO.find({ _id: id }, function(err, data) {
+ if (err) {
+ res.send("error");
+ return;
+ }
+ res.send(data[0]);
+ });
+}).post("/", function(req, res) {
+ var obj = req.body;
+ var model = new leaveDAO(obj);
+ model.save(function(err) {
+ if (err) {
+ console.log(err);
+ res.send("error");
+ return;
+ }
+ res.send("created");
+ });
+}).put("/:id", function(req, res) {
+ var id = req.params.id;
+ var obj = req.body;
+ 
+ leaveDAO.findByIdAndUpdate(id, { resourcename: obj.resourcename,regionname:obj.regionname,startDate:obj.startDate,endDate:obj.endDate,numberOfLeaves:obj.numberOfLeaves}, 
+function(err) {
+ if (err) {
+ res.send("error");
+ return;
+ }
+ res.send("updated");
+ });
+}).delete("/:id", function(req, res) {
+ var id = req.params.id;
+ leaveDAO.findByIdAndRemove(id, function(err) {
+ if (err) {
+ res.send("error");
+ return;
+ }
+ res.send("deleted");
+ });
+});
+ 
+module.exports = router;
+
+

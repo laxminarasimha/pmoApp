@@ -1,0 +1,115 @@
+<span class="label label-primary" style="height: 100%;font:bold;font: 15px arial, sans-serif;" >Project</span>
+
+
+<div ng-controller="projectCtrl">
+<form name="projectForm" ng-submit="createProject(project)" novalidate class="form-horizontal">
+<div class="well well-md">
+<h2 ng-show="project._id!=null">Edit</h2>
+<h2 ng-hide="project._id!=null">Create</h2>
+<div class="row">
+ 		
+	
+ 		<div >
+              <label>Project:</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              <input type="text" ng-model="project.projectname" name="projectname" ng-required="true" class="form-control" style="width:300px"/>
+              <p ng-show="projectForm.projectname.$error.required && (projectForm.$submitted)" class="text-danger">Please Enter Project Name</p>
+			   
+			   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			   <label>Region:</label>&nbsp;&nbsp;&nbsp;
+			   <select ng-model="project.regionname">
+				  <option ng-repeat="x in regionList" value="{{x.regionname}}">{{x.regionname}}</option>
+			  </select>
+			  <p ng-show="projectForm.regionname.$error.required && (projectForm.$submitted)" class="text-danger">Please Select Region Name</p>
+        </div>
+		
+		<div>
+		 <label>Start  Date:</label>&nbsp;&nbsp;&nbsp;
+              <input type="text" ng-model="project.startDate" id = "startDateID" name="startDate" ng-required="true" class="form-control"/>
+              <img src="..\assets\images\calendar-icon.png"  >
+              <p ng-show="projectForm.startDate.$error.required && (projectForm.$submitted)" class="text-danger">Please Enter Start Date</p>
+          
+		 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+		 <label>End  Date:</label>&nbsp;&nbsp;&nbsp;
+              <input type="text" ng-model="project.endDate" id = "endDateID" name="endDate" ng-required="true" class="form-control"/>
+              <img src="..\assets\images\calendar-icon.png"  >
+              <p ng-show="projectForm.endDate.$error.required && (projectForm.$submitted)" class="text-danger">Please Enter End Date</p>
+              	
+		</div>
+			
+	</div>
+
+      <div align="right"> 
+            <input type="submit" value="Update" ng-click="saveData(project)" class="btn btn-primary" ng-show="project._id!=null"/>
+            <input type="submit" value="Create" class="btn btn-primary" ng-hide="project._id!=null"/>             
+            <button class="btn btn-warning" ng-click="clearFields()" type="button">Clear</button>                  
+      </div>
+</div>
+
+</form> 
+<div class="well well-md" style="border: 1px">
+			<div class="panel panel-default panel-table">
+
+				<div class="table-responsive">
+					<table class="table" cellspacing="0" width="100%">
+						<thead>
+							<tr style="background-color:grey">
+								<th >Serial No.</th>
+								<th >Project name</th>
+								<th >Region</th>
+								<th >Start Date</th>
+								<th >End Date</th>
+								<th >Action</th>				   
+							</tr>
+              </thead>
+              <tbody>
+              <tr ng-repeat="x in mongoProjectData">
+                <td>{{ $index + 1 }}</td>
+                <td>{{ x.projectname }}</td>
+				<td>{{ x.regionname }}</td>
+				<td>{{ x.startDate | date : "dd-MMM-yy" }}</td>
+				<td>{{ x.endDate | date : "dd-MMM-yy" }}</td>
+                <td>
+                      <a  ng-click="editProject(x._id)">Edit</a> |
+                      <a  ng-click="deleteProject(x._id)">Delete</a>
+                </td>
+              </tr>
+						  </tbody>
+					</table>
+					
+				</div>
+		   </div>
+</div>
+
+</div>    
+
+<style>
+     /* tr:nth-of-type(odd) {
+      background-color:#FCF8E3;
+    } */
+    tr:nth-of-type(even) {
+      background-color:#FCF8E3;
+    } 
+</style>
+
+<script>
+   $(function() {
+      $( "#startDateID" ).datepicker({
+         //appendText:"(dd-MMM-yy)",
+         dateFormat:"dd-MM-yy",
+         minDate: new Date()
+         //showOn:"button",
+         //buttonImage: "/images/calendar-icon.png",
+         //buttonImageOnly: true
+      });
+	  
+	  $( "#endDateID" ).datepicker({
+         //appendText:"(dd-MMM-yy)",
+         dateFormat:"dd-MM-yy",
+         minDate: new Date()
+         //showOn:"button",
+         //buttonImage: "/images/calendar-icon.png",
+         //buttonImageOnly: true
+      });
+   });
+</script>

@@ -1,0 +1,34 @@
+main{
+	padding-top:30px;
+}
+
+
+heade .nabar {
+	border-radius:0px;
+}
+
+
+.show-hide-message.ng-hide-remove{
+	-webkit-animation:zoomIn 0.3s both ease;
+	-moz-animation:zoomIn 0.3s both ease ;
+	animation:zoomIn 0.3s both ease ;
+}
+
+
+.spinner {
+	-webkit-animation:spin 1s Infinite;
+	-moz-animation:spin 1s Infinite;
+	animation:spin 1s Infinite;
+}
+
+@keyframes spin{
+	from {-webkit-transform:route(0deg);}
+	to {-webkit-transform:route(360deg);}
+}
+
+@-moz-keyframes spin{
+	from {-moz-transform:route(0deg);}
+	to {-moz-transform:route(360deg);}
+}
+
+
