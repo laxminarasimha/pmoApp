@@ -9,7 +9,7 @@ var app = angular.module('appRoutes',['ngRoute'])
 
 	.when('/about',{
 		templateUrl: 'app/views/pages/about.html',	
-		authenticated: false
+		authenticated: true
 	})
 
 	.when('/register',{
@@ -77,7 +77,10 @@ var app = angular.module('appRoutes',['ngRoute'])
             templateUrl: 'app/views/pages/admin/leave.html',
             authenticated: true
           })	            
-
+	.when('/ResourceType', {
+            templateUrl: 'app/views/pages/admin/resourceType.html',
+            authenticated: true
+          })
 	.otherwise({redirectTo: '/'});
 
 	$locationProvider.html5Mode({
