@@ -82,7 +82,10 @@ var app = angular.module('appRoutes',['ngRoute'])
             templateUrl: 'app/views/pages/resourceMapping.html',
             authenticated: true
           })	            
-
+	.when('/ResourceType', {
+            templateUrl: 'app/views/pages/admin/resourceType.html',
+            authenticated: true
+          })
 	.otherwise({redirectTo: '/'});
 
 	$locationProvider.html5Mode({
@@ -96,8 +99,7 @@ var app = angular.module('appRoutes',['ngRoute'])
 app.run(['$rootScope','Auth','$location',function($rootScope, Auth, $location){
 
 	$rootScope.$on('$routeChangeStart', function(event, next, current){
-		
-		console.log(next.$$route.authenticated);
+		console.log('check-3 :' + next.$$route.authenticated);	
 
 		if(next.$$route.authenticated ==  true){	
 			if(!Auth.isLoggedIn()){

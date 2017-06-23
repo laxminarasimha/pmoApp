@@ -1,9 +1,9 @@
 var express = require("express"),
  router = express.Router(),
- resourceDAO = require("../models/resourceDAO.js");
+ resourceTypeDAO = require("../models/resourceTypeDAO.js");
  
 router.get("/", function(req, res) {
- resourceDAO.find({}, function(err, data) {
+ resourceTypeDAO.find({}, function(err, data) {
  if (err) {
  res.send("error");
  return;
@@ -12,7 +12,7 @@ router.get("/", function(req, res) {
  });
 }).get("/:id", function(req, res) {
  var id = req.params.id;
- resourceDAO.find({ _id: id }, function(err, data) {
+ resourceTypeDAO.find({ _id: id }, function(err, data) {
  if (err) {
  res.send("error");
  return;
@@ -21,7 +21,7 @@ router.get("/", function(req, res) {
  });
 }).post("/", function(req, res) {
  var obj = req.body;
- var model = new resourceDAO(obj);
+ var model = new resourceTypeDAO(obj);
  model.save(function(err) {
  if (err) {
  console.log(err);
@@ -34,14 +34,7 @@ router.get("/", function(req, res) {
  var id = req.params.id;
  var obj = req.body;
  
-resourceDAO.findByIdAndUpdate(id, {
-	resourcename: obj.resourcename,
-		   email: obj.email,
-		   designation: obj.designation,
-		   alias: obj.alias,
-		   etype: obj.etype,
-		   kinId: obj.kinId
-		   }, 
+ resourceTypeDAO.findByIdAndUpdate(id, { resourceTypename: obj.resourceTypename}, 
 function(err) {
  if (err) {
  res.send("error");
@@ -51,7 +44,7 @@ function(err) {
  });
 }).delete("/:id", function(req, res) {
  var id = req.params.id;
- resourceDAO.findByIdAndRemove(id, function(err) {
+ resourceTypeDAO.findByIdAndRemove(id, function(err) {
  if (err) {
  res.send("error");
  return;
