@@ -9,7 +9,7 @@ var app = angular.module('appRoutes',['ngRoute'])
 
 	.when('/about',{
 		templateUrl: 'app/views/pages/about.html',	
-		authenticated: false
+		authenticated: true
 	})
 
 	.when('/register',{
@@ -75,6 +75,11 @@ var app = angular.module('appRoutes',['ngRoute'])
           })
     .when('/Leave', {
             templateUrl: 'app/views/pages/admin/leave.html',
+            authenticated: true
+          })
+
+     .when('/User', {
+            templateUrl: 'app/views/pages/resourceMapping.html',
             authenticated: true
           })	            
 

@@ -1,0 +1,125 @@
+
+<legend>Resource Mapping</legend>
+<div class="panel panel-info" ng-controller="resourceMappingCtrl"> 
+<h2 ng-show="resourcemap._id!=null">Edit</h2>
+<h2 ng-hide="resourcemap._id!=null">Create</h2>   
+  <div class="panel-heading">
+    <form name="resourceMappingForm" ng-submit="createResourceMapping(resourcemap)" novalidate class="form-horizontal">
+      <div class='row'>
+        <div class='col-sm-1'>
+            <label for="resourcename">Name</label>
+         </div>
+        <div class='col-sm-2'> 
+           
+           <select ng-model="selectedResource" ng-options="x.resourcename for x in resourceList"> </select>
+           <input type="hidden" id="resourcename" ng-model="resourcemap.resourcename" 
+                 value="{{selectedResource.resourcename}}">
+        </div>
+
+
+        <div class='col-sm-1'>
+            <label for="alias">Alias</label>
+         </div>
+        <div class='col-sm-2'> 
+          <input id="alias" ng-model="selectedResource.alias" required="true"  type="text" disabled />
+          <input type="hidden" id="resourcealias" ng-model="resourcemap.resourcealias" value="{{selectedResource.alias}}">
+        </div>
+
+        <div class='col-sm-1'>
+            <label for="designation">Designation</label>
+         </div>
+        <div class='col-sm-2'> 
+          <input id="designation" ng-model="selectedResource.designation" required="true"  type="text" disabled/>
+          <input type="hidden" id="resourcedesignation" ng-model="resourcemap.resourcedesignation" value="{{selectedResource.designation}}">
+        </div>
+
+        <div class='col-sm-1'>
+            <label for="role">Role</label>
+         </div>
+        <div class='col-sm-2'> 
+          <select ng-model="resourcemap.role" id="role" class="form-control">
+              <option ng-repeat="x in roleList" value="{{x.rolename}}">{{x.rolename}}</option>
+           </select>
+        </div>
+      </div>
+      <div class='row'> 
+
+         <div class='col-sm-1'>
+            <label for="location">Location</label>
+         </div>
+        <div class='col-sm-2'> 
+          <select ng-model="resourcemap.location" id="location" class="form-control">
+              <option ng-repeat="x in locationList" value="{{x.locationname}}">{{x.locationname}}</option>
+           </select>
+        </div> 
+       
+
+        <div class='col-sm-1'>
+            <label for="region">Region</label>
+         </div>
+        <div class='col-sm-2'> 
+          <select ng-model="resourcemap.region" id="region"  class="form-control">
+              <option ng-repeat="x in regionList" value="{{x.regionname}}">{{x.regionname}}</option>
+           </select>
+        </div> 
+
+        <div class='col-sm-1'>
+            <label for="skill">Skill</label>
+         </div>
+        <div class='col-sm-2'> 
+          <select ng-model="resourcemap.skill" id="skill" class="form-control">
+              <option ng-repeat="x in skillSetList" value="{{x.skillname}}">{{x.skillname}}</option>
+           </select>
+        </div> 
+
+        <div class='col-sm-1'>
+            <label for="status">Status</label>
+         </div>
+        <div class='col-sm-2'> 
+          <select ng-model="resourcemap.status" id="status" class="form-control">
+              <option ng-repeat="x in statusList" value="{{x.statusname}}">{{x.statusname}}</option>
+           </select>
+        </div>        
+      </div>
+      <div class='row'>    
+
+        <div class='col-sm-1'>
+            <label for="resourceType">Type</label>
+         </div>
+        <div class='col-sm-2'> 
+          <select ng-model="resourcemap.resourceType" id="resourceType"  class="form-control">
+              <option ng-repeat="x in resourceTypeList" value="{{x.locationname}}">{{x.locationname}}</option>
+           </select>
+        </div>    
+       
+       <div class='col-sm-1'>
+            <label for="manager">Manager</label>
+         </div>
+        <div class='col-sm-2'> 
+          <select ng-model="resourcemap.manager" id="manager"  class="form-control">
+              <option ng-repeat="x in resourceList" value="{{x.resourcename}}">{{x.resourcename}}</option>
+           </select>
+        </div>
+      </div>
+      <div class='row'>
+        
+        <div class='col-sm-12'>
+        </div>
+      </div>
+      <div class='row'>
+        <div class='col-sm-12'>
+           <div align="right">
+                  <input type="submit" value="Update" ng-click="saveData(resourcemap)" class="btn btn-primary" ng-show="resourcemap._id!=null"/>
+                  <input type="submit" value="Create" class="btn btn-primary" ng-hide="resourcemap._id!=null"/>             
+                  <button class="btn btn-warning" ng-click="clearFields()" type="button">Clear</button>                   
+            </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<div class="panel panel-info">    
+  <div class="panel-body">
+    Grid Content Here
+  </div>
+</div>
