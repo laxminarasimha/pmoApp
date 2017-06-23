@@ -1,1 +1,78 @@
-<div class="page-Header">About Page{{main.username}}</div>
+<legend>Personal Information</legend>
+<div class="panel panel-info">    
+	<div class="panel-heading">
+		<form name="resourceForm">
+			<div class='row'>
+				<div class='col-sm-4'>    
+					<div class='form-group'>
+					<label for="user_title">Employee ID</label>
+					<input class="form-control" id="user_title" name="user[title]" size="30" type="text" />
+					</div>
+				</div>
+				<div class='col-sm-4'>
+					<div class='form-group'>
+					<label for="user_firstname">First Name</label>
+					<input class="form-control" id="user_firstname" name="user[firstname]" required="true" s type="text" />
+					</div>
+				</div>
+				<div class='col-sm-4'>
+					<div class='form-group'>
+					<label for="user_lastname">Last name</label>
+					<input class="form-control" id="user_lastname" name="user[lastname]" required="true"  type="text" />
+					</div>
+				</div>
+			</div>
+			<div class='row'>
+				<div class='col-sm-4'>    
+					<div class='form-group'>
+					<label for="user_title">Alias</label>
+					<input class="form-control" id="user_title" name="user[title]" size="30" type="text" />
+					</div>
+				</div>
+				<div class='col-sm-4'>
+					<div class='form-group'>
+					<label for="user_firstname">Designation</label>
+					<input class="form-control" id="user_firstname" name="user[firstname]" required="true" s type="text" />
+					</div>
+				</div>
+				<div class='col-sm-4'>
+					<div class='form-group'>
+					<label for="user_lastname">Type</label>
+					<select class="form-control">
+						<option value="">Admin</option>
+						<option value="">Manager</option>
+						<option value="">General User</option>
+					</select>
+					</div>
+				</div>
+			</div>
+			<div class='row'>
+				<div class='col-sm-8'>
+					<div class='form-group'>
+					<label for="user_lastname">User Email</label>
+						<div class="input-group">
+						<input type="text" class="form-control" placeholder="Recipient's email" aria-describedby="basic-addon2">
+						<span class="input-group-addon" id="basic-addon2">@capgemini.com</span>
+						</div>
+					</div>
+				</div>
+				<div class='col-sm-4'>
+				</div>
+			</div>
+			<div class='row'>
+				<div class='col-sm-12'>
+					<div align="right"> 
+            			<input type="submit" value="Update" class="btn btn-primary" />
+            			<input type="submit" value="Create" class="btn btn-primary" />             
+            			<button class="btn btn-warning" type="button">Clear</button>                  
+      </div>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+<div class="panel panel-info">    
+	<div class="panel-body">
+	  Grid Content Here
+	</div>
+</div>
