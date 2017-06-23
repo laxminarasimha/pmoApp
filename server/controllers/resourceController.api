@@ -34,7 +34,14 @@ router.get("/", function(req, res) {
  var id = req.params.id;
  var obj = req.body;
  
-resourceDAO.findByIdAndUpdate(id, { resourcename: obj.resourcename,alias: obj.alias,kinId: obj.kinId}, 
+resourceDAO.findByIdAndUpdate(id, {
+	resourcename: obj.resourcename,
+		   email: obj.email,
+		   designation: obj.designation,
+		   alias: obj.alias,
+		   etype: obj.etype,
+		   kinId: obj.kinId
+		   }, 
 function(err) {
  if (err) {
  res.send("error");

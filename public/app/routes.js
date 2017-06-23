@@ -9,7 +9,7 @@ var app = angular.module('appRoutes',['ngRoute'])
 
 	.when('/about',{
 		templateUrl: 'app/views/pages/about.html',	
-		authenticated: false
+		authenticated: true
 	})
 
 	.when('/register',{
@@ -91,8 +91,7 @@ var app = angular.module('appRoutes',['ngRoute'])
 app.run(['$rootScope','Auth','$location',function($rootScope, Auth, $location){
 
 	$rootScope.$on('$routeChangeStart', function(event, next, current){
-		
-		console.log(next.$$route.authenticated);
+		console.log('check-3 :' + next.$$route.authenticated);	
 
 		if(next.$$route.authenticated ==  true){	
 			if(!Auth.isLoggedIn()){
