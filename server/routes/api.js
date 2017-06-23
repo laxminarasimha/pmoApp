@@ -92,5 +92,7 @@ router.use("/project", require("../controllers/projectController.api"));
 router.use("/holiday", require("../controllers/holidayListController.api"));
 
 router.use("/leave", require("../controllers/leaveController.api"));
-	return router;
+
+router.use("/resourceType", require("../controllers/resourceTypeController.api"));
+return router;
 }

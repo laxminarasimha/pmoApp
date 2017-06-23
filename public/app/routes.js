@@ -77,7 +77,10 @@ var app = angular.module('appRoutes',['ngRoute'])
             templateUrl: 'app/views/pages/admin/leave.html',
             authenticated: true
           })	            
-
+	.when('/ResourceType', {
+            templateUrl: 'app/views/pages/admin/resourceType.html',
+            authenticated: true
+          })
 	.otherwise({redirectTo: '/'});
 
 	$locationProvider.html5Mode({
