@@ -98,6 +98,7 @@ angular.module('pmoApp').controller('allocationCtrl', Controller);
 			  "availableMandays": "21",
 			  "allocation": "0.23",
 		    },
+		    
 		    {
 		      "name": "Amit Nandan",
 		      "project": "T2S Release 2 Implementation",
