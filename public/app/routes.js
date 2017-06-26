@@ -30,6 +30,10 @@ var app = angular.module('appRoutes',['ngRoute'])
 		authenticated: true
 	})
 
+	.when('/changepassword',{
+		templateUrl: 'app/views/pages/users/changepassword.html',			
+		authenticated: true
+	})
 	.when('/profile',{
 		templateUrl: 'app/views/pages/users/profile.html',			
 		authenticated: true

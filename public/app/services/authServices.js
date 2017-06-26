@@ -3,7 +3,8 @@ angular.module('authServices',[])
 	authFactory ={};
 
 	authFactory.login = function(loginData) {
-		return $http.post('/api/authenticate', loginData).then(function(data){				
+		return $http.post('/api/authenticate', loginData).then(function(data){	
+			console.log(data);
 			authToken.setToken(data.data.token);			
 			return data;
 		});
@@ -43,7 +44,7 @@ angular.module('authServices',[])
 			$window.localStorage.removeItem('token');
 	}
 
-	authTokenFactory.getToken = function(){		
+	authTokenFactory.getToken = function(){				
 		return $window.localStorage.getItem('token');
 	};
 	return authTokenFactory;
