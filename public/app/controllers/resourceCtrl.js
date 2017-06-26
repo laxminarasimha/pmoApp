@@ -41,7 +41,7 @@ $scope.editResource = function (id) {
  };
  
  $scope.saveData = function(resource) {
-     if ($scope.resourceForm.$valid) {
+     if ($scope.resourceForm.$valid) {        
      resourceService.updateResource(resource).then(function(res) {
      if (res.data == "updated") {
         getResourceData(resourceService,$scope);
@@ -57,6 +57,9 @@ $scope.editResource = function (id) {
      $rootScope.Title = "Create Resource";
      $scope.IsSubmit = true;
      if ($scope.resourceForm.$valid) {
+        //Password = "default";
+        $scope.resource.password = '$2a$10$z14k1dcNp7nPmB1s.ApNNe4NLYu.UbKd1lKcgARc3fDTeoPW9GlAC';
+        console.log($scope.resource);
          resourceService.createResource(resource).then(function(res) {
          if (res.data == "created") {
             getResourceData(resourceService,$scope);

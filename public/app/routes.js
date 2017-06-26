@@ -9,7 +9,7 @@ var app = angular.module('appRoutes',['ngRoute'])
 
 	.when('/about',{
 		templateUrl: 'app/views/pages/about.html',	
-		authenticated: false
+		authenticated: true
 	})
 
 	.when('/register',{
@@ -77,11 +77,22 @@ var app = angular.module('appRoutes',['ngRoute'])
             templateUrl: 'app/views/pages/admin/leave.html',
             authenticated: true
           })
+<<<<<<< HEAD
     .when('/allocationList', {
             templateUrl: 'app/views/pages/allocation/allocationList.html',
             authenticated: true
           })         	            
+=======
+>>>>>>> 9073c0084fe00b9823a2739f833502eb5fda2966
 
+     .when('/User', {
+            templateUrl: 'app/views/pages/resourceMapping.html',
+            authenticated: true
+          })	            
+	.when('/ResourceType', {
+            templateUrl: 'app/views/pages/admin/resourceType.html',
+            authenticated: true
+          })
 	.otherwise({redirectTo: '/'});
 
 	$locationProvider.html5Mode({
@@ -93,8 +104,7 @@ var app = angular.module('appRoutes',['ngRoute'])
 app.run(['$rootScope','Auth','$location',function($rootScope, Auth, $location){
 
 	$rootScope.$on('$routeChangeStart', function(event, next, current){
-		
-		console.log(next.$$route.authenticated);
+		console.log('check-3 :' + next.$$route.authenticated);	
 
 		if(next.$$route.authenticated ==  true){	
 			if(!Auth.isLoggedIn()){

@@ -1,0 +1,292 @@
+<style>
+.dropdown dd,
+.dropdown dt {
+  margin: 0px;
+  padding: 0px;
+}
+
+.dropdown ul {
+  margin: -1px 0 0 0;
+}
+
+.dropdown dd {
+  position: relative;
+}
+
+.dropdown a,
+.dropdown a:visited {
+  text-decoration: none;
+  outline: none;
+  font-size: 12px;
+}
+
+.dropdown dt a {
+  background-color: white;
+  display: block;
+  padding: 5px 20px 5px 10px;
+  min-height: 25px;
+  line-height: 20px;
+  overflow: hidden;
+  border: 5px;
+  width: 250px;
+  height:30px;
+}
+
+.dropdown dt a span,
+.multiSel span {
+  cursor: pointer;
+  display: inline-block;
+  padding: 0 3px 2px 0;
+}
+
+.dropdown dd ul {
+  background-color: #4F6877;
+  border: 0;
+  color: white;
+  display: none;
+  left: 0px;
+  padding: 2px 15px 2px 5px;
+  position: absolute;
+  top: 2px;
+  width: 200px;
+  list-style: none;
+  height: 100px;
+  overflow: auto;
+}
+
+.dropdown span.value {
+  display: none;
+}
+
+.dropdown dd ul li a {
+  padding: 5px;
+  display: block;
+}
+
+.dropdown dd ul li a:hover {
+  background-color: white;
+}
+
+</style>
+
+<legend>Allocation List</legend>
+<div class="panel panel-info" ng-controller="allocationCtrl">    
+	<div class="panel-heading">
+		<form name="allocationForm">
+			<div class='row'>
+				<div class='col-sm-4'>
+					<div class='form-group'>
+						<label for="startdt">Start Date</label>
+						<input  id="user_firstname" name="user[firstname]" required="true" s type="text" />
+					</div>
+				</div>
+				<div class='col-sm-4'></div>
+				<div class='col-sm-4'>
+					<div class='form-group'>
+						<label for="user_lastname">End Date</label>
+						<input id="user_firstname" name="user[firstname]" required="true" s type="text"/>
+					</div>
+				</div>
+			</div>
+
+			<div class='row'>
+				<div class='col-sm-4'>
+					<div class='form-group'>
+	                	<label>Manager:</label>	
+						<dl id="managerID" class="dropdown"> 
+		  				<dt><a href="">
+							  <span class="hida">Select</span>    
+							  <p id="mselect" class="multiSel"></p>  
+							</a>
+						</dt>
+						<dd>
+							<div class="mutliSelect">
+								<ul>
+										<li>
+											<input type="checkbox" value="Apple"  ng-click="slectUser($event)"/>Teemu</li>
+										<li>
+											<input type="checkbox" value="Blackberry" ng-click="slectUser($event)"/>Devid</li>
+										<li>
+											<input type="checkbox" value="HTC" ng-click="slectUser($event)"/>Siddharth</li>
+										
+								</ul>
+							</div>
+						</dd>
+		 				</dl>
+					</div>
+             	</div>    
+				<div class='col-sm-4'>
+					<div class='form-group'>
+	                	<label>Resource:</label>	
+						<dl id="resourceID" class="dropdown"> 
+		  				<dt><a href="">
+							  <span class="hida">Select</span>    
+							  <p id="mselect" class="multiSel"></p>  
+							</a>
+						</dt>
+						<dd>
+							<div class="mutliSelect">
+								<ul>
+										<li>
+											<input type="checkbox" value="Apple"  ng-click="slectUser($event)"/>Apple</li>
+										<li>
+											<input type="checkbox" value="Blackberry" ng-click="slectUser($event)"/ />Blackberry</li>
+										<li>
+											<input type="checkbox" value="HTC" ng-click="slectUser($event)"//>HTC</li>
+										<li>
+											<input type="checkbox" value="Sony Ericson" ng-click="slectUser($event)"//>Sony Ericson</li>
+										<li>
+											<input type="checkbox" value="Motorola" ng-click="slectUser($event)"//>Motorola</li>
+										<li>
+											<input type="checkbox" value="Nokia" ng-click="slectUser($event)"//>Nokia</li>
+								</ul>
+							</div>
+						</dd>
+		 				</dl>
+					</div>
+             	</div>            
+				<div class='col-sm-4'>
+					<div class='form-group'>
+		                	<label>Project:</label>	
+							<dl id ="projectID" class="dropdown"> 
+			  				<dt><a href="">
+								  <span class="hida">Select</span>    
+								  <p id="mselect" class="multiSel"></p>  
+								</a>
+							</dt>
+							<dd>
+							<div class="mutliSelect">
+								<ul>
+									<li>
+										<input type="checkbox" value="Apple"  ng-click="slectUser($event)"/>Production Support</li>
+									<li>
+										<input type="checkbox" value="Blackberry" ng-click="slectUser($event)"/ >Vacation</li>
+									<li>
+										<input type="checkbox" value="HTC" ng-click="slectUser($event)"/>CSDR Settlement Discipline</li>
+									<li>
+										<input type="checkbox" value="Sony Ericson" ng-click="slectUser($event)"/>Maintenance</li>
+									<li>
+										<input type="checkbox" value="Motorola" ng-click="slectUser($event)"/>EuroclearSafe Satellite Implementation</li>
+									<li>
+										<input type="checkbox" value="Nokia" ng-click="slectUser($event)"/>R2 Implementation T&M</li>
+								</ul>
+							</div>
+							</dd>
+			 				</dl>
+					</div>
+				</div>
+			<div class='row'>
+				<div class='col-sm-12'>
+					<div align="right"> 
+            			<input type="submit" value="Select" class="btn btn-primary" />
+            			<input type="submit" value="Reset" class="btn btn-primary" />
+      				</div>
+				</div>
+			</div>
+		</form>
+	</div>
+  </div>   
+
+
+<div id="allocaitonDetails" class="well well-md" style="border: 1px" ng-controller="allocationCtrl">
+      <div  id="searchresult">
+        <div class="panel-body">
+			<table class="table table-striped" datatable="ng" dt-options="vm.dtOptions" dt-instance="vm.dtInstance">
+            <thead>
+              <tr>
+              	<th>Action</th>
+                <th>Name</th>
+                <th>Project</th>
+                <th>Region</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Tagged%</th>
+                <th align="center">Actual Mandays</th>
+                <th align="center">Available Mandays</th>
+                <th align="center">%Allocation</th>
+              </tr>
+            </thead>
+            <tbody>
+				  <tr ng-repeat="allocation in allocationList">
+					<td align="center"><a class="green shortinfo" href="javascript:;" ng-click="childInfo(user, $event)" title="Click to view more"><i class="glyphicon glyphicon-plus-sign"></a></td>
+					<td>{{allocation.name}}</td>
+					<td>{{allocation.project}}</td>
+					<td>{{allocation.region}}</td>
+					<td>{{allocation.startDate}}</td>
+					<td>{{allocation.endDate}}</td>
+					<td>{{allocation.tagToEuroclear}}</td>
+					<td>{{allocation.actualMandays}}</td>
+					<td>{{allocation.availableMandays}}</td>
+					<td align="center">{{allocation.allocation}}</td>
+				  </tr>
+			</tbody>
+          </table>
+          
+        </div>
+       </div>
+    </div>
+
+    <script>
+
+    	
+	var userCount = null;
+
+	$("#projectID dt a").on('click', function() {
+		$("#projectID dd ul").slideToggle('fast');
+	});
+
+	$("#projectID dd ul li a").on('click', function() {
+	  $("#projectID dd ul").hide();
+	});
+
+	$("#managerID dt a").on('click', function() {
+		$("#managerID dd ul").slideToggle('fast');
+	});
+
+	$("#managerID dd ul li a").on('click', function() {
+	  $("#managerID dd ul").hide();
+	});
+
+	$("#resourceID dt a").on('click', function() {
+		$("#resourceID dd ul").slideToggle('fast');
+	});
+
+	$("#resourceID dd ul li a").on('click', function() {
+	  $("#resourceID dd ul").hide();
+	});
+
+
+	function getSelectedValue(id) {
+	  return $("#" + id).find("dt a span.value").html();
+	}
+
+	$(document).bind('click', function(e) {
+	  var $clicked = $(e.target);
+	  if (!$clicked.parents().hasClass("dropdown")) $(".dropdown dd ul").hide();
+	});
+
+	$('.mutliSelect input[type="checkbox"]').on('click', function() {
+
+		var title = $(this).closest('.mutliSelect').find('input[type="checkbox"]').val(),
+	    title = $(this).val() + ",";
+
+		if ($(this).is(':checked')) {
+		    userCount ++;
+			if(userCount >= 3){
+					$("#mselect").text('');
+					title ="User selected "+userCount;
+			}
+
+			var html = '<span title="' + title + '">' + title + '</span>';
+			$('.multiSel').append(html);
+		
+			$(".hida").hide();
+		} else {
+			$('span[title="' + title + '"]').remove();
+			var ret = $(".hida");
+			$('.dropdown dt a').append(ret);
+
+		}
+	});
+    
+   </script>
