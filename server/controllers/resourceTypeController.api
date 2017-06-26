@@ -1,0 +1,58 @@
+var express = require("express"),
+ router = express.Router(),
+ resourceTypeDAO = require("../models/resourceTypeDAO.js");
+ 
+router.get("/", function(req, res) {
+ resourceTypeDAO.find({}, function(err, data) {
+ if (err) {
+ res.send("error");
+ return;
+ }
+ res.send(data);
+ });
+}).get("/:id", function(req, res) {
+ var id = req.params.id;
+ resourceTypeDAO.find({ _id: id }, function(err, data) {
+ if (err) {
+ res.send("error");
+ return;
+ }
+ res.send(data[0]);
+ });
+}).post("/", function(req, res) {
+ var obj = req.body;
+ var model = new resourceTypeDAO(obj);
+ model.save(function(err) {
+ if (err) {
+ console.log(err);
+ res.send("error");
+ return;
+ }
+ res.send("created");
+ });
+}).put("/:id", function(req, res) {
+ var id = req.params.id;
+ var obj = req.body;
+ 
+ resourceTypeDAO.findByIdAndUpdate(id, { resourceTypename: obj.resourceTypename}, 
+function(err) {
+ if (err) {
+ res.send("error");
+ return;
+ }
+ res.send("updated");
+ });
+}).delete("/:id", function(req, res) {
+ var id = req.params.id;
+ resourceTypeDAO.findByIdAndRemove(id, function(err) {
+ if (err) {
+ res.send("error");
+ return;
+ }
+ res.send("deleted");
+ });
+});
+ 
+module.exports = router;
+
+
