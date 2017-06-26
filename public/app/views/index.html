@@ -8,18 +8,43 @@
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
    <title>::Demand & Capacity::</title>
   <!-- Cascade Style Sheets -->
+
+
   <link href="assets/css/bootstrap.css" rel="stylesheet"> 
   <link href="assets/css/animate.css" rel="stylesheet">
   <link href="assets/css/style.css" rel="stylesheet">
-  <link rel = "stylesheet" href = "assets/css/jquery-ui.css"><!-- For calender -->
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="assets/js/jquery-3.2.1.min.js"></script>
-    <script src="assets/js/jquery-ui.js"></script><!-- For calender --> 
+  <link href ="assets/css/jquery-ui.css"><!-- For calender -->
 
-	<!-- Mian Angular Files -->
+
+  <link rel="stylesheet" href="assets/css/bootstrap.min.css"> 
+  <link rel='stylesheet' href="assets/css/font-awesome.min.css">  
+  <link rel="stylesheet" href="assets/css/buttons.dataTables.min.css">
+  <link rel="stylesheet" href="assets/css/customDatatable.css">
+  
+
+
+  <!-- Cascade Style Sheets for Datatable -->
+  <link rel="stylesheet" href="assets/css/datatables.bootstrap.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css"> 
+
+  
+
+  <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+  <script src="assets/js/jquery-3.2.1.js"></script>
+  <script src="assets/js/jquery.dataTables.min.js"></script>
+  
+  <script src="assets/js/jquery-ui.js"></script><!-- For calender --> 
+
+ 
+
+	<!-- Main Angular Files -->
   <script src="assets/js/angular.min.js"></script>
+  <!-- Angular (necessary for DataTable plugins) -->
+  <script src="assets/js/angular-datatables.min.js"></script>
 	<script src="assets/js/angular-route.min.js"></script>
   <script src="assets/js/angular-animate.min.js"></script>
+
+  
 
   <!-- Angular Config/routes -->
   <script src="app/app.js"></script>
@@ -39,6 +64,7 @@
   <script src="app/controllers/roleCtrl.js"></script>
   <script src="app/controllers/statusCtrl.js"></script>
   <script src="app/controllers/leaveCtrl.js"></script>
+  <script src="app/controllers/allocationCtrl.js"></script>
 
   <!-- Angular Services -->
   <script src="app/services/userservice.js"></script>
@@ -54,6 +80,8 @@
   <script src="app/services/locationService.js"></script>
   <script src="app/services/leaveService.js"></script>
 
+  <!-- Angular Directive -->
+  <script src="app/directive/allocationDirective.js"></script>
 
   <script src="app/constants/appConstants.js"></script>
 
@@ -74,7 +102,8 @@
               <ul class="nav navbar-nav">
                 <li ng-repeat="menu in menuData"><a class="text-white" href="/{{menu.name}}"  data-toggle="{{ menu.submenu.length > 0 ? 'dropdown' : 'undefined'}}">{{menu.name}} <b ng-if="menu.submenu.length > 0" class="caret"></b></a>
                   <ul class="dropdown-menu">
-                     <li ng-repeat="subMenuData in menu.submenu"><a href="/{{subMenuData.name}}">{{subMenuData.name}}</a></li>
+                     <li ng-repeat="subMenuData in menu.submenu">
+                      <a href="/{{subMenuData.page !=null ? subMenuData.page : subMenuData.name}}">{{subMenuData.name}}</a></li>
                   </ul> 
                                     
                 </li>                           

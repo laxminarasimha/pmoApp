@@ -12,7 +12,7 @@
 {
 "id" : "3",
 "name" : "Allocation",
-"submenu" : []
+"submenu" : [{"id":"1", "name":"List","page":"allocationList"},{"id":"2", "name":"Create","page":"allocaitonCreate"}]
 },
 {
 "id" : "4",

@@ -76,7 +76,11 @@ var app = angular.module('appRoutes',['ngRoute'])
     .when('/Leave', {
             templateUrl: 'app/views/pages/admin/leave.html',
             authenticated: true
-          })	            
+          })
+    .when('/allocationList', {
+            templateUrl: 'app/views/pages/allocation/allocationList.html',
+            authenticated: true
+          })         	            
 
 	.otherwise({redirectTo: '/'});
 
@@ -85,8 +89,6 @@ var app = angular.module('appRoutes',['ngRoute'])
 		requireBase:false
 	});
 });
-
-
 
 app.run(['$rootScope','Auth','$location',function($rootScope, Auth, $location){
 
