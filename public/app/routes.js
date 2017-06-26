@@ -77,13 +77,10 @@ var app = angular.module('appRoutes',['ngRoute'])
             templateUrl: 'app/views/pages/admin/leave.html',
             authenticated: true
           })
-<<<<<<< HEAD
     .when('/allocationList', {
             templateUrl: 'app/views/pages/allocation/allocationList.html',
             authenticated: true
           })         	            
-=======
->>>>>>> 9073c0084fe00b9823a2739f833502eb5fda2966
 
      .when('/User', {
             templateUrl: 'app/views/pages/resourceMapping.html',
