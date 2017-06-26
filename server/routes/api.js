@@ -94,5 +94,7 @@ router.use("/holiday", require("../controllers/holidayListController.api"));
 router.use("/leave", require("../controllers/leaveController.api"));
 
 router.use("/resourceType", require("../controllers/resourceTypeController.api"));
+
+router.use("/mappedresource", require("../controllers/resourceMappingController.api"));
 return router;
 }

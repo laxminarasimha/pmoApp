@@ -61,7 +61,7 @@ var app = angular.module('appRoutes',['ngRoute'])
             templateUrl: 'app/views/pages/admin/resource.html',
             authenticated: true
           })
-	.when('/Holiday List', {
+	.when('/HolidayList', {
             templateUrl: 'app/views/pages/admin/holidayList.html',
             authenticated: true
           })
@@ -82,7 +82,7 @@ var app = angular.module('appRoutes',['ngRoute'])
             authenticated: true
           })         	            
 
-     .when('/User', {
+     .when('/ResourceMapping', {
             templateUrl: 'app/views/pages/resourceMapping.html',
             authenticated: true
           })	            
