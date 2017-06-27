@@ -4,10 +4,10 @@
  
 angular.module('pmoApp').controller('resourceMappingCtrl', Controller);
  
- Controller.$inject = ['$scope', '$rootScope', 'resourceMappingService','resourceService','roleService','locationService',
+ Controller.$inject = ['$scope', '$rootScope', 'DTOptionsBuilder', 'DTColumnBuilder', '$compile','resourceMappingService','resourceService','roleService','locationService',
                        'regionService','skillSetService','statusService','resourceTypeService'];
   
- function Controller($scope, $rootScope, resourceMappingService,resourceService,roleService,locationService,
+ function Controller($scope, $rootScope, DTOptionsBuilder, DTColumnBuilder, $compile, resourceMappingService,resourceService,roleService,locationService,
                         regionService,skillSetService,statusService,resourceTypeService) {
 
  //$scope.resourcemap = {};
@@ -94,6 +94,37 @@ $scope.editResourceMapping = function (id) {
      }
      
  }
+
+
+//=========================Data table==========================//
+        $scope.vm = {};
+        $scope.vm.dtInstance = null;  
+        $scope.vm.dtOptions = DTOptionsBuilder.newOptions().withOption('order', [0, 'asc']);
+         
+         $scope.childInfo = function(resourcemap, event){
+            var scope = $scope.$new(true);      
+                scope.resourcemap  = resourcemap;
+
+            var link = angular.element(event.currentTarget),
+                icon = link.find('.glyphicon'),
+                tr = link.parent().parent(),
+                table = $scope.vm.dtInstance.DataTable,        
+                row = table.row(tr);
+            
+              if (row.child.isShown()) {
+                icon.removeClass('glyphicon-minus-sign').addClass('glyphicon-plus-sign');             
+                row.child.hide();
+                tr.removeClass('shown');
+              }
+              else {
+                icon.removeClass('glyphicon-plus-sign').addClass('glyphicon-minus-sign');
+                row.child($compile('<div resourcemap-child-directive class="clearfix"></div>')(scope)).show();
+                tr.addClass('shown');
+              }
+        }
+//=============================================================//
+
+
  }
 
  function getMappedResourceData(resourceMappingService,$scope){
