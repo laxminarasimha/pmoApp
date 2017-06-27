@@ -105,7 +105,8 @@
       $( "#startDateID" ).datepicker({
          //appendText:"(dd-MMM-yy)",
          dateFormat:"dd-MM-yy",
-         minDate: new Date()
+         minDate: new Date(),
+		 beforeShowDay: $.datepicker.noWeekends
          //showOn:"button",
          //buttonImage: "/images/calendar-icon.png",
          //buttonImageOnly: true
@@ -114,10 +115,13 @@
 	  $( "#endDateID" ).datepicker({
          //appendText:"(dd-MMM-yy)",
          dateFormat:"dd-MM-yy",
-         minDate: new Date()
+         minDate: new Date(),
+		 beforeShowDay: $.datepicker.noWeekends
          //showOn:"button",
          //buttonImage: "/images/calendar-icon.png",
          //buttonImageOnly: true
       });
    });
+   
 </script>
+ 

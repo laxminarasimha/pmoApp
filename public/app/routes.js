@@ -77,7 +77,7 @@ var app = angular.module('appRoutes',['ngRoute'])
             templateUrl: 'app/views/pages/admin/leave.html',
             authenticated: true
           })	            
-	.when('/ResourceType', {
+	.when('/Resource Type', {
             templateUrl: 'app/views/pages/admin/resourceType.html',
             authenticated: true
           })
