@@ -6,9 +6,9 @@ angular.module('mainController',['authServices'])
 		if(Auth.isLoggedIn()){			
 			app.isLoggedIn = true;
 			Auth.getUser().then(function(data){	
-			console.log(data)		;
 			app.username = data.data.username;
 			app.email = data.data.email;
+			app._id = data.data.email;
 			app.loadMe = true;
 		});
 		}else{			
@@ -39,7 +39,7 @@ angular.module('mainController',['authServices'])
 			}
 		});
 	};
-
+	
 	this.logout = function(){
 		Auth.logout();
 		$location.path('/logout');
@@ -47,5 +47,23 @@ angular.module('mainController',['authServices'])
 			$location.path('/')
 		}, 2000);
 	};
+
+	this.changePassword = function(userData){
+		console.log(app.userData);
+		var password = app.userData.password;
+		var vpassword = app.userData.vpassword;
+		if(password.length > 8 && password === vpassword)
+		{
+				app.loading = false;				
+				app.errorMsg  = false;				
+				app.successMsg = "Password Updated";
+				
+		}else
+		{
+				app.loading =false;
+				app.successMsg = false;
+				app.errorMsg = "Password not matched basic criteria";
+		}
+	}
 
 });

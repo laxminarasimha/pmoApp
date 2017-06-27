@@ -30,6 +30,10 @@ var app = angular.module('appRoutes',['ngRoute'])
 		authenticated: true
 	})
 
+	.when('/changepassword',{
+		templateUrl: 'app/views/pages/users/changepassword.html',			
+		authenticated: true
+	})
 	.when('/profile',{
 		templateUrl: 'app/views/pages/users/profile.html',			
 		authenticated: true
@@ -61,7 +65,7 @@ var app = angular.module('appRoutes',['ngRoute'])
             templateUrl: 'app/views/pages/admin/resource.html',
             authenticated: true
           })
-	.when('/Holiday List', {
+	.when('/HolidayList', {
             templateUrl: 'app/views/pages/admin/holidayList.html',
             authenticated: true
           })
@@ -76,6 +80,15 @@ var app = angular.module('appRoutes',['ngRoute'])
     .when('/Leave', {
             templateUrl: 'app/views/pages/admin/leave.html',
             authenticated: true
+          })
+    .when('/allocationList', {
+            templateUrl: 'app/views/pages/allocation/allocationList.html',
+            authenticated: true
+          })         	            
+
+     .when('/ResourceMapping', {
+            templateUrl: 'app/views/pages/resourceMapping.html',
+            authenticated: true
           })	            
 	.when('/Resource Type', {
             templateUrl: 'app/views/pages/admin/resourceType.html',
@@ -89,13 +102,10 @@ var app = angular.module('appRoutes',['ngRoute'])
 	});
 });
 
-
-
 app.run(['$rootScope','Auth','$location',function($rootScope, Auth, $location){
 
 	$rootScope.$on('$routeChangeStart', function(event, next, current){
-		
-		console.log(next.$$route.authenticated);
+		console.log('check-3 :' + next.$$route.authenticated);	
 
 		if(next.$$route.authenticated ==  true){	
 			if(!Auth.isLoggedIn()){

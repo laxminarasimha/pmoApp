@@ -1,0 +1,153 @@
+
+<legend>Resource Mapping</legend>
+<div ng-controller="resourceMappingCtrl">
+<div class="panel panel-info" > 
+<h2 ng-show="resourcemap._id!=null">Edit</h2>
+<h2 ng-hide="resourcemap._id!=null">Create</h2>   
+  <div class="panel-heading">
+    <form name="resourceMappingForm" ng-submit="createResourceMapping(resourcemap)" novalidate class="form-horizontal">
+      <div class='row'>
+        <div class='col-sm-1'>
+            <label for="resourcename">Name</label>
+         </div>
+        <div class='col-sm-2'> 
+                  
+           <select ng-if="resourcemap._id==null" ng-model="resourcemap.mappedResource" ng-options="x.resourcename for x in resourceList">
+           </select>
+           <input ng-if="resourcemap._id!=null" id="resourcename" ng-model="resourcemap.mappedResource.resourcename" 
+              type="text" disabled />          
+        </div>
+
+
+        <div class='col-sm-1'>
+            <label for="alias">Alias</label>
+         </div>
+        <div class='col-sm-2'> 
+          <input id="alias" ng-model="resourcemap.mappedResource.alias" required="true"  type="text" disabled />
+        </div>
+
+        <div class='col-sm-1'>
+            <label for="designation">Designation</label>
+         </div>
+        <div class='col-sm-2'> 
+          <input id="designation" ng-model="resourcemap.mappedResource.designation" required="true"  type="text" disabled/>
+        </div>
+
+        <div class='col-sm-1'>
+            <label for="role">Role</label>
+         </div>
+        <div class='col-sm-2'> 
+          <select ng-model="resourcemap.role" id="role" class="form-control">
+              <option ng-repeat="x in roleList" value="{{x.rolename}}">{{x.rolename}}</option>
+           </select>
+        </div>
+      </div>
+      <div class='row'> 
+
+         <div class='col-sm-1'>
+            <label for="location">Location</label>
+         </div>
+        <div class='col-sm-2'> 
+          <select ng-model="resourcemap.location" id="location" class="form-control">
+              <option ng-repeat="x in locationList" value="{{x.locationname}}">{{x.locationname}}</option>
+           </select>
+        </div> 
+       
+
+        <div class='col-sm-1'>
+            <label for="region">Region</label>
+         </div>
+        <div class='col-sm-2'> 
+          <select ng-model="resourcemap.region" id="region"  class="form-control">
+              <option ng-repeat="x in regionList" value="{{x.regionname}}">{{x.regionname}}</option>
+           </select>
+        </div> 
+
+        <div class='col-sm-1'>
+            <label for="skill">Skill</label>
+         </div>
+        <div class='col-sm-2'> 
+          <select ng-model="resourcemap.skill" id="skill" class="form-control">
+              <option ng-repeat="x in skillSetList" value="{{x.skillname}}">{{x.skillname}}</option>
+           </select>
+        </div> 
+
+        <div class='col-sm-1'>
+            <label for="status">Status</label>
+         </div>
+        <div class='col-sm-2'> 
+          <select ng-model="resourcemap.status" id="status" class="form-control">
+              <option ng-repeat="x in statusList" value="{{x.statusname}}">{{x.statusname}}</option>
+           </select>
+        </div>        
+      </div>
+      <div class='row'>    
+
+        <div class='col-sm-1'>
+            <label for="resourceType">Type</label>
+         </div>
+        <div class='col-sm-2'> 
+          <select ng-model="resourcemap.resourceType" id="resourceType"  class="form-control">
+              <option ng-repeat="x in resourceTypeList" value="{{x.resourceTypename}}">{{x.resourceTypename}}</option>
+           </select>
+        </div>    
+       
+       <div class='col-sm-1'>
+            <label for="manager">Manager</label>
+         </div>
+        <div class='col-sm-2'> 
+          <select ng-model="resourcemap.manager" id="manager"  class="form-control">
+              <option ng-repeat="x in resourceList | filter:{ designation: 'Manager' } " value="{{x.resourcename}}">{{x.resourcename }}</option>
+           </select>
+        </div>
+      </div>
+      <div class='row'>
+        
+        <div class='col-sm-12'>
+        </div>
+      </div>
+      <div class='row'>
+        <div class='col-sm-12'>
+           <div align="right">
+                  <input type="submit" value="Update" ng-click="saveData(resourcemap)" class="btn btn-primary" ng-show="resourcemap._id!=null"/>
+                  <input type="submit" value="Create" class="btn btn-primary" ng-hide="resourcemap._id!=null"/>             
+                  <button class="btn btn-warning" ng-click="clearFields()" type="button">Clear</button>                   
+            </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<div class="panel panel-info" >    
+  <div class="panel-body">
+    <div class="table-responsive">
+          <table class="table" cellspacing="0" width="100%">
+            <thead>
+              <tr style="background-color:grey">
+                <th >Serial No.</th>
+                <th >Resource Name</th>
+                <th >Role</th>
+                <th >Manager</th>
+                <th >Status</th>
+                <th >Action</th>           
+              </tr>
+              </thead>
+              <tbody>
+              <tr ng-repeat="x in mongoMappedResourceData">
+                <td>{{ $index + 1 }}</td>
+                <td>{{x.mappedResource.resourcename}}</td>
+                <td>{{ x.role }}</td>
+                <td>{{ x.manager }}</td>
+                <td>{{ x.status }}</td>
+                <td>
+                      <a  ng-click="editResourceMapping(x._id)">Edit</a> |
+                      <a  ng-click="deleteResourceMapping(x._id)">Delete</a>
+                </td>
+              </tr>
+              </tbody>
+          </table>
+          
+        </div>
+  </div>
+</div>
+</div>

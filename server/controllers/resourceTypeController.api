@@ -2,6 +2,7 @@ var express = require("express"),
  router = express.Router(),
  resourceTypeDAO = require("../models/resourceTypeDAO.js");
  
+ 
 router.get("/", function(req, res) {
  resourceTypeDAO.find({}, function(err, data) {
  if (err) {

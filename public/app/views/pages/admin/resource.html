@@ -1,83 +1,99 @@
-<span class="label label-primary" style="height: 100%;font:bold;font: 15px arial, sans-serif;" >Resource</span>
-
-
 <div ng-controller="resourceCtrl">
-<form name="resourceForm" ng-submit="createResource(resource)" novalidate class="form-horizontal">
-<div class="well well-md">
-<h2 ng-show="resource._id!=null">Edit</h2>
-<h2 ng-hide="resource._id!=null">Create</h2>
-<div class="row">
- 		
-	
- 			  <div style="padding-right:25px; padding-left:35px">
-              <label>Resource Name:</label>&nbsp;&nbsp;
-              <input type="text" ng-model="resource.resourcename" name="resourcename" ng-required="true" class="form-control" style="width:300px"/>
-              <p ng-show="resourceForm.resourcename.$error.required && (resourceForm.$submitted)" class="text-danger">Please Enter Name</p>
-			  
-			  &nbsp;&nbsp;&nbsp;&nbsp;
-			  <label>Alias:</label>&nbsp;&nbsp;
-              <input type="text" ng-model="resource.alias" name="alias" ng-required="true" class="form-control" style="width:200px"/>
-              <p ng-show="resourceForm.alias.$error.required && (resourceForm.$submitted)" class="text-danger">Please Enter Alias</p>
-			  
-			  &nbsp;&nbsp;&nbsp;&nbsp;
-			  <label>Kin Id:</label>&nbsp;&nbsp;
-              <input type="text" ng-model="resource.kinId" name="kinId" ng-required="true" class="form-control" style="width:150px"/>
-              <p ng-show="resourceForm.kinId.$error.required && (resourceForm.$submitted)" class="text-danger">Please Enter Kin Id</p>
+<form name="resourceForm" ng-submit="createResource(resource)" novalidate>
+<legend>Personal Information (<label ng-show="resource._id!=null">Edit</label><label ng-hide="resource._id!=null">Create</label>)</legend>
+<div class="panel panel-info">    
+  <div class="panel-heading">
+    <form name="resourceForm">
+      <div class='row'>
+        <div class='col-sm-4'>
+          <div  class=form-group>
+          <label for="user_firstname">Employee ID</label>                        
+          <input class="form-control" type="text" ng-model="resource.kinId" name="kinId" ng-required="true"/><p ng-show="resourceForm.kinId.$error.required && (resourceForm.$submitted)" class="text-danger">Please Enter Kin Id</p>
+          </div>
         </div>
-			 
-			
-			
-	</div>
-
-  
-      
-      <div align="right"> 
-            <input type="submit" value="Update" ng-click="saveData(resource)" class="btn btn-primary" ng-show="resource._id!=null"/>
-            <input type="submit" value="Create" class="btn btn-primary" ng-hide="resource._id!=null"/>             
-            <button class="btn btn-warning" ng-click="clearFields()" type="button">Clear</button>                  
+        <div class='col-sm-4'>              
+          <label for="user_title">Name</label>
+          <input class="form-control" ng-model="resource.resourcename" name="resourcename" ng-required="true"  type="text" />
+          <p ng-show="resourceForm.resourcename.$error.required && (resourceForm.$submitted)" class="text-danger">Please Enter Name</p>          
+        </div>
+        <div class='col-sm-4'>    
+          <div class='form-group'>
+          <label for="user_title">Alias</label>
+          <input class="form-control" type="text" ng-model="resource.alias" name="alias" ng-required="true" class="form-control"/>
+          <p ng-show="resourceForm.alias.$error.required && (resourceForm.$submitted)" class="text-danger">Please Enter Alias</p>
+          </div>
+        </div>
       </div>
+      <div class='row'>
+      <div class='col-sm-4'>
+          <div class='form-group'>
+          <label for="user_lastname">User Email</label>            
+            <input type="text" class="form-control" id="inputWarning" ng-model="resource.email" name="email" ng-required="true">            
+          </div>
+        </div>
+        <div class='col-sm-4'>
+          <div class='form-group'>
+          <label for="user_firstname">Designation</label>
+          <input class="form-control" type="text" ng-model="resource.designation" name="designation" ng-required="true" />
+          </div>
+        </div>
+        <div class='col-sm-4'>
+          <div class='form-group'>
+          <label for="user_lastname">Type</label>
+          <select class="form-control" ng-model="resource.etype" name="etype" ng-required="true">
+            <option value="Admin">Admin</option>
+            <option value="Manager">Manager</option>
+            <option value="User">General User</option>
+          </select>
+          </div>
+        </div>
+      </div>
+      <div class='row'>
+        <div class='col-sm-12'>
+          <div align="right"> 
+            <input type="submit" value="Update" ng-click="saveData(resource)" class="btn btn-primary" ng-show="resource._id!=null"/>
+            <input type="submit" value="Create" class="btn btn-primary" ng-hide="resource._id!=null"/>
+            <button class="btn btn-warning" ng-click="clearFields()" type="button">Clear</button>
+      </div>
+        </div>
+      </div>
+     
+    </form>
+  </div>
 </div>
+<div class="panel panel-info">    
+  <div class="panel-body">
+    <div class="table-responsive">
+      <table class="table table-striped" cellspacing="0" width="100%">
+        <thead>
+          <tr>
+          <th >Serial No.</th>
+          <th >Kin ID</th>
+          <th >Name(Alias)</th>
+          <th >Designation</th>
+          <th >Email Id</th>
+          <th >Access Type</th>
 
-</form> 
-<div class="well well-md" style="border: 1px">
-			<div class="panel panel-default panel-table">
-
-				<div class="table-responsive">
-					<table class="table" cellspacing="0" width="100%">
-						<thead>
-							<tr style="background-color:grey">
-                <th >Serial No.</th>
-				<th >Resource</th>
-				<th >Alias</th>
-				<th >Kin ID</th>
-                <th >Action</th>				   
-			</tr>
-              </thead>
-              <tbody>
-              <tr ng-repeat="x in mongoResourceData">
-                <td>{{ $index + 1 }}</td>
-                <td>{{ x.resourcename }}</td>
-				<td>{{ x.alias }}</td>
-				<td>{{ x.kinId }}</td>
-                <td>
-                      <a  ng-click="editResource(x._id)">Edit</a> |
-                      <a  ng-click="deleteResource(x._id)">Delete</a>
-                </td>
-              </tr>
-						  </tbody>
-					</table>
-					
-				</div>
-		   </div>
+          <th >Action</th>           
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="x in mongoResourceData">
+            <td>{{ $index + 1 }}</td>
+            <td>{{ x.kinId }}</td>
+            <td>{{ x.resourcename }}({{ x.alias }})</td>
+            <td>{{ x.designation }}</td>
+            <td>{{ x.email }}</td>
+            <td>{{ x.etype }}</td>            
+            <td>
+            <a  ng-click="editResource(x._id)">Edit</a> |
+            <a  ng-click="deleteResource(x._id)">Delete</a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>
-
-</div>    
-
-<style>
-     /* tr:nth-of-type(odd) {
-      background-color:#FCF8E3;
-    } */
-    tr:nth-of-type(even) {
-      background-color:#FCF8E3;
-    } 
-</style>
+</form>
+</div>

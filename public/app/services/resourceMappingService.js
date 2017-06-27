@@ -1,0 +1,34 @@
+ (function() {
+
+ 'use strict';
+ 
+ angular.module('pmoApp').factory('resourceMappingService', Service);
+ 
+ Service.$inject = ['$http', 'globalConfig'];
+ 
+ function Service($http, globalConfig) {
+ var url = "";
+   return {
+       getMappedResources: function() {
+       url = globalConfig.apiAddress + "/mappedresource";
+       return $http.get(url);
+       },
+       getMappedResourceForID: function(id) {
+       url = globalConfig.apiAddress + "/mappedresource/" + id;
+       return $http.get(url);
+       },
+       createResourceMapping: function(resourcemap) {
+       url = globalConfig.apiAddress + "/mappedresource";
+       return $http.post(url, resourcemap);
+       },
+       updateResourceMapping: function(resourcemap) {
+       url = globalConfig.apiAddress + "/mappedresource/" + resourcemap._id;
+       return $http.put(url, resourcemap);
+       },
+       deleteResourceMapping: function(id) {
+       url = globalConfig.apiAddress + "/mappedresource/" + id;
+       return $http.delete(url);
+       }
+   };
+ }
+  })();

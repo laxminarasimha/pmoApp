@@ -37,7 +37,7 @@ module.exports = function(router){
 				if(!validPassword){
 					res.json({success:false,message:'could not authenticate user'});			
 				}else{
-					var token = jwt.sign({username:user.username, email:user.email},secret,{expiresIn: '24h'});
+					var token = jwt.sign({username:user.username, email:user.emailID,_id:user._id},secret,{expiresIn: '24h'});
 					res.json({success:true,message:'User Authenticates',token: token});			
 				}
 			}
@@ -94,5 +94,7 @@ router.use("/holiday", require("../controllers/holidayListController.api"));
 router.use("/leave", require("../controllers/leaveController.api"));
 
 router.use("/resourceType", require("../controllers/resourceTypeController.api"));
+
+router.use("/mappedresource", require("../controllers/resourceMappingController.api"));
 return router;
 }

@@ -1,0 +1,125 @@
+<style type="text/css">
+   
+    #add {
+        border: 1px solid #cdcdcd;
+		padding: 5px;
+        text-align: left;
+    }
+
+    #divActivites td {  
+     color: green;  
+	}  
+	
+	#divActivites {
+		padding-top: 5px;
+	}
+	#add td,th {
+  		text-align: center;
+	}
+	#add tr{
+		height:10px;
+		width :10px;
+    	vertical-align: bottom;
+	}
+
+	.scroll{
+    	max-height: 300px;
+    	overflow-y: scroll;
+	}
+   
+</style>
+<div id="allocaitonDetails" class="well well-md" align="top" >
+	<div class="panel-body">
+		<div id="divActivites" align="center">
+				<table id="caption" style="allign:center">
+				   <td style="padding-right:5px">
+						<label>Actual Days:</label>
+						<input type='text' class="form-control" placeholder="0"  style="width:30px !important"/>
+				  </td>
+	        	 <td style="padding-right:5px">
+						<label>Available Days:</label>
+						<input type='text' class="form-control" placeholder="0" style="width:30px !important"/>
+				  </td>
+				 
+	   			  <td style="padding-right:5px">
+	    				  	<label>Buffer available:</label>
+	    				  	<input type='text' class="form-control" placeholder="0" style="width:30px !important"/>
+	    		  </td>
+	    		</table>
+    		</div>
+    		<div class="scroll">
+	 			<table id="add" class="table table-bordered col-lg-12" >
+				<caption>Allocation user to project</caption>
+				<thead>
+					<tr>
+						<th>Select</th>
+						<th>Name</th>
+						<th>Project</th>
+						<th>Start Date</th>
+						<th>End Date</th>
+						<th>Assign(Days)</th>
+						<th>Allocation %</th>
+					</tr>
+				</thead>
+				<tbody>	</tbody>
+			</table>
+		</div>
+		<div align="right">                          
+	        <button class="btn btn-primary" type="button" onclick="deleteAllocation('searchresult')">Save</button>
+	        <button class="btn btn-primary" type="button" onclick="deleteAllocation()">Delete</button>                    
+	        <button class="btn btn-primary" type="button" onclick="hideSearchResult('searchresult')">Cancel</button>                            
+    	</div>  
+	</div>
+</div>	
+    
+    <script>
+
+		 (function(){
+			 createAllocation();
+		}());
+		 
+		function hideSearchResult(){
+			 $('#allocaitonDetails').hide();
+			 $("#mydiv").load("views/resourceAssignment.html");
+		}
+		  
+		function saveNewAllocation(){
+			hideSearchResult();
+		}
+
+		function createAllocation(){
+	   
+			var rows=null;
+			$('#project :selected').each(function(i, proj){ 
+				$('#user :selected').each(function(i, usr){ 
+						rows +="<tr>"+
+								"<td><input type='checkbox' name='record'/></td>"+
+								"<td id ='name'>"+$(usr).val()+"</td>"+
+								"<td>"+$(proj).val()+"</td>"+
+								"<td><input type='text' class='form-control' style='width:150px'/></td>"+
+								"<td><input type='text' class='form-control' style='width:150px'/></td>"+
+								"<td><input type='text' class='form-control' style='width:50px'/></td>"+
+								"<td><input type='text' class='form-control' style='width:50px' readonly/></td>"+
+								"</tr>"
+				});
+			});
+
+			$("#add tbody").append(rows);
+		 }
+
+		function deleteAllocation(){
+				
+		  $("#add tbody").find('input[name="record"]').each(function(){
+            	if($(this).is(":checked")){
+				    //data = $(this).parents("tr").find("td:eq(2)").html()+"-"+$(this).parents("tr").find("td:eq(1)").html();
+					//var index = records.indexOf(data);
+					//if(index != -1)
+						//records.splice( index, 1 );
+                    $(this).parents("tr").remove();
+                }
+            });
+		}
+	  
+   </script>
+ <script src="data/resourceAssignmentData.js"></script>
+ <script src="data/resourceAssignmentDatatable.js"></script>
