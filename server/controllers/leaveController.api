@@ -34,7 +34,7 @@ router.get("/", function(req, res) {
  var id = req.params.id;
  var obj = req.body;
  
- leaveDAO.findByIdAndUpdate(id, { resourcename: obj.resourcename,regionname:obj.regionname,startDate:obj.startDate,endDate:obj.endDate,numberOfLeaves:obj.numberOfLeaves}, 
+ leaveDAO.findByIdAndUpdate(id, { resourcename: obj.resourcename,locationname:obj.locationname,startDate:obj.startDate,endDate:obj.endDate,numberOfLeaves:obj.numberOfLeaves}, 
 function(err) {
  if (err) {
  res.send("error");

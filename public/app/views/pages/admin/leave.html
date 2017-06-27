@@ -16,11 +16,11 @@
               <p ng-show="leaveForm.resourcename.$error.required && (leaveForm.$submitted)" class="text-danger">Please Enter Resource Name </p>
 			   
 			   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			   <label>Region:</label>&nbsp;&nbsp;&nbsp;
-			   <select ng-model="leave.regionname">
-				  <option ng-repeat="x in regionList" value="{{x.regionname}}">{{x.regionname}}</option>
+			   <label>Location:</label>&nbsp;&nbsp;&nbsp;
+			   <select ng-model="leave.locationname" ng-change="getHolidayDataForLoaction(leave.locationname)">
+				  <option ng-repeat="x in locationList" value="{{x.locationname}}">{{x.locationname}}</option>
 			  </select>
-			  <p ng-show="leaveForm.regionname.$error.required && (leaveForm.$submitted)" class="text-danger">Please Select Region Name</p>
+			  <p ng-show="leaveForm.locationname.$error.required && (leaveForm.$submitted)" class="text-danger">Please Select Location Name</p>
         </div>
 		
 		<div>
@@ -62,7 +62,7 @@
 							<tr style="background-color:grey">
 								<th >Serial No.</th>
 								<th >Resource name</th>
-								<th >Region</th>
+								<th >Location</th>
 								<th >Start Date</th>
 								<th >End Date</th>
 								<th >Number of Leaves</th>
@@ -73,7 +73,7 @@
               <tr ng-repeat="x in mongoLeaveData">
                 <td>{{ $index + 1 }}</td>
                 <td>{{ x.resourcename }}</td>
-				<td>{{ x.regionname }}</td>
+				<td>{{ x.locationname }}</td>
 				<td>{{ x.startDate | date : "dd-MMM-yy" }}</td>
 				<td>{{ x.endDate | date : "dd-MMM-yy" }}</td>
 				<td>{{ x.numberOfLeaves}}</td>

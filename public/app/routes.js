@@ -90,7 +90,7 @@ var app = angular.module('appRoutes',['ngRoute'])
             templateUrl: 'app/views/pages/resourceMapping.html',
             authenticated: true
           })	            
-	.when('/Resource Type', {
+	.when('/ResourceType', {
             templateUrl: 'app/views/pages/admin/resourceType.html',
             authenticated: true
           })
