@@ -10,10 +10,7 @@ angular.module('pmoApp').controller('allocationCtrl', Controller);
 		$scope.vm.dtInstance = null;  
 		$scope.vm.dtOptions = DTOptionsBuilder.newOptions()
 		  .withOption('order', [0, 'asc']);
-		  $scope.customer = {
-			name: 'Naomi',
-			address: '1600 Amphitheatre'
-		  };
+		  
 		 
 		 $scope.childInfo = function(user, event){
 			var scope = $scope.$new(true);      

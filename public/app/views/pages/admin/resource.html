@@ -33,8 +33,10 @@
         </div>
         <div class='col-sm-4'>
           <div class='form-group'>
-          <label for="user_firstname">Designation</label>
-          <input class="form-control" type="text" ng-model="resource.designation" name="designation" ng-required="true" />
+          <label for="designation">Designation</label>
+            <select ng-model="resource.designation" id="designation" class="form-control" ng-required="true">
+              <option ng-repeat="x in designationList" value="{{x.designationname}}">{{x.designationname}}</option>
+           </select>
           </div>
         </div>
         <div class='col-sm-4'>

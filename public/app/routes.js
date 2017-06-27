@@ -83,7 +83,7 @@ var app = angular.module('appRoutes',['ngRoute'])
           })         	            
 
      .when('/ResourceMapping', {
-            templateUrl: 'app/views/pages/resourceMapping.html',
+            templateUrl: 'app/views/pages/resourcemapping/resourceMapping.html',
             authenticated: true
           })	            
 	.when('/ResourceType', {
