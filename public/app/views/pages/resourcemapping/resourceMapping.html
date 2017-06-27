@@ -7,7 +7,7 @@
       <div class='row'>
         <div class='col-sm-3'>
             <div  class=form-group>
-            <label for="resourcename">Name</label>
+            <label for="resourcename">Resource Name</label>
             <select ng-if="resourcemap._id==null" ng-model="resourcemap.mappedResource" ng-options="x.resourcename for x in resourceList">
            </select>
            <input ng-if="resourcemap._id!=null" id="resourcename" ng-model="resourcemap.mappedResource.resourcename" 
