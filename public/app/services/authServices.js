@@ -27,6 +27,16 @@ angular.module('authServices',[])
 		}
 	}
 
+	authFactory.resetPassword = function(userData){		
+		if(authToken.getToken()){			
+			return $http.put('api/resetpassword',userData);
+		}
+		else{
+			$q.reject({message: 'User has no Token'});
+		}
+	}
+
+
 	//Auth.logout()	
 	authFactory.logout = function(){
 		authToken.setToken();
