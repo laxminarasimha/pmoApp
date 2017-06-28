@@ -7,11 +7,14 @@
       <div class='row'>
         <div class='col-sm-3'>
             <div  class=form-group>
-            <label for="resourcename">Resource Name</label>
-            <select ng-if="resourcemap._id==null" ng-model="resourcemap.mappedResource" ng-options="x.resourcename for x in resourceList">
-           </select>
-           <input ng-if="resourcemap._id!=null" id="resourcename" ng-model="resourcemap.mappedResource.resourcename" 
-              type="text" disabled style="width:250px"/>
+                  <label for="resourcename">Resource Name</label>
+                  
+                  <select ng-show="resourcemap._id==null" ng-model="resourcemap.mappedResource" 
+                             ng-options="x.resourcename for x in resourceList">
+                  </select>                 
+                  
+                 <input ng-show="resourcemap._id!=null" id="resourcename" ng-model="resourcemap.mappedResource.resourcename" 
+                    type="text" disabled style="width:250px"/>
               </div>   
          </div>
 
@@ -31,13 +34,19 @@
         
 
         <div class='col-sm-3'>
-            <div  class=form-group>
+            <!--<div  class=form-group>
             <label for="role">Role</label>
             <select ng-model="resourcemap.role" id="role" class="form-control">
               <option ng-repeat="x in roleList" value="{{x.rolename}}">{{x.rolename}}</option>
            </select>
+           </div>-->
+           <div  class=form-group>
+            <label for="resourceType">Type</label>
+            <select ng-model="resourcemap.resourceType" id="resourceType"  class="form-control">
+              <option ng-repeat="x in resourceTypeList" value="{{x.resourceTypename}}">{{x.resourceTypename}}</option>
+           </select>
            </div>
-         </div>        
+        </div>        
       </div>
 
       <div class='row'> 
@@ -82,7 +91,7 @@
                
       </div>
 
-      <div class='row'>    
+      <!--<div class='row'>    
 
         <div class='col-sm-3'>
            <div  class=form-group>
@@ -103,7 +112,7 @@
            </div>
         </div>
 
-      </div>
+      </div>-->
         
       
       <div class='row'>
@@ -127,8 +136,9 @@
                 <tr style="background-color:grey">
                   <th ></th>
                   <th >Resource Name</th>
-                  <th >Role</th>
-                  <th >Manager</th>
+                  <th >Kin ID</th>
+                  <th >Resource Type</th>                  
+                  <th >Region</th>
                   <th >Status</th>
                   <th >Action</th>  
                 </tr>
@@ -137,8 +147,9 @@
                   <tr ng-repeat="x in mongoMappedResourceData">
                       <td align="center"><a class="green shortinfo" href="javascript:;" ng-click="childInfo(x, $event)" title="Click to view more"><i class="glyphicon glyphicon-plus-sign"></a></td>
                       <td>{{x.mappedResource.resourcename}}</td>
-                      <td>{{ x.role }}</td>
-                      <td>{{ x.manager }}</td>
+                      <td>{{x.mappedResource.kinId}}</td>
+                      <td>{{x.resourceType}}</td>
+                      <td>{{x.region}}</td>
                       <td>{{ x.status }}</td>
                       <td>
                         <a  ng-click="editResourceMapping(x._id)">Edit</a> |

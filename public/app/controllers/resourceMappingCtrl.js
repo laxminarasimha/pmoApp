@@ -19,8 +19,8 @@ angular.module('pmoApp').controller('resourceMappingCtrl', Controller);
  $scope.resourceList = [];
  getResourceData(resourceService,$scope);
 
- $scope.roleList = [];
- getRoleData(roleService,$scope);
+ //$scope.roleList = [];
+ //getRoleData(roleService,$scope);
 
 
  $scope.locationList = [];
@@ -44,6 +44,13 @@ angular.module('pmoApp').controller('resourceMappingCtrl', Controller);
      $scope.resourcemap = {};
  }
  
+
+ $scope.getResourceExtraData = function(resource){
+    console.log(resource.alias +"==="+resource.designation);
+     $scope.resourcemap.mappedResource.alias = resource.alias;
+     $scope.resourcemap.mappedResource.designation = resource.designation;
+ }
+
  $scope.deleteResourceMapping = function(id) {
      if (confirm('Are you sure to delete?')) {
      resourceMappingService.deleteResourceMapping(id).then(function(res) {
@@ -143,13 +150,13 @@ $scope.editResourceMapping = function (id) {
      });
  }
 
- function getRoleData(roleService,$scope){
+ /*function getRoleData(roleService,$scope){
       roleService.getRole().then(function(res) {
          $scope.roleList = res.data;
          }).catch(function(err) {
          console.log(err);
      });
- }
+ }*/
 
  function getLocationData(locationService,$scope){
       locationService.getLocation().then(function(res) {

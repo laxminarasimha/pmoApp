@@ -34,7 +34,7 @@ router.get("/", function(req, res) {
  var id = req.params.id;
  var obj = req.body;
  
-resourceMappingDAO.findByIdAndUpdate(id, { mappedResource: obj.mappedResource, role: obj.role, location: obj.location, region: obj.region, skill: obj.skill, status: obj.status, resourceType: obj.resourceType, manager: obj.manager}, 
+resourceMappingDAO.findByIdAndUpdate(id, { mappedResource: obj.mappedResource, location: obj.location, region: obj.region, skill: obj.skill, status: obj.status, resourceType: obj.resourceType}, 
 function(err) {
  if (err) {
  res.send("error");
