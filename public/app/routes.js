@@ -77,7 +77,7 @@ var app = angular.module('appRoutes',['ngRoute'])
             templateUrl: 'app/views/pages/admin/location.html',
             authenticated: true
           })
-    .when('/Leave', {
+    .when('/AddLeave', {
             templateUrl: 'app/views/pages/admin/leave.html',
             authenticated: true
           })

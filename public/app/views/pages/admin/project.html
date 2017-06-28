@@ -20,6 +20,13 @@
 				  <option ng-repeat="x in regionList" value="{{x.regionname}}">{{x.regionname}}</option>
 			  </select>
 			  <p ng-show="projectForm.regionname.$error.required && (projectForm.$submitted)" class="text-danger">Please Select Region Name</p>
+
+          <div  class=form-group>
+            <label for="manager">Project Manager</label>
+            <select ng-model="project.manager" id="manager"  class="form-control">
+              <option ng-repeat="x in resourceList" value="{{x.resourcename}}">{{x.resourcename }}</option>
+           </select>
+           </div>
         </div>
 		
 		<div>
@@ -57,6 +64,7 @@
 								<th >Serial No.</th>
 								<th >Project name</th>
 								<th >Region</th>
+                <th >Project manager</th>
 								<th >Start Date</th>
 								<th >End Date</th>
 								<th >Action</th>				   
@@ -66,9 +74,10 @@
               <tr ng-repeat="x in mongoProjectData">
                 <td>{{ $index + 1 }}</td>
                 <td>{{ x.projectname }}</td>
-				<td>{{ x.regionname }}</td>
-				<td>{{ x.startDate | date : "dd-MMM-yy" }}</td>
-				<td>{{ x.endDate | date : "dd-MMM-yy" }}</td>
+        				<td>{{ x.regionname }}</td>
+                <td>{{ x.manager }}</td>
+        				<td>{{ x.startDate | date : "dd-MMM-yy" }}</td>
+        				<td>{{ x.endDate | date : "dd-MMM-yy" }}</td>
                 <td>
                       <a  ng-click="editProject(x._id)">Edit</a> |
                       <a  ng-click="deleteProject(x._id)">Delete</a>

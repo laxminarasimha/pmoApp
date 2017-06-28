@@ -3,9 +3,9 @@
  
 angular.module('pmoApp').controller('projectCtrl', Controller);
  
- Controller.$inject = ['$scope', '$rootScope', 'projectService','regionService'];
+ Controller.$inject = ['$scope', '$rootScope', 'projectService','regionService','resourceService'];
   
- function Controller($scope, $rootScope, projectService,regionService) {
+ function Controller($scope, $rootScope, projectService,regionService,resourceService) {
  $scope.mongoProjectData = [];
  $scope.regionList = [];
  
@@ -13,6 +13,10 @@ angular.module('pmoApp').controller('projectCtrl', Controller);
  $rootScope.Title = "Project Listing";
  getProjectData(projectService,$scope);
  getRegionData(regionService,$scope);
+
+
+ $scope.resourceList = [];
+ getResourceData(resourceService,$scope);
   
  $scope.clearFields = function (){
  
@@ -87,4 +91,13 @@ $scope.editProject = function (id) {
      });
  }
 
+
+function getResourceData(resourceService,$scope){
+      resourceService.getResources().then(function(res) {
+         $scope.resourceList = res.data;
+         }).catch(function(err) {
+         console.log(err);
+     });
+ }
+ 
    })();
