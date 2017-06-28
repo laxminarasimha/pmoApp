@@ -15,6 +15,11 @@
        url = globalConfig.apiAddress + "/holiday";
        return $http.get(url);
        },
+       getLocationHolidays: function(locationname) {
+       url = globalConfig.apiAddress + "/holiday/location/" +locationname;
+       return $http.get(url);
+       },
+
        getHolidayForID: function(id) {
        url = globalConfig.apiAddress + "/holiday/" + id;
        return $http.get(url);

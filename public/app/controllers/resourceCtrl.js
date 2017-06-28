@@ -3,14 +3,17 @@
  
 angular.module('pmoApp').controller('resourceCtrl', Controller);
  
- Controller.$inject = ['$scope', '$rootScope', 'resourceService'];
+ Controller.$inject = ['$scope', '$rootScope', 'resourceService','designationService'];
   
- function Controller($scope, $rootScope, resourceService) {
+ function Controller($scope, $rootScope, resourceService, designationService) {
  $scope.mongoResourceData = [];
  
  
  $rootScope.Title = "Resource Listing";
  getResourceData(resourceService,$scope);
+
+ $scope.designationList = [];
+ getDesignationData(designationService,$scope);
  
   
  $scope.clearFields = function (){
@@ -76,6 +79,14 @@ $scope.editResource = function (id) {
  function getResourceData(resourceService,$scope){
       resourceService.getResources().then(function(res) {
          $scope.mongoResourceData = res.data;
+         }).catch(function(err) {
+         console.log(err);
+     });
+ }
+
+ function getDesignationData(designationService,$scope){
+      designationService.getDesignations().then(function(res) {
+         $scope.designationList = res.data;
          }).catch(function(err) {
          console.log(err);
      });

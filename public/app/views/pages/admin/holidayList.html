@@ -19,8 +19,12 @@
          <input type="text" ng-model="holiday.holidayDate" id = "holidayDateID" name="holidayDate" ng-required="true" class="form-control"/>
           <img src="..\assets\images\calendar-icon.png">
          <p ng-show="holidayForm.holidayDate.$error.required && (holidayForm.$submitted)" class="text-danger">Please Enter Holiday Date</p>
+
+         <label>Comments:</label>&nbsp;&nbsp;&nbsp;
+              <input type="text" ng-model="holiday.comments" name="comments" ng-required="true" class="form-control" style="width:300px"/>
+              <p ng-show="holidayForm.comments.$error.required && (holidayForm.$submitted)" class="text-danger">Please Enter Comments</p>
               
-       </div>
+    </div>
 			 			
 </div>
       
@@ -42,6 +46,7 @@
 								<th>Serial No.</th>
 								<th>Country name</th>
 								<th>Holiday Date</th>	
+                <th>Comments</th> 
 								<th>Action</th>				   
 							</tr>
               </thead>
@@ -50,7 +55,7 @@
                 <td>{{ $index + 1 }}</td>
                 <td>{{ x.locationname }}</td>
                 <td>{{ x.holidayDate | date : "dd-MMM-yy" }} </td>
-                
+                <td>{{ x.comments }}</td>
                 <td>
                       <a  ng-click="editHoliday(x._id)">Edit</a> |
                       <a  ng-click="deleteHoliday(x._id)">Delete</a>
@@ -79,7 +84,8 @@
       $( "#holidayDateID" ).datepicker({
          //appendText:"(dd-MMM-yy)",
          dateFormat:"dd-MM-yy",
-         minDate: new Date()
+         minDate: new Date(),
+         beforeShowDay: $.datepicker.noWeekends
          //showOn:"button",
          //buttonImage: "/images/calendar-icon.png",
          //buttonImageOnly: true
