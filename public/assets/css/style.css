@@ -1,9 +1,3 @@
-body{
-    margin: 0;
-    padding: 0;
-    color: #465a64;
-    font-family: HelveticaLTStdLight,helvetica,arial;
-}
 main{
 	padding-top:30px;
 }
@@ -45,7 +39,6 @@ heade .nabar {
     background-color:#00264A;
     color:#ffffff;
     border-radius:0;
-    font-size:110%;
 }
 
 .navbar-custom .navbar-nav > li > a {
@@ -116,4 +109,9 @@ heade .nabar {
 }
 .table-curved > :last-child > :last-child > :last-child {
     border-radius: 0 0 6px 0;
+}
+
+
+.error {    
+    border-color: #a94442 !important;
 }
