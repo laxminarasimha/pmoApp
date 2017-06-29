@@ -37,9 +37,9 @@
      skillSetService.deleteSkillSet(id).then(function(res) {
      if (res.data == "deleted") {
        getSkillData(skillSetService,$scope);
-            app.loading = false;
-            app.successMsg = "Skillset Deleted successfully";
-            app.errorMsg = false;
+       app.loading = false;
+       app.successMsg = "Skillset Deleted successfully";
+       app.errorMsg = false;
      }
      }).catch(function(err) {
      console.log(err);
@@ -82,12 +82,12 @@ $scope.editSkill = function (id) {
             getSkillData(skillSetService,$scope);
             $scope.skill = {};
             app.loading =false;
-            app.successMsg = "Skill set created successfully";
+            app.successMsg = "Skillset created successfully";
             app.errorMsg = false;
          } else
          {
             app.loading =false;
-            app.successMsg = "Skill set Updated successfully";
+            app.successMsg = "Skillset Updated successfully";
             app.errorMsg = false;
          }
          }).catch(function(err) {
