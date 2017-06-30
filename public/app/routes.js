@@ -66,7 +66,7 @@ var app = angular.module('appRoutes',['ngRoute'])
             templateUrl: 'app/views/pages/admin/resource.html',
             authenticated: true
           })
-	.when('/HolidayList', {
+	.when('/Holiday List', {
             templateUrl: 'app/views/pages/admin/holidayList.html',
             authenticated: true
           })
@@ -78,7 +78,7 @@ var app = angular.module('appRoutes',['ngRoute'])
             templateUrl: 'app/views/pages/admin/location.html',
             authenticated: true
           })
-    .when('/AddLeave', {
+    .when('/Add Leave', {
             templateUrl: 'app/views/pages/admin/leave.html',
             authenticated: true
           })
@@ -87,11 +87,11 @@ var app = angular.module('appRoutes',['ngRoute'])
             authenticated: true
           })         	            
 
-     .when('/ResourceMapping', {
+     .when('/Resource Mapping', {
             templateUrl: 'app/views/pages/resourcemapping/resourceMapping.html',
             authenticated: true
           })	            
-	.when('/ResourceType', {
+	.when('/Resource Type', {
             templateUrl: 'app/views/pages/admin/resourceType.html',
             authenticated: true
           })

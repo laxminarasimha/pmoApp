@@ -6,7 +6,7 @@
 },
 {
 "id" : "2",
-"name" : "ResourceMapping" ,
+"name" : "Resource Mapping" ,
 "submenu" : []
 },
 {
@@ -27,11 +27,11 @@
 {
 "id" : "6",
 "name" : "Admin",
-"submenu" : [{"id":"1", "name":"SkillSet"},{"id":"2", "name":"Resource"},{"id":"3", "name":"Status"},{"id":"4", "name":"Designation"},{"id":"5", "name":"Role"},{"id":"6", "name":"Region"},{"id":"7", "name":"Location"},{"id":"8", "name":"HolidayList"},{"id":"9", "name":"Project"},{"id":"10", "name":"ResourceType"}]
+"submenu" : [{"id":"1", "name":"SkillSet"},{"id":"2", "name":"Resource"},{"id":"3", "name":"Status"},{"id":"4", "name":"Designation"},{"id":"5", "name":"Role"},{"id":"6", "name":"Region"},{"id":"7", "name":"Location"},{"id":"8", "name":"Holiday List"},{"id":"9", "name":"Project"},{"id":"10", "name":"Resource Type"}]
 },
 {
 "id" : "7",
-"name" : "AddLeave" ,
+"name" : "Add Leave" ,
 "submenu" : []
 }
 ]
