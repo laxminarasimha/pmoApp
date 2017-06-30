@@ -10,7 +10,7 @@
                   <label for="resourcename">Resource Name</label>
                   
                   <select ng-show="resourcemap._id==null" ng-model="resourcemap.mappedResource" 
-                             ng-options="x.resourcename for x in resourceList">
+                             ng-options="x.resourcename for x in resourceList" style="width:250px">
                   </select>                 
                   
                  <input ng-show="resourcemap._id!=null" id="resourcename" ng-model="resourcemap.mappedResource.resourcename" 
@@ -91,9 +91,16 @@
                
       </div>
 
-      <!--<div class='row'>    
+      <div class='row'>
 
-        <div class='col-sm-3'>
+       <div class='col-sm-3'>
+           <div  class=form-group>
+            <label for="taggToEuroclear">% Tagged to Euroclear</label>
+            <input id="taggToEuroclear" ng-model="resourcemap.taggToEuroclear" required="true"  type="text"  style="width:250px"/>
+           </div>
+       </div>   
+
+        <!--<div class='col-sm-3'>
            <div  class=form-group>
             <label for="resourceType">Type</label>
             <select ng-model="resourcemap.resourceType" id="resourceType"  class="form-control">

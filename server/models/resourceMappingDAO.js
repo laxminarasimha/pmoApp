@@ -13,8 +13,8 @@ var resourceMappingSchema = new Schema(
                    region: { type: String, required: false },
                    skill: { type: String, required: false },
                    status: { type: String, required: false },
-                   resourceType: { type: String, required: false }
-                   //manager: { type: String, required: false }
+                   resourceType: { type: String, required: false },
+                   taggToEuroclear: { type: Number, required: false }
                   }, 
                   {
                     collection: 'resourceMapping'
