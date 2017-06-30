@@ -10,7 +10,7 @@
          <div class='col-sm-4'>
           <div  class=form-group>
                  <label>Country Name:</label>
-                  <select class="form-control input-sm" ng-model="holiday.locationname" class="form-control input-sm" ng-required="true">
+                  <select ng-model="holiday.locationname" class="form-control input-sm {{errorClass}}" ng-required="true">
                       <option ng-repeat="x in locationList" value="{{x.locationname}}">{{x.locationname}}</option>
                   </select>
                   
@@ -31,7 +31,7 @@
           <div class='col-sm-4'>
             <div  class=form-group> 
                 <label>Comments:</label>
-                <input type="text" ng-model="holiday.comments" name="comments" ng-required="true" class="form-control" class="form-control input-sm {{errorClass}}" />
+                <input type="text" ng-model="holiday.comments" name="comments" ng-required="true" class="form-control input-sm {{errorClass}}" />
                  
             </div>
           </div>

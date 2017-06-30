@@ -12,6 +12,7 @@ angular.module('pmoApp').controller('resourceMappingCtrl', Controller);
 
  //$scope.resourcemap = {};
  $rootScope.Title = "Resource Map Listing";
+ var app = $scope;
 
  $scope.mongoMappedResourceData = [];
  getMappedResourceData(resourceMappingService,$scope);
@@ -42,20 +43,21 @@ angular.module('pmoApp').controller('resourceMappingCtrl', Controller);
   
  $scope.clearFields = function (){
      $scope.resourcemap = {};
+     app.loading =false;
+     app.successMsg = false;
+     app.errorMsg = false;
+     app.errorClass = "";
  }
  
-
- $scope.getResourceExtraData = function(resource){
-    console.log(resource.alias +"==="+resource.designation);
-     $scope.resourcemap.mappedResource.alias = resource.alias;
-     $scope.resourcemap.mappedResource.designation = resource.designation;
- }
 
  $scope.deleteResourceMapping = function(id) {
      if (confirm('Are you sure to delete?')) {
      resourceMappingService.deleteResourceMapping(id).then(function(res) {
      if (res.data == "deleted") {
        getMappedResourceData(resourceMappingService,$scope);
+       app.loading = false;
+       app.successMsg = "Resource mapping Deleted successfully";
+       app.errorMsg = false;
      }
      }).catch(function(err) {
      console.log(err);
@@ -79,6 +81,9 @@ $scope.editResourceMapping = function (id) {
      if (res.data == "updated") {
         getMappedResourceData(resourceMappingService,$scope);
         $scope.resourcemap = {};
+        app.loading =false;
+        app.successMsg = "Resource mapping Updated successfully";
+        app.errorMsg = false;
      }
      }).catch(function(err) {
      console.log(err);
@@ -94,10 +99,19 @@ $scope.editResourceMapping = function (id) {
          if (res.data == "created") {
             getMappedResourceData(resourceMappingService,$scope);
             $scope.resourcemap = {};
+            app.loading =false;
+            app.successMsg = "Resource mapping created successfully";
+            app.errorMsg = false;
          }
          }).catch(function(err) {
          console.log(err);
          });
+     }else
+     {
+            app.loading =false;
+            app.successMsg = false;
+            app.errorMsg = "Please Enter Required value";
+            app.errorClass = "error"
      }
      
  }
