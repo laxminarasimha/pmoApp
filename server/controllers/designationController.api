@@ -3,7 +3,7 @@ var express = require("express"),
  designationDAO = require("../models/designationDAO.js");
  
 router.get("/", function(req, res) {
- designationDAO.find({}, function(err, data) {
+ designationDAO.find({}, null, {sort:{ designationname: 1}}, function(err, data) {
  if (err) {
  res.send("error");
  return;
