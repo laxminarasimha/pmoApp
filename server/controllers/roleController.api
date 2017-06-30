@@ -3,7 +3,7 @@ var express = require("express"),
  roleDAO = require("../models/roleDAO.js");
  
 router.get("/", function(req, res) {
- roleDAO.find({}, function(err, data) {
+ roleDAO.find({},null, {sort:{ rolename: 1}},  function(err, data) {
  if (err) {
  res.send("error");
  return;
