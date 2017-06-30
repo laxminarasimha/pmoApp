@@ -8,17 +8,17 @@
         <div class='col-sm-4'>
           <div  class=form-group>
           <label for="user_firstname">Employee ID</label>                        
-          <input class="form-control input-sm" type="text" ng-model="resource.kinId" name="kinId" ng-required="true"/>
+          <input class="form-control input-sm {{errorClass}}" type="text" ng-model="resource.kinId" name="kinId" ng-required="true"/>
           </div>
         </div>
         <div class='col-sm-4'>              
           <label for="user_title">Name</label>
-          <input class="form-control input-sm" ng-model="resource.resourcename" name="resourcename" ng-required="true"  type="text" />
+          <input class="form-control input-sm {{errorClass}}" ng-model="resource.resourcename" name="resourcename" ng-required="true"  type="text" />
         </div>
         <div class='col-sm-4'>    
           <div class='form-group'>
           <label for="user_title">Alias</label>
-          <input class="form-control input-sm" type="text" ng-model="resource.alias" name="alias" ng-required="true" class="form-control"/>
+          <input class="form-control input-sm {{errorClass}}" type="text" ng-model="resource.alias" name="alias" ng-required="true" class="form-control"/>
           </div>
         </div>
       </div>
@@ -26,21 +26,21 @@
       <div class='col-sm-4'>
           <div class='form-group'>
           <label for="user_lastname">User Email</label>            
-            <input type="text" class="form-control input-sm" id="inputWarning" ng-model="resource.email" name="email" ng-required="true">            
+            <input type="text" class="form-control input-sm {{errorClass}}" id="inputWarning" ng-model="resource.email" name="email" ng-required="true">            
           </div>
         </div>
         <div class='col-sm-4'>
           <div class='form-group'>
           <label for="designation">Designation</label>
-            <select ng-model="resource.designation" id="designation" class="form-control input-sm" ng-required="true">
+            <select ng-model="resource.designation" id="designation" class="form-control input-sm {{errorClass}}" ng-required="true">
               <option ng-repeat="x in designationList" value="{{x.designationname}}">{{x.designationname}}</option>
            </select>
           </div>
         </div>
         <div class='col-sm-4'>
           <div class='form-group'>
-          <label for="user_lastname">Type</label>
-          <select class="form-control input-sm" ng-model="resource.etype" name="etype" ng-required="true">
+          <label for="eype">Type</label>
+          <select class="form-control input-sm {{errorClass}}" ng-model="resource.etype" name="etype" ng-required="true">
             <option value="Admin">Admin</option>
             <option value="Engagement Manager">Engagement Manager</option>
             <option value="Manager">Manager</option>
