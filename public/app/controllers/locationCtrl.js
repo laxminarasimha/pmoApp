@@ -9,7 +9,7 @@
   
  function Controller($scope, $rootScope, locationService) {
  $scope.mongoLocationData = [];
- 
+ var app = $scope;
  
  $rootScope.Title = "Location Listing";
  getLocationData(locationService,$scope);
@@ -18,6 +18,10 @@
  $scope.clearFields = function (){
  
      $scope.location = {};
+     app.loading =false;
+     app.successMsg = false;
+     app.errorMsg = false;
+     app.errorClass = "";
  }
  
  $scope.deleteLocation = function(id) {
@@ -25,6 +29,9 @@
      locationService.deleteLocation(id).then(function(res) {
      if (res.data == "deleted") {
        getLocationData(locationService,$scope);
+       app.loading = false;
+       app.successMsg = "Location Deleted successfully";
+       app.errorMsg = false;
      }
      }).catch(function(err) {
      console.log(err);
@@ -48,6 +55,9 @@ $scope.editLocation = function (id) {
      if (res.data == "updated") {
         getLocationData(locationService,$scope);
         $scope.location = {};
+        app.loading =false;
+        app.successMsg = "Location Updated successfully";
+        app.errorMsg = false;
      }
      }).catch(function(err) {
      console.log(err);
@@ -63,10 +73,19 @@ $scope.editLocation = function (id) {
          if (res.data == "created") {
             getLocationData(locationService,$scope);
             $scope.location = {};
+            app.loading =false;
+            app.successMsg = "Location created successfully";
+            app.errorMsg = false;
          }
          }).catch(function(err) {
          console.log(err);
          });
+     }else
+     {
+            app.loading =false;
+            app.successMsg = false;
+            app.errorMsg = "Please Enter Required value";
+            app.errorClass = "error"
      }
      
  }
