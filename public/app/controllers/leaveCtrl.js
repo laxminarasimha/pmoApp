@@ -10,7 +10,7 @@ angular.module('pmoApp').controller('leaveCtrl', Controller);
  $scope.locationList = [];
  $scope.resourceList = [];
  $scope.holidayList = '';
-
+ var app = $scope;
  
  $rootScope.Title = "Leave Listing";
  getLeaveData(leaveService,$scope);
@@ -21,6 +21,10 @@ angular.module('pmoApp').controller('leaveCtrl', Controller);
  $scope.clearFields = function (){
  
      $scope.leave = {};
+     app.loading =false;
+     app.successMsg = false;
+     app.errorMsg = false;
+     app.errorClass = "";
  }
  
   
@@ -29,6 +33,9 @@ angular.module('pmoApp').controller('leaveCtrl', Controller);
      leaveService.deleteLeave(id).then(function(res) {
      if (res.data == "deleted") {
        getLeaveData(leaveService,$scope);
+       app.loading = false;
+       app.successMsg = "Leave Deleted successfully";
+       app.errorMsg = false;
      }
      }).catch(function(err) {
      console.log(err);
@@ -52,6 +59,9 @@ $scope.editLeave = function (id) {
      if (res.data == "updated") {
         getLeaveData(leaveService,$scope);
         $scope.leave = {};
+        app.loading =false;
+        app.successMsg = "Leave Updated successfully";
+        app.errorMsg = false;
      }
      }).catch(function(err) {
      console.log(err);
@@ -67,10 +77,19 @@ $scope.editLeave = function (id) {
          if (res.data == "created") {
             getLeaveData(leaveService,$scope);
             $scope.leave = {};
+            app.loading =false;
+            app.successMsg = "Leave created successfully";
+            app.errorMsg = false;
          }
          }).catch(function(err) {
          console.log(err);
          });
+     }else
+     {
+            app.loading =false;
+            app.successMsg = false;
+            app.errorMsg = "Please Enter Required value";
+            app.errorClass = "error"
      }
      
  };
