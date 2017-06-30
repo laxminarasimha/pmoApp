@@ -1,69 +1,71 @@
-<span class="label label-primary" style="height: 100%;font:bold;font: 15px arial, sans-serif;" >Role</span>
-
-
 <div ng-controller="roleCtrl">
-<form name="roleForm" ng-submit="createRole(role)" novalidate class="form-horizontal">
-<div class="well well-md">
-<h2 ng-show="role._id!=null">Edit</h2>
-<h2 ng-hide="role._id!=null">Create</h2>
-<div class="row">
- 		
-	
- 			  <div style="padding-right:25px; padding-left:35px">
-              <label>Role:</label>&nbsp;&nbsp;&nbsp;
-              <input type="text" ng-model="role.rolename" name="rolename" ng-required="true" class="form-control" style="width:300px"/>
-              <p ng-show="roleForm.rolename.$error.required && (roleForm.$submitted)" class="text-danger">Please Enter Role Name</p>
-        </div>
-			 
-			
-			
-	</div>
+<form name="roleForm" ng-submit="createRole(role)" novalidate >
+<legend>Role (
+  <label ng-show="Role._id!=null">Edit</label>
+  <label ng-hide="Role._id!=null">Create</label>)
+</legend>
+<div class="panel panel-info">
+    <div class="panel-heading">
+          <div class="row">
+       			  <div class='col-sm-4'>
+                   <div  class=form-group>
+                    <label>Role:</label>
+                    <input type="text" ng-model="role.rolename" name="rolename" ng-required="true" class="form-control input-sm {{errorClass}}" />                    
+                  </div>
+              </div>
+          	</div>
+            <div class='row'>      
+             <div class='col-sm-12'>
+              <div align="right">
+                  <input type="submit" value="Update" ng-click="saveData(role)" class="btn btn-primary" ng-show="role._id!=null"/>
+                  <input type="submit" value="Create" class="btn btn-primary" ng-hide="role._id!=null"/>             
+                  <button class="btn btn-warning" ng-click="clearFields()" type="button">Clear</button>                  
+               </div>
+              </div>
+             </div>
+    </div>
 
-  
-      
-      <div align="right"> 
-            <input type="submit" value="Update" ng-click="saveData(role)" class="btn btn-primary" ng-show="role._id!=null"/>
-            <input type="submit" value="Create" class="btn btn-primary" ng-hide="role._id!=null"/>             
-            <button class="btn btn-warning" ng-click="clearFields()" type="button">Clear</button>                  
+
+      <div class="panel-body" ng-show="loading || successMsg || errorMsg">
+        <div class="row" >
+          <div class='col-sm-12'>
+                <div class="jumbotron text-center" ng-show="loading">
+                  <span class="glyphicon glyphicon-repeat spinner"></span>
+                  <p>Loading...</p>
+                </div>
+                <div class="row show-hide-message" ng-show="successMsg">
+                  <div class="alert alert-success">{{successMsg}}</div>
+                </div>
+                <div class="row show-hide-message" ng-show="errorMsg">
+                  <div class="alert alert-danger">{{errorMsg}}</div>
+                </div>
+            </div>
+        </div>
+      </div>
+
+      <div class="panel-footer">
+      				<div class="table-responsive">
+      					<table class="table table-striped table-curved" cellspacing="0" width="100%">
+                   <thead class="bg-primary">
+      							<tr >
+                      <th >Serial No.</th>
+      								<th >Status name</th>
+                      <th >Action</th>				   
+      							</tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="x in mongoRoleData">
+                      <td>{{ $index + 1 }}</td>
+                      <td>{{ x.rolename }}</td>
+                      <td>
+                            <a  ng-click="editRole(x._id)">Edit</a> |
+                            <a  ng-click="deleteRole(x._id)">Delete</a>
+                      </td>
+                    </tr>
+      						  </tbody>
+      					</table>
+      				</div>
       </div>
 </div>
-
 </form> 
-<div class="well well-md" style="border: 1px">
-			<div class="panel panel-default panel-table">
-
-				<div class="table-responsive">
-					<table class="table" cellspacing="0" width="100%">
-						<thead class="bg-info">
-							<tr >
-                <th >Serial No.</th>
-								<th >Status name</th>
-                <th >Action</th>				   
-							</tr>
-              </thead>
-              <tbody>
-              <tr ng-repeat="x in mongoRoleData">
-                <td>{{ $index + 1 }}</td>
-                <td>{{ x.rolename }}</td>
-                <td>
-                      <a  ng-click="editRole(x._id)">Edit</a> |
-                      <a  ng-click="deleteRole(x._id)">Delete</a>
-                </td>
-              </tr>
-						  </tbody>
-					</table>
-					
-				</div>
-		   </div>
-</div>
-
 </div>    
-
-<style>
-     /* tr:nth-of-type(odd) {
-      background-color:#FCF8E3;
-    } */
-    tr:nth-of-type(even) {
-      background-color:#FCF8E3;
-    } 
-</style>
