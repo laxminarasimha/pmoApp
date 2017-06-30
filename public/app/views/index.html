@@ -10,7 +10,7 @@
   <!-- Cascade Style Sheets -->
 
 
-  <link href="assets/css/bootstrap.css" rel="stylesheet"> 
+  <link href="assets/css/bootstrap.min.css" rel="stylesheet"> 
   <link href="assets/css/animate.css" rel="stylesheet">
   <link href="assets/css/style.css" rel="stylesheet">
   <link href ="assets/css/jquery-ui.css" rel="stylesheet"><!-- For calender -->
@@ -25,7 +25,7 @@
 
   <!-- Cascade Style Sheets for Datatable -->
   <link rel="stylesheet" href="assets/css/datatables.bootstrap.css">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css"> 
+
 
   
 
@@ -95,11 +95,12 @@
   </script>
 
   </head>
-  <body ng-app="pmoApp" ng-controller="mainCtrl as main"   ng-cloak>
+  <body ng-app="pmoApp" ng-controller="mainCtrl as main" ng-cloak>
 
   <div id="main" ng-controller="menuCtrl" class="container">
 
 <div class="masthead">
+
       <div class="row">
         <div class="col-md-8"><img src="assets\images\capgemini_header.jpg" alt="Capgemini"></div>
         <div class="col-md-4"><img src="assets\images\dandmlogo.png" alt="Demand & Capacity" class="pull-right img-responsive"></div>         
@@ -132,14 +133,15 @@
         </div>    
       </div>
     </nav>
-    
 </div>
-
-
 
     <div ng-view>
       
     </div>
+
+
+    <!-- Footer  -->
+    <legend></legend>
     <div ng-controller="footerCtrl">
       <footer class="container-fluid text-center" >
         <p><span ng-bind="rightToReserveMsg"></span></p>
@@ -148,6 +150,8 @@
    </div>
 
     <!-- Include all compiled plugins (below), or include individual files as needed -->
+
     <script src="assets/js/bootstrap.min.js"></script>
+
   </body>
 </html>

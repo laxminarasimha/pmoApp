@@ -8,6 +8,7 @@ angular.module('pmoApp').controller('resourceCtrl', Controller);
  function Controller($scope, $rootScope, resourceService, designationService) {
  $scope.mongoResourceData = [];
  
+ var app = $scope;
  
  $rootScope.Title = "Resource Listing";
  getResourceData(resourceService,$scope);
@@ -19,6 +20,10 @@ angular.module('pmoApp').controller('resourceCtrl', Controller);
  $scope.clearFields = function (){
  
      $scope.resource = {};
+     app.loading =false;
+     app.successMsg = false;
+     app.errorMsg = false;
+     app.errorClass = ""
  }
  
  $scope.deleteResource = function(id) {
@@ -26,6 +31,9 @@ angular.module('pmoApp').controller('resourceCtrl', Controller);
      resourceService.deleteResource(id).then(function(res) {
      if (res.data == "deleted") {
        getResourceData(resourceService,$scope);
+       app.loading = false;
+       app.successMsg = "Resource Deleted successfully";
+       app.errorMsg = false;
      }
      }).catch(function(err) {
      console.log(err);
@@ -60,17 +68,30 @@ $scope.editResource = function (id) {
      $rootScope.Title = "Create Resource";
      $scope.IsSubmit = true;
      if ($scope.resourceForm.$valid) {
+        app.loading =true;
         //Password = "default";
         $scope.resource.password = '$2a$10$z14k1dcNp7nPmB1s.ApNNe4NLYu.UbKd1lKcgARc3fDTeoPW9GlAC';
-        console.log($scope.resource);
          resourceService.createResource(resource).then(function(res) {
          if (res.data == "created") {
-            getResourceData(resourceService,$scope);
+            app.loading =true;
+            getResourceData(resourceService,$scope);            
             $scope.resource = {};
+            app.loading =false;
+            app.successMsg = "Resource created successfully";
+            app.errorMsg = false;
+         }else{
+            app.loading =false;
+            app.successMsg = "Resource Updated successfully";
+            app.errorMsg = false;
          }
          }).catch(function(err) {
          console.log(err);
          });
+     }else{
+            app.loading =false;
+            app.successMsg = false;
+            app.errorMsg = "Please Fill All Required Fields(*)";
+            app.errorClass = "error"
      }
      
  }

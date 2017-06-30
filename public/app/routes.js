@@ -41,7 +41,8 @@ var app = angular.module('appRoutes',['ngRoute'])
 
 	.when('/SkillSet', {
             templateUrl: 'app/views/pages/admin/skillSet.html',
-            authenticated: true
+            authenticated: true,
+            controllerAs: 'skill'
           })
 
 	.when('/Project', {

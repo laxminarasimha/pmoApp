@@ -9,9 +9,12 @@
   
  function Controller($scope, $rootScope, skillSetService) {
  $scope.mongoSkillData = [];
- 
- 
+
+ var app = $scope;
+         
+
  $rootScope.Title = "Skill Set Listing";
+
  skillSetService.getSkillSets().then(function(res) {
    $scope.mongoSkillData = res.data;
    }).catch(function(err) {
@@ -22,13 +25,21 @@
  $scope.clearFields = function (){
  
      $scope.skill = {};
+     app.loading =false;
+     app.successMsg = false;
+     app.errorMsg = false;
+     app.errorClass = ""
  }
  
  $scope.deleteSkill = function(id) {
      if (confirm('Are you sure to delete?')) {
+        app.loading = true;
      skillSetService.deleteSkillSet(id).then(function(res) {
      if (res.data == "deleted") {
        getSkillData(skillSetService,$scope);
+       app.loading = false;
+       app.successMsg = "Skillset Deleted successfully";
+       app.errorMsg = false;
      }
      }).catch(function(err) {
      console.log(err);
@@ -60,18 +71,36 @@ $scope.editSkill = function (id) {
  };
  
  $scope.createSkill = function(skill) {
+     app.loading = true;
+     app.successMsg = false;
+     app.errorMsg = false;            
      $rootScope.Title = "Create Skill Set";
      $scope.IsSubmit = true;
      if ($scope.skillForm.$valid) {
-         skillSetService.createSkillSet(skill).then(function(res) {
+         skillSetService.createSkillSet(skill).then(function(res) {            
          if (res.data == "created") {
             getSkillData(skillSetService,$scope);
             $scope.skill = {};
+            app.loading =false;
+            app.successMsg = "Skillset created successfully";
+            app.errorMsg = false;
+         } else
+         {
+            app.loading =false;
+            app.successMsg = "Skillset Updated successfully";
+            app.errorMsg = false;
          }
          }).catch(function(err) {
          console.log(err);
          });
+     }else
+     {
+            app.loading =false;
+            app.successMsg = false;
+            app.errorMsg = "Please Enter Required value";
+            app.errorClass = "error"
      }
+
      
  }
  }
