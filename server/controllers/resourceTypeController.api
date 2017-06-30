@@ -4,7 +4,7 @@ var express = require("express"),
  
  
 router.get("/", function(req, res) {
- resourceTypeDAO.find({}, function(err, data) {
+ resourceTypeDAO.find({},null, {sort:{resourceTypename: 1}}, function(err, data) {
  if (err) {
  res.send("error");
  return;

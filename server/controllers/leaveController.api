@@ -3,7 +3,7 @@ var express = require("express"),
  leaveDAO = require("../models/leaveDAO.js");
  
 router.get("/", function(req, res) {
- leaveDAO.find({}, function(err, data) {
+ leaveDAO.find({},null, {sort:{resourcename: 1}}, function(err, data) {
  if (err) {
  res.send("error");
  return;
