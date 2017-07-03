@@ -3,9 +3,9 @@
  
 angular.module('pmoApp').controller('holidayListCtrl', Controller);
 
- Controller.$inject = ['$scope', '$rootScope', 'holidayListService','locationService'];
+ Controller.$inject = ['$scope', '$rootScope', 'holidayListService','locationService','DTOptionsBuilder', 'DTColumnBuilder'];
   
- function Controller($scope, $rootScope, holidayListService, locationService) {
+ function Controller($scope, $rootScope, holidayListService, locationService, DTOptionsBuilder, DTColumnBuilder) {
  $scope.mongoHolidayData = [];
  $scope.locationList = [];
  
@@ -69,6 +69,14 @@ $scope.editHoliday = function (id) {
      }
      
  }
+
+//=========================Data table==========================//
+        $scope.vm = {};
+        $scope.vm.dtInstance = null;  
+        $scope.vm.dtOptions = DTOptionsBuilder.newOptions().withOption('order', [0, 'asc']);
+         
+//=============================================================//
+ 
  }
 
  function getHolidayData(holidayListService,$scope){

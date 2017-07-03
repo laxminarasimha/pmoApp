@@ -3,9 +3,15 @@
  
 angular.module('pmoApp').controller('projectCtrl', Controller);
  
+<<<<<<< HEAD
  Controller.$inject = ['$scope', '$rootScope', 'projectService','regionService'];
   
  function Controller($scope, $rootScope, projectService,regionService) {
+=======
+ Controller.$inject = ['$scope', '$rootScope', 'projectService','regionService','resourceService', 'DTOptionsBuilder', 'DTColumnBuilder'];
+  
+ function Controller($scope, $rootScope, projectService,regionService,resourceService, DTOptionsBuilder, DTColumnBuilder) {
+>>>>>>> da618df17967fbd5e575886d6c146d2f4f8d5577
  $scope.mongoProjectData = [];
  $scope.regionList = [];
  
@@ -69,6 +75,14 @@ $scope.editProject = function (id) {
      }
      
  }
+
+//=========================Data table==========================//
+        $scope.vm = {};
+        $scope.vm.dtInstance = null;  
+        $scope.vm.dtOptions = DTOptionsBuilder.newOptions().withOption('order', [0, 'asc']);
+         
+//=============================================================//
+
  }
 
  function getProjectData(projectService,$scope){

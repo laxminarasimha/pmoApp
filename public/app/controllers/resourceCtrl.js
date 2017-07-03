@@ -3,9 +3,15 @@
  
 angular.module('pmoApp').controller('resourceCtrl', Controller);
  
+<<<<<<< HEAD
  Controller.$inject = ['$scope', '$rootScope', 'resourceService'];
   
  function Controller($scope, $rootScope, resourceService) {
+=======
+ Controller.$inject = ['$scope', '$rootScope', 'resourceService','designationService','DTOptionsBuilder', 'DTColumnBuilder'];
+  
+ function Controller($scope, $rootScope, resourceService, designationService, DTOptionsBuilder, DTColumnBuilder) {
+>>>>>>> da618df17967fbd5e575886d6c146d2f4f8d5577
  $scope.mongoResourceData = [];
  
  
@@ -71,6 +77,13 @@ $scope.editResource = function (id) {
      }
      
  }
+
+  //=========================Data table==========================//
+        $scope.vm = {};
+        $scope.vm.dtInstance = null;  
+        $scope.vm.dtOptions = DTOptionsBuilder.newOptions().withOption('order', [0, 'asc']);
+         
+//=============================================================//
  }
 
  function getResourceData(resourceService,$scope){

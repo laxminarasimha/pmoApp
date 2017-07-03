@@ -1,0 +1,8 @@
+git config --global user.name  "sudhakar"
+git config --global user.email  "sudhakar.vaka@capgemini.com"
+git clone https://github.com/laxminarasimha/pmoApp .
+git status
+git commit -m "wht changes done"
+git pull origin master
+git push -u origin master
+git add file name

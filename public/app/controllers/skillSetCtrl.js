@@ -5,9 +5,11 @@
  
  angular.module('pmoApp').controller('skillSetCtrl', Controller);
  
- Controller.$inject = ['$scope', '$rootScope', 'skillSetService'];
+ Controller.$inject = ['$scope', '$rootScope', 'skillSetService','DTOptionsBuilder', 'DTColumnBuilder'];
   
- function Controller($scope, $rootScope, skillSetService) {
+ function Controller($scope, $rootScope, skillSetService, DTOptionsBuilder, DTColumnBuilder) {
+
+
  $scope.mongoSkillData = [];
  
  
@@ -74,6 +76,15 @@ $scope.editSkill = function (id) {
      }
      
  }
+
+ //=========================Data table==========================//
+        $scope.vm = {};
+        $scope.vm.dtInstance = null;  
+        $scope.vm.dtOptions = DTOptionsBuilder.newOptions().withOption('order', [0, 'asc']);
+         
+//=============================================================//
+
+
  }
 
  function getSkillData(skillSetService,$scope){
