@@ -3,9 +3,9 @@
  
 angular.module('pmoApp').controller('leaveCtrl', Controller);
  
- Controller.$inject = ['$scope', '$filter', '$rootScope', 'leaveService','locationService', 'resourceService','holidayListService'];
+ Controller.$inject = ['$scope', '$filter', '$rootScope', 'leaveService','locationService', 'resourceService','holidayListService','DTOptionsBuilder', 'DTColumnBuilder'];
   
- function Controller($scope, $filter, $rootScope, leaveService,locationService,resourceService,holidayListService) {
+ function Controller($scope, $filter, $rootScope, leaveService,locationService,resourceService,holidayListService,DTOptionsBuilder, DTColumnBuilder) {
  $scope.mongoLeaveData = [];
  $scope.locationList = [];
  $scope.resourceList = [];
@@ -111,9 +111,10 @@ $scope.editLeave = function (id) {
 	$scope.leave.numberOfLeaves = daysDiff;
 	return  $scope.leave.numberOfLeaves;
   }
-  
+ };
 
-  $scope.getHolidayDataForLoaction = function (location){
+ 
+$scope.getHolidayDataForLoaction = function (location){
       console.log(location);
       holidayListService.getLocationHolidays(location).then(function(res) {
            angular.forEach(res.data,function(value,index){
@@ -132,10 +133,13 @@ $scope.editLeave = function (id) {
   };
 
 
-	
- };
+//=========================Data table==========================//
+        $scope.vm = {};
+        $scope.vm.dtInstance = null;  
+        $scope.vm.dtOptions = DTOptionsBuilder.newOptions().withOption('order', [0, 'asc']);
+         
+//=============================================================//
 
- 
   }
   
   function pad(num) {
