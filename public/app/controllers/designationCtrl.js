@@ -8,7 +8,7 @@ angular.module('pmoApp').controller('designationCtrl', Controller);
   
  function Controller($scope, $rootScope, designationService,DTOptionsBuilder, DTColumnBuilder) {
  $scope.mongoDesignationData = [];
- var app = $scope;
+ 
  
  $rootScope.Title = "Designation Listing";
  getDesignationData(designationService,$scope);
@@ -17,10 +17,6 @@ angular.module('pmoApp').controller('designationCtrl', Controller);
  $scope.clearFields = function (){
  
      $scope.designation = {};
-     app.loading =false;
-     app.successMsg = false;
-     app.errorMsg = false;
-     app.errorClass = "";
  }
  
  $scope.deleteDesignation = function(id) {
@@ -28,9 +24,6 @@ angular.module('pmoApp').controller('designationCtrl', Controller);
      designationService.deleteDesignation(id).then(function(res) {
      if (res.data == "deleted") {
        getDesignationData(designationService,$scope);
-       app.loading = false;
-       app.successMsg = "Designation Deleted successfully";
-       app.errorMsg = false;
      }
      }).catch(function(err) {
      console.log(err);
@@ -54,9 +47,6 @@ $scope.editDesignation = function (id) {
      if (res.data == "updated") {
         getDesignationData(designationService,$scope);
         $scope.designation = {};
-        app.loading =false;
-        app.successMsg = "Designation Updated successfully";
-        app.errorMsg = false;
      }
      }).catch(function(err) {
      console.log(err);
@@ -72,19 +62,10 @@ $scope.editDesignation = function (id) {
          if (res.data == "created") {
             getDesignationData(designationService,$scope);
             $scope.designation = {};
-            app.loading =false;
-            app.successMsg = "Designation created successfully";
-            app.errorMsg = false;
          }
          }).catch(function(err) {
          console.log(err);
          });
-     }else
-     {
-            app.loading =false;
-            app.successMsg = false;
-            app.errorMsg = "Please Enter Required value";
-            app.errorClass = "error"
      }
      
  }

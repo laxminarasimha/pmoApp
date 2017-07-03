@@ -3,7 +3,7 @@ var express = require("express"),
  resourceDAO = require("../models/resourceDAO.js");
  
 router.get("/", function(req, res) {
- resourceDAO.find({},null, {sort:{resourcename: 1}}, function(err, data) {
+ resourceDAO.find({}, function(err, data) {
  if (err) {
  res.send("error");
  return;

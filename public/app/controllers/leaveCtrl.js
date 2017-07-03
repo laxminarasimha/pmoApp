@@ -3,28 +3,28 @@
  
 angular.module('pmoApp').controller('leaveCtrl', Controller);
  
+<<<<<<< HEAD
+ Controller.$inject = ['$scope', '$rootScope', 'leaveService','regionService', 'resourceService'];
+  
+ function Controller($scope, $rootScope, leaveService,regionService,resourceService) {
+=======
  Controller.$inject = ['$scope', '$filter', '$rootScope', 'leaveService','locationService', 'resourceService','holidayListService','DTOptionsBuilder', 'DTColumnBuilder'];
   
  function Controller($scope, $filter, $rootScope, leaveService,locationService,resourceService,holidayListService,DTOptionsBuilder, DTColumnBuilder) {
+>>>>>>> da618df17967fbd5e575886d6c146d2f4f8d5577
  $scope.mongoLeaveData = [];
- $scope.locationList = [];
+ $scope.regionList = [];
  $scope.resourceList = [];
- $scope.holidayList = '';
- var app = $scope;
+ 
  
  $rootScope.Title = "Leave Listing";
  getLeaveData(leaveService,$scope);
- 
- getLocationData(locationService,$scope);
+ getRegionData(regionService,$scope);
  getResourceData(resourceService,$scope);
-
+  
  $scope.clearFields = function (){
  
      $scope.leave = {};
-     app.loading =false;
-     app.successMsg = false;
-     app.errorMsg = false;
-     app.errorClass = "";
  }
  
   
@@ -33,9 +33,6 @@ angular.module('pmoApp').controller('leaveCtrl', Controller);
      leaveService.deleteLeave(id).then(function(res) {
      if (res.data == "deleted") {
        getLeaveData(leaveService,$scope);
-       app.loading = false;
-       app.successMsg = "Leave Deleted successfully";
-       app.errorMsg = false;
      }
      }).catch(function(err) {
      console.log(err);
@@ -59,9 +56,6 @@ $scope.editLeave = function (id) {
      if (res.data == "updated") {
         getLeaveData(leaveService,$scope);
         $scope.leave = {};
-        app.loading =false;
-        app.successMsg = "Leave Updated successfully";
-        app.errorMsg = false;
      }
      }).catch(function(err) {
      console.log(err);
@@ -77,21 +71,14 @@ $scope.editLeave = function (id) {
          if (res.data == "created") {
             getLeaveData(leaveService,$scope);
             $scope.leave = {};
-            app.loading =false;
-            app.successMsg = "Leave created successfully";
-            app.errorMsg = false;
          }
          }).catch(function(err) {
          console.log(err);
          });
-     }else
-     {
-            app.loading =false;
-            app.successMsg = false;
-            app.errorMsg = "Please Enter Required value";
-            app.errorClass = "error"
      }
      
+<<<<<<< HEAD
+=======
  };
 
  $scope.difference = function (fromDate, toDate) {
@@ -151,8 +138,17 @@ $scope.getHolidayDataForLoaction = function (location){
 	pad(d.getMonth() + 1), 
 	pad(d.getDate())];
 	return dArr.join('-');
+>>>>>>> da618df17967fbd5e575886d6c146d2f4f8d5577
  }
  
+ $scope.difference = function (fromDate, toDate) {
+        if (fromDate && toDate) {
+            $scope.leave.numberOfLeaves = Math.round(Math.abs((new Date(fromDate).getTime() - new Date(toDate).getTime())/(24*60*60*1000)));
+            return $scope.leave.numberOfLeaves;
+		}
+   };
+ }
+
  function getLeaveData(leaveService,$scope){
       leaveService.getLeave().then(function(res) {
          $scope.mongoLeaveData = res.data;
@@ -161,10 +157,9 @@ $scope.getHolidayDataForLoaction = function (location){
      });
  }
  
-
- function getLocationData(locationService,$scope){
-      locationService.getLocation().then(function(res) {
-         $scope.locationList = res.data;
+ function getRegionData(regionService,$scope){
+      regionService.getRegion().then(function(res) {
+         $scope.regionList = res.data;
          }).catch(function(err) {
          console.log(err);
      });
@@ -177,7 +172,5 @@ $scope.getHolidayDataForLoaction = function (location){
          console.log(err);
      });
  }
-
  
-  
   })();

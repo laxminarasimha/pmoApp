@@ -6,7 +6,7 @@ var leaveSchema = new Schema(
                   {
                    _id: { type: objectId, auto: true },
                    resourcename: { type: String, required: false },
-				   locationname: { type: String, required: false },
+				   regionname: { type: String, required: false },
 				   startDate: { type: Date, required: false },
 				   endDate: { type: Date, required: false },
 				   numberOfLeaves: { type: String, required: false }

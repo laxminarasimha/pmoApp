@@ -3,7 +3,7 @@ var express = require("express"),
  projectDAO = require("../models/projectDAO.js");
  
 router.get("/", function(req, res) {
- projectDAO.find({},null, {sort:{projectname: 1}}, function(err, data) {
+ projectDAO.find({}, function(err, data) {
  if (err) {
  res.send("error");
  return;
@@ -34,7 +34,7 @@ router.get("/", function(req, res) {
  var id = req.params.id;
  var obj = req.body;
  
- projectDAO.findByIdAndUpdate(id, { projectname: obj.projectname,regionname:obj.regionname,manager: obj.manager, startDate:obj.startDate,endDate:obj.endDate}, 
+ projectDAO.findByIdAndUpdate(id, { projectname: obj.projectname,regionname:obj.regionname,startDate:obj.startDate,endDate:obj.endDate}, 
 function(err) {
  if (err) {
  res.send("error");

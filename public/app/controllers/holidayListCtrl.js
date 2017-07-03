@@ -8,7 +8,6 @@ angular.module('pmoApp').controller('holidayListCtrl', Controller);
  function Controller($scope, $rootScope, holidayListService, locationService, DTOptionsBuilder, DTColumnBuilder) {
  $scope.mongoHolidayData = [];
  $scope.locationList = [];
- var app = $scope;
  
  $rootScope.Title = "Holiday Listing";
  getLocationData(locationService, $scope);
@@ -18,11 +17,6 @@ angular.module('pmoApp').controller('holidayListCtrl', Controller);
  $scope.clearFields = function (){
  
      $scope.holiday = {};
-
-     app.loading =false;
-     app.successMsg = false;
-     app.errorMsg = false;
-     app.errorClass = "";
  }
  
  $scope.deleteHoliday = function(id) {
@@ -30,9 +24,6 @@ angular.module('pmoApp').controller('holidayListCtrl', Controller);
      holidayListService.deleteHoliday(id).then(function(res) {
      if (res.data == "deleted") {
        getHolidayData(holidayListService,$scope);
-       app.loading = false;
-       app.successMsg = "Holiday Deleted successfully";
-       app.errorMsg = false;
      }
      }).catch(function(err) {
      console.log(err);
@@ -56,9 +47,6 @@ $scope.editHoliday = function (id) {
      if (res.data == "updated") {
         getHolidayData(holidayListService,$scope);
         $scope.holiday = {};
-        app.loading =false;
-        app.successMsg = "Holiday Updated successfully";
-        app.errorMsg = false;
      }
      }).catch(function(err) {
      console.log(err);
@@ -74,19 +62,10 @@ $scope.editHoliday = function (id) {
          if (res.data == "created") {
             getHolidayData(holidayListService,$scope);
             $scope.holiday = {};
-            app.loading =false;
-            app.successMsg = "Holiday created successfully";
-            app.errorMsg = false;
          }
          }).catch(function(err) {
          console.log(err);
          });
-     }else
-     {
-            app.loading =false;
-            app.successMsg = false;
-            app.errorMsg = "Please Enter Required value";
-            app.errorClass = "error"
      }
      
  }

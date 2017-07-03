@@ -8,7 +8,7 @@
   
  function Controller($scope, $rootScope, regionService) {
  $scope.mongoRegionData = [];
- var app = $scope;
+ 
  
  $rootScope.Title = "Region Listing";
  getRegionData(regionService,$scope);
@@ -17,10 +17,6 @@
  $scope.clearFields = function (){
  
      $scope.region = {};
-     app.loading =false;
-     app.successMsg = false;
-     app.errorMsg = false;
-     app.errorClass = "";
  }
  
  $scope.deleteRegion = function(id) {
@@ -28,9 +24,6 @@
      regionService.deleteRegion(id).then(function(res) {
      if (res.data == "deleted") {
        getRegionData(regionService,$scope);
-       app.loading = false;
-       app.successMsg = "Region Deleted successfully";
-       app.errorMsg = false;
      }
      }).catch(function(err) {
      console.log(err);
@@ -54,9 +47,6 @@ $scope.editRegion = function (id) {
      if (res.data == "updated") {
         getRegionData(regionService,$scope);
         $scope.region = {};
-        app.loading =false;
-        app.successMsg = "Region Updated successfully";
-        app.errorMsg = false;
      }
      }).catch(function(err) {
      console.log(err);
@@ -72,19 +62,10 @@ $scope.editRegion = function (id) {
          if (res.data == "created") {
             getRegionData(regionService,$scope);
             $scope.region = {};
-            app.loading =false;
-            app.successMsg = "Region created successfully";
-            app.errorMsg = false;
          }
          }).catch(function(err) {
          console.log(err);
          });
-     }else
-     {
-            app.loading =false;
-            app.successMsg = false;
-            app.errorMsg = "Please Enter Required value";
-            app.errorClass = "error"
      }
      
  }

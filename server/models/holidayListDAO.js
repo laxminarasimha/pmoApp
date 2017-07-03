@@ -6,8 +6,7 @@ var holidaySchema = new Schema(
                   {
                    _id: { type: objectId, auto: true },
                    locationname: { type: String, required: false } ,
-                   holidayDate: { type: Date, required: false },
-                   comments: { type: String, required: false }
+                   holidayDate: { type: Date, required: false }
                   }, 
                   {
                     collection: 'holidaylist'

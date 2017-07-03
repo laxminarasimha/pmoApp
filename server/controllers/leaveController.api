@@ -3,7 +3,7 @@ var express = require("express"),
  leaveDAO = require("../models/leaveDAO.js");
  
 router.get("/", function(req, res) {
- leaveDAO.find({},null, {sort:{resourcename: 1}}, function(err, data) {
+ leaveDAO.find({}, function(err, data) {
  if (err) {
  res.send("error");
  return;
@@ -34,7 +34,7 @@ router.get("/", function(req, res) {
  var id = req.params.id;
  var obj = req.body;
  
- leaveDAO.findByIdAndUpdate(id, { resourcename: obj.resourcename,locationname:obj.locationname,startDate:obj.startDate,endDate:obj.endDate,numberOfLeaves:obj.numberOfLeaves}, 
+ leaveDAO.findByIdAndUpdate(id, { resourcename: obj.resourcename,regionname:obj.regionname,startDate:obj.startDate,endDate:obj.endDate,numberOfLeaves:obj.numberOfLeaves}, 
 function(err) {
  if (err) {
  res.send("error");

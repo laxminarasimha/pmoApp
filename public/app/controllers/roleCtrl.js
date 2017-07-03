@@ -10,7 +10,7 @@
   
  function Controller($scope, $rootScope, roleService, DTOptionsBuilder, DTColumnBuilder) {
  $scope.mongoRoleData = [];
- var app = $scope;
+ 
  
  $rootScope.Title = "Role Listing";
  getRoleData(roleService,$scope);
@@ -19,10 +19,6 @@
  $scope.clearFields = function (){
  
      $scope.role = {};
-     app.loading =false;
-     app.successMsg = false;
-     app.errorMsg = false;
-     app.errorClass = "";
  }
  
  $scope.deleteRole = function(id) {
@@ -30,9 +26,6 @@
      roleService.deleteRole(id).then(function(res) {
      if (res.data == "deleted") {
        getRoleData(roleService,$scope);
-       app.loading = false;
-       app.successMsg = "Role Deleted successfully";
-       app.errorMsg = false;
      }
      }).catch(function(err) {
      console.log(err);
@@ -56,9 +49,6 @@ $scope.editRole = function (id) {
      if (res.data == "updated") {
         getRoleData(roleService,$scope);
         $scope.role = {};
-        app.loading =false;
-        app.successMsg = "Role Updated successfully";
-        app.errorMsg = false;
      }
      }).catch(function(err) {
      console.log(err);
@@ -74,19 +64,10 @@ $scope.editRole = function (id) {
          if (res.data == "created") {
             getRoleData(roleService,$scope);
             $scope.role = {};
-            app.loading =false;
-            app.successMsg = "Role created successfully";
-            app.errorMsg = false;
          }
          }).catch(function(err) {
          console.log(err);
          });
-     }else
-     {
-            app.loading =false;
-            app.successMsg = false;
-            app.errorMsg = "Please Enter Required value";
-            app.errorClass = "error"
      }
      
  }

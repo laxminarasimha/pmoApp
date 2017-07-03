@@ -9,8 +9,7 @@
  function Controller($scope, $rootScope, statusService) {
  $scope.mongoStatusData = [];
  
- var app = $scope;
-
+ 
  $rootScope.Title = "Status Listing";
  getStatusData(statusService,$scope);
  
@@ -18,10 +17,6 @@
  $scope.clearFields = function (){
  
      $scope.status = {};
-     app.loading =false;
-     app.successMsg = false;
-     app.errorMsg = false;
-     app.errorClass = ""
  }
  
  $scope.deleteStatus = function(id) {
@@ -29,9 +24,6 @@
      statusService.deleteStatus(id).then(function(res) {
      if (res.data == "deleted") {
        getStatusData(statusService,$scope);
-        app.loading = false;
-       app.successMsg = "Status Deleted successfully";
-       app.errorMsg = false;
      }
      }).catch(function(err) {
      console.log(err);
@@ -66,28 +58,14 @@ $scope.editStatus = function (id) {
      $rootScope.Title = "Create Status";
      $scope.IsSubmit = true;
      if ($scope.statusForm.$valid) {
-        app.loading = true;
          statusService.createStatus(status).then(function(res) {
-         if (res.data == "created") {            
+         if (res.data == "created") {
             getStatusData(statusService,$scope);
             $scope.status = {};
-            app.loading =false;
-            app.successMsg = "Status created successfully";
-            app.errorMsg = false;
-         }else{
-            app.loading =false;
-            app.successMsg = "Status Updated successfully";
-            app.errorMsg = false;
          }
          }).catch(function(err) {
          console.log(err);
          });
-     }else
-     {
-            app.loading =false;
-            app.successMsg = false;
-            app.errorMsg = "Please Enter Required value";
-            app.errorClass = "error"
      }
      
  }

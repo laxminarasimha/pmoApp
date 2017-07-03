@@ -7,7 +7,6 @@ var projectSchema = new Schema(
                    _id: { type: objectId, auto: true },
                    projectname: { type: String, required: false },
 				   regionname: { type: String, required: false },
-           manager: { type: String, required: false },
 				   startDate: { type: Date, required: false },
 				   endDate: { type: Date, required: false }
                   }, 

@@ -3,27 +3,25 @@
  
 angular.module('pmoApp').controller('resourceCtrl', Controller);
  
+<<<<<<< HEAD
+ Controller.$inject = ['$scope', '$rootScope', 'resourceService'];
+  
+ function Controller($scope, $rootScope, resourceService) {
+=======
  Controller.$inject = ['$scope', '$rootScope', 'resourceService','designationService','DTOptionsBuilder', 'DTColumnBuilder'];
   
  function Controller($scope, $rootScope, resourceService, designationService, DTOptionsBuilder, DTColumnBuilder) {
+>>>>>>> da618df17967fbd5e575886d6c146d2f4f8d5577
  $scope.mongoResourceData = [];
  
- var app = $scope;
  
  $rootScope.Title = "Resource Listing";
  getResourceData(resourceService,$scope);
-
- $scope.designationList = [];
- getDesignationData(designationService,$scope);
  
   
  $scope.clearFields = function (){
  
      $scope.resource = {};
-     app.loading =false;
-     app.successMsg = false;
-     app.errorMsg = false;
-     app.errorClass = ""
  }
  
  $scope.deleteResource = function(id) {
@@ -31,9 +29,6 @@ angular.module('pmoApp').controller('resourceCtrl', Controller);
      resourceService.deleteResource(id).then(function(res) {
      if (res.data == "deleted") {
        getResourceData(resourceService,$scope);
-       app.loading = false;
-       app.successMsg = "Resource Deleted successfully";
-       app.errorMsg = false;
      }
      }).catch(function(err) {
      console.log(err);
@@ -68,30 +63,17 @@ $scope.editResource = function (id) {
      $rootScope.Title = "Create Resource";
      $scope.IsSubmit = true;
      if ($scope.resourceForm.$valid) {
-        app.loading =true;
         //Password = "default";
         $scope.resource.password = '$2a$10$z14k1dcNp7nPmB1s.ApNNe4NLYu.UbKd1lKcgARc3fDTeoPW9GlAC';
+        console.log($scope.resource);
          resourceService.createResource(resource).then(function(res) {
          if (res.data == "created") {
-            app.loading =true;
-            getResourceData(resourceService,$scope);            
+            getResourceData(resourceService,$scope);
             $scope.resource = {};
-            app.loading =false;
-            app.successMsg = "Resource created successfully";
-            app.errorMsg = false;
-         }else{
-            app.loading =false;
-            app.successMsg = "Resource Updated successfully";
-            app.errorMsg = false;
          }
          }).catch(function(err) {
          console.log(err);
          });
-     }else{
-            app.loading =false;
-            app.successMsg = false;
-            app.errorMsg = "Please Fill All Required Fields(*)";
-            app.errorClass = "error"
      }
      
  }
@@ -107,14 +89,6 @@ $scope.editResource = function (id) {
  function getResourceData(resourceService,$scope){
       resourceService.getResources().then(function(res) {
          $scope.mongoResourceData = res.data;
-         }).catch(function(err) {
-         console.log(err);
-     });
- }
-
- function getDesignationData(designationService,$scope){
-      designationService.getDesignations().then(function(res) {
-         $scope.designationList = res.data;
          }).catch(function(err) {
          console.log(err);
      });

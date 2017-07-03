@@ -3,7 +3,7 @@ var express = require("express"),
  locationDAO = require("../models/locationDAO.js");
  
 router.get("/", function(req, res) {
- locationDAO.find({},null, {sort:{locationname: 1}}, function(err, data) {
+ locationDAO.find({}, function(err, data) {
  if (err) {
  res.send("error");
  return;

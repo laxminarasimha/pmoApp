@@ -1,55 +1,22 @@
 <div class="page-header">
+<h1>{{main.username}}'s Profile</h1>
+<table>
 
 
-<div class="panel panel-info">
-            <div class="panel-heading">
-              <h3 class="panel-title">{{main.username}}</h3>
-            </div>
-            <div class="panel-body">
-              <div class="row">
-                <div class="col-md-3 col-lg-3 " align="center"> <img alt="User Pic" src="../../../../assets/images/unknown.png" class="img-circle img-responsive"> </div>                
-                <div class=" col-md-9 col-lg-9 "> 
-                  <table class="table table-user-information">
-                    <tbody>
-                      <tr>
-                        <td>Employee Id</td>
-                        <td>{{main.kinId}}</td>
-                      </tr>
-                      <tr>
-                        <td>Full Name:</td>
-                        <td>{{main.username}}</td>
-                      </tr>
-                      
-                      <tr>
-                        <td>Designation</td>
-                        <td>{{main.designation}}</td>
-                     </tr>
-                     <tr>
-                        <td>User Name</td>
-                        <td>{{main.alias}}</td>
-                      </tr>
-                      <tr>
-                        <td>Email</td>
-                        <td><a href="mailto:{{main.email}}">{{main.email}}</a></td>
-                      </tr>
-                        <tr><td>Phone Number</td>
-                        <td> </td>
-                      </tr>
-                     
-                    </tbody>
-                  </table>
-                  <a href="/changepassword" class="btn btn-primary">Change Password</a>           
-                </div>
-              </div>
-            </div>
-                 <div class="panel-footer">
-                        <a data-original-title="Broadcast Message" data-toggle="tooltip" type="button" class="btn btn-sm btn-primary"><i class="glyphicon glyphicon-envelope"></i></a>                        
-                    </div>
-            
-          </div>
+</table>
 
 
-
+<div class="panel panel-default">
+  <!-- Default panel contents -->
+  <div class="panel-heading">{{main.username}}'s Profile</div>
+  <div class="panel-body">
+  </div>
+  <!-- Table -->
+<table class="table">
+    <tr><td>User Name </td><td>Email</td></tr>
+	<tr><td> {{main.username}}</td><td>{{main.email}}</td></tr>
+  </table>
+</div>
 
 
 </div>

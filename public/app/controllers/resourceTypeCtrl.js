@@ -10,7 +10,7 @@
   
  function Controller($scope, $rootScope, resourceTypeService) {
  $scope.mongoResourceTypeData = [];
- var app = $scope;
+ 
  
  $rootScope.Title = "ResourceType Listing";
  getResourceTypeData(resourceTypeService,$scope);
@@ -19,10 +19,6 @@
  $scope.clearFields = function (){
  
      $scope.resourceType = {};
-     app.loading =false;
-     app.successMsg = false;
-     app.errorMsg = false;
-     app.errorClass = "";
  }
  
  $scope.deleteResourceType = function(id) {
@@ -30,9 +26,6 @@
      resourceTypeService.deleteResourceType(id).then(function(res) {
      if (res.data == "deleted") {
        getResourceTypeData(resourceTypeService,$scope);
-       app.loading = false;
-       app.successMsg = "ResourceType Deleted successfully";
-       app.errorMsg = false;
      }
      }).catch(function(err) {
      console.log(err);
@@ -56,9 +49,6 @@ $scope.editResourceType = function (id) {
      if (res.data == "updated") {
         getResourceTypeData(resourceTypeService,$scope);
         $scope.resourceType = {};
-        app.loading =false;
-        app.successMsg = "ResourceType Updated successfully";
-        app.errorMsg = false;
      }
      }).catch(function(err) {
      console.log(err);
@@ -74,19 +64,10 @@ $scope.editResourceType = function (id) {
          if (res.data == "created") {
             getResourceTypeData(resourceTypeService,$scope);
             $scope.resourceType = {};
-            app.loading =false;
-            app.successMsg = "ResourceType created successfully";
-            app.errorMsg = false;
          }
          }).catch(function(err) {
          console.log(err);
          });
-     }else
-     {
-            app.loading =false;
-            app.successMsg = false;
-            app.errorMsg = "Please Enter Required value";
-            app.errorClass = "error"
      }
      
  }
