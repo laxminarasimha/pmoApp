@@ -4,9 +4,9 @@
  
 angular.module('pmoApp').controller('designationCtrl', Controller);
  
- Controller.$inject = ['$scope', '$rootScope', 'designationService'];
+ Controller.$inject = ['$scope', '$rootScope', 'designationService','DTOptionsBuilder', 'DTColumnBuilder'];
   
- function Controller($scope, $rootScope, designationService) {
+ function Controller($scope, $rootScope, designationService,DTOptionsBuilder, DTColumnBuilder) {
  $scope.mongoDesignationData = [];
  var app = $scope;
  
@@ -88,6 +88,14 @@ $scope.editDesignation = function (id) {
      }
      
  }
+
+//=========================Data table==========================//
+        $scope.vm = {};
+        $scope.vm.dtInstance = null;  
+        $scope.vm.dtOptions = DTOptionsBuilder.newOptions().withOption('order', [0, 'asc']);
+         
+//=============================================================//
+
  }
 
  function getDesignationData(designationService,$scope){

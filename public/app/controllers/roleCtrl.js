@@ -6,9 +6,9 @@
  
  angular.module('pmoApp').controller('roleCtrl', Controller);
  
- Controller.$inject = ['$scope', '$rootScope', 'roleService'];
+ Controller.$inject = ['$scope', '$rootScope', 'roleService','DTOptionsBuilder', 'DTColumnBuilder'];
   
- function Controller($scope, $rootScope, roleService) {
+ function Controller($scope, $rootScope, roleService, DTOptionsBuilder, DTColumnBuilder) {
  $scope.mongoRoleData = [];
  var app = $scope;
  
@@ -90,6 +90,13 @@ $scope.editRole = function (id) {
      }
      
  }
+
+ //=========================Data table==========================//
+        $scope.vm = {};
+        $scope.vm.dtInstance = null;  
+        $scope.vm.dtOptions = DTOptionsBuilder.newOptions().withOption('order', [0, 'asc']);
+         
+//=============================================================//
  }
 
  function getRoleData(roleService,$scope){
