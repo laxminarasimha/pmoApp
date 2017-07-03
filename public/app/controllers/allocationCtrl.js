@@ -121,10 +121,11 @@ Controller.$inject = ['$scope','DTOptionsBuilder', 'DTColumnBuilder', '$compile'
 		$scope.saveAllocation = function(){
 
 			angular.forEach($scope.resourceWiseAllocaiton,function(item){
+									console.log('item'+item);
 	  		    allocationService.createAllocation(item).then(function(res) {
-		         if (res.data == "created") {
-		            getAlloctionData(allocationService,$scope);
-		         }
+			         if (res.data == "created") {
+			            getAlloctionData(allocationService,$scope);
+			         }
 		         }).catch(function(err) {
 		         	console.log(err);
 		      	});

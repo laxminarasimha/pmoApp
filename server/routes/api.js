@@ -118,5 +118,7 @@ router.use("/leave", require("../controllers/leaveController.api"));
 router.use("/resourceType", require("../controllers/resourceTypeController.api"));
 
 router.use("/mappedresource", require("../controllers/resourceMappingController.api"));
+
+router.use("/allocation", require("../controllers/allocationController.api"));
 return router;
 }

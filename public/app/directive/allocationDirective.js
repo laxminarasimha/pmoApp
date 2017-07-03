@@ -4,7 +4,6 @@
 angular.module('pmoApp').directive('tmpl', testComp);
   
 function testComp($compile){
-alert('Hi');
     var directive = {};
     directive.restrict = 'A';
     directive.templateUrl = 'app/views/pages/allocation/allocationDetail.html'; 
