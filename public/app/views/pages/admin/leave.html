@@ -1,67 +1,68 @@
-<span class="label label-primary" style="height: 100%;font:bold;font: 15px arial, sans-serif;" >Leave</span>
-
-
 <div ng-controller="leaveCtrl">
-<form name="leaveForm" ng-submit="createLeave(leave)" novalidate class="form-horizontal">
-<div class="well well-md">
-<h2 ng-show="leave._id!=null">Edit</h2>
-<h2 ng-hide="leave._id!=null">Create</h2>
-<div class="row">
- 		<div >
-              <label>Resource Name:</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              <!-- <input type="text" ng-model="leave.resourcename" name="resourcename" ng-required="true" class="form-control" style="width:300px"/> -->
-			   <select ng-model="leave.resourcename">
-				  <option ng-repeat="x in resourceList" value="{{x.resourcename}}">{{x.resourcename}}</option>
-			  </select>
-              <p ng-show="leaveForm.resourcename.$error.required && (leaveForm.$submitted)" class="text-danger">Please Enter Resource Name </p>
-			   
-			   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			   <label>Region:</label>&nbsp;&nbsp;&nbsp;
-			   <select ng-model="leave.regionname">
-				  <option ng-repeat="x in regionList" value="{{x.regionname}}">{{x.regionname}}</option>
-			  </select>
-			  <p ng-show="leaveForm.regionname.$error.required && (leaveForm.$submitted)" class="text-danger">Please Select Region Name</p>
+<form name="leaveForm" ng-submit="createLeave(leave)" novalidate>
+<legend>Add Leave (
+  <label ng-show="leave._id!=null">Edit</label>
+  <label ng-hide="leave._id!=null">Create</label>)
+</legend>
+<div class="panel panel-info">
+    <div class="panel-heading">
+      <div class="row">
+ 		       <div class='col-sm-3'>
+             <div  class=form-group>
+               <label>Resource Name:</label>
+                <select ng-model="leave.resourcename" class="form-control input-sm {{errorClass}}">
+                <option ng-repeat="x in resourceList" value="{{x.resourcename}}">{{x.resourcename}}</option>
+              </select>
+             </div>
+          </div>
+
+          <div class='col-sm-3'>
+             <div  class=form-group>
+                <label>Location:</label>
+                   <select ng-model="leave.locationname" ng-change="getHolidayDataForLoaction(leave.locationname)" class="form-control input-sm {{errorClass}}">
+                   <option ng-repeat="x in locationList" value="{{x.locationname}}">{{x.locationname}}</option>
+              </select>
+             </div>
+          </div>
+           
+		   
         </div>
-		
-		<div>
-		 <label>Start  Date:</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              <input type="text" ng-model="leave.startDate" id = "startDateID" name="startDate" ng-required="true" class="form-control"/>
-              <img src="..\assets\images\calendar-icon.png">
-              <p ng-show="leaveForm.startDate.$error.required && (leaveForm.$submitted)" class="text-danger">Please Enter Start Date</p>
-          
-		 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
-		 <label>End  Date:</label>
-              <input type="text" ng-model="leave.endDate" id = "endDateID" name="endDate" ng-required="true" class="form-control"/>
-              <img src="..\assets\images\calendar-icon.png">
-              <p ng-show="leaveForm.endDate.$error.required && (leaveForm.$submitted)" class="text-danger">Please Enter End Date</p>
+        <div class="row">       
+            <div class='col-sm-3'>
+             <div  class=form-group>
+               <label>Start  Date:</label>
+               <input type="text" ng-model="leave.startDate" id = "startDateID" name="startDate" ng-required="true" class="form-control input-sm {{errorClass}}"/>            
+             </div>
+          </div>
+          <div class='col-sm-3'>
+             <div  class=form-group>
+               <label>End  Date:</label>
+                <input type="text" ng-model="leave.endDate" id = "endDateID" name="endDate" ng-required="true" class="form-control input-sm {{errorClass}}"/>
              
+             </div>
+          </div>  
+          <div class='col-sm-3'>
+             <div  class=form-group>
+                <label>No of days leaves:</label>
+                <input type="text" style="width:50px;" name="numberOfLeaves" ng-model="leave.numberOfLeaves" ng-value="difference(leave.startDate, leave.endDate)"  disabled class="form-control"/>
+             
+             </div>
+          </div>
+                   
+        </div>
 
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;			 
-			<label>No of days leaves:&nbsp;&nbsp;&nbsp;&nbsp; </label>
-			<input type="text" style="width:50px;" name="numberOfLeaves" ng-model="leave.numberOfLeaves" ng-value="difference(leave.startDate, leave.endDate)"  disabled>
-		</div>
-		
-			
-	</div>
-
-      <div align="right"> 
-            <input type="submit" value="Update" ng-click="saveData(leave)" class="btn btn-primary" ng-show="leave._id!=null"/>
-            <input type="submit" value="Create" class="btn btn-primary" ng-hide="leave._id!=null"/>             
-            <button class="btn btn-warning" ng-click="clearFields()" type="button">Clear</button>                  
+          <div class='row'>      
+              <div class='col-sm-12'>
+                 <div align="right"> 
+                      <input type="submit" value="Update" ng-click="saveData(leave)" class="btn btn-primary" ng-show="leave._id!=null"/>
+                      <input type="submit" value="Create" class="btn btn-primary" ng-hide="leave._id!=null"/>             
+                     <button class="btn btn-warning" ng-click="clearFields()" type="button">Clear</button>
+                </div>
+              </div>
+          </div>
+                  
       </div>
-</div>
 
-<<<<<<< HEAD
-</form> 
-<div class="well well-md" style="border: 1px">
-			<div class="panel panel-default panel-table">
-
-				<div class="table-responsive">
-					<table class="table" cellspacing="0" width="100%">
-						<thead>
-							<tr style="background-color:grey">
-=======
       <div class="panel-body" ng-show="loading || successMsg || errorMsg">
         <div class="row" >
           <div class='col-sm-12'>
@@ -85,10 +86,9 @@
               <table class="table table-striped table-curved" cellspacing="0" width="100%" datatable="ng" dt-options="vm.dtOptions" dt-instance="vm.dtInstance">
             <thead class="bg-primary">
 							<tr>
->>>>>>> da618df17967fbd5e575886d6c146d2f4f8d5577
 								<th >Serial No.</th>
 								<th >Resource name</th>
-								<th >Region</th>
+								<th >Location</th>
 								<th >Start Date</th>
 								<th >End Date</th>
 								<th >Number of Leaves</th>
@@ -99,10 +99,10 @@
               <tr ng-repeat="x in mongoLeaveData">
                 <td>{{ $index + 1 }}</td>
                 <td>{{ x.resourcename }}</td>
-				<td>{{ x.regionname }}</td>
-				<td>{{ x.startDate | date : "dd-MMM-yy" }}</td>
-				<td>{{ x.endDate | date : "dd-MMM-yy" }}</td>
-				<td>{{ x.numberOfLeaves}}</td>
+        				<td>{{ x.locationname }}</td>
+        				<td>{{ x.startDate | date : "dd-MMM-yy" }}</td>
+        				<td>{{ x.endDate | date : "dd-MMM-yy" }}</td>
+        				<td>{{ x.numberOfLeaves}}</td>
                 <td>
                       <a  ng-click="editLeave(x._id)">Edit</a> |
                       <a  ng-click="deleteLeave(x._id)">Delete</a>
@@ -111,27 +111,19 @@
 						  </tbody>
 					</table>
 					
-				</div>
-		   </div>
+			</div>
+    </div>
 </div>
-
+</form> 
 </div>    
-
-<style>
-     /* tr:nth-of-type(odd) {
-      background-color:#FCF8E3;
-    } */
-    tr:nth-of-type(even) {
-      background-color:#FCF8E3;
-    } 
-</style>
 
 <script>
    $(function() {
       $( "#startDateID" ).datepicker({
          //appendText:"(dd-MMM-yy)",
          dateFormat:"dd-MM-yy",
-         minDate: new Date()
+         minDate: new Date(),
+		 beforeShowDay: $.datepicker.noWeekends
          //showOn:"button",
          //buttonImage: "/images/calendar-icon.png",
          //buttonImageOnly: true
@@ -140,10 +132,13 @@
 	  $( "#endDateID" ).datepicker({
          //appendText:"(dd-MMM-yy)",
          dateFormat:"dd-MM-yy",
-         minDate: new Date()
+         minDate: new Date(),
+		 beforeShowDay: $.datepicker.noWeekends
          //showOn:"button",
          //buttonImage: "/images/calendar-icon.png",
          //buttonImageOnly: true
       });
    });
+   
 </script>
+ 

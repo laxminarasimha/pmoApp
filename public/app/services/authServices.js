@@ -3,7 +3,8 @@ angular.module('authServices',[])
 	authFactory ={};
 
 	authFactory.login = function(loginData) {
-		return $http.post('/api/authenticate', loginData).then(function(data){				
+		return $http.post('/api/authenticate', loginData).then(function(data){	
+			console.log(data);
 			authToken.setToken(data.data.token);			
 			return data;
 		});
@@ -26,6 +27,16 @@ angular.module('authServices',[])
 		}
 	}
 
+	authFactory.resetPassword = function(userData){		
+		if(authToken.getToken()){			
+			return $http.put('api/resetpassword',userData);
+		}
+		else{
+			$q.reject({message: 'User has no Token'});
+		}
+	}
+
+
 	//Auth.logout()	
 	authFactory.logout = function(){
 		authToken.setToken();
@@ -43,7 +54,7 @@ angular.module('authServices',[])
 			$window.localStorage.removeItem('token');
 	}
 
-	authTokenFactory.getToken = function(){		
+	authTokenFactory.getToken = function(){				
 		return $window.localStorage.getItem('token');
 	};
 	return authTokenFactory;

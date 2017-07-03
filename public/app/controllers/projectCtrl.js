@@ -3,26 +3,28 @@
  
 angular.module('pmoApp').controller('projectCtrl', Controller);
  
-<<<<<<< HEAD
- Controller.$inject = ['$scope', '$rootScope', 'projectService','regionService'];
-  
- function Controller($scope, $rootScope, projectService,regionService) {
-=======
  Controller.$inject = ['$scope', '$rootScope', 'projectService','regionService','resourceService', 'DTOptionsBuilder', 'DTColumnBuilder'];
   
  function Controller($scope, $rootScope, projectService,regionService,resourceService, DTOptionsBuilder, DTColumnBuilder) {
->>>>>>> da618df17967fbd5e575886d6c146d2f4f8d5577
  $scope.mongoProjectData = [];
  $scope.regionList = [];
- 
+ var app = $scope;
  
  $rootScope.Title = "Project Listing";
  getProjectData(projectService,$scope);
  getRegionData(regionService,$scope);
+
+
+ $scope.resourceList = [];
+ getResourceData(resourceService,$scope);
   
  $scope.clearFields = function (){
  
      $scope.project = {};
+	 app.loading =false;
+     app.successMsg = false;
+     app.errorMsg = false;
+     app.errorClass = "";
  }
  
  $scope.deleteProject = function(id) {
@@ -30,6 +32,9 @@ angular.module('pmoApp').controller('projectCtrl', Controller);
      projectService.deleteProject(id).then(function(res) {
      if (res.data == "deleted") {
        getProjectData(projectService,$scope);
+	   app.loading = false;
+       app.successMsg = "Project Deleted successfully";
+       app.errorMsg = false;
      }
      }).catch(function(err) {
      console.log(err);
@@ -53,6 +58,9 @@ $scope.editProject = function (id) {
      if (res.data == "updated") {
         getProjectData(projectService,$scope);
         $scope.project = {};
+		app.loading =false;
+        app.successMsg = "Project Updated successfully";
+        app.errorMsg = false;
      }
      }).catch(function(err) {
      console.log(err);
@@ -68,10 +76,19 @@ $scope.editProject = function (id) {
          if (res.data == "created") {
             getProjectData(projectService,$scope);
             $scope.project = {};
+			app.loading =false;
+            app.successMsg = "Project created successfully";
+            app.errorMsg = false;
          }
          }).catch(function(err) {
          console.log(err);
          });
+     }else
+     {
+            app.loading =false;
+            app.successMsg = false;
+            app.errorMsg = "Please Enter Required value";
+            app.errorClass = "error"
      }
      
  }
@@ -101,4 +118,13 @@ $scope.editProject = function (id) {
      });
  }
 
+
+function getResourceData(resourceService,$scope){
+      resourceService.getResources().then(function(res) {
+         $scope.resourceList = res.data;
+         }).catch(function(err) {
+         console.log(err);
+     });
+ }
+ 
    })();

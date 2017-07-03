@@ -3,7 +3,7 @@ var express = require("express"),
  skillSetDAO = require("../models/skillSetDAO.js");
  
 router.get("/", function(req, res) {
- skillSetDAO.find({}, function(err, data) {
+ skillSetDAO.find({},null, {sort:{skillname: 1}}, function(err, data) {
  if (err) {
  res.send("error");
  return;

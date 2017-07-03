@@ -3,7 +3,7 @@ var express = require("express"),
  regionDAO = require("../models/regionDAO.js");
  
 router.get("/", function(req, res) {
- regionDAO.find({}, function(err, data) {
+ regionDAO.find({},null, {sort:{regionname: 1}}, function(err, data) {
  if (err) {
  res.send("error");
  return;

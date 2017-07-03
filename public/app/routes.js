@@ -30,6 +30,10 @@ var app = angular.module('appRoutes',['ngRoute'])
 		authenticated: true
 	})
 
+	.when('/changepassword',{
+		templateUrl: 'app/views/pages/users/changepassword.html',			
+		authenticated: true
+	})
 	.when('/profile',{
 		templateUrl: 'app/views/pages/users/profile.html',			
 		authenticated: true
@@ -37,7 +41,8 @@ var app = angular.module('appRoutes',['ngRoute'])
 
 	.when('/SkillSet', {
             templateUrl: 'app/views/pages/admin/skillSet.html',
-            authenticated: true
+            authenticated: true,
+            controllerAs: 'skill'
           })
 
 	.when('/Project', {
@@ -61,7 +66,7 @@ var app = angular.module('appRoutes',['ngRoute'])
             templateUrl: 'app/views/pages/admin/resource.html',
             authenticated: true
           })
-	.when('/HolidayList', {
+	.when('/Holiday List', {
             templateUrl: 'app/views/pages/admin/holidayList.html',
             authenticated: true
           })
@@ -73,21 +78,20 @@ var app = angular.module('appRoutes',['ngRoute'])
             templateUrl: 'app/views/pages/admin/location.html',
             authenticated: true
           })
-    .when('/Leave', {
+    .when('/Add Leave', {
             templateUrl: 'app/views/pages/admin/leave.html',
             authenticated: true
           })
     .when('/allocationList', {
             templateUrl: 'app/views/pages/allocation/allocationList.html',
-            controller : 'allocationCtrl',
             authenticated: true
           })         	            
 
-     .when('/ResourceMapping', {
-            templateUrl: 'app/views/pages/resourceMapping.html',
+     .when('/Resource Mapping', {
+            templateUrl: 'app/views/pages/resourcemapping/resourceMapping.html',
             authenticated: true
           })	            
-	.when('/ResourceType', {
+	.when('/Resource Type', {
             templateUrl: 'app/views/pages/admin/resourceType.html',
             authenticated: true
           })
@@ -102,7 +106,7 @@ var app = angular.module('appRoutes',['ngRoute'])
 app.run(['$rootScope','Auth','$location',function($rootScope, Auth, $location){
 
 	$rootScope.$on('$routeChangeStart', function(event, next, current){
-		
+		console.log('check-3 :' + next.$$route.authenticated);	
 
 		if(next.$$route.authenticated ==  true){	
 			if(!Auth.isLoggedIn()){
