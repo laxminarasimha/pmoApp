@@ -79,6 +79,7 @@ var app = angular.module('appRoutes',['ngRoute'])
           })
     .when('/allocationList', {
             templateUrl: 'app/views/pages/allocation/allocationList.html',
+            controller : 'allocationCtrl',
             authenticated: true
           })         	            
 
@@ -101,7 +102,7 @@ var app = angular.module('appRoutes',['ngRoute'])
 app.run(['$rootScope','Auth','$location',function($rootScope, Auth, $location){
 
 	$rootScope.$on('$routeChangeStart', function(event, next, current){
-		console.log('check-3 :' + next.$$route.authenticated);	
+		
 
 		if(next.$$route.authenticated ==  true){	
 			if(!Auth.isLoggedIn()){
