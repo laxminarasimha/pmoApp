@@ -96,6 +96,20 @@ var app = angular.module('appRoutes',['ngRoute'])
             templateUrl: 'app/views/pages/admin/resourceType.html',
             authenticated: true
           })
+	.when('/AvailableActualMandays', {
+            templateUrl: 'app/views/pages/data/AvailableActualMandays.html',
+            authenticated: true
+          })
+	.when('/IdleTime', {
+            templateUrl: 'app/views/pages/data/IdleTime.html',
+            authenticated: true
+          })
+	.when('/Utilisation', {
+            templateUrl: 'app/views/pages/data/Utilisation.html',
+            authenticated: true
+          })
+
+
 	.otherwise({redirectTo: '/'});
 
 	$locationProvider.html5Mode({

@@ -1,0 +1,144 @@
+
+<div ng-controller="idleTimeCtrl">
+<form name="idleTimeForm" ng-submit="getIdleTimes(idleTimeDTO)" novalidate >
+<legend>Idle Time</legend>
+<div class="panel panel-info" >  
+  <div class="panel-heading">  
+      <div class='row'>
+        <div class='col-sm-3'>
+             <div  class=form-group>
+                  <label for="resourcename">Resource Name</label>                  
+                  <select ng-model="idleTimeDTO.resource" id="resource"  class="form-control input-sm {{errorClass}}">
+                    <option ng-repeat="x in resourceList" value="{{x.resourcename}}">{{x.resourcename }}</option>
+                 </select>
+              </div>   
+         </div>
+
+         <div class='col-sm-3'>        
+           <div  class=form-group>
+            <label for="resourceType">Resource Type</label>
+            <select ng-model="idleTimeDTO.resourceType" id="resourceType"  class="form-control input-sm {{errorClass}}">
+              <option ng-repeat="x in resourceTypeList" value="{{x.resourceTypename}}">{{x.resourceTypename}}</option>
+           </select>
+           </div>
+        </div> 
+
+        <div class='col-sm-3'>
+            <div  class=form-group>
+            <label for="region">Region</label>
+            <select ng-model="idleTimeDTO.region" id="region"  class="form-control input-sm {{errorClass}}">
+              <option ng-repeat="x in regionList" value="{{x.regionname}}">{{x.regionname}}</option>
+           </select>
+           </div>
+         </div>
+
+      </div>
+   
+
+      <div class='row'>
+         <div class='col-sm-3'>
+             <div  class=form-group>
+              <label for="currentProject">Current Project</label>
+              <select ng-model="idleTimeDTO.project" id="project"  class="form-control input-sm {{errorClass}}">
+              <option ng-repeat="x in projectList" value="{{x.projectname}}">{{x.projectname}}</option>
+              </select>
+             </div>
+         </div> 
+
+         <div class='col-sm-3'>
+             <div  class=form-group>
+              <label for="currentProject">Role</label>
+              <select ng-model="idleTimeDTO.role" id="role"  class="form-control input-sm {{errorClass}}">
+              <option ng-repeat="x in roleList" value="{{x.rolename}}">{{x.rolename}}</option>
+              </select>
+             </div>
+         </div>  
+
+         <div class='col-sm-3'>
+             <div  class=form-group>
+               <label>Start  Date:</label>
+             <input type="text" ng-model="idleTimeDTO.startDate" id = "startDateID" name="startDate" ng-required="true" class="form-control input-sm {{errorClass}}"/>
+             </div>
+          </div>
+      </div>
+      
+        <div class='row'>
+          <div class='col-sm-12'>
+             <div align="right">
+                    
+                    <input type="submit" value="Search" class="btn btn-primary"/>             
+                    <button class="btn btn-warning" ng-click="clearFields()" type="button">Clear</button>                   
+              </div>
+          </div>
+        </div>
+    
+      
+  </div>
+
+   <div class="panel-body" ng-show="loading || successMsg || errorMsg">
+        <div class="row" >
+          <div class='col-sm-12'>
+                <div class="jumbotron text-center" ng-show="loading">
+                  <span class="glyphicon glyphicon-repeat spinner"></span>
+                  <p>Loading...</p>
+                </div>
+                <div class="row show-hide-message" ng-show="successMsg">
+                  <div class="alert alert-success">{{successMsg}}</div>
+                </div>
+                <div class="row show-hide-message" ng-show="errorMsg">
+                  <div class="alert alert-danger">{{errorMsg}}</div>
+                </div>
+            </div>
+        </div>
+      </div>
+
+      
+      <div class="panel-footer">
+              <div class="panel-body">
+                  <table class="table table-striped table-curved" cellspacing="0" width="100%" datatable="ng" dt-options="vm.dtOptions" dt-instance="vm.dtInstance">
+                    <thead class="bg-primary">
+                      <tr>
+                        <th ></th>
+                        <th >Resource Name</th>
+                        <th >Kin ID</th>
+                        <th >Resource Type</th>                  
+                        <th >Region</th>
+                        <th >Status</th>
+                        <th >Action</th>  
+                      </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="x in idleTimeData">
+                            <td align="center"></td>
+                            <td>{{x.mappedResource.resourcename}}</td>
+                            <td>{{x.mappedResource.kinId}}</td>
+                            <td>{{x.resourceType}}</td>
+                            <td>{{x.region}}</td>
+                            <td>{{ x.status }}</td>
+                            <td>
+                              <a  ng-click="editResourceMapping(x._id)">Edit</a> |
+                              <a  ng-click="deleteResourceMapping(x._id)">Delete</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                  </table>
+              </div>
+      </div>
+  </div>
+</form>
+</div>
+
+<script>
+   $(function() {
+      $( "#startDateID" ).datepicker({
+         //appendText:"(dd-MMM-yy)",
+         dateFormat:"dd-MM-yy",
+         minDate: new Date()
+         //showOn:"button",
+         //buttonImage: "/images/calendar-icon.png",
+         //buttonImageOnly: true
+      });   
+   
+   });
+</script>
+
