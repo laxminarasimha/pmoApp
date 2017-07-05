@@ -1,13 +1,21 @@
-<div style="width:1050px; overflow-x:scroll ;  padding-bottom:10px;"> 
+<div class="well well-md" style="border: 1px; overflow-x:scroll ;  padding-bottom:10px;"> 
 	<table class="table table-striped">
-	        <tr style="font-weight:bold">
-	            <td width="150" style='text-align:center;'>Month :</td>
-	            <td align="center" ng-repeat="month in allocation.allocationmonth">{{month.label}}</td>
-	        </tr>
-	        <tr>
-	            <td width="150" style='text-align:center; font-weight:bold;'>Allocation:</td>
-	            <td align="center" ng-repeat="alloc in allocation.allocationmonth">{{alloc.allocationValues}}</td>
-	        </tr>
+			<thead>
+				<tr style="font-weight:bold" ng-repeat="alloc in allocCollection">
+		            <td width="150" style='text-align:center;'>Month :</td>
+		            <td align="center" ng-repeat="month in alloc.allocation">{{month.label}}
+		            </td>
+	        	</tr> 
+			</thead>
+			<tbody>
+	        	<!-- <tr ng-repeat="alloc in allocCollection | resourcewise:resource">
+		            <td width="150" style='text-align:center; font-weight:bold;'>{{alloc.project}}</td> 
+		            <td align="center" ng-repeat="data in alloc.allocation">
+		            	<input type="text" name="input" ng-model="alloc.project"
+           							ng-pattern="example.word" value="alloc.project" maxlength="2" size="2" required ng-trim="false"/>
+		            </td>
+		        </tr> -->
+	        <tbody>
 
 	</table>
-</div> 
+</div>
