@@ -1,21 +1,48 @@
-<div class="well well-md" style="border: 1px; overflow-x:scroll ;  padding-bottom:10px;"> 
-	<table class="table table-striped">
-			<thead>
-				<tr style="font-weight:bold" ng-repeat="alloc in allocCollection">
-		            <td width="150" style='text-align:center;'>Month :</td>
-		            <td align="center" ng-repeat="month in alloc.allocation">{{month.label}}
-		            </td>
-	        	</tr> 
-			</thead>
-			<tbody>
-	        	<!-- <tr ng-repeat="alloc in allocCollection | resourcewise:resource">
-		            <td width="150" style='text-align:center; font-weight:bold;'>{{alloc.project}}</td> 
-		            <td align="center" ng-repeat="data in alloc.allocation">
-		            	<input type="text" name="input" ng-model="alloc.project"
-           							ng-pattern="example.word" value="alloc.project" maxlength="2" size="2" required ng-trim="false"/>
-		            </td>
-		        </tr> -->
-	        <tbody>
+<style>
+#detail {
+  table-layout: fixed; 
+  width: 100%;
+}
 
-	</table>
-</div>
+#detail td, th {
+  vertical-align: top;
+  padding: 10px;
+  width: 100px;
+}
+
+.inner {
+  overflow-x: scroll;
+  overflow-y: visible;
+  width: 1050px; 
+}
+</style>
+
+<div class="inner">
+    <table id="detail" class="table table-striped">
+      	<thead>	
+	      <tr>
+	        <th align="center">Month</th>
+	        <th align="center" ng-repeat="month in monthLabel">{{month}}</th>
+		   </tr>
+	      <tr>
+	    </thead> 
+	    <tbody ng-repeat="allocRecords in allocCollection">
+	    	<tr>
+	    		<td style="font-weight: bold;">Project</td>
+	    		<td align="center" colspan="10" style="font-weight: bold;">
+		    		<font color="green">{{allocRecords.project}}
+		    		</font>
+	    		</td>
+	    	</tr>
+	    	<tr>
+	    		<td style="font-weight: bold;" align="left">Allocation</td>
+
+		    	<td ng-repeat="monthlyAlloc in allocRecords.allocation"> 
+		    				 			 <input type="text" ng-model="monthlyAlloc.allocationValues" maxlength="2" size="2" value="{{monthlyAlloc.allocationValues}}"/> 
+		    				 			
+		    	 	
+	    	 	</td>
+	    	</tr>	
+	    </tbody> 	
+    </table>
+  </div>

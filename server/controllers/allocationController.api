@@ -34,9 +34,14 @@ router.get("/", function(req, res) {
 }).put("/:id", function(req, res) {
  	var id = req.params.id;
  	var obj = req.body;
- 	allocationDAO.findByIdAndUpdate(id, { resource: obj.resource}, 
+ 	allocationDAO.findByIdAndUpdate(id,  {
+        $set: {
+            allocation: req.body.allocation,
+        }
+    }, 
 	function(err) {
  		if (err) {
+ 			console.log('error');
  			res.send("error");
  			return;
  		}

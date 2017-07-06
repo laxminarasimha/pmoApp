@@ -28,6 +28,11 @@
        deleteLeave: function(id) {
        url = globalConfig.apiAddress + "/leave/" + id;
        return $http.delete(url);
+       },
+       getLeaveForResource: function(resource,startdt,enddate) {
+       url = globalConfig.apiAddress + "/leave/" + resource+"/"+startdt+"/"+enddate;
+       console.log(url);
+       return $http.get(url);
        }
    };
  }
