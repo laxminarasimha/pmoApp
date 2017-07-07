@@ -14,7 +14,8 @@ var resourceMappingSchema = new Schema(
                    skill: { type: String, required: false },
                    status: { type: String, required: false },
                    resourceType: { type: String, required: false },
-                   taggToEuroclear: { type: Number, required: false }
+                   taggToEuroclear: { type : Array , "default" : [] },
+                   monthlyAvailableActualMandays: { type : Array , "default" : [] }
                   }, 
                   {
                     collection: 'resourceMapping'
