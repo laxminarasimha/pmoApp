@@ -4,10 +4,12 @@ var mongoose = require("mongoose"),
  
 var allocationSchema = new Schema(
                   {
-                   _id: 		{ type: objectId, auto: true },
+                   _id: 	{ type: objectId, auto: true },
                    resource: 	{ type: String, required: true },
-                   project: 	{ type: String, required: true },
-                   allocationmonth: []
+                   project: 	{ type: String, required: true},
+                   startdate: { type: Date, required: true },
+                   enddate:   { type: Date, required: true },
+                   allocation: []
                   }, 
                   {
                     collection: 'allocation'

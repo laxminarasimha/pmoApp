@@ -1,13 +1,48 @@
-<div style="width:1050px; overflow-x:scroll ;  padding-bottom:10px;"> 
-	<table class="table table-striped">
-	        <tr style="font-weight:bold">
-	            <td width="150" style='text-align:center;'>Month :</td>
-	            <td align="center" ng-repeat="month in allocation.allocationmonth">{{month.label}}</td>
-	        </tr>
-	        <tr>
-	            <td width="150" style='text-align:center; font-weight:bold;'>Allocation:</td>
-	            <td align="center" ng-repeat="alloc in allocation.allocationmonth">{{alloc.allocationValues}}</td>
-	        </tr>
+<style>
+#detail {
+  table-layout: fixed; 
+  width: 100%;
+}
 
-	</table>
-</div> 
+#detail td, th {
+  vertical-align: top;
+  padding: 10px;
+  width: 100px;
+}
+
+.inner {
+  overflow-x: scroll;
+  overflow-y: visible;
+  width: 1050px; 
+}
+</style>
+
+<div class="inner">
+    <table id="detail" class="table table-striped">
+      	<thead>	
+	      <tr>
+	        <th align="center">Month</th>
+	        <th align="center" ng-repeat="month in monthLabel">{{month}}</th>
+		   </tr>
+	      <tr>
+	    </thead> 
+	    <tbody ng-repeat="allocRecords in allocCollection">
+	    	<tr>
+	    		<td style="font-weight: bold;">Project</td>
+	    		<td align="center" colspan="10" style="font-weight: bold;">
+		    		<font color="green">{{allocRecords.project}}
+		    		</font>
+	    		</td>
+	    	</tr>
+	    	<tr>
+	    		<td style="font-weight: bold;" align="left">Allocation</td>
+
+		    	<td ng-repeat="monthlyAlloc in allocRecords.allocation"> 
+		    				 			 <input type="text" ng-model="monthlyAlloc.allocationValues" maxlength="2" size="2" value="{{monthlyAlloc.allocationValues}}"/> 
+		    				 			
+		    	 	
+	    	 	</td>
+	    	</tr>	
+	    </tbody> 	
+    </table>
+  </div>

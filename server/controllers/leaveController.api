@@ -19,6 +19,17 @@ router.get("/", function(req, res) {
  }
  res.send(data[0]);
  });
+ }).get("/:resource/:startdt/:enddate", function(req, res) {
+ var resource = req.params.resource;
+ var startdt = req.params.startdt;
+ var enddate = req.params.enddate;
+ leaveDAO.find({ resourcename: resource ,startDate:{"$gte": new Date(startdt)}, endDate:{"$lte": new Date(enddate)}}, function(err, data) {
+ if (err) {
+ res.send("error");
+ return;
+ }
+ res.send(data[0]);
+ });
 }).post("/", function(req, res) {
  var obj = req.body;
  var model = new leaveDAO(obj);

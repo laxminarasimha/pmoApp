@@ -27,6 +27,7 @@
              
              updateAllocation: function(allocation) {
                   url = globalConfig.apiAddress + "/allocation/" + allocation._id;
+                  console.log(url);
                   return $http.put(url, allocation);
              },
              

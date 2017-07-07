@@ -19,12 +19,12 @@
 			
 			<div class='col-sm-10'>
 				<label>Resources:</label>	
-				<select id="resource-select"  ng-model="resource" required multiple="multiple" multi-select></select>
+				<select id="resource-select"  ng-model="resource" required multiple="multiple" multi-select></select> 
+				<!-- <input id="resource" ng-model="resource" ng-keyup="completeResources()"/> -->
 			</div>
 			<div class='col-sm-2'></div>
 			
 		</div>
-		</br>
 		</form>	
   	</div>	
 
@@ -38,26 +38,27 @@
 		              <tr>
 		              	<th>Action</th>
 		                <th>Name</th>
-		                <th>Project</th>
+		                <!-- <th>Project</th> -->
 		                <!-- <th>Month</th> -->
-		                <th>Tagged%</th>
+		                <th>Skill</th>
+		                <th>Region</th>
 		               <!--  <th align="center">Allocation</th> -->
 		               <!--  <th align="center">Available Mandays</th> -->
-		                <!-- <th align="center">%Allocation</th> -->
+		                <th align="center">Action</th>
 		              </tr>
 		            </thead>
-		            <tbody >
-							  <tr ng-repeat="allocation in allocationList">
-								<td align="center"><a class="green shortinfo" href="javascript:;" ng-click="childInfo(allocation, $event)" title="Click to view more"><i class="glyphicon glyphicon-plus-sign"></a></td>
+		            <tbody>
+							<tr ng-repeat="allocation in allocationList | resourceunique:'resource'">
+								<td align="center"><a class="green shortinfo" href="javascript:;" ng-click="childInfo(allocationList,allocation.resource, $event)" title="Click to view more"><i class="glyphicon glyphicon-plus-sign"></a></td>
 								<td>{{allocation.resource}}</td>
-								<td>{{allocation.project}}</td>
+								<!-- <td>{{allocation.project}}</td> -->
 								<!-- <td>{{allocation.month}}</td> -->
-								<td>{{allocation.tagToEuroclear}}</td>
+								<td>{{allocation.skill}}</td>
+								<td>{{allocation.region}}</td>
 								<!-- <td>{{allocation.allocation}}</td> -->
 								<!-- <td>{{allocation.availableMandays}}</td> -->
-								<!-- td align="center">{{allocation.allocation}}</td> -->
-							  </tr>
-
+								<td align="left"><a class="span" ng-click="updateAllocaiton(allocation.resource);">Save</a></td> 
+							 </tr>
 					</tbody>
        			</table>
 			</div>
@@ -71,7 +72,7 @@
 			<div class="row" allign="right" style="padding-top: 2px">
 						<div class='col-sm-10'/>
 						<div class='col-sm-2'>
-							<button class="btn btn-primary" type="button" ng-click="saveAllocation()">Save</button>
+						<button class="btn btn-primary" type="button" ng-click="saveAllocation()">Save</button>
 							<button class="btn btn-primary" type="button" ng-click="cancel()">Cancel</button> 
 						</div>
 			</div>
@@ -81,7 +82,7 @@
 						<tr>
 					      	<th>Resource</th>
 					      	<th>Project</th>
-					      	<th ng-repeat="data in months">{{data.label}}</th>
+					      	<th ng-repeat="data in months">{{data.month}}</th>
 					      	<th>Action</th>
 					    </tr>
 				    <thead>
@@ -95,9 +96,12 @@
 					      <td>
 					      	<span editable-select="allocRows.project" e-name="project" e-form="rowform" >
 					          <select  ng-model="allocRows.project" ng-options="item.projectname as item.projectname for item in project"/>
+					          <!-- <div class="ui-widget">								  
+								<input id="project" ng-model="allocRows.project" ng-keyup="completeProjects()"> -->
+							</div>
 					        </span>
 					      </td>
-					      <td ng-repeat="months in allocRows.allocationmonth">
+					      <td ng-repeat="months in allocRows.allocation">
 					      	<span editable-select="alloc.tag" e-name="tag"  e-form="rowform">
 					           <input type="text"  name="tagged" ng-model="months.allocationValues"  maxlength="4" size="4"/>
 					        </span>
@@ -115,7 +119,6 @@
 			</div>
 	   </div>
 	</div>
-    
     <script>
 	   $('#resource-select').multiselect();
 		
