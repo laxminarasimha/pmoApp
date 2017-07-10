@@ -14,9 +14,6 @@ angular.module('pmoApp').controller('availableActualMandaysCtrl', Controller);
 
  
  var app = $scope;
-
- 
-
  $scope.mappedResourceList = [];
  getMappedResourceData(resourceMappingService,$scope);
 
@@ -59,7 +56,25 @@ angular.module('pmoApp').controller('availableActualMandaysCtrl', Controller);
 
     
 
- }
+ };
+
+ $scope.getAvailableActualMandays = function(availableActualMandaysDTO) {
+    console.log("Welocme###########");
+    $scope.IsSubmit = true;
+     //if ($scope.availableActualMandaysForm.$valid) {
+        console.log("Sudhkar###########12");
+         availableActualMandaysService.search(availableActualMandaysDTO).then(function(res) {
+         if (res.data == "Search") {
+            getAvailableMandaysData(availableActualMandaysService,$scope);
+            $scope.availableActualMandaysDTO = {};
+         }
+         }).catch(function(err) {
+         console.log(err);
+         });
+     //}else{
+     //   console.log("else BLOCK");
+     //}
+ };
  
 
  //=========================Data table==========================//

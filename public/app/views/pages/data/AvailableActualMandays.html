@@ -8,7 +8,7 @@
         <div class='col-sm-3'>
              <div  class=form-group>
                   <label for="resourcename">Resource Name</label>                  
-                  <select ng-model="availableActualMandaysDTO.resource" id="resource"  class="form-control input-sm {{errorClass}}">
+                  <select ng-model="availableActualMandaysDTO.resource" id="resource"  class="form-control">
                     <option ng-repeat="x in resourceList" value="{{x.resourcename}}">{{x.resourcename }}</option>
                  </select>
               </div>   
@@ -17,7 +17,7 @@
          <div class='col-sm-3'>        
            <div  class=form-group>
             <label for="resourceType">Resource Type</label>
-            <select ng-model="availableActualMandaysDTO.resourceType" id="resourceType"  class="form-control input-sm {{errorClass}}">
+            <select ng-model="availableActualMandaysDTO.resourceType" id="resourceType"  class="form-control">
               <option ng-repeat="x in resourceTypeList" value="{{x.resourceTypename}}">{{x.resourceTypename}}</option>
            </select>
            </div>
@@ -26,7 +26,7 @@
         <div class='col-sm-3'>
             <div  class=form-group>
             <label for="region">Region</label>
-            <select ng-model="availableActualMandaysDTO.region" id="region"  class="form-control input-sm {{errorClass}}">
+            <select ng-model="availableActualMandaysDTO.region" id="region"  class="form-control">
               <option ng-repeat="x in regionList" value="{{x.regionname}}">{{x.regionname}}</option>
            </select>
            </div>
@@ -39,7 +39,7 @@
          <div class='col-sm-3'>
              <div  class=form-group>
               <label for="currentProject">Current Project</label>
-              <select ng-model="availableActualMandaysDTO.project" id="project"  class="form-control input-sm {{errorClass}}">
+              <select ng-model="availableActualMandaysDTO.project" id="project"  class="form-control">
               <option ng-repeat="x in projectList" value="{{x.projectname}}">{{x.projectname}}</option>
               </select>
              </div>
@@ -48,7 +48,7 @@
          <div class='col-sm-3'>
              <div  class=form-group>
               <label for="currentProject">Role</label>
-              <select ng-model="availableActualMandaysDTO.role" id="role"  class="form-control input-sm {{errorClass}}">
+              <select ng-model="availableActualMandaysDTO.role" id="role"  class="form-control">
               <option ng-repeat="x in roleList" value="{{x.rolename}}">{{x.rolename}}</option>
               </select>
              </div>
@@ -57,7 +57,7 @@
          <div class='col-sm-3'>
              <div  class=form-group>
                <label>Start  Date:</label>
-             <input type="text" ng-model="availableActualMandaysDTO.startDate" id = "startDateID" name="startDate" ng-required="true" class="form-control input-sm {{errorClass}}"/>
+             <input type="text" ng-model="availableActualMandaysDTO.startDate" id = "startDateID" name="startDate" ng-required="true" class="form-control"/>
              </div>
           </div>
       </div>

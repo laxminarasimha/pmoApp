@@ -120,5 +120,7 @@ router.use("/resourceType", require("../controllers/resourceTypeController.api")
 router.use("/mappedresource", require("../controllers/resourceMappingController.api"));
 
 router.use("/allocation", require("../controllers/allocationController.api"));
+
+router.use("/avaactmandays", require("../controllers/availableActualMandaysController.api"));
 return router;
 }
