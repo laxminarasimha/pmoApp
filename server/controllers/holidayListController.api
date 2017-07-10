@@ -30,6 +30,24 @@ router.get("/", function(req, res) {
  console.log(data);
  res.send(data);
  });
+}).get("/aggegrate/:location", function(req, res) {
+ var loc = req.params.location;
+ console.log("loc====="+loc);
+ holidayListDAO.aggregate([
+                           {$match : {locationname: loc}},
+                           {$group:{_id:{ locationname: "$locationname" , year : { $year : "$holidayDate" },
+                                     month : { $month : "$holidayDate" }},number:{$sum:1}}},
+                           {$sort: {_id:1}}
+
+                          ], function(err, data) {
+								 if (err) {
+								 res.send("error");
+								 return;
+								 }
+
+								 console.log(data);
+								 res.send(data);
+								 });
 }).post("/", function(req, res) {
  var obj = req.body;
  var model = new holidayListDAO(obj);

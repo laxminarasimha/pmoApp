@@ -5,14 +5,19 @@
 angular.module('pmoApp').controller('resourceMappingCtrl', Controller);
  
  Controller.$inject = ['$scope', '$rootScope', 'DTOptionsBuilder', 'DTColumnBuilder', '$compile','resourceMappingService','resourceService','roleService','locationService',
-                       'regionService','skillSetService','statusService','resourceTypeService'];
+                       'regionService','skillSetService','statusService','resourceTypeService','holidayListService'];
   
  function Controller($scope, $rootScope, DTOptionsBuilder, DTColumnBuilder, $compile, resourceMappingService,resourceService,roleService,locationService,
-                        regionService,skillSetService,statusService,resourceTypeService) {
+                        regionService,skillSetService,statusService,resourceTypeService,holidayListService) {
 
  //$scope.resourcemap = {};
  $rootScope.Title = "Resource Map Listing";
  var app = $scope;
+
+ $scope.resourcemap = {        
+        'taggToEuroclear': [],
+        'monthlyAvailableActualMandays' :[]
+    };
 
  $scope.mongoMappedResourceData = [];
  getMappedResourceData(resourceMappingService,$scope);
@@ -40,9 +45,19 @@ angular.module('pmoApp').controller('resourceMappingCtrl', Controller);
   
  $scope.resourceTypeList = [];
  getResourceTypeData(resourceTypeService,$scope);
+
+ $scope.taggedToEuroclearList = [];
+ prepareTagToEuroclearHeading($scope);
+
+ //$scope.aggegrateHolidayList = [];
+ //$scope.monthWorkDaysListForLocation = [];
+ //prepareHolidayListForLocation(holidayListService,$scope);
   
  $scope.clearFields = function (){
-     $scope.resourcemap = {};
+     $scope.resourcemap = {
+        'taggToEuroclear': [],
+        'monthlyAvailableActualMandays' : []
+     };
      app.loading =false;
      app.successMsg = false;
      app.errorMsg = false;
@@ -76,36 +91,25 @@ $scope.editResourceMapping = function (id) {
  };
  
  $scope.saveData = function(resourcemap) {
+     $rootScope.Title = "Update resourcemap";
      if ($scope.resourceMappingForm.$valid) {
-     resourceMappingService.updateResourceMapping(resourcemap).then(function(res) {
-     if (res.data == "updated") {
-        getMappedResourceData(resourceMappingService,$scope);
-        $scope.resourcemap = {};
-        app.loading =false;
-        app.successMsg = "Resource mapping Updated successfully";
-        app.errorMsg = false;
-     }
-     }).catch(function(err) {
-     console.log(err);
-     });
+            prepareTaggedToEuroclearData($scope,resourcemap);        
+            prepareData(resourceMappingService,app,holidayListService,$scope,resourcemap,false);
+     }else{
+            app.loading =false;
+            app.successMsg = false;
+            app.errorMsg = "Please Enter Required value";
+            app.errorClass = "error"
      }
  };
  
  $scope.createResourceMapping = function(resourcemap) {
      $rootScope.Title = "Create resourcemap";
-     $scope.IsSubmit = true;
-     if ($scope.resourceMappingForm.$valid) {
-         resourceMappingService.createResourceMapping(resourcemap).then(function(res) {
-         if (res.data == "created") {
-            getMappedResourceData(resourceMappingService,$scope);
-            $scope.resourcemap = {};
-            app.loading =false;
-            app.successMsg = "Resource mapping created successfully";
-            app.errorMsg = false;
-         }
-         }).catch(function(err) {
-         console.log(err);
-         });
+     $scope.IsSubmit = true;             
+     //if (false) {
+     if ($scope.resourceMappingForm.$valid) {  
+         prepareTaggedToEuroclearData($scope,resourcemap);        
+         prepareData(resourceMappingService,app,holidayListService,$scope,resourcemap,true);         
      }else
      {
             app.loading =false;
@@ -143,10 +147,201 @@ $scope.editResourceMapping = function (id) {
                 tr.addClass('shown');
               }
         }
-//=============================================================//
+
+}
+
+function createResoucreMap(resourceMappingService,app,$scope){
+    resourceMappingService.createResourceMapping($scope.resourcemap).then(function(res) {
+         if (res.data == "created") {
+            getMappedResourceData(resourceMappingService,$scope);
+            $scope.resourcemap = {
+                'taggToEuroclear': [],
+                'monthlyAvailableActualMandays' : []
+            };
+            app.loading =false;
+            app.successMsg = "Resource mapping created successfully";
+            app.errorMsg = false;
+         }
+         }).catch(function(err) {
+         console.log(err);
+         });
+}
+
+function saveResoucreMap(resourceMappingService,app,$scope){
+    resourceMappingService.updateResourceMapping($scope.resourcemap).then(function(res) {
+         if (res.data == "updated") {
+            getMappedResourceData(resourceMappingService,$scope);
+            $scope.resourcemap = {
+                'taggToEuroclear': [],
+                'monthlyAvailableActualMandays' : []
+            };
+            app.loading =false;
+            app.successMsg = "Resource mapping updated successfully";
+            app.errorMsg = false;
+         }
+         }).catch(function(err) {
+         console.log(err);
+         });
+}
+
+function prepareData(resourceMappingService,app,holidayListService,$scope,resourcemap,isCreate){
+
+  prepareHolidayListForLocation(resourceMappingService,app,holidayListService,$scope,resourcemap,isCreate);
+}
+
+function prepareHolidayListForLocation(resourceMappingService,app,holidayListService,$scope,resourcemap,isCreate){          
+           holidayListService.getAggegrateLocationHolidays(resourcemap.location).then(function(res) {
+                         prepareWorkingDaysForGivenRange(resourceMappingService,app,$scope,res.data,resourcemap,isCreate);
+                         }).catch(function(err) {
+                         console.log(err);
+                     });         
+
+    }
+
+function prepareWorkingDaysForGivenRange(resourceMappingService,app, $scope,aggegrateHolidayList,resourcemap,isCreate){
+         var theMonths = new Array("JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC");
+         var monthWorkDays = [];
+         var taggedToEuroclearList = $scope.taggedToEuroclearList;
+         var location = resourcemap.location;
+         
+           for(var j=0; j<taggedToEuroclearList.length; j++){
+               var leaveFound = false;
+               for(var i=0; i< aggegrateHolidayList.length; i++){ 
+                    var monthyearLabel = theMonths[aggegrateHolidayList[i]._id.month - 1]  + '-' + 
+                             (aggegrateHolidayList[i]._id.year.toString()).substring(2, 4);
+                     if(monthyearLabel == taggedToEuroclearList[j]){
+                       var workdays =  getWorkDays(aggegrateHolidayList[i]._id.month - 1 ,aggegrateHolidayList[i]._id.year);
+                       var realWorkDays = workdays - aggegrateHolidayList[i].number;
+                       var monthWorkDaysObject = {"location" : location, "monthyear" : monthyearLabel, "value" : realWorkDays};
+                       monthWorkDays.push(monthWorkDaysObject);
+                       leaveFound = true;
+                       break;
+                     }
+                
+               }
+
+               if(!leaveFound){
+                     var headeingLabelArray = taggedToEuroclearList[j].split('-');
+                     var month = theMonths.indexOf(headeingLabelArray[0]);
+                     var year = '20' + headeingLabelArray[1] ;
+                     var workdays =  getWorkDays(month ,year);
+                     var monthWorkDaysObject = {"location" : location, "monthyear" : taggedToEuroclearList[j], "value" : workdays};
+                     monthWorkDays.push(monthWorkDaysObject);
+               }
+                 
+            }
+          
+          
+
+         prepareActualAvailableMandaysData(resourceMappingService,app, $scope,resourcemap,monthWorkDays,isCreate);
+    }
 
 
+function prepareActualAvailableMandaysData(resourceMappingService,app, $scope,resourcemap,monthWorkDaysListForLocation,isCreate){
+           var theMonths = new Array("JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC");
+           var taggedToEuroclearList = $scope.taggedToEuroclearList;
+           var monthlyAvailableActualMandaysArray = [];
+           var mappedResourceLocation = resourcemap.location;
+                  
+                for(var j=0; j<taggedToEuroclearList.length; j++){
+                      
+                     for(var k=0; k<monthWorkDaysListForLocation.length; k++){                   
+                       if((mappedResourceLocation == monthWorkDaysListForLocation[k].location)
+                             && (taggedToEuroclearList[j] == monthWorkDaysListForLocation[k].monthyear)){
+                               var taggToEuroclearPercentage = getTaggToEuroclearPercentageForMonth(resourcemap,taggedToEuroclearList[j]);
+                               var actualWorkingDays = (monthWorkDaysListForLocation[k].value)*(taggToEuroclearPercentage/100);
+                               var actualWorkingDaysWithRound = round(actualWorkingDays, 1);
+                               var monthlyAvailableActualMandaysObject = {
+                                "key" : taggedToEuroclearList[j],
+                                "value" : actualWorkingDaysWithRound
+                             };
+                              monthlyAvailableActualMandaysArray.push(monthlyAvailableActualMandaysObject);
+                              break;
+
+                       }
+                    }
+
+               
+
+                }
+
+
+           $scope.resourcemap.monthlyAvailableActualMandays = monthlyAvailableActualMandaysArray;
+           if(isCreate){
+             createResoucreMap(resourceMappingService,app,$scope);
+           }else{
+             saveResoucreMap(resourceMappingService,app,$scope);
+           }
+           
+    }
+
+function getTaggToEuroclearPercentageForMonth(resourcemap,monthyear){
+
+   for(var i=0; i<resourcemap.taggToEuroclear.length;i++){
+     if(monthyear == resourcemap.taggToEuroclear[i].key){
+          return resourcemap.taggToEuroclear[i].value;
+     }
+   }
+}
+
+function round(value, precision) {
+    var multiplier = Math.pow(10, precision || 0);
+    return Math.round(value * multiplier) / multiplier;
+}
+
+function prepareTagToEuroclearHeading($scope){
+       var theMonths = new Array("JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC");
+       var headinglabelArray = [];
+       var x, todayDate = new Date();
+       todayDate.setDate(1);
+        for(x=0; x<12; ++x) {             
+            var headinglabel = theMonths[todayDate.getMonth()] + '-' + (todayDate.getFullYear().toString()).substring(2, 4);;
+            headinglabelArray.push(headinglabel);
+            todayDate.setMonth(todayDate.getMonth()+1);
+        }
+
+        $scope.taggedToEuroclearList = headinglabelArray;
+
+    }
+
+ function prepareTaggedToEuroclearData($scope,resourcemap){
+     var taggedToEuroclearArray = [];
+     var taggedToEuroclearObject = {};
+
+     for(var i=0;i<$scope.taggedToEuroclearList.length;i++){
+       var taggedToEuroclearObject = {
+         "key" : $scope.taggedToEuroclearList[i],
+         "value" : resourcemap.taggToEuroclear[i].value
+       };
+           taggedToEuroclearArray.push(taggedToEuroclearObject);
+     }
+
+     $scope.resourcemap.taggToEuroclear = taggedToEuroclearArray;
  }
+
+ function getDaysInMonth(month,year) {
+       return new Date(year, month+1, 0).getDate();
+}
+
+function getWorkDays(month, year){
+        var days = getDaysInMonth(month, year);
+        console.log(days);
+        var workdays = 0;
+        for(var i = 0; i < days; i++) {
+            if (isWorkDay(year, month, i+1)) {
+                workdays++;
+                }
+        }
+        return workdays;
+
+     }
+
+function isWorkDay(year, month, day){
+        var date = new Date(year, month, day);        
+        var dayOfWeek =  date.getDay();    
+        return (dayOfWeek >=1 && dayOfWeek <=5); // Sun = 0, Mon = 1, and so forth
+    }
+
 
  function getMappedResourceData(resourceMappingService,$scope){
       resourceMappingService.getMappedResources().then(function(res) {

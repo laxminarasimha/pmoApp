@@ -93,30 +93,19 @@
       </div>
       <div class="panel-footer">
               <div class="panel-body">
-                  <table class="table table-striped table-curved" cellspacing="0" width="100%" datatable="ng" dt-options="vm.dtOptions" dt-instance="vm.dtInstance">
+                  <table class="table table-striped table-curved" cellspacing="0" width="100%"
+                     datatable="ng" dt-options="vm.dtOptions" dt-instance="vm.dtInstance">
                     <thead class="bg-primary">
                       <tr>
-                        <th ></th>
-                        <th >Resource Name</th>
-                        <th >Kin ID</th>
-                        <th >Resource Type</th>                  
-                        <th >Region</th>
-                        <th >Status</th>
-                        <th >Action</th>  
+                        <th>Resource name</th>
+                         <th ng-repeat="column in headingList">{{column}}</th>  
                       </tr>
                     </thead>
-                    <tbody>
-                        <tr ng-repeat="x in availableActualMandaysData">
-                            <td align="center"></td>
-                            <td>{{x.mappedResource.resourcename}}</td>
-                            <td>{{x.mappedResource.kinId}}</td>
-                            <td>{{x.resourceType}}</td>
-                            <td>{{x.region}}</td>
-                            <td>{{ x.status }}</td>
-                            <td>
-                              <a  ng-click="editResourceMapping(x._id)">Edit</a> |
-                              <a  ng-click="deleteResourceMapping(x._id)">Delete</a>
-                            </td>
+                    <tbody>                           
+                        <tr ng-repeat="resourceVar in mappedResourceList">
+                            <td>{{ resourceVar.mappedResource.resourcename}}</td>
+                            <td ng-repeat="mandays in resourceVar.monthlyAvailableActualMandays">
+                              {{mandays.value}}</td>                    
                         </tr>
                     </tbody>
                   </table>
