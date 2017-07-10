@@ -5,7 +5,8 @@ appConstants
 				"appConstants",
 				{
 					"right_reserve" : "@All Copyright to Capgemini 2017",
-          "UserName" : "username",  					
-					"DB_ERROR" : "4"
+                    "UserName" : "username",  					
+					"DB_ERROR" : "4",
+					"NoOfMonthToDisplay" :12
 
 				});
