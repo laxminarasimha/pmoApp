@@ -84,7 +84,6 @@ app.controller('allocationCtrl', Controller);
 			}
 		}
 
-
      	var bufferTotal = {
 	     	resource: 	resource,
 	     	project: "",
@@ -92,8 +91,7 @@ app.controller('allocationCtrl', Controller);
      	};
 
      	resourceDetails.push(bufferTotal);
-
-     	   		
+    	   		
 		return resourceDetails;
 	}
 
@@ -182,7 +180,7 @@ app.controller('allocationCtrl', Controller);
      		lreturn = false;
 			angular.forEach(actualMandays,function(actualTime){
 				angular.forEach(actualTime,function(mappedDay){
-					if(mappedDay.key.toLowerCase() === buffTot.month.toLowerCase()){
+					if(mappedDay.key === buffTot.month){
 						buffTot.value = mappedDay.value -buffTot.value;
 						buffTot.conflict = buffTot.value < 0 ? true : false;
 						lreturn = true;
@@ -299,7 +297,6 @@ Controller.$inject = ['$scope','DTOptionsBuilder', 'DTColumnBuilder', '$compile'
 		$scope.updateAllocaiton = function(resource){
 			angular.forEach($scope.allocationList,function(item){
 				if(item.resource === resource){
-					console.log(item);
 					allocationService.updateAllocation(item).then(function(res) {
 				         if (res.data == "created") {
 				         		console.log('updated');
