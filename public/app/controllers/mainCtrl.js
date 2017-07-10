@@ -2,17 +2,27 @@ angular.module('mainController',['authServices'])
 .controller('mainCtrl', function(Auth, $http,$location,$timeout,$rootScope){	
 	var app = this;
 	app.loadMe = false;
-	$rootScope.$on('$routeChangeStart', function(){		
-		if(Auth.isLoggedIn()){			
-			app.isLoggedIn = true;
-			Auth.getUser().then(function(data){	
-			app.username = data.data.resourcename;
-			app.email = data.data.email;
-			app._id = data.data._id;
-			app.kinId = data.data.kinId;
-			app.designation = data.data.designation;
-			app.alias = data.data.alias;
-			app.loadMe = true;
+	$rootScope.$on('$routeChangeStart', function(){	
+
+		if(Auth.isLoggedIn()){					
+			app.isLoggedIn = true;			
+			Auth.getUser().then(function(data){										
+			if(data.data.resourcename !== ""){	
+				app.username = data.data.resourcename;
+				app.email = data.data.email;
+				app._id = data.data._id;
+				app.kinId = data.data.kinId;
+				app.designation = data.data.designation;
+				app.alias = data.data.alias;
+				app.loadMe = true;
+			}else{
+				app.isLoggedIn = false;
+				app.username = '';
+				app.loadMe = false;				
+				Auth.logout();	
+				$location.path('/login');					
+			}
+
 		});
 		}else{			
 			app.isLoggedIn = false;

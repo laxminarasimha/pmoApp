@@ -6,11 +6,11 @@ angular.module('pmoApp').controller('availableActualMandaysCtrl', Controller);
  
  Controller.$inject = ['$filter','$scope', '$rootScope', 'DTOptionsBuilder', 'DTColumnBuilder', '$compile','availableActualMandaysService',
                        'resourceService','roleService','regionService','projectService','resourceTypeService','holidayListService',
-                       'resourceMappingService','locationService'];
+                       'resourceMappingService','locationService','monthlyHeaderListService'];
   
  function Controller($filter,$scope, $rootScope, DTOptionsBuilder, DTColumnBuilder, $compile, availableActualMandaysService,
                      resourceService,roleService,regionService,projectService,resourceTypeService,holidayListService,
-                     resourceMappingService,locationService) {
+                     resourceMappingService,locationService,monthlyHeaderListService) {
 
  
  var app = $scope;
@@ -45,7 +45,7 @@ angular.module('pmoApp').controller('availableActualMandaysCtrl', Controller);
 
 
  $scope.headingList = [];
- prepareTableHeading($scope);
+ prepareTableHeading($scope,monthlyHeaderListService);
   
  $scope.clearFields = function (){
      $scope.availableActualMandaysDTO = {};
@@ -135,18 +135,10 @@ angular.module('pmoApp').controller('availableActualMandaysCtrl', Controller);
  }
 
 
-    function prepareTableHeading($scope){
-       var theMonths = new Array("JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC");
-       var headinglabelArray = [];
-       var x, todayDate = new Date();
-       todayDate.setDate(1);
-        for(x=0; x<12; ++x) {             
-            var headinglabel = theMonths[todayDate.getMonth()] + '-' + (todayDate.getFullYear().toString()).substring(2, 4);;
-            headinglabelArray.push(headinglabel);
-            todayDate.setMonth(todayDate.getMonth()+1);
-        }
+    function prepareTableHeading($scope,monthlyHeaderListService){
+       
 
-        $scope.headingList = headinglabelArray;
+        $scope.headingList = monthlyHeaderListService.getHeaderList();
 
     }
 

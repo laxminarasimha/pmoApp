@@ -5,10 +5,11 @@
 angular.module('pmoApp').controller('resourceMappingCtrl', Controller);
  
  Controller.$inject = ['$scope', '$rootScope', 'DTOptionsBuilder', 'DTColumnBuilder', '$compile','resourceMappingService','resourceService','roleService','locationService',
-                       'regionService','skillSetService','statusService','resourceTypeService','holidayListService'];
+                       'regionService','skillSetService','statusService','resourceTypeService','holidayListService',
+                        'monthlyHeaderListService'];
   
  function Controller($scope, $rootScope, DTOptionsBuilder, DTColumnBuilder, $compile, resourceMappingService,resourceService,roleService,locationService,
-                        regionService,skillSetService,statusService,resourceTypeService,holidayListService) {
+                        regionService,skillSetService,statusService,resourceTypeService,holidayListService,monthlyHeaderListService) {
 
  //$scope.resourcemap = {};
  $rootScope.Title = "Resource Map Listing";
@@ -47,7 +48,7 @@ angular.module('pmoApp').controller('resourceMappingCtrl', Controller);
  getResourceTypeData(resourceTypeService,$scope);
 
  $scope.taggedToEuroclearList = [];
- prepareTagToEuroclearHeading($scope);
+ prepareTagToEuroclearHeading($scope,monthlyHeaderListService);
 
  //$scope.aggegrateHolidayList = [];
  //$scope.monthWorkDaysListForLocation = [];
@@ -94,7 +95,7 @@ $scope.editResourceMapping = function (id) {
      $rootScope.Title = "Update resourcemap";
      if ($scope.resourceMappingForm.$valid) {
             prepareTaggedToEuroclearData($scope,resourcemap);        
-            prepareData(resourceMappingService,app,holidayListService,$scope,resourcemap,false);
+            prepareData(resourceMappingService,app,holidayListService,$scope,resourcemap,false,monthlyHeaderListService);
      }else{
             app.loading =false;
             app.successMsg = false;
@@ -109,7 +110,7 @@ $scope.editResourceMapping = function (id) {
      //if (false) {
      if ($scope.resourceMappingForm.$valid) {  
          prepareTaggedToEuroclearData($scope,resourcemap);        
-         prepareData(resourceMappingService,app,holidayListService,$scope,resourcemap,true);         
+         prepareData(resourceMappingService,app,holidayListService,$scope,resourcemap,true,monthlyHeaderListService);         
      }else
      {
             app.loading =false;
@@ -184,22 +185,22 @@ function saveResoucreMap(resourceMappingService,app,$scope){
          });
 }
 
-function prepareData(resourceMappingService,app,holidayListService,$scope,resourcemap,isCreate){
+function prepareData(resourceMappingService,app,holidayListService,$scope,resourcemap,isCreate,monthlyHeaderListService){
 
-  prepareHolidayListForLocation(resourceMappingService,app,holidayListService,$scope,resourcemap,isCreate);
+  prepareHolidayListForLocation(resourceMappingService,app,holidayListService,$scope,resourcemap,isCreate,monthlyHeaderListService);
 }
 
-function prepareHolidayListForLocation(resourceMappingService,app,holidayListService,$scope,resourcemap,isCreate){          
+function prepareHolidayListForLocation(resourceMappingService,app,holidayListService,$scope,resourcemap,isCreate,monthlyHeaderListService){          
            holidayListService.getAggegrateLocationHolidays(resourcemap.location).then(function(res) {
-                         prepareWorkingDaysForGivenRange(resourceMappingService,app,$scope,res.data,resourcemap,isCreate);
+                         prepareWorkingDaysForGivenRange(resourceMappingService,app,$scope,res.data,resourcemap,isCreate,monthlyHeaderListService);
                          }).catch(function(err) {
                          console.log(err);
                      });         
 
     }
 
-function prepareWorkingDaysForGivenRange(resourceMappingService,app, $scope,aggegrateHolidayList,resourcemap,isCreate){
-         var theMonths = new Array("JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC");
+function prepareWorkingDaysForGivenRange(resourceMappingService,app, $scope,aggegrateHolidayList,resourcemap,isCreate,monthlyHeaderListService){
+         var theMonths = monthlyHeaderListService.getMonthList();
          var monthWorkDays = [];
          var taggedToEuroclearList = $scope.taggedToEuroclearList;
          var location = resourcemap.location;
@@ -233,12 +234,12 @@ function prepareWorkingDaysForGivenRange(resourceMappingService,app, $scope,agge
           
           
 
-         prepareActualAvailableMandaysData(resourceMappingService,app, $scope,resourcemap,monthWorkDays,isCreate);
+         prepareActualAvailableMandaysData(resourceMappingService,app, $scope,resourcemap,monthWorkDays,isCreate,monthlyHeaderListService);
     }
 
 
-function prepareActualAvailableMandaysData(resourceMappingService,app, $scope,resourcemap,monthWorkDaysListForLocation,isCreate){
-           var theMonths = new Array("JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC");
+function prepareActualAvailableMandaysData(resourceMappingService,app, $scope,resourcemap,monthWorkDaysListForLocation,isCreate,monthlyHeaderListService){
+           var theMonths = monthlyHeaderListService.getMonthList();
            var taggedToEuroclearList = $scope.taggedToEuroclearList;
            var monthlyAvailableActualMandaysArray = [];
            var mappedResourceLocation = resourcemap.location;
@@ -289,18 +290,9 @@ function round(value, precision) {
     return Math.round(value * multiplier) / multiplier;
 }
 
-function prepareTagToEuroclearHeading($scope){
-       var theMonths = new Array("JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC");
-       var headinglabelArray = [];
-       var x, todayDate = new Date();
-       todayDate.setDate(1);
-        for(x=0; x<12; ++x) {             
-            var headinglabel = theMonths[todayDate.getMonth()] + '-' + (todayDate.getFullYear().toString()).substring(2, 4);;
-            headinglabelArray.push(headinglabel);
-            todayDate.setMonth(todayDate.getMonth()+1);
-        }
-
-        $scope.taggedToEuroclearList = headinglabelArray;
+function prepareTagToEuroclearHeading($scope,monthlyHeaderListService){
+      
+        $scope.taggedToEuroclearList = monthlyHeaderListService.getHeaderList();
 
     }
 
