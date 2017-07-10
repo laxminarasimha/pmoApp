@@ -23,7 +23,7 @@ if(obj.locationname){
 }
 
 
-console.log(query);
+
 
 resourceMappingDAO.find(query, function(err, data) {
  if (err) {
