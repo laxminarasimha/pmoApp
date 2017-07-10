@@ -31,25 +31,24 @@
             <div class='col-sm-3'>
              <div  class=form-group>
                <label>Start  Date:</label>
-               <input type="text" ng-model="leave.startDate" id = "startDateID" name="startDate" ng-required="true" class="form-control input-sm {{errorClass}}"/>            
+               <input type="text" ng-model="fromDate" id = "startDateID" name="fromDate" ng-required="true" ng-change="numberofdays(fromDate,toDate)" class="form-control input-sm {{errorClass}}"/>            
              </div>
           </div>
           <div class='col-sm-3'>
              <div  class=form-group>
                <label>End  Date:</label>
-                <input type="text" ng-model="leave.endDate" id = "endDateID" name="endDate" ng-required="true" class="form-control input-sm {{errorClass}}"/>
+                <input type="text" ng-model="toDate" id = "endDateID" name="toDate" 
+                ng-change="numberofdays(fromDate,toDate)" ng-required="true" class="form-control input-sm {{errorClass}}"/>
              
              </div>
           </div>  
           <div class='col-sm-3'>
              <div  class=form-group>
                 <label>No of days leaves:</label>
-                <input type="text" style="width:50px;" name="numberOfLeaves" ng-model="leave.numberOfLeaves" ng-value="difference(leave.startDate, leave.endDate)"  disabled class="form-control"/>
-             
-             </div>
+                <input type="text" style="width:50px;" name="numberOfLeaves" ng-model="numberOfLeaves"   
+                  disabled class="form-control"/>
+               </div> 
           </div>
-                   
-        </div>
 
           <div class='row'>      
               <div class='col-sm-12'>
@@ -100,8 +99,8 @@
                 <td>{{ $index + 1 }}</td>
                 <td>{{ x.resourcename }}</td>
         				<td>{{ x.locationname }}</td>
-        				<td>{{ x.startDate | date : "dd-MMM-yy" }}</td>
-        				<td>{{ x.endDate | date : "dd-MMM-yy" }}</td>
+        				<td>{{ x.fromDate | date : "dd-MMM-yy" }}</td>
+        				<td>{{ x.toDate | date : "dd-MMM-yy" }}</td>
         				<td>{{ x.numberOfLeaves}}</td>
                 <td>
                       <a  ng-click="editLeave(x._id)">Edit</a> |
@@ -110,7 +109,6 @@
               </tr>
 						  </tbody>
 					</table>
-					
 			</div>
     </div>
 </div>

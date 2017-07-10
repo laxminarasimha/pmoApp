@@ -28,21 +28,33 @@
 	    </thead> 
 	    <tbody ng-repeat="allocRecords in allocCollection">
 	    	<tr>
-	    		<td style="font-weight: bold;">Project</td>
+	    		<td style="font-weight: bold;">{{allocRecords.project.length > 1 ? "Project" :"" }}</td>
 	    		<td align="center" colspan="10" style="font-weight: bold;">
-		    		<font color="green">{{allocRecords.project}}
+		    		<font color="green">{{allocRecords.project.length > 0 ? allocRecords.project :"Buffered Time"}}
 		    		</font>
 	    		</td>
 	    	</tr>
 	    	<tr>
-	    		<td style="font-weight: bold;" align="left">Allocation</td>
+	    		<td style="font-weight: bold;" align="left">
+
+	    			{{allocRecords.project === "Vacation" ? "Leave" : allocRecords.project === "" ? "Total" : "Allocation"}}
+
+	    		</td>
+
+
 
 		    	<td ng-repeat="monthlyAlloc in allocRecords.allocation"> 
-		    				 			 <input type="text" ng-model="monthlyAlloc.allocationValues" maxlength="2" size="2" value="{{monthlyAlloc.allocationValues}}"/> 
-		    				 			
-		    	 	
+		    		<span ng-if="allocRecords.project !='Vacation' && allocRecords.project.length > 0 ">
+		    			<input type="text" ng-model="monthlyAlloc.value" maxlength="2" size="2" value="{{monthlyAlloc.value}}" /> 
+		    		</span>
+		    		<span colspan="10" ng-if="allocRecords.project ==='Vacation'"  style="font-weight:
+		    			text-align: center" >{{monthlyAlloc.value}} 		</span>
+		    		<span colspan="10" ng-if="allocRecords.project.length <= 0" style="font-weight: 
+		    			bold;background-color:{{monthlyAlloc.conflict === true ? 'red' : ''}} ;text-align: center" >
+		    				{{monthlyAlloc.value}}
+		    		</span>
 	    	 	</td>
-	    	</tr>	
+	    	</tr>
 	    </tbody> 	
     </table>
   </div>

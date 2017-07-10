@@ -9,14 +9,50 @@
 		<tr>
 		    <th class="bg-warning" width="25%">Alias</th>
 			<td class="bg-warning" width="25%">{{resourcemap.mappedResource.alias}}</td>
-			<th class="bg-warning" width="25%">% Tagged to Euroclear</th>
-			<td class="bg-warning" width="25%">{{resourcemap.taggToEuroclear}} %</td>		
-		</tr>
-		<tr>
 			<th class="bg-warning" width="25%">Location</th>
-			<td class="bg-warning" width="25%">{{resourcemap.location}}</td>
+			<td class="bg-warning" width="25%">{{resourcemap.location}}</td>					
+		</tr>
+		<tr>			
 			<th class="bg-warning" width="25%">E-mail ID</th>
 			<td class="bg-warning" width="25%">{{resourcemap.mappedResource.email}}</td>		
-		</tr>	
+			<th class="bg-warning" width="25%"></th>
+			<td class="bg-warning" width="25%"></td>
+		</tr>
+		
 	</table>
+     <b>%Tagged to Euroclear</b>
+	 <div class="panel-body">
+          <table class="table table-striped table-curved" cellspacing="0" width="100%">
+            <thead>
+              <tr class="danger">                        
+                 <th ng-repeat="column in resourcemap.taggToEuroclear">{{column.key}}</th>  
+              </tr>
+            </thead>
+            <tbody>
+                <tr>            
+                    <td ng-repeat="column in resourcemap.taggToEuroclear">
+                      {{column.value}} %
+                    </td>          
+                </tr>
+            </tbody>
+          </table>
+      </div>
+
+      <b>Available Actual Mandays</b>
+	 <div class="panel-body">
+          <table class="table table-striped table-curved" cellspacing="0" width="100%">
+            <thead>
+              <tr class="danger">                        
+                 <th ng-repeat="column in resourcemap.monthlyAvailableActualMandays">{{column.key}}</th>  
+              </tr>
+            </thead>
+            <tbody>
+                <tr>            
+                    <td ng-repeat="column in resourcemap.monthlyAvailableActualMandays">
+                      {{column.value}} 
+                    </td>          
+                </tr>
+            </tbody>
+          </table>
+      </div>
 </div>

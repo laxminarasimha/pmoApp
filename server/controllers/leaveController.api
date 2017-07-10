@@ -19,18 +19,7 @@ router.get("/", function(req, res) {
  }
  res.send(data[0]);
  });
- }).get("/:resource/:startdt/:enddate", function(req, res) {
- var resource = req.params.resource;
- var startdt = req.params.startdt;
- var enddate = req.params.enddate;
- leaveDAO.find({ resourcename: resource ,startDate:{"$gte": new Date(startdt)}, endDate:{"$lte": new Date(enddate)}}, function(err, data) {
- if (err) {
- res.send("error");
- return;
- }
- res.send(data[0]);
- });
-}).post("/", function(req, res) {
+ }).post("/", function(req, res) {
  var obj = req.body;
  var model = new leaveDAO(obj);
  model.save(function(err) {
@@ -45,7 +34,7 @@ router.get("/", function(req, res) {
  var id = req.params.id;
  var obj = req.body;
  
- leaveDAO.findByIdAndUpdate(id, { resourcename: obj.resourcename,locationname:obj.locationname,startDate:obj.startDate,endDate:obj.endDate,numberOfLeaves:obj.numberOfLeaves}, 
+ leaveDAO.findByIdAndUpdate(id, { resourcename: obj.resourcename,locationname:obj.locationname,fromDate:obj.fromDate,toDate:obj.toDate,numberOfLeaves:obj.numberOfLeaves,leavedaysinmonth:obj.leavedaysinmonth}, 
 function(err) {
  if (err) {
  res.send("error");

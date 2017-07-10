@@ -68,6 +68,7 @@ $scope.editHoliday = function (id) {
  
  $scope.createHoliday = function(holiday) {
      $rootScope.Title = "Create Holiday";
+     alert(holiday.holidayDate);
      $scope.IsSubmit = true;
      if ($scope.holidayForm.$valid) {
          holidayListService.createHoliday(holiday).then(function(res) {

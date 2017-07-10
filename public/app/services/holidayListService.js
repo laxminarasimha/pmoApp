@@ -20,6 +20,11 @@
        return $http.get(url);
        },
 
+       getAggegrateLocationHolidays: function(location) {
+       url = globalConfig.apiAddress + "/holiday/aggegrate/"+location;
+       return $http.get(url);
+       },
+
        getHolidayForID: function(id) {
        url = globalConfig.apiAddress + "/holiday/" + id;
        return $http.get(url);

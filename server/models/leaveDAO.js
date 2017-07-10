@@ -5,11 +5,12 @@ var mongoose = require("mongoose"),
 var leaveSchema = new Schema(
                   {
                    _id: { type: objectId, auto: true },
-                   resourcename: { type: String, required: false },
-				   locationname: { type: String, required: false },
-				   startDate: { type: Date, required: false },
-				   endDate: { type: Date, required: false },
-				   numberOfLeaves: { type: String, required: false }
+                   resourcename: { type: String, required: true },
+        				   locationname: { type: String, required: true },
+        				   fromDate: { type: Date, required: true },
+        				   toDate: { type: Date, required: true },
+        				   numberOfLeaves: { type: String, required: true },
+                   leavedaysinmonth:[]
                   }, 
                   {
                     collection: 'leave'
