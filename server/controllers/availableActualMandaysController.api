@@ -4,7 +4,28 @@ var express = require("express"),
  
 router.post("/", function(req, res) {
 var obj = req.body;
-resourceMappingDAO.find({"mappedResource.resourcename": obj.resource,"region":     obj.region,"resourceType": obj.resourceType}, function(err, data) {
+
+var query = {};
+if(obj.resourcename){
+	query["mappedResource.resourcename"] = obj.resourcename;
+}
+if(obj.region){
+	query["region"] = obj.region;
+}
+if(obj.resourceType){
+	query["resourceType"] = obj.resourceType;
+}
+if(obj.skillname){
+	query["skill"] = obj.skillname;
+}
+if(obj.locationname){
+	query["location"] = obj.locationname;
+}
+
+
+console.log(query);
+
+resourceMappingDAO.find(query, function(err, data) {
  if (err) {
  res.send("error");
  return;

@@ -17,11 +17,7 @@
 
  $rootScope.Title = "Skill Set Listing";
 
- skillSetService.getSkillSets().then(function(res) {
-   $scope.mongoSkillData = res.data;
-   }).catch(function(err) {
-   console.log(err);
- });
+ getSkillData(skillSetService,$scope);
  
   
  $scope.clearFields = function (){
