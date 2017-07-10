@@ -48,6 +48,7 @@ angular.module('pmoApp').controller('leaveCtrl', Controller);
      };
  
     $scope.editLeave = function (id) {
+        
          $rootScope.Title = "Edit Leave";
          leaveService.getLeaveForID(id).then(function(res) {
          $scope.leave = res.data;
@@ -58,9 +59,9 @@ angular.module('pmoApp').controller('leaveCtrl', Controller);
      };
  
     $scope.saveData = function(leave) {
-        if ($scope.leaveForm.$valid) {
-            leave.fromDate=$scope.fromDate;
-            leave.toDate=$scope.toDate;
+        if ($scope.leaveForm.$valid) {    
+            leave.fromDate=$scope.leave.fromDate;
+            leave.toDate=$scope.leave.toDate;
             leave.numberOfLeaves=$scope.numberOfLeaves;
             leave.leavedaysinmonth=$scope.monthwiseLeave;
             leaveService.updateLeave(leave).then(function(res) {
@@ -80,11 +81,13 @@ angular.module('pmoApp').controller('leaveCtrl', Controller);
     $scope.createLeave = function(leave) {
          $rootScope.Title = "Create Leave";
          $scope.IsSubmit = true;
-         if ($scope.leaveForm.$valid) {
-            leave.fromDate=$scope.fromDate;
-            leave.toDate=$scope.toDate;
+
+         if ($scope.leaveForm.$valid) {           
+            leave.fromDate=$scope.leave.fromDate;
+            leave.toDate=$scope.leave.toDate;
             leave.numberOfLeaves=$scope.numberOfLeaves;
             leave.leavedaysinmonth=$scope.monthwiseLeave;
+             console.log(leave);
             leaveService.createLeave(leave).then(function(res) {
         
              if (res.data == "created") {
@@ -107,6 +110,7 @@ angular.module('pmoApp').controller('leaveCtrl', Controller);
     };
 
     $scope.numberofdays = function (fromDate,toDate) {
+        
             if(toDate != null && fromDate !=null) {
                var holidays = {};
                 holidays["holiday"] = $scope.holidayList.split(",");
@@ -121,13 +125,15 @@ angular.module('pmoApp').controller('leaveCtrl', Controller);
                       daysDiff--;
                 }
             }
-            	$scope.numberOfLeaves = daysDiff;
-                $scope.monthwiseLeave(daysDiff,fromDate,toDate);
+            
+            	
+                $scope.numberOfLeaves = daysDiff;                
+                monthwiseLeave(daysDiff,fromDate,toDate,$scope);
+                
             	return  $scope.numberOfLeaves;
             }
         }
     };
-
 
     function daysDiff (fromDate,toDate) {
             
@@ -150,7 +156,7 @@ angular.module('pmoApp').controller('leaveCtrl', Controller);
     };
 
 
-    $scope.monthwiseLeave = function(days,fromDate,toDate){
+    function monthwiseLeave(days,fromDate,toDate,$scope){
 
        var monthNames = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun",
             "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" ];
