@@ -119,8 +119,20 @@
       <div class="container-fluid">    
         <div class="collapse navbar-collapse" id="myNavbar">
               <ul class="nav navbar-nav">
-                <li ng-repeat="menu in menuData"><a class="text-white" href="/{{menu.name}}"  data-toggle="{{ menu.submenu.length > 0 ? 'dropdown' : 'undefined'}}">{{menu.name}} <b ng-if="menu.submenu.length > 0" class="caret"></b></a>
-                  <ul class="dropdown-menu">
+                <li ng-repeat="menu in menuData">
+                 <a class="text-white"                                              
+                      ng-if="menu.submenu.length == 0"
+                      href="/{{menu.name}}" 
+                      onclick="return true;">{{menu.name}}                       
+                 </a>
+                 <a class="text-white" 
+                      ng-if="menu.submenu.length > 0"
+                      href="#"
+                      data-toggle="{{ menu.submenu.length > 0 ? 'dropdown' : 'undefined'}}"                      
+                      onclick="return false;">{{menu.name}} 
+                      <b ng-if="menu.submenu.length > 0" class="caret"></b>
+                 </a>
+                     <ul class="dropdown-menu">
                      <li ng-repeat="subMenuData in menu.submenu">
                       <a href="/{{subMenuData.page !=null ? subMenuData.page : subMenuData.name}}">{{subMenuData.name}}</a></li>
                   </ul> 
