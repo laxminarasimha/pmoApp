@@ -108,7 +108,10 @@ var app = angular.module('appRoutes',['ngRoute'])
             templateUrl: 'app/views/pages/data/Utilisation.html',
             authenticated: true
           })
-
+	.when('/Home', {
+            templateUrl: 'app/views/pages/home.html',
+            authenticated: true
+          })
 
 	.otherwise({redirectTo: '/'});
 
