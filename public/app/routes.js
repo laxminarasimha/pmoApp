@@ -113,9 +113,12 @@ var app = angular.module('appRoutes',['ngRoute'])
             authenticated: true
           })
 
+	.when('/Skill Set Availability',{
+		templateUrl: 'app/views/pages/reporting/skillsetAvailability.html',
+        authenticated: true
+	})
 
-
-	.otherwise({redirectTo: '/'});
+	.otherwise({redirectTo: '/Home'});
 
 	$locationProvider.html5Mode({
 		enabled:true,

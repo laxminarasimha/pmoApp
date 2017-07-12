@@ -21,8 +21,8 @@
 },
 {
 "id" : "5",
-"name" : "Graphs",
-"submenu" : [{"id":"1", "name":"SwedenGraph"},{"id":"1", "name":"FinlandGraph"}]
+"name" : "Reports",
+"submenu" : [{"id":"1", "name":"Skill Set Availability"},{"id":"1", "name":"FinlandGraph"}]
 },
 {
 "id" : "6",
