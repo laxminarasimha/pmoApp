@@ -98,27 +98,25 @@
                   <table class="table table-striped table-curved" cellspacing="0" width="100%" datatable="ng" dt-options="vm.dtOptions" dt-instance="vm.dtInstance">
                     <thead class="bg-primary">
                       <tr>
-                        <th ></th>
-                        <th >Resource Name</th>
-                        <th >Kin ID</th>
-                        <th >Resource Type</th>                  
-                        <th >Region</th>
-                        <th >Status</th>
-                        <th >Action</th>  
+                        <th>Resource name</th>
+                         <th ng-repeat="column in headingList">{{column}}</th>  
                       </tr>
                     </thead>
                     <tbody>
-                        <tr ng-repeat="x in idleTimeData">
-                            <td align="center"></td>
-                            <td>{{x.mappedResource.resourcename}}</td>
-                            <td>{{x.mappedResource.kinId}}</td>
-                            <td>{{x.resourceType}}</td>
-                            <td>{{x.region}}</td>
-                            <td>{{ x.status }}</td>
-                            <td>
-                              <a  ng-click="editResourceMapping(x._id)">Edit</a> |
-                              <a  ng-click="deleteResourceMapping(x._id)">Delete</a>
-                            </td>
+                        <tr ng-repeat="resourceVar in idleTimeData">
+                            <td>{{ resourceVar.name}}</td>
+                            <td ng-repeat="column in headingList">                              
+                              <div ng-repeat="idleTime in resourceVar.idleTimeArray">
+                                  <div ng-if="idleTime.key==column">
+                                    <span ng-if="idleTime.value==100" style="background-color: red !important">{{idleTime.value}}%
+                                    </span>
+                                    <span ng-if="idleTime.value==0 && idleTime.value!=100" style="background-color: #7030A0 !important">{{idleTime.value}}%
+                                    </span>
+                                    <span ng-if="idleTime.value < 100 && idleTime.value!=0">{{idleTime.value}}%
+                                    </span>
+                                  </div>
+                              </div>
+                            </td>                    
                         </tr>
                     </tbody>
                   </table>

@@ -39,6 +39,7 @@
         var resourceDetails = [];
         var uniqueResource = $filter('resourceunique')(this.allocation,'resource');
         var list = filter(this.allocation,uniqueResource,this.resourceMapped,this.leaves,month,$filter);
+        return list;
        
       }
   }
@@ -145,7 +146,8 @@
               }
                 
               sum = sum + parseInt(object.leave);
-              object.buffertime = Math.round(item.value - sum);
+              //console.log(item.value);
+              object.buffertime = round((item.value - sum),1);
               return;
             }
         });
@@ -168,6 +170,11 @@
       }        
       return arr;
   }
+
+  function round(value, precision) {
+      var multiplier = Math.pow(10, precision || 0);
+      return Math.round(value * multiplier) / multiplier;
+    }
 
 })();  
   

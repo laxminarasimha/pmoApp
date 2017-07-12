@@ -251,7 +251,7 @@ function prepareActualAvailableMandaysData(resourceMappingService,app, $scope,re
                              && (taggedToEuroclearList[j] == monthWorkDaysListForLocation[k].monthyear)){
                                var taggToEuroclearPercentage = getTaggToEuroclearPercentageForMonth(resourcemap,taggedToEuroclearList[j]);
                                var actualWorkingDays = (monthWorkDaysListForLocation[k].value)*(taggToEuroclearPercentage/100);
-                               var actualWorkingDaysWithRound = round(actualWorkingDays, 1);
+                               var actualWorkingDaysWithRound = monthlyHeaderListService.getRoundNumber(actualWorkingDays, 1);
                                var monthlyAvailableActualMandaysObject = {
                                 "key" : taggedToEuroclearList[j],
                                 "value" : actualWorkingDaysWithRound
@@ -285,10 +285,6 @@ function getTaggToEuroclearPercentageForMonth(resourcemap,monthyear){
    }
 }
 
-function round(value, precision) {
-    var multiplier = Math.pow(10, precision || 0);
-    return Math.round(value * multiplier) / multiplier;
-}
 
 function prepareTagToEuroclearHeading($scope,monthlyHeaderListService){
       
