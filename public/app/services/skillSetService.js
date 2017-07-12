@@ -14,6 +14,14 @@
        url = globalConfig.apiAddress + "/skillSet";
        return $http.get(url);
        },
+       getSkillSetsCount: function() {
+       url = globalConfig.apiAddress + "/skillSet/count/"+"countNo";
+       return $http.get(url);
+       },
+       getSkillSetsPaginationData: function(page,size) {
+       url = globalConfig.apiAddress + "/skillSet/pagination/"+page+"/"+size;
+       return $http.get(url);
+       },
        getSkillSetsForID: function(id) {
        url = globalConfig.apiAddress + "/skillset/" + id;
        return $http.get(url);

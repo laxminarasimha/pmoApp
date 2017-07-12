@@ -115,7 +115,7 @@ var app = angular.module('appRoutes',['ngRoute'])
 
 
 
-	.otherwise({redirectTo: '/Home'});
+	.otherwise({redirectTo: '/'});
 
 	$locationProvider.html5Mode({
 		enabled:true,
