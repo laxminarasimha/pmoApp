@@ -3,9 +3,9 @@
  
 angular.module('pmoApp').controller('leaveCtrl', Controller);
  
- Controller.$inject = ['$scope', '$filter', '$rootScope', 'leaveService','locationService', 'resourceService','holidayListService','DTOptionsBuilder', 'DTColumnBuilder'];
+ Controller.$inject = ['$scope', '$filter', '$rootScope', 'leaveService','locationService', 'resourceService','holidayListService','DTOptionsBuilder', 'DTColumnBuilder','availableDaysService'];
   
- function Controller($scope, $filter, $rootScope, leaveService,locationService,resourceService,holidayListService,DTOptionsBuilder, DTColumnBuilder) {
+ function Controller($scope, $filter, $rootScope, leaveService,locationService,resourceService,holidayListService,DTOptionsBuilder, DTColumnBuilder,availableDaysService) {
      $scope.mongoLeaveData = [];
      $scope.locationList = [];
      $scope.resourceList = [];
@@ -13,6 +13,8 @@ angular.module('pmoApp').controller('leaveCtrl', Controller);
      $scope.toDate;
      $scope.fromDate;
      $scope.numberOfLeaves;
+
+     availableDaysService.getData();
 
      var app = $scope;
  
