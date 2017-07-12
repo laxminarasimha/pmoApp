@@ -14,7 +14,6 @@ angular.module('pmoApp').controller('leaveCtrl', Controller);
      $scope.fromDate;
      $scope.numberOfLeaves;
 
-     availableDaysService.getData();
 
      var app = $scope;
  
