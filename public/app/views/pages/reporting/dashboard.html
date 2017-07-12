@@ -7,7 +7,7 @@
                         <div class="panel-heading">
                             <div class="row">
                                 <div class="col-xs-3">
-                                    <span class="glyphicon glyphicon-thumbs-up gi-5x" aria-hidden="true"></span>
+                                    <span class="glyphicon glyphicon-user gi-5x" aria-hidden="true"></span>
                                 </div>
                                 <div class="col-xs-9 text-right">
                                     <div class="gi-3x">{{ResourceData.length}}</div>
@@ -18,7 +18,7 @@
                         <a href="#">
                             <div class="panel-footer">
                                 <span class="pull-left"><a href="/Resource">View Details</a></span>
-                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                <span class="pull-right"><span class="glyphicon glyphicon-option-horizontal " aria-hidden="true"></span></span>
                                 <div class="clearfix"></div>
                             </div>
                         </a>
@@ -29,7 +29,7 @@
                         <div class="panel-heading">
                             <div class="row">
                                 <div class="col-xs-3">
-                                    <span class="glyphicon glyphicon-signal gi-5x" aria-hidden="true"></span>
+                                    <span class="glyphicon glyphicon-book gi-5x" aria-hidden="true"></span>
                                 </div>
                                 <div class="col-xs-9 text-right">
                                     <div class="gi-3x">{{ProjectData.length}}</div>
@@ -40,7 +40,7 @@
                         <a href="#">
                             <div class="panel-footer">
                                 <span class="pull-left"><a href="/Project">View Details</a></span>
-                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                <span class="pull-right"><span class="glyphicon glyphicon-option-horizontal" aria-hidden="true"></span></span>
                                 <div class="clearfix"></div>
                             </div>
                         </a>
@@ -62,7 +62,7 @@
                         <a href="#">
                             <div class="panel-footer">
                                 <span class="pull-left">View Details</span>
-                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                <span class="pull-right"><span class="glyphicon glyphicon-option-horizontal" aria-hidden="true"></span></span>
                                 <div class="clearfix"></div>
                             </div>
                         </a>
@@ -74,8 +74,7 @@
                         <div class="panel-heading">
                             <div class="row">
                                 <div class="col-xs-3">
-                                    <span class="glyphicon glyphicon-cog
-glyphicon  gi-5x" aria-hidden="true"></span>
+                                    <span class="glyphicon glyphicon-time  gi-5x" aria-hidden="true"></span>
                                 </div>
                                 <div class="col-xs-9 text-right">
                                     <div class="gi-3x">140 Hrs</div>
@@ -83,10 +82,12 @@ glyphicon  gi-5x" aria-hidden="true"></span>
                                 </div>
                             </div>
                         </div>
+                         
+                       
                         <a href="#">
                             <div class="panel-footer">
                                 <span class="pull-left">View Details</span>
-                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                <span class="pull-right"><span class="glyphicon glyphicon-option-horizontal" aria-hidden="true"></span></span>
                                 <div class="clearfix"></div>
                             </div>
                         </a>
@@ -130,17 +131,17 @@ glyphicon  gi-5x" aria-hidden="true"></span>
 
     <div class="panel panel-default">
         <div class="panel-heading">
-         <span class="glyphicon glyphicon-bell" aria-hidden="true"></span> Notifications Panel
+            <span class="glyphicon glyphicon-bell" aria-hidden="true"></span> Notifications Panel
         </div>
-   <div class="Pannel-body">
-    <ul>
-          <li ng-repeat='x in ProjectData'>{{x.projectname}}</li>
-    </ul>    
-    </br>
-
-    <p>Some default panel content here. Nulla vitae elit libero, a pharetra augue. Aenean lacinia bibendum nulla sed consectetur. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Nullam id dolor id nibh ultricies vehicula ut id elit.
-    </p>
-    </div>
+        <div class="Pannel-body">
+            <canvas id="piChart"></canvas>
+            
+        </div>
+        <div class="Pannel-footer">
+            <ul>
+                  <li ng-repeat='x in ProjectData'>{{x.projectname}}</li>
+            </ul>              
+        </div>
     </div>
 </div>
 </div>
