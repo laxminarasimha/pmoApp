@@ -19,6 +19,33 @@ router.get("/", function(req, res) {
  }
  res.send(data[0]);
  });
+}).get("/count/:countNo", function(req, res) {
+ skillSetDAO.count({}, function(err, data) {
+ if (err) {
+ res.send("error");
+ return;
+ }
+ 
+ var result = {"data":data};
+ res.send(result);
+ });
+}).get("/pagination/:page/:size", function(req, res) {
+ 
+var page = parseInt(req.params.page),
+            size = parseInt(req.params.size),
+            skip = page > 0 ? ((page - 1) * size) : 0;
+
+
+ skillSetDAO.find(null, null, {
+					            skip: skip,
+					            limit: size
+					        }, function(err, data) {
+									 if (err) {
+									 res.send("error");
+									 return;
+									 }
+									 res.send(data);
+									 });
 }).post("/", function(req, res) {
  var obj = req.body;
  var model = new skillSetDAO(obj);

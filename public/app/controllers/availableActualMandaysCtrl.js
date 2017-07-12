@@ -6,17 +6,14 @@ angular.module('pmoApp').controller('availableActualMandaysCtrl', Controller);
  
  Controller.$inject = ['$filter','$scope', '$rootScope', 'DTOptionsBuilder', 'DTColumnBuilder', '$compile','availableActualMandaysService',
                        'resourceService','roleService','regionService','projectService','resourceTypeService','holidayListService',
-                       'resourceMappingService','locationService','monthlyHeaderListService'];
+                       'resourceMappingService','locationService','monthlyHeaderListService','skillSetService'];
   
  function Controller($filter,$scope, $rootScope, DTOptionsBuilder, DTColumnBuilder, $compile, availableActualMandaysService,
                      resourceService,roleService,regionService,projectService,resourceTypeService,holidayListService,
-                     resourceMappingService,locationService,monthlyHeaderListService) {
+                     resourceMappingService,locationService,monthlyHeaderListService,skillSetService) {
 
  
  var app = $scope;
-
- 
-
  $scope.mappedResourceList = [];
  getMappedResourceData(resourceMappingService,$scope);
 
@@ -46,6 +43,9 @@ angular.module('pmoApp').controller('availableActualMandaysCtrl', Controller);
 
  $scope.headingList = [];
  prepareTableHeading($scope,monthlyHeaderListService);
+
+ $scope.skillDataList = [];
+ getSkillData(skillSetService,$scope);
   
  $scope.clearFields = function (){
      $scope.availableActualMandaysDTO = {};
@@ -53,13 +53,23 @@ angular.module('pmoApp').controller('availableActualMandaysCtrl', Controller);
      app.successMsg = false;
      app.errorMsg = false;
      app.errorClass = "";
-
-
-     prepareActualAvailableMandaysData($scope);
-
     
 
- }
+ };
+
+ $scope.getAvailableActualMandays = function(availableActualMandaysDTO) {
+    
+    $scope.IsSubmit = true;
+         availableActualMandaysService.search(availableActualMandaysDTO).then(function(res) {
+         $scope.mappedResourceList = res.data;
+         app.loading = false;
+         app.successMsg = "Data feteched successfully";
+         app.errorMsg = false;
+         }).catch(function(err) {
+         console.log(err);
+         });
+     
+ };
  
 
  //=========================Data table==========================//
@@ -132,6 +142,14 @@ angular.module('pmoApp').controller('availableActualMandaysCtrl', Controller);
          }).catch(function(err) {
          console.log(err);
      });
+ }
+
+ function getSkillData(skillSetService,$scope){
+        skillSetService.getSkillSets().then(function(res) {
+           $scope.skillDataList = res.data;
+           }).catch(function(err) {
+           console.log(err);
+         });
  }
 
 

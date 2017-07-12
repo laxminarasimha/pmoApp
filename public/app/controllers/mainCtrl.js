@@ -39,7 +39,7 @@ angular.module('mainController',['authServices'])
 			if(data.data.success){				
 				app.loading =false;
 				app.successMsg = data.data.message + '... Redirecting';
-				$timeout(function(){$location.path('/profile');
+				$timeout(function(){$location.path('/Home');
 					app.loginData = '';
 					app.successMsg = false;
 				},2000);

@@ -33,7 +33,7 @@
   
   <script src="assets/js/jquery-ui.js"></script><!-- For calender --> 
 
-
+  <script src="assets/js/jquery.bootpag.min.js"></script><!-- For Pagination --> 
 
   <!-- Main Angular Files -->
   <script src="assets/js/angular.min.js"></script>
@@ -42,6 +42,15 @@
   <script src="assets/js/angular-route.min.js"></script>
   <script src="assets/js/angular-animate.min.js"></script>
   <script src="assets/js/bootstrap-multiselect.js"></script>
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+  <script src="http://cdn.jsdelivr.net/angular.chartjs/latest/angular-chart.min.js"></script>
+  
+  
+  <script src="assets/js/highcharts.js"></script>
+
+  <script src="https://code.highcharts.com/highcharts-more.js"></script>
+  
 
  
 
@@ -69,7 +78,8 @@
   <script src="app/controllers/availableActualMandaysCtrl.js"></script>
   <script src="app/controllers/idleTimeCtrl.js"></script>
   <script src="app/controllers/utilisationCtrl.js"></script>
-
+  <script src="app/controllers/dashBoardCtrl.js"></script>
+  <script src="app/controllers/skillsetAvailabilityCtrl.js"></script>
   
   
   <!-- Angular Services -->
@@ -93,9 +103,8 @@
   <script src="app/services/idleTimeService.js"></script>
   <script src="app/services/utilisationService.js"></script>
   <script src="app/services/monthlyHeaderListService.js"></script>
- 
+  <script src="app/services/dashboardService.js"></script>
 
-  
 
   <!-- Angular Directive -->
   <script src="app/directive/allocationDirective.js"></script>
@@ -123,8 +132,20 @@
       <div class="container-fluid">    
         <div class="collapse navbar-collapse" id="myNavbar">
               <ul class="nav navbar-nav">
-                <li ng-repeat="menu in menuData"><a class="text-white" href="/{{menu.name}}"  data-toggle="{{ menu.submenu.length > 0 ? 'dropdown' : 'undefined'}}">{{menu.name}} <b ng-if="menu.submenu.length > 0" class="caret"></b></a>
-                  <ul class="dropdown-menu">
+                <li ng-repeat="menu in menuData">
+                 <a class="text-white"                                              
+                      ng-if="menu.submenu.length == 0"
+                      href="/{{menu.name}}" 
+                      onclick="return true;">{{menu.name}}                       
+                 </a>
+                 <a class="text-white" 
+                      ng-if="menu.submenu.length > 0"
+                      href="#"
+                      data-toggle="{{ menu.submenu.length > 0 ? 'dropdown' : 'undefined'}}"                      
+                      onclick="return false;">{{menu.name}} 
+                      <b ng-if="menu.submenu.length > 0" class="caret"></b>
+                 </a>
+                     <ul class="dropdown-menu">
                      <li ng-repeat="subMenuData in menu.submenu">
                       <a href="/{{subMenuData.page !=null ? subMenuData.page : subMenuData.name}}">{{subMenuData.name}}</a></li>
                   </ul> 
@@ -166,5 +187,6 @@
 
     <script src="assets/js/bootstrap.min.js"></script>
     <link href="style.css" rel="stylesheet" />
+
   </body>
 </html>

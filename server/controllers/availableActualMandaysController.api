@@ -1,0 +1,39 @@
+var express = require("express"),
+ router = express.Router(),
+ resourceMappingDAO = require("../models/resourceMappingDAO.js");
+ 
+router.post("/", function(req, res) {
+var obj = req.body;
+
+var query = {};
+if(obj.resourcename){
+	query["mappedResource.resourcename"] = obj.resourcename;
+}
+if(obj.region){
+	query["region"] = obj.region;
+}
+if(obj.resourceType){
+	query["resourceType"] = obj.resourceType;
+}
+if(obj.skillname){
+	query["skill"] = obj.skillname;
+}
+if(obj.locationname){
+	query["location"] = obj.locationname;
+}
+
+
+
+
+resourceMappingDAO.find(query, function(err, data) {
+ if (err) {
+ res.send("error");
+ return;
+ }
+ res.send(data);
+ });
+});
+ 
+module.exports = router;
+
+

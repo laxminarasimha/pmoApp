@@ -43,25 +43,27 @@
   </div>
   <div class="panel-footer">
     <div class="panel-body">
-          <table class="table table-striped table-curved" cellspacing="0" width="100%" datatable="ng" dt-options="vm.dtOptions" dt-instance="vm.dtInstance">
-            <thead class="bg-primary">
-              <tr>
-                <th >Serial No.</th>
-                <th >Skill name</th>
-                <th >Action</th>           
-              </tr>
-              </thead>
-              <tbody>
-              <tr ng-repeat="x in mongoSkillData">
-                <td>{{ $index + 1 }}</td>
-                <td>{{ x.skillname }}</td>
-                <td>
-                      <a  ng-click="editSkill(x._id)">Edit</a> |
-                      <a  ng-click="deleteSkill(x._id)">Delete</a>
-                </td>
-              </tr>
-              </tbody>
-          </table>
+         <div id="pagerTop" class="text-right"></div>
+            <table class="table table-striped table-curved" cellspacing="0" width="100%">
+              <thead class="bg-primary">
+                <tr>
+                  <!--<th >Serial No.</th>-->
+                  <th >Skill name</th>
+                  <th >Action</th>           
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="x in mongoSkillData">
+                  <!--<td>{{ $index + 1 }}</td>-->
+                  <td>{{ x.skillname }}</td>
+                  <td>
+                        <a  ng-click="editSkill(x._id)">Edit</a> |
+                        <a  ng-click="deleteSkill(x._id)">Delete</a>
+                  </td>
+                </tr>
+                </tbody>
+            </table>
+          <div id="pagerBottom" class="text-right"></div>
     </div>
   </div>
 </div>

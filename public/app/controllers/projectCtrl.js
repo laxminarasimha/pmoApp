@@ -11,7 +11,7 @@ angular.module('pmoApp').controller('projectCtrl', Controller);
  var app = $scope;
  
  $rootScope.Title = "Project Listing";
- getProjectData(projectService,$scope);
+ getProjectData(projectService,$scope); 
  getRegionData(regionService,$scope);
 
 

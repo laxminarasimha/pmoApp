@@ -32,7 +32,6 @@ router.get("/", function(req, res) {
  });
 }).get("/aggegrate/:location", function(req, res) {
  var loc = req.params.location;
- console.log("loc====="+loc);
  holidayListDAO.aggregate([
                            {$match : {locationname: loc}},
                            {$group:{_id:{ locationname: "$locationname" , year : { $year : "$holidayDate" },

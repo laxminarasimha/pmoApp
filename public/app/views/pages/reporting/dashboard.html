@@ -1,0 +1,147 @@
+<div ng-controller="dashboardController">
+
+
+<div class="row">
+                <div class="col-lg-3 col-md-6">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <span class="glyphicon glyphicon-user gi-5x" aria-hidden="true"></span>
+                                </div>
+                                <div class="col-xs-9 text-right">
+                                    <div class="gi-3x">{{ResourceData.length}}</div>
+                                    <div>Total resources!</div>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="#">
+                            <div class="panel-footer">
+                                <span class="pull-left"><a href="/Resource">View Details</a></span>
+                                <span class="pull-right"><span class="glyphicon glyphicon-option-horizontal " aria-hidden="true"></span></span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <span class="glyphicon glyphicon-book gi-5x" aria-hidden="true"></span>
+                                </div>
+                                <div class="col-xs-9 text-right">
+                                    <div class="gi-3x">{{ProjectData.length}}</div>
+                                    <div>Total Projects!</div>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="#">
+                            <div class="panel-footer">
+                                <span class="pull-left"><a href="/Project">View Details</a></span>
+                                <span class="pull-right"><span class="glyphicon glyphicon-option-horizontal" aria-hidden="true"></span></span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                                    <div class="panel panel-success">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-3">
+                                   <span class="glyphicon glyphicon-check gi-5x" aria-hidden="true"></span>
+                                </div>
+                                <div class="col-xs-9 text-right">
+                                    <div class="gi-3x">1012</div>
+                                    <div>Total Allocation!</div>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="#">
+                            <div class="panel-footer">
+                                <span class="pull-left">View Details</span>
+                                <span class="pull-right"><span class="glyphicon glyphicon-option-horizontal" aria-hidden="true"></span></span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </a>
+                    </div>
+
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="panel panel-danger">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <span class="glyphicon glyphicon-time  gi-5x" aria-hidden="true"></span>
+                                </div>
+                                <div class="col-xs-9 text-right">
+                                    <div class="gi-3x">140 Hrs</div>
+                                    <div>Total Buffer !</div>
+                                </div>
+                            </div>
+                        </div>
+                         
+                       
+                        <a href="#">
+                            <div class="panel-footer">
+                                <span class="pull-left">View Details</span>
+                                <span class="pull-right"><span class="glyphicon glyphicon-option-horizontal" aria-hidden="true"></span></span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+<div class="row">
+    <div class="col-lg-8">
+    <div class="panel panel-default">
+<div class="panel-heading">
+    <span class="glyphicon glyphicon-grain" aria-hidden="true"></span> Resource Allocation per Month 
+    <div class="pull-right">
+        <div class="btn-group">
+            <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+                Actions
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu pull-right" role="menu">
+                <li><a href="#">Action</a>
+                </li>
+                <li><a href="#">Another action</a>
+                </li>
+                <li><a href="#">Something else here</a>
+                </li>
+                <li class="divider"></li>
+                <li><a href="#">Separated link</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!-- /.panel-heading -->
+<div class="panel-body">
+<canvas id="myChart"></canvas>
+</div>
+</div>
+        
+    </div>
+
+    <div class="col-lg-4">
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <span class="glyphicon glyphicon-bell" aria-hidden="true"></span> Notifications Panel
+        </div>
+        <div class="Pannel-body">
+            <canvas id="piChart"></canvas>
+            
+        </div>
+        <div class="Pannel-footer">
+            <ul>
+                  <li ng-repeat='x in ProjectData'>{{x.projectname}}</li>
+            </ul>              
+        </div>
+    </div>
+</div>
+</div>

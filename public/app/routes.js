@@ -108,9 +108,17 @@ var app = angular.module('appRoutes',['ngRoute'])
             templateUrl: 'app/views/pages/data/Utilisation.html',
             authenticated: true
           })
+	.when('/Home', {
+            templateUrl: 'app/views/pages/reporting/dashboard.html',
+            authenticated: true
+          })
 
+	.when('/Skill Set Availability',{
+		templateUrl: 'app/views/pages/reporting/skillsetAvailability.html',
+        authenticated: true
+	})
 
-	.otherwise({redirectTo: '/'});
+	.otherwise({redirectTo: '/Home'});
 
 	$locationProvider.html5Mode({
 		enabled:true,
@@ -120,8 +128,7 @@ var app = angular.module('appRoutes',['ngRoute'])
 
 app.run(['$rootScope','Auth','$location',function($rootScope, Auth, $location){
 
-	$rootScope.$on('$routeChangeStart', function(event, next, current){
-		console.log('check-3 :' + next.$$route.authenticated);	
+	$rootScope.$on('$routeChangeStart', function(event, next, current){	
 
 		if(next.$$route.authenticated ==  true){	
 			if(!Auth.isLoggedIn()){
@@ -133,7 +140,7 @@ app.run(['$rootScope','Auth','$location',function($rootScope, Auth, $location){
 			if(Auth.isLoggedIn()){
 				console.log('Check1');
 				event.preventDefault();
-				$location.path('/profile');
+				$location.path('/Home');
 
 			}
 		}
