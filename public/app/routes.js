@@ -137,7 +137,7 @@ app.run(['$rootScope','Auth','$location',function($rootScope, Auth, $location){
 			if(Auth.isLoggedIn()){
 				console.log('Check1');
 				event.preventDefault();
-				$location.path('/profile');
+				$location.path('/Home');
 
 			}
 		}
