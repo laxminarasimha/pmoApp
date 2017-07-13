@@ -7,12 +7,12 @@ angular.module('pmoApp').controller('idleTimeCtrl', Controller);
  Controller.$inject = ['$scope', '$rootScope', 'DTOptionsBuilder', 'DTColumnBuilder', '$compile','idleTimeService',
                        'resourceService','roleService','regionService','projectService','resourceTypeService',
                        'allocationService','leaveService','resourceMappingService','availableDaysService',
-                       'monthlyHeaderListService','locationService','skillSetService'];
+                       'monthlyHeaderListService','locationService','skillSetService','$filter'];
   
  function Controller($scope, $rootScope, DTOptionsBuilder, DTColumnBuilder, $compile, idleTimeService,
                      resourceService,roleService,regionService,projectService,resourceTypeService,
                      allocationService,leaveService,resourceMappingService,availableDaysService,
-                     monthlyHeaderListService,locationService,skillSetService) {
+                     monthlyHeaderListService,locationService,skillSetService,$filter) {
 
  
  var app = $scope;
@@ -61,18 +61,38 @@ angular.module('pmoApp').controller('idleTimeCtrl', Controller);
  
  $scope.getIdleTimes = function(idleTimeDTO) {
      $scope.IsSubmit = true;
-     if ($scope.idleTimeForm.$valid) {
-         idleTimeService.getIdleTimes(idleTimeDTO).then(function(res) {
-         if (res.data == "created") {
-            getIdleTimeData(idleTimeService,$scope);
-            $scope.idleTimeDTO = {};
-            app.loading =false;
-            app.successMsg = "Data fetched successfully";
-            app.errorMsg = false;
-         }
-         }).catch(function(err) {
-         console.log(err);
-         });
+     console.log(idleTimeDTO);
+     if (false) {
+            var emptyObject =  angular.equals({}, idleTimeDTO);
+            if (typeof idleTimeDTO == "undefined" || emptyObject) {
+                getGraphData($scope,allocationService,leaveService,resourceMappingService,availableDaysService,monthlyHeaderListService);
+            }else{
+                var idleTimeFilteredDataList = [];
+                idleTimeFilteredDataList = $scope.idleTimeData;
+                if(idleTimeDTO.resource){ 
+                  idleTimeFilteredDataList =$filter('filter')(idleTimeFilteredDataList, {'name': idleTimeDTO.resource});
+                  console.log(idleTimeFilteredDataList);
+                }
+                if(idleTimeDTO.resourceType){
+                  idleTimeFilteredDataList =$filter('filter')(idleTimeFilteredDataList, {'resourceType': idleTimeDTO.resourceType});
+                  console.log(idleTimeFilteredDataList);
+                }
+                if(idleTimeDTO.region){
+                  idleTimeFilteredDataList =$filter('filter')(idleTimeFilteredDataList, {'region': idleTimeDTO.region});
+                  console.log(idleTimeFilteredDataList);
+                }
+                if(idleTimeDTO.skillname){
+                  idleTimeFilteredDataList =$filter('filter')(idleTimeFilteredDataList, {'skill': idleTimeDTO.skillname});
+                  console.log(idleTimeFilteredDataList);
+                }
+                if(idleTimeDTO.region){
+                  idleTimeFilteredDataList =$filter('filter')(idleTimeFilteredDataList, {'location': idleTimeDTO.locationname});
+                  console.log(idleTimeFilteredDataList);
+                }
+                $scope.idleTimeData = idleTimeFilteredDataList;
+            }
+            
+          
      }else
      {
             app.loading =false;
@@ -153,9 +173,9 @@ angular.module('pmoApp').controller('idleTimeCtrl', Controller);
                  }
                  resourceObj.idleTimeArray = monthlyIdleTimeArray;
                  resourceIdleTimeArray.push(resourceObj);
-                 //console.log(resourceIdleTimeArray);
+                 
            }
-
+              console.log(resourceIdleTimeArray);
               $scope.idleTimeData = resourceIdleTimeArray;
 
         }
