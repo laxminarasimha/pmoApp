@@ -1,4 +1,4 @@
-<span class="label label-primary" style="height: 100%;font:bold;font: 15px arial, sans-serif;" >Project Allocation</span>
+<!-- <span class="label label-primary" style="height: 100%;font:bold;font: 15px arial, sans-serif;" >Project Allocation</span>
 	<div class="well well-md"  style="height:150px;">
 		<form class="form-horizontal" name="allocationForm">
 		
@@ -16,17 +16,15 @@
 			</div>
 		</div>
 		<div class="row" allign="right">
-			
 			<div class='col-sm-10'>
 				<label>Resources:</label>	
 				<select id="resource-select"  ng-model="resource" required multiple="multiple" multi-select></select> 
-				<!-- <input id="resource" ng-model="resource" ng-keyup="completeResources()"/> -->
 			</div>
 			<div class='col-sm-2'></div>
 			
 		</div>
 		</form>	
-  	</div>	
+  	</div>	 -->
 
   	<!-- Datatable Begins -->
 
@@ -39,27 +37,21 @@
 		              <tr>
 		              	<th>Action</th>
 		                <th>Name</th>
-		                <!-- <th>Project</th> -->
-		                <!-- <th>Month</th> -->
 		                <th>Skill</th>
 		                <th>Region</th>
-		               <!--  <th align="center">Allocation</th> -->
-		               <!--  <th align="center">Available Mandays</th> -->
+		                <th>Location</th>
 		                <th align="center">Action</th>
 		                <th></th>
 		              </tr>
 		            </thead>
 		            <tbody>
-							<tr ng-repeat="allocation in allocationList | resourceunique:'resource'">
-								<td align="center"><a class="green shortinfo" href="javascript:;" ng-click="childInfo(allocationList,allocation.resource, $event)" title="Click to view more"><i class="glyphicon glyphicon-plus-sign"></a></td>
-								<td>{{allocation.resource}}</td>
-								<!-- <td>{{allocation.project}}</td> -->
-								<!-- <td>{{allocation.month}}</td> -->
+							<tr ng-repeat="allocation in mappedResourceData">
+								<td align="center"><a class="green shortinfo" href="javascript:;" ng-click="childInfo(allocation.mappedResource.resourcename, $event)" title="Click to view more"><i class="glyphicon glyphicon-plus-sign"></a></td>
+								<td>{{allocation.mappedResource.resourcename}}</td>
 								<td>{{allocation.skill}}</td>
 								<td>{{allocation.region}}</td>
-								<!-- <td>{{allocation.allocation}}</td> -->
-								<!-- <td>{{allocation.availableMandays}}</td> -->
-								<td align="left"><a class="span" ng-click="updateAllocaiton(allocation.resource);">Save</a></td> 
+								<td>{{allocation.location}}</td>
+								<td align="left"><a class="span" ng-click="updateAllocaiton(allocation.mappedResource.resourcename);">Save</a></td> 
 								<td><span id="conflict" style="display:{{conflict != true ? 'none' :''}}"></span></td>
 							 </tr>
 					</tbody>
@@ -80,7 +72,7 @@
 						</div>
 			</div>
 			<div class="panel-body" style="overflow: scroll;">
-				<table class="table table-bordered table-hover table-condensed">
+				<table class="table table-bordered table-hover table-condensed" id="createAllocTab">
 					<thead>
 						<tr>
 					      	<th>Resource</th>
@@ -90,7 +82,7 @@
 					    </tr>
 				    <thead>
 				    <tbody>
-					    <tr ng-repeat="allocRows in resourceWiseAllocaiton">
+					    <tr ng-repeat="allocRows in resourceWiseAllocaiton" id="{{$index}}">
 					      <td>
 					        <span editable-text="allocRows.resource" e-name="resource" e-form="rowform" >
 					          {{ allocRows.resource }}
@@ -111,9 +103,9 @@
 					      </td>
 	     				   <td style="white-space: nowrap">
 						        <div class="buttons">
-						          <button type="button" class="btn btn-primary" ng-click="clearAllocation()">
+						          <button type="button" class="btn btn-primary" ng-click="clearAllocation($index)">
 						          	Clear</button>
-						          <button type="button" class="btn btn-danger" ng-click="removeUser($index)">Delete</button>
+						          <button type="button" class="btn btn-danger" ng-click="removeAllocation($index)">Delete</button>
 						        </div>  
 	      					</td>
 	    				</tr>
@@ -122,29 +114,7 @@
 			</div>
 	   </div>
 	</div>
-    <script>
-	   $('#resource-select').multiselect();
-		
-      $( "#startDt" ).datepicker({
-         //appendText:"(dd-MMM-yy)",
-         dateFormat:"dd-MM-yy",
-         minDate: new Date()
-         //showOn:"button",
-         //buttonImage: "/images/calendar-icon.png",
-         //buttonImageOnly: true
-      });
-	  
-	  $( "#endDt" ).datepicker({
-         //appendText:"(dd-MMM-yy)",
-         dateFormat:"dd-MM-yy",
-         minDate: new Date()
-         //showOn:"button",
-         //buttonImage: "/images/calendar-icon.png",
-         //buttonImageOnly: true
-      });
-
-
-   </script>
+    
    <style>
 	#conflict {
 	    background: red;

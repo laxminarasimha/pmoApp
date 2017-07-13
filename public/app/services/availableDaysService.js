@@ -35,8 +35,7 @@
       }
       
       this.getData = function(startDt,EndDt){
-        var month=months('2017-07-23','2018-06-23');
-        var resourceDetails = [];
+        var month=months(startDt,EndDt);
         var uniqueResource = $filter('resourceunique')(this.allocation,'resource');
         var list = filter(this.allocation,uniqueResource,this.resourceMapped,this.leaves,month,$filter);
         return list;
@@ -64,8 +63,15 @@
         this.leave =0;
     }
 
-    function Resource(resource,months,allocation){
+    function Resource(){
         this.resource ="";
+        this.resourcetype="";
+        this.location="";
+        this.region="";
+        this.status="",
+        this.skill="";
+        this.kindid="";
+
         this.maps=[];
     }
 
@@ -93,7 +99,7 @@
                 angular.forEach(alloc.allocation,function(mapAlloc){
                   if(mapAlloc.month === month ){
                     projA.push(alloc.project);
-                    allocA.push(mapAlloc.value);
+                    allocA.push(round(mapAlloc.value),1);
                     rLoop = true;
                     return;
                   }
@@ -107,16 +113,16 @@
             setAvailableTime(object,rname.resource,mappedResourceData);
             projA = new Array();
             allocA = new Array();
-           allocaitonWithBufferTime.push(object);
+            allocaitonWithBufferTime.push(object);
         });
           
         var nResource = new Resource();
             nResource.resource=rname.resource;
+            mapResoruceDetails(nResource,mappedResourceData);
             nResource.maps.push(allocaitonWithBufferTime);
         allocaitonWithBufferTime = new Array();
         allocaitonObj.push(nResource);
     });
-    console.log(allocaitonObj);
     return allocaitonObj;
   }
 
@@ -142,17 +148,29 @@
               var allocaiton = object.allocation;
               var sum = 0,data=0;
               for(var i = 0, len = allocaiton.length; i < len; i++) {
-                sum += parseInt(allocaiton[i]);  
+                sum += round((allocaiton[i]),1);  
               }
-                
               sum = sum + parseInt(object.leave);
-              //console.log(item.value);
               object.buffertime = round((item.value - sum),1);
               return;
             }
         });
       }
     }
+  }
+
+  function mapResoruceDetails(nResource,mappedResourceData){
+        for(var user = 0;user < mappedResourceData.length;user ++){
+          if(mappedResourceData[user].mappedResource.resourcename === nResource.resource ){
+              nResource.resourcetype=mappedResourceData[user].resourceType;
+              nResource.location=mappedResourceData[user].location;
+              nResource.region=mappedResourceData[user].region;
+              nResource.status=mappedResourceData[user].status,
+              nResource.skill=mappedResourceData[user].skill;
+              nResource.kindid=mappedResourceData[user].mappedResource.kinId;
+              break;
+          }
+        };
   }
 
   function months(from, to) {
@@ -174,7 +192,8 @@
   function round(value, precision) {
       var multiplier = Math.pow(10, precision || 0);
       return Math.round(value * multiplier) / multiplier;
-    }
+  }
+
 
 })();  
   

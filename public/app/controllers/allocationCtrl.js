@@ -6,7 +6,6 @@ var app =angular.module('pmoApp');
 app.controller('allocationCtrl', Controller);
 	
  	app.filter('projectfilter', function() {
- 		console.log('projectfilter');
 		   return function(collection, keyname) {
 		      var output = []; 
 		      angular.forEach(collection, function(item) {
@@ -18,25 +17,7 @@ app.controller('allocationCtrl', Controller);
 		   };
 	})
 
-
- 	app.filter('resourceunique', function() {
-		   return function(collection, keyname) {
-		      var output = [], 
-		          keys = [];
-
-		      angular.forEach(collection, function(item) {
-		          var key = item[keyname];
-		          if(keys.indexOf(key) === -1) {
-		              keys.push(key);
-		              output.push(item);
-		          }
-		      });
-
-		      return output;
-		   };
-	})
-
-		
+ 			
 	function filter(scope,collection, resource,mappedResourceData,leaveList,showdetail) {
 		if(showdetail) return; // if details is going to close then return
 		
@@ -231,10 +212,11 @@ Controller.$inject = ['$scope','DTOptionsBuilder', 'DTColumnBuilder', '$compile'
 
 
       	getProjectData(projectService,$scope);
- 		getResourceData(resourceService,$scope);
+      	getMappedResourceData(resourceMappingService,$scope);
+ 		//getResourceData(resourceService,$scope);
 		getAlloctionData(allocationService,$scope,availableDaysService);
 		getLeaveData(leaveService,$scope);
-		getMappedResourceData(resourceMappingService,$scope);
+		
 
 	
 		$scope.createAllocation = function(){
@@ -264,6 +246,7 @@ Controller.$inject = ['$scope','DTOptionsBuilder', 'DTColumnBuilder', '$compile'
 	     			startdate:          $scope.startDate,
 	     			enddate:            $scope.endDate,
 	     			allocation: 		[],
+	     			rowSelect:          true
      			};
      						
 				angular.forEach($scope.months, function(item){
@@ -276,23 +259,42 @@ Controller.$inject = ['$scope','DTOptionsBuilder', 'DTColumnBuilder', '$compile'
 
     		$scope.resource = [];
 			$scope.detailDiv = false;
+
+			console.log($scope.resourceWiseAllocaiton);
+
 		}
 
 		$scope.saveAllocation = function(){
 			angular.forEach($scope.resourceWiseAllocaiton,function(item){
-	  		    allocationService.createAllocation(item).then(function(res) {
-			         if (res.data == "created") {
-			            getAlloctionData(allocationService,$scope);
-			         }
-		         }).catch(function(err) {
-		         	console.log(err);
-		      	});
+				if(item.rowSelect) {// if row delete in screen,then it should not save
+		  		    allocationService.createAllocation(item).then(function(res) {
+				         if (res.data == "created") {
+				            getAlloctionData(allocationService,$scope);
+				         }
+			         }).catch(function(err) {
+			         	console.log(err);
+			      	});
+			    }
 		    });
 		    $scope.resourceWiseAllocaiton=[];
 	    }
  
  		$scope.cancel = function(){
 			$scope.detailDiv = true;
+
+		}
+
+		$scope.removeAllocation = function(rowId){
+			
+			$("#"+rowId).hide();
+			$scope.resourceWiseAllocaiton[rowId].rowSelect=false;
+			
+		}
+
+		$scope.clearAllocation = function(rowId){
+			angular.forEach($scope.resourceWiseAllocaiton[rowId].allocation,function(item){
+				item.value =0;
+			});
 		}
 
 		$scope.updateAllocaiton = function(resource){
@@ -311,11 +313,9 @@ Controller.$inject = ['$scope','DTOptionsBuilder', 'DTColumnBuilder', '$compile'
 		}
 
 		$scope.call = function(availableDaysService){
-
-			availableDaysService.getData();
-
+			var list = availableDaysService.getData('2017-07-23','2018-06-23');
+			console.log(list);
 		}
-
 		
    		 /*$scope.completeResources=function(){
 			var resourcenames = [];
@@ -337,7 +337,7 @@ Controller.$inject = ['$scope','DTOptionsBuilder', 'DTColumnBuilder', '$compile'
 		$scope.vm.dtOptions = DTOptionsBuilder.newOptions()
 		  .withOption('order', [0, 'asc']);
 		
-		$scope.childInfo = function(allocationList,resource, event){
+		$scope.childInfo = function(resource, event){
 			var scope = $scope.$new(true);      
 		    var link = angular.element(event.currentTarget),
 	          	icon = link.find('.glyphicon'),
@@ -346,7 +346,7 @@ Controller.$inject = ['$scope','DTOptionsBuilder', 'DTColumnBuilder', '$compile'
 	          	row = table.row(tr);
 
 	        var leaves =$filter('filter')($scope.leaveList, {resourcename: resource});  
-	        scope.allocCollection  = filter(scope,allocationList,resource,$scope.mappedResourceData,leaves,row.child.isShown());	
+	        scope.allocCollection  = filter(scope,$scope.allocationList,resource,$scope.mappedResourceData,leaves,row.child.isShown());	
 
 		    if (row.child.isShown()) {
 		        icon.removeClass('glyphicon-minus-sign').addClass('glyphicon-plus-sign');             
@@ -364,7 +364,7 @@ Controller.$inject = ['$scope','DTOptionsBuilder', 'DTColumnBuilder', '$compile'
 	}
 
  	
-	function getResourceData(resourceService,$scope){
+	/*function getResourceData(resourceService,$scope){
 
       	resourceService.getResources().then(function(res) {
         $scope.resourceData = res.data;
@@ -380,7 +380,7 @@ Controller.$inject = ['$scope','DTOptionsBuilder', 'DTColumnBuilder', '$compile'
          }).catch(function(err) {
          console.log(err);
      });
- 	}
+ 	}*/
 
 
  	function getProjectData(projectService,$scope){
@@ -411,7 +411,16 @@ Controller.$inject = ['$scope','DTOptionsBuilder', 'DTColumnBuilder', '$compile'
 	function getMappedResourceData(resourceMappingService,$scope){
       resourceMappingService.getMappedResources().then(function(res) {
          $scope.mappedResourceData = res.data;
-         }).catch(function(err) {
+
+        var htm = '';
+      
+        angular.forEach($scope.mappedResourceData, function(item){
+        	htm += '<option>' + item.mappedResource.resourcename + '</option>';
+        });
+        
+        $('#resource-select').append(htm);
+        $('#resource-select').multiselect('rebuild');
+        }).catch(function(err) {
          console.log(err);
      });
  	}
