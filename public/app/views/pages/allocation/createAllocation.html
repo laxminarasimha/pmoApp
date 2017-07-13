@@ -1,0 +1,50 @@
+<span class="label label-primary" style="height: 100%;font:bold;font: 15px arial, sans-serif;" >Project Allocation</span>
+	<div class="well well-md"  style="height:150px;">
+		<form class="form-horizontal" name="allocationForm">
+		
+		<div class="row">
+			<div class='col-sm-5'>
+				<label>Start Date:</label>
+         		<input type="text"  ng-model="startDate" id = "startDt"  ng-required="true" class="form-control"/>
+			</div>
+			<div class='col-sm-5'>
+				<label>End Date:</label>
+         		<input type="text"  ng-model="endDate" id = "endDt" n ng-required="true" class="form-control"/>
+			</div>
+			<div class='col-sm-2' style="padding-top: 30px">
+				<button class="btn btn-primary" type="button" ng-click="createAllocation()">Projection</button> 
+			</div>
+		</div>
+		<div class="row" allign="right">
+			<div class='col-sm-10'>
+				<label>Resources:</label>	
+				<select id="resource-select"  ng-model="resource" required multiple="multiple" multi-select></select> 
+			</div>
+			<div class='col-sm-2'></div>
+			
+		</div>
+		</form>	
+  	</div>
+  	<script>
+	   $('#resource-select').multiselect();
+		
+      $( "#startDt" ).datepicker({
+         //appendText:"(dd-MMM-yy)",
+         dateFormat:"dd-MM-yy",
+         minDate: new Date()
+         //showOn:"button",
+         //buttonImage: "/images/calendar-icon.png",
+         //buttonImageOnly: true
+      });
+	  
+	  $( "#endDt" ).datepicker({
+         //appendText:"(dd-MMM-yy)",
+         dateFormat:"dd-MM-yy",
+         minDate: new Date()
+         //showOn:"button",
+         //buttonImage: "/images/calendar-icon.png",
+         //buttonImageOnly: true
+      });
+
+
+   </script>

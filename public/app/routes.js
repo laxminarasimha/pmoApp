@@ -86,7 +86,12 @@ var app = angular.module('appRoutes',['ngRoute'])
             templateUrl: 'app/views/pages/allocation/allocationList.html',
             controller : 'allocationCtrl',
             authenticated: true
-          })         	            
+          })      
+     .when('/createAllocation', {
+            templateUrl: 'app/views/pages/allocation/createAllocation.html',
+            controller : 'createAllocationCtrl',
+            authenticated: true
+          })            	            
 
      .when('/Resource Mapping', {
             templateUrl: 'app/views/pages/resourcemapping/resourceMapping.html',
