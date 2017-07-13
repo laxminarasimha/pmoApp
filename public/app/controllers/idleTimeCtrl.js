@@ -7,18 +7,24 @@ angular.module('pmoApp').controller('idleTimeCtrl', Controller);
  Controller.$inject = ['$scope', '$rootScope', 'DTOptionsBuilder', 'DTColumnBuilder', '$compile','idleTimeService',
                        'resourceService','roleService','regionService','projectService','resourceTypeService',
                        'allocationService','leaveService','resourceMappingService','availableDaysService',
-                       'monthlyHeaderListService'];
+                       'monthlyHeaderListService','locationService','skillSetService','$filter'];
   
  function Controller($scope, $rootScope, DTOptionsBuilder, DTColumnBuilder, $compile, idleTimeService,
                      resourceService,roleService,regionService,projectService,resourceTypeService,
                      allocationService,leaveService,resourceMappingService,availableDaysService,
-                     monthlyHeaderListService) {
+                     monthlyHeaderListService,locationService,skillSetService,$filter) {
 
  
  var app = $scope;
 
  $scope.idleTimeData = [];
  //getIdleTimeData(idleTimeService,$scope);
+
+ $scope.locationList = [];
+ getLocationData(locationService,$scope);
+
+ $scope.skillDataList = [];
+ getSkillData(skillSetService,$scope);
 
  $scope.resourceList = [];
  getResourceData(resourceService,$scope);
@@ -55,18 +61,38 @@ angular.module('pmoApp').controller('idleTimeCtrl', Controller);
  
  $scope.getIdleTimes = function(idleTimeDTO) {
      $scope.IsSubmit = true;
-     if ($scope.idleTimeForm.$valid) {
-         idleTimeService.getIdleTimes(idleTimeDTO).then(function(res) {
-         if (res.data == "created") {
-            getIdleTimeData(idleTimeService,$scope);
-            $scope.idleTimeDTO = {};
-            app.loading =false;
-            app.successMsg = "Data fetched successfully";
-            app.errorMsg = false;
-         }
-         }).catch(function(err) {
-         console.log(err);
-         });
+     console.log(idleTimeDTO);
+     if (false) {
+            var emptyObject =  angular.equals({}, idleTimeDTO);
+            if (typeof idleTimeDTO == "undefined" || emptyObject) {
+                getGraphData($scope,allocationService,leaveService,resourceMappingService,availableDaysService,monthlyHeaderListService);
+            }else{
+                var idleTimeFilteredDataList = [];
+                idleTimeFilteredDataList = $scope.idleTimeData;
+                if(idleTimeDTO.resource){ 
+                  idleTimeFilteredDataList =$filter('filter')(idleTimeFilteredDataList, {'name': idleTimeDTO.resource});
+                  console.log(idleTimeFilteredDataList);
+                }
+                if(idleTimeDTO.resourceType){
+                  idleTimeFilteredDataList =$filter('filter')(idleTimeFilteredDataList, {'resourceType': idleTimeDTO.resourceType});
+                  console.log(idleTimeFilteredDataList);
+                }
+                if(idleTimeDTO.region){
+                  idleTimeFilteredDataList =$filter('filter')(idleTimeFilteredDataList, {'region': idleTimeDTO.region});
+                  console.log(idleTimeFilteredDataList);
+                }
+                if(idleTimeDTO.skillname){
+                  idleTimeFilteredDataList =$filter('filter')(idleTimeFilteredDataList, {'skill': idleTimeDTO.skillname});
+                  console.log(idleTimeFilteredDataList);
+                }
+                if(idleTimeDTO.region){
+                  idleTimeFilteredDataList =$filter('filter')(idleTimeFilteredDataList, {'location': idleTimeDTO.locationname});
+                  console.log(idleTimeFilteredDataList);
+                }
+                $scope.idleTimeData = idleTimeFilteredDataList;
+            }
+            
+          
      }else
      {
             app.loading =false;
@@ -88,13 +114,20 @@ angular.module('pmoApp').controller('idleTimeCtrl', Controller);
    
     getGraphData($scope,allocationService,leaveService,resourceMappingService,availableDaysService,monthlyHeaderListService);
 
-    $scope.prepareIdleTimeData = function(availableDaysService,monthlyHeaderListService){
-
-           var list =  availableDaysService.getData();
+    $scope.prepareIdleTimeData = function($scope,availableDaysService,monthlyHeaderListService){
+           var fromDate = "01-"+$scope.headingList[0];
+           var toDate = "01-"+$scope.headingList[$scope.headingList.length-1];
+           var list =  availableDaysService.getData(fromDate,toDate);
            var resourceIdleTimeArray = [];
            for(var i=0; i<list.length;i++){
              var resourceObj = new Resource();
              resourceObj.name = list[i].resource;
+             resourceObj.kindid = list[i].kindid;
+             resourceObj.location = list[i].location;
+             resourceObj.region = list[i].region;
+             resourceObj.resourcetype = list[i].resourcetype;
+             resourceObj.skill = list[i].skill;
+             resourceObj.status = list[i].status;
              //console.log("list[i].resource=================="+list[i].resource);
              var monthlyIdleTimeArray = [];
                  for(var j=0;j<list[i].maps[0].length;j++){
@@ -140,9 +173,9 @@ angular.module('pmoApp').controller('idleTimeCtrl', Controller);
                  }
                  resourceObj.idleTimeArray = monthlyIdleTimeArray;
                  resourceIdleTimeArray.push(resourceObj);
-                 console.log(resourceIdleTimeArray);
+                 
            }
-
+              //console.log(resourceIdleTimeArray);
               $scope.idleTimeData = resourceIdleTimeArray;
 
         }
@@ -152,8 +185,14 @@ angular.module('pmoApp').controller('idleTimeCtrl', Controller);
 
 //====================================================//
 
-function Resource(name,idleTimeArray){
-        this.name =name
+function Resource(name,kindid,location,region,resourcetype,skill,status,idleTimeArray){
+        this.name =name;
+        this.kindid = kindid;
+        this.location = location;
+        this.region = region;
+        this.resourcetype = resourcetype;
+        this.skill = skill;
+        this.status = status;
         this.idleTimeArray=idleTimeArray;
     }
 
@@ -170,7 +209,7 @@ function getGraphData($scope,allocationService,leaveService,resourceMappingServi
                     resourceMappingService.getMappedResources().then(function(res) {
                         resoruceM = res.data;
                         availableDaysService.intialize(allocation,resoruceM,leave);
-                        $scope.prepareIdleTimeData(availableDaysService,monthlyHeaderListService);
+                        $scope.prepareIdleTimeData($scope,availableDaysService,monthlyHeaderListService);
                      }).catch(function(err) {
                      console.log(err);
                     });
@@ -239,10 +278,24 @@ function getGraphData($scope,allocationService,leaveService,resourceMappingServi
  }
 
  function prepareTableHeading($scope,monthlyHeaderListService){
-       
-
         $scope.headingList = monthlyHeaderListService.getHeaderList();
-
     }
+
+
+    function getLocationData(locationService,$scope){
+      locationService.getLocation().then(function(res) {
+         $scope.locationList = res.data;
+         }).catch(function(err) {
+         console.log(err);
+     });
+ }
+
+ function getSkillData(skillSetService,$scope){
+        skillSetService.getSkillSets().then(function(res) {
+           $scope.skillDataList = res.data;
+           }).catch(function(err) {
+           console.log(err);
+         });
+ }
 
  })();
