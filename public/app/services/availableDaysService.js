@@ -99,7 +99,7 @@
                 angular.forEach(alloc.allocation,function(mapAlloc){
                   if(mapAlloc.month === month ){
                     projA.push(alloc.project);
-                    allocA.push(round(mapAlloc.value),1);
+                    allocA.push(Math.round(mapAlloc.value));
                     rLoop = true;
                     return;
                   }
@@ -148,7 +148,7 @@
               var allocaiton = object.allocation;
               var sum = 0,data=0;
               for(var i = 0, len = allocaiton.length; i < len; i++) {
-                sum += round((allocaiton[i]),1);  
+                sum += Math.round(allocaiton[i]);  
               }
               sum = sum + parseInt(object.leave);
               object.buffertime = round((item.value - sum),1);

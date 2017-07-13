@@ -193,14 +193,14 @@ Controller.$inject = ['$scope','DTOptionsBuilder', 'DTColumnBuilder', '$compile'
 		$scope.leaveList=[];
 		$scope.mappedResourceData=[];
 		$scope.conflict =false;
-		$scope.availableDaysService = availableDaysService;
 
-		getGraphData($scope,allocationService,leaveService,resourceMappingService,$scope.availableDaysService);
+		getGraphData($scope,allocationService,leaveService,resourceMappingService,availableDaysService);
 		
 		function allocObject(object){
 		 	var month;
 		 	var allocation;
 		 	var date;
+  			
   			return {
 		  		month : object.month,
 		  		value: object.value,
@@ -263,40 +263,7 @@ Controller.$inject = ['$scope','DTOptionsBuilder', 'DTColumnBuilder', '$compile'
 			console.log($scope.resourceWiseAllocaiton);
 
 		}
-
-		$scope.saveAllocation = function(){
-			angular.forEach($scope.resourceWiseAllocaiton,function(item){
-				if(item.rowSelect) {// if row delete in screen,then it should not save
-		  		    allocationService.createAllocation(item).then(function(res) {
-				         if (res.data == "created") {
-				            getAlloctionData(allocationService,$scope);
-				         }
-			         }).catch(function(err) {
-			         	console.log(err);
-			      	});
-			    }
-		    });
-		    $scope.resourceWiseAllocaiton=[];
-	    }
- 
- 		$scope.cancel = function(){
-			$scope.detailDiv = true;
-
-		}
-
-		$scope.removeAllocation = function(rowId){
-			
-			$("#"+rowId).hide();
-			$scope.resourceWiseAllocaiton[rowId].rowSelect=false;
-			
-		}
-
-		$scope.clearAllocation = function(rowId){
-			angular.forEach($scope.resourceWiseAllocaiton[rowId].allocation,function(item){
-				item.value =0;
-			});
-		}
-
+		
 		$scope.updateAllocaiton = function(resource){
 			angular.forEach($scope.allocationList,function(item){
 				if(item.resource === resource){

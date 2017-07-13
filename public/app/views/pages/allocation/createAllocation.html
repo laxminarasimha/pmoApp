@@ -25,6 +25,63 @@
 		</div>
 		</form>	
   	</div>
+
+  	<!-- Create and Edit Datatable -->
+
+	<div class="well well-md" style="border: 1px;  display: {{detailDiv === true ? 'none' : 'true'}};">
+		<div class="panel panel-default panel-table" id="searchresult">
+			<div class="row" allign="right" style="padding-top: 2px">
+						<div class='col-sm-10'/>
+						<div class='col-sm-2'>
+						<button class="btn btn-primary" type="button" ng-click="saveAllocation()">Save</button>
+							<button class="btn btn-primary" type="button" ng-click="cancel()">Cancel</button> 
+						</div>
+			</div>
+			<div class="panel-body" style="overflow: scroll;">
+				<table class="table table-bordered table-hover table-condensed" id="createAllocTab">
+					<thead>
+						<tr>
+					      	<th>Resource</th>
+					      	<th>Project</th>
+					      	<th ng-repeat="data in months">{{data.month}}</th>
+					      	<th>Action</th>
+					    </tr>
+				    <thead>
+				    <tbody>
+					    <tr ng-repeat="allocRows in resourceWiseAllocaiton" id="{{$index}}">
+					      <td>
+					        <span editable-text="allocRows.resource" e-name="resource" e-form="rowform" >
+					          {{ allocRows.resource }}
+					        </span>
+					      </td>
+					      <td>
+					      	<span editable-select="allocRows.project" e-name="project" e-form="rowform" >
+					          <select  ng-model="allocRows.project" ng-options="item.projectname as item.projectname for item in project |projectfilter:'Vacation'"/>
+					          <!-- <div class="ui-widget">								  
+								<input id="project" ng-model="allocRows.project" ng-keyup="completeProjects()"> -->
+							</div>
+					        </span>
+					      </td>
+					      <td ng-repeat="months in allocRows.allocation">
+					      	<span editable-select="alloc.tag" e-name="tag"  e-form="rowform">
+					           <input type="text"  name="tagged" ng-model="months.value"  maxlength="4" size="4"/>
+					        </span>
+					      </td>
+	     				   <td style="white-space: nowrap">
+						        <div class="buttons">
+						          <button type="button" class="btn btn-primary" ng-click="clearAllocation($index)">
+						          	Clear</button>
+						          <button type="button" class="btn btn-danger" ng-click="removeAllocation($index)">Delete</button>
+						        </div>  
+	      					</td>
+	    				</tr>
+	    			</tbody>
+  				</table>
+			</div>
+	   </div>
+	</div>
+    
+   <
   	<script>
 	   $('#resource-select').multiselect();
 		
