@@ -15,7 +15,7 @@ app.controller('createAllocationCtrl', Controller);
 		      });
 		      return output;
 		   };
-	})
+	});
  		
 
 	function eachMonthAllocaiton(source,target){
@@ -44,9 +44,9 @@ app.controller('createAllocationCtrl', Controller);
     };
   
    	
-Controller.$inject = ['$scope','resourceService','projectService','$filter'];
+Controller.$inject = ['$scope','resourceService','projectService','resourceMappingService','allocationService','$filter'];
 
-	function Controller($scope,resourceService,projectService,$filter) {
+	function Controller($scope,resourceService,projectService,resourceMappingService,allocationService,$filter) {
 
 		$scope.detailDiv =true;
 		$scope.resource = [];
@@ -56,9 +56,9 @@ Controller.$inject = ['$scope','resourceService','projectService','$filter'];
  		$scope.endDate;
 		$scope.months=[];
 		$scope.mappedResourceData=[];
-
-		//getGraphData($scope,allocationService,leaveService,resourceMappingService,$scope.availableDaysService);
-		
+		$scope.successMsg ="";
+		$scope.errorMsg ="";
+	
 		function allocObject(object){
 		 	var month;
 		 	var allocation;
@@ -74,15 +74,17 @@ Controller.$inject = ['$scope','resourceService','projectService','$filter'];
 
     	getMappedResourceData(resourceMappingService,$scope);
       	getProjectData(projectService,$scope);
-      	
- 	
-		
-
-	
+      		
 		$scope.createAllocation = function(){
 
 			if($scope.resource.length <= 0){
-				alert('Please select a resource');
+				$scope.errorMsg ="Please select a resource."
+				return;
+			}
+
+			if($scope.startDate === undefined && typeof $scope.startDate === "undefined" || 
+				$scope.endDate === undefined && typeof $scope.endDate === "undefined"){
+				$scope.errorMsg ="Please select a date range."
 				return;
 			}
 
@@ -116,45 +118,71 @@ Controller.$inject = ['$scope','resourceService','projectService','$filter'];
 
      			$scope.resourceWiseAllocaiton.push($scope.rowWiseAllocation);
  			}
-
     		$scope.resource = [];
 			$scope.detailDiv = false;
-
-			console.log($scope.resourceWiseAllocaiton);
-
 		}
 
 		$scope.saveAllocation = function(){
-			angular.forEach($scope.resourceWiseAllocaiton,function(item){
-				if(item.rowSelect) {// if row delete in screen,then it should not save
-		  		    allocationService.createAllocation(item).then(function(res) {
-				         if (res.data == "created") {
-				            getAlloctionData(allocationService,$scope);
-				         }
-			         }).catch(function(err) {
-			         	console.log(err);
-			      	});
-			    }
-		    });
-		    $scope.resourceWiseAllocaiton=[];
+			if($scope.resourceWiseAllocaiton.length > 0){
+				angular.forEach($scope.resourceWiseAllocaiton,function(item){
+					if(item.rowSelect) {// if row delete in screen,then it should not save
+						if(item.project === undefined && typeof item.project === "undefined"){
+							$scope.errorMsg="Please select a project.";
+							error = true;
+							return;
+						}
+
+			  		    allocationService.createAllocation(item).then(function(res) {
+					        if (res.data == "created") {
+					        	$scope.successMsg ="Allocaiton created successfully";
+					        }
+				         }).catch(function(err) {
+				         	console.log(err);
+				      	});
+				    }
+			    });
+			}else{
+				$scope.errorMsg="Please select a project.";
+			}
+		   
 	    }
  
  		$scope.cancel = function(){
 			$scope.detailDiv = true;
-
 		}
+
+
 
 		$scope.removeAllocation = function(rowId){
-			
 			$("#"+rowId).hide();
 			$scope.resourceWiseAllocaiton[rowId].rowSelect=false;
-			
+			var rowDelete =$filter('filter')($scope.resourceWiseAllocaiton, {rowSelect: false}); 
+			if($scope.resourceWiseAllocaiton.length === rowDelete.length){
+				$scope.months=[];
+			}
 		}
+
 
 		$scope.clearAllocation = function(rowId){
 			angular.forEach($scope.resourceWiseAllocaiton[rowId].allocation,function(item){
 				item.value =0;
 			});
+		}
+
+		$scope.clearFields = function(){
+			$scope.startDate="";
+ 			$scope.endDate="";
+ 			$scope.months=[];
+ 			$scope.resourceWiseAllocaiton=[];
+ 			/*var checkedElements =$('#resource-select');
+ 			console.log(checkedElements.length);
+ 			for(var i = 0, length = checkedElements.length; i < length; i++) {	
+ 				console.log(checkedElements[i].selected);
+			    checkedElements[i].selected = false;
+			};
+ 			$('#resource-select').find($('option')).attr('selected',false);*/
+ 			
+
 		}
 
 		
@@ -168,11 +196,9 @@ Controller.$inject = ['$scope','resourceService','projectService','$filter'];
 	}
 
 
-
 	function getMappedResourceData(resourceMappingService,$scope){
       resourceMappingService.getMappedResources().then(function(res) {
-         $scope.mappedResourceData = res.data;
-
+        $scope.mappedResourceData = res.data;
         var htm = '';
       
         angular.forEach($scope.mappedResourceData, function(item){
@@ -203,5 +229,6 @@ Controller.$inject = ['$scope','resourceService','projectService','$filter'];
         
         return arr;
     }
+}
 
 })();
