@@ -1,19 +1,27 @@
 <div ng-controller="slillsetAvailabilityController">
 <legend>Skillset Available Capacity</legend>
+<form name="skillsetGraph" >
 <div class="panel panel-info">
     <div class="panel-heading">
 		<div class="row">
-       	  <div class='col-sm-12'>Country : </div>
+       	  <div class='col-sm-1'>Country :</div>
+          <div class='col-sm-3'>
+            <select id="locationname" class="form-control input-sm" ng-model="inputVal" ng-init="inputVal='All'" ng-change="change()">
+              <option ng-repeat="x in LocationData" value="{{x.locationname}}">{{x.locationname}}
+              </option>
+              <option value="All">All Locations</option>
+           </select>
+           </div>
        	</div>
     </div>
     <div class="panel-body">
         <div class="row" >
-          <div class='col-sm-6'>
-          	<canvas id="SwedenChart">Chart Content Area</canvas>
+          <div class='col-sm-12'>
+          <div id="ChartContainer">
+             <div id="chartSubContainer"></div>
+            
           </div>
-        
-          <div class='col-sm-6'>
-          	<canvas id="FinlandChart">Chart Content Area</canvas>
+          	<!--<canvas id="SkillsetChart">Chart Content Area</canvas>-->
           </div>
         </div>
     </div>
@@ -22,3 +30,4 @@
      </div>
 
 </div>
+</form>
