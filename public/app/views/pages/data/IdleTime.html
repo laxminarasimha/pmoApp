@@ -36,7 +36,7 @@
    
 
       <div class='row'>
-         <div class='col-sm-3'>
+         <!--<div class='col-sm-3'>
              <div  class=form-group>
               <label for="currentProject">Current Project</label>
               <select ng-model="idleTimeDTO.project" id="project"  class="form-control input-sm {{errorClass}}">
@@ -60,6 +60,24 @@
              <input type="text" ng-model="idleTimeDTO.startDate" id = "startDateID" name="startDate" ng-required="true" class="form-control input-sm {{errorClass}}"/>
              </div>
           </div>
+          -->
+          <div class='col-sm-3'>
+             <div  class=form-group>
+              <label for="skillname">Skill</label>
+              <select ng-model="idleTimeDTO.skillname" id="skillname"  class="form-control">
+              <option ng-repeat="x in skillDataList" value="{{x.skillname}}">{{x.skillname}}</option>
+              </select>
+             </div>
+         </div> 
+
+         <div class='col-sm-3'>
+             <div  class=form-group>
+              <label for="locationname">Location</label>
+              <select ng-model="idleTimeDTO.locationname" id="locationname"  class="form-control">
+              <option ng-repeat="x in locationList" value="{{x.locationname}}">{{x.locationname}}</option>
+              </select>
+             </div>
+         </div>  
       </div>
       
         <div class='row'>
