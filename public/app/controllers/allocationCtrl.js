@@ -163,7 +163,7 @@ app.controller('allocationCtrl', Controller);
 			angular.forEach(actualMandays,function(actualTime){
 				angular.forEach(actualTime,function(mappedDay){
 					if(mappedDay.key === buffTot.month){
-						buffTot.value = Math.round(mappedDay.value -buffTot.value);
+						buffTot.value = round((mappedDay.value -buffTot.value),1);
 						buffTot.conflict = buffTot.value < 0 ? true : false;
 						lreturn = true;
 						return;
@@ -477,6 +477,11 @@ Controller.$inject = ['$scope','DTOptionsBuilder', 'DTColumnBuilder', '$compile'
         }        
         
         return arr;
+    }
+
+    function round(value, precision) {
+	    var multiplier = Math.pow(10, precision || 0);
+	    return Math.round(value * multiplier) / multiplier;
     }
 
 })();
