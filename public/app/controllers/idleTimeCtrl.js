@@ -88,9 +88,10 @@ angular.module('pmoApp').controller('idleTimeCtrl', Controller);
    
     getGraphData($scope,allocationService,leaveService,resourceMappingService,availableDaysService,monthlyHeaderListService);
 
-    $scope.prepareIdleTimeData = function(availableDaysService,monthlyHeaderListService){
-
-           var list =  availableDaysService.getData();
+    $scope.prepareIdleTimeData = function($scope,availableDaysService,monthlyHeaderListService){
+           var fromDate = "01-"+$scope.headingList[0];
+           var toDate = "01-"+$scope.headingList[$scope.headingList.length-1];
+           var list =  availableDaysService.getData(fromDate,toDate);
            var resourceIdleTimeArray = [];
            for(var i=0; i<list.length;i++){
              var resourceObj = new Resource();
@@ -140,7 +141,7 @@ angular.module('pmoApp').controller('idleTimeCtrl', Controller);
                  }
                  resourceObj.idleTimeArray = monthlyIdleTimeArray;
                  resourceIdleTimeArray.push(resourceObj);
-                 console.log(resourceIdleTimeArray);
+                 //console.log(resourceIdleTimeArray);
            }
 
               $scope.idleTimeData = resourceIdleTimeArray;
@@ -170,7 +171,7 @@ function getGraphData($scope,allocationService,leaveService,resourceMappingServi
                     resourceMappingService.getMappedResources().then(function(res) {
                         resoruceM = res.data;
                         availableDaysService.intialize(allocation,resoruceM,leave);
-                        $scope.prepareIdleTimeData(availableDaysService,monthlyHeaderListService);
+                        $scope.prepareIdleTimeData($scope,availableDaysService,monthlyHeaderListService);
                      }).catch(function(err) {
                      console.log(err);
                     });
@@ -239,10 +240,7 @@ function getGraphData($scope,allocationService,leaveService,resourceMappingServi
  }
 
  function prepareTableHeading($scope,monthlyHeaderListService){
-       
-
         $scope.headingList = monthlyHeaderListService.getHeaderList();
-
     }
 
  })();
