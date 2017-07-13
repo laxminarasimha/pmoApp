@@ -175,7 +175,7 @@ angular.module('pmoApp').controller('idleTimeCtrl', Controller);
                  resourceIdleTimeArray.push(resourceObj);
                  
            }
-              console.log(resourceIdleTimeArray);
+              //console.log(resourceIdleTimeArray);
               $scope.idleTimeData = resourceIdleTimeArray;
 
         }
