@@ -36,7 +36,7 @@
    
 
       <div class='row'>
-         <div class='col-sm-3'>
+         <!--<div class='col-sm-3'>
              <div  class=form-group>
               <label for="currentProject">Current Project</label>
               <select ng-model="utilisationDTO.project" id="project"  class="form-control input-sm {{errorClass}}">
@@ -60,6 +60,24 @@
              <input type="text" ng-model="utilisationDTO.startDate" id ="startDateID" name="startDate" ng-required="true" class="form-control input-sm {{errorClass}}"/>
              </div>
           </div>
+          -->
+          <div class='col-sm-3'>
+             <div  class=form-group>
+              <label for="skillname">Skill</label>
+              <select ng-model="utilisationDTO.skillname" id="skillname"  class="form-control">
+              <option ng-repeat="x in skillDataList" value="{{x.skillname}}">{{x.skillname}}</option>
+              </select>
+             </div>
+         </div> 
+
+         <div class='col-sm-3'>
+             <div  class=form-group>
+              <label for="locationname">Location</label>
+              <select ng-model="utilisationDTO.locationname" id="locationname"  class="form-control">
+              <option ng-repeat="x in locationList" value="{{x.locationname}}">{{x.locationname}}</option>
+              </select>
+             </div>
+         </div>
       </div>
       
         <div class='row'>
@@ -108,13 +126,13 @@
                             <td ng-repeat="column in headingList">                              
                               <div ng-repeat="utilisationTime in resourceVar.utilisationArray">
                                   <div ng-if="utilisationTime.key==column">
-                                    <span ng-if="utilisationTime.value==100" style="background-color: #32cd32 !important"><b>{{utilisationTime.value}}%</b>
+                                    <span ng-if="utilisationTime.value==100" class="label label-success">{{utilisationTime.value}}%
                                     </span>
-                                    <span ng-if="utilisationTime.value==0 && utilisationTime.value!=100" style="background-color: aqua !important"><b>{{utilisationTime.value}}%</b>
+                                    <span ng-if="utilisationTime.value==0 && utilisationTime.value!=100" class="label label-info">{{utilisationTime.value}}%
                                     </span>
-                                    <span ng-if="utilisationTime.value < 100 && utilisationTime.value!=0">{{utilisationTime.value}}%
+                                    <span ng-if="utilisationTime.value < 100 && utilisationTime.value!=0" class="label label-default">{{utilisationTime.value}}%
                                     </span>
-                                    <span ng-if="utilisationTime.value > 100" style="background-color: #ff6666 !important"><b>{{utilisationTime.value}}%</b>
+                                    <span ng-if="utilisationTime.value > 100" class="label label-danger">{{utilisationTime.value}}%
                                     </span>
                                   </div>
                               </div>

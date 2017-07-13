@@ -110,52 +110,9 @@ function createPieChart(dashboardService,$scope,$filter,ctx){
 }
  
  function getProjectGraph(dashboardService,$scope,$filter){        
-    dashboardService.getProject().then(function(res) {
-        var options = {
-                chart: {
-                    renderTo: 'container',
-                    type: 'columnrange',
-                    inverted: true
-                },
-                title: {
-                    text: 'Project Details'
-                },
-                subtitle: {
-                    text: 'Observed in Years'
-                },
-                xAxis: {
-                categories: $scope.projectNames
-                },
-                yAxis: {
-                    title: {
-                        text: 'Years(YYYY)'
-                    }
-                },
-                tooltip: {
-                    valueSuffix: ''
-                },
-                plotOptions: {
-                columnrange: {
-                    dataLabels: {
-                        enabled: true,
-                        formatter: function () {
-                            return this.y;
-                        }
-                    }
-                }
-                },
-                legend: {
-                    enabled: false
-                },
-                series: [{
-                name: 'Year',                
-                data: [{}]                
-                }]
-            };
-    
+    dashboardService.getProject().then(function(res) {      
             $scope.ProjectData = res.data;            
-
-            angular.forEach(res.data,function(value, key){
+            /*angular.forEach(res.data,function(value, key){
                 $scope.projectNames.push(value.projectname);               
                 var pdates = [];
                 pdates.push(parseInt($filter('date')(value.startDate, "yyyy")));
@@ -163,7 +120,7 @@ function createPieChart(dashboardService,$scope,$filter,ctx){
                 $scope.projectDates.push(pdates);
             })
             options.series[0].data = $scope.projectDates;
-            var chart = new Highcharts.Chart(options);
+            var chart = new Highcharts.Chart(options);*/
          }).catch(function(err) {
          console.log(err);
      });
