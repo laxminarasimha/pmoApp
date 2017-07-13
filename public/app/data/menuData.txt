@@ -22,7 +22,7 @@
 {
 "id" : "5",
 "name" : "Reports",
-"submenu" : [{"id":"1", "name":"Skill Set Availability"},{"id":"1", "name":"FinlandGraph"}]
+"submenu" : [{"id":"1", "name":"All Graphs"},{"id":"1", "name":"FinlandGraph"}]
 },
 {
 "id" : "6",

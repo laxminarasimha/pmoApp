@@ -4,7 +4,14 @@
 <div class="panel panel-info">
     <div class="panel-heading">
 		<div class="row">
-       	  <div class='col-sm-1'>Country :</div>
+       	  <div class='col-sm-1'>Graph :</div>
+          <div class='col-sm-3'>
+            <select id="graphid" class="form-control input-sm" ng-model="graphid" ng-init="inputVal='All'" ng-change="graphidchange()">
+              <option value="Resource Capacity">Resource Capacity</option>
+              <option value="Skillset Capacity">Skillset Capacity</option>
+           </select>
+           </div>
+           <div class='col-sm-1'>Country :</div>
           <div class='col-sm-3'>
             <select id="locationname" class="form-control input-sm" ng-model="inputVal" ng-init="inputVal='All'" ng-change="change()">
               <option ng-repeat="x in LocationData" value="{{x.locationname}}">{{x.locationname}}

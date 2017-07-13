@@ -6,7 +6,7 @@ angular.module('pmoApp').controller('slillsetAvailabilityController', Controller
  
 Controller.$inject = ['$scope', '$rootScope','$filter', 'locationService', 'resourceMappingService'];
  var barChartData ;
- var colors = ['#ff6384','#36a2eb','#cc65fe','#ffce56','#55ceff','#ceff56','#fe65cc','#cc20ed','#ccef00','rgba(153, 202, 255, 0.2)','rgba(255, 99, 132, 0.2)','rgba(54, 162, 235, 0.2)','rgba(153, 102, 255, 0.2)','rgba(253, 102, 255, 0.2)','rgba(153, 202, 255, 0.2)'];
+ var colors = ['#7394CB','#E1974D','#84BB5C','#D35D60','#818787','#9066A7','#AD6A58','#CCC374','#3869B1','#DA7E30','#3F9852','#6B4C9A','#922427','rgba(253, 102, 255, 0.2)','rgba(153, 202, 255, 0.2)'];
  function Controller($scope, $rootScope, $filter, locationService,resourceMappingService) {
     var app = $scope;	 
     $rootScope.Title = "Reporting";         
@@ -38,7 +38,9 @@ function getLocationData(locationService,$scope){
      });
  }
 
- function getMappedResourceData(resourceMappingService,$scope){
+ }
+
+  function getMappedResourceData(resourceMappingService,$scope){
     resourceMappingService.getMappedResources().then(function(res) {         
          $scope.chartlabels = [];
          $scope.barChartData = {        
@@ -70,15 +72,22 @@ function getLocationData(locationService,$scope){
             $scope.barChartData["labels"] = $scope.chartlabels;          
         }
          })
-    
+         createStackedBarGraph($scope);
+         }).catch(function(err) {
+         console.log(err);
+     });
+ }
+
+ function createStackedBarGraph($scope){
+
     if (document.contains(document.getElementById("chartSubContainer"))) {
-            document.getElementById("chartSubContainer").remove();
-        }
-    
+           document.getElementById("chartSubContainer").remove();
+    }
+
     var canvas = document.createElement('canvas');
     var chartSubContainer = document.createElement('div');
-    chartSubContainer.id = "chartSubContainer";
-    canvas.id     = "SkillsetChart";        
+        chartSubContainer.id = "chartSubContainer";
+        canvas.id     = "SkillsetChart";        
 
     var container = document.getElementById('ChartContainer');
         container.appendChild(chartSubContainer);        
@@ -86,7 +95,7 @@ function getLocationData(locationService,$scope){
 
     var ctx = canvas.getContext('2d');
 
-    var chart = new Chart(ctx, {
+        var chart = new Chart(ctx, {
         type: 'bar',
         data: $scope.barChartData,
         options: {
@@ -99,7 +108,7 @@ function getLocationData(locationService,$scope){
                         },
                         title:{
                             display:true,
-                            text: $scope.inputVal +"Resource Capacity"
+                            text: $scope.inputVal +" Resource Capacity"
                         },
                         tooltips: {
                             mode: 'index',
@@ -117,11 +126,8 @@ function getLocationData(locationService,$scope){
                     }
     });
 
-         }).catch(function(err) {
-         console.log(err);
-     });
- }
+ }//Endf OF createStackedBarGraph($scope)
 
- }
+
 
  })();
