@@ -1,73 +1,73 @@
 <div ng-controller="regionCtrl">
-<form name="regionForm" ng-submit="createRegion(region)" novalidate>
-<legend>Region (
-  <label ng-show="region._id!=null">Edit</label>
-  <label ng-hide="region._id!=null">Create</label>)
-</legend>
-<div class="panel panel-info">
-    <div class="panel-heading">
-        <div class="row"> 
-            <div class='col-sm-4'>
-                <div  class=form-group>
-                     <label>Region:</label>&nbsp;&nbsp;&nbsp;
-                      <input type="text" ng-model="region.regionname" name="regionname" ng-required="true" class="form-control input-sm {{errorClass}}" />
-                </div>
+  <form name="regionForm" ng-submit="createRegion(region)" novalidate>
+    <legend>Region (
+      <label ng-show="region._id!=null">Edit</label>
+      <label ng-hide="region._id!=null">Create</label>)
+    </legend>
+    <div class="panel panel-info">
+      <div class="panel-heading">
+        <div class="row">
+          <div class='col-sm-4'>
+            <div class=form-group>
+              <label>Region:</label>&nbsp;&nbsp;&nbsp;
+              <input type="text" ng-model="region.regionname" name="regionname" ng-required="true" class="form-control input-sm {{errorClass}}"
+              />
             </div>
+          </div>
         </div>
-        <div class='row'>      
-            <div class='col-sm-12'>
-              <div align="right">
-                  <input type="submit" value="Update" ng-click="saveData(region)" class="btn btn-primary" ng-show="region._id!=null"/>
-                    <input type="submit" value="Create" class="btn btn-primary" ng-hide="region._id!=null"/>           
-                    <button class="btn btn-warning" ng-click="clearFields()" type="button">Clear</button>
-              </div>
+        <div class='row'>
+          <div class='col-sm-12'>
+            <div align="right">
+              <input type="submit" value="Update" ng-click="saveData(region)" class="btn btn-primary" ng-show="region._id!=null" />
+              <input type="submit" value="Create" class="btn btn-primary" ng-hide="region._id!=null" />
+              <button class="btn btn-warning" ng-click="clearFields()" type="button">Clear</button>
             </div>
+          </div>
         </div>
-              
-    </div>
+
+      </div>
 
       <div class="panel-body" ng-show="loading || successMsg || errorMsg">
-        <div class="row" >
+        <div class="row">
           <div class='col-sm-12'>
-                <div class="jumbotron text-center" ng-show="loading">
-                  <span class="glyphicon glyphicon-repeat spinner"></span>
-                  <p>Loading...</p>
-                </div>
-                <div class="row show-hide-message" ng-show="successMsg">
-                  <div class="alert alert-success">{{successMsg}}</div>
-                </div>
-                <div class="row show-hide-message" ng-show="errorMsg">
-                  <div class="alert alert-danger">{{errorMsg}}</div>
-                </div>
+            <div class="jumbotron text-center" ng-show="loading">
+              <span class="glyphicon glyphicon-repeat spinner"></span>
+              <p>Loading...</p>
             </div>
+            <div class="row show-hide-message" ng-show="successMsg">
+              <div class="alert alert-success">{{successMsg}}</div>
+            </div>
+            <div class="row show-hide-message" ng-show="errorMsg">
+              <div class="alert alert-danger">{{errorMsg}}</div>
+            </div>
+          </div>
         </div>
       </div>
 
 
       <div class="panel-footer">
-      				<div class="table-responsive">
-      					<table class="table table-striped table-curved" cellspacing="0" width="100%">
-                <thead class="bg-primary">
-      							<tr>
-      								<th >Serial No.</th>
-      								<th >Region name</th>
-      								<th >Action</th>				   
-      							</tr>
-                    </thead>
-                    <tbody>
-                    <tr ng-repeat="x in mongoRegionData">
-                      <td>{{ $index + 1 }}</td>
-                      <td>{{ x.regionname }}</td>
-                      <td>
-                            <a  ng-click="editRegion(x._id)">Edit</a> |
-                            <a  ng-click="deleteRegion(x._id)">Delete</a>
-                      </td>
-                    </tr>
-      						  </tbody>
-      					</table>      					
-      				</div>
+        <div class="table-responsive">
+          <table class="table table-striped table-curved" cellspacing="0" width="100%">
+            <thead class="bg-primary">
+              <tr>
+                <th>Serial No.</th>
+                <th>Region name</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="x in mongoRegionData">
+                <td>{{ $index + 1 }}</td>
+                <td>{{ x.regionname }}</td>
+                <td>
+                  <a ng-click="editRegion(x._id)">Edit</a> |
+                  <a ng-click="deleteRegion(x._id)">Delete</a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
+    </div>
+  </form>
 </div>
-</form> 
-</div>    
-

@@ -1,42 +1,39 @@
-
 <div class="jumbotron text-center">
-    <h1>
+  <h1>
     <img src="..\assets\images\capgemini_header.jpg">
-    
-    </h1> 
-    <p>Demand and Capacity Application</p> 
-    <br> <br> 
-    <form ng-submit="main.doLogin(loginData)">
-      <div class="input-group" style="width:50%; margin-left: auto; margin-right: auto">
-        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-        <input id="username" type="text" class="form-control" name="username" placeholder="Please Enter Username" ng-model="main.loginData.username">
-      </div>
-      <br> 
-      <div class="input-group" style="width:50%; margin-left: auto; margin-right: auto">
-        <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
-        <input id="password" type="password" class="form-control" name="password" placeholder="Please Enter Password" ng-model="main.loginData.password">
-      </div>
-      <br>
-      <div>
-          <input type="submit" class="btn btn-danger" value="Login">
-      </div> 
-      </form>          
-  </div>
+
+  </h1>
+  <p>Demand and Capacity Application</p>
+  <br> <br>
+  <form ng-submit="main.doLogin(loginData)">
+    <div class="input-group" style="width:50%; margin-left: auto; margin-right: auto">
+      <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+      <input id="username" type="text" class="form-control" name="username" placeholder="Please Enter Username" ng-model="main.loginData.username">
+    </div>
+    <br>
+    <div class="input-group" style="width:50%; margin-left: auto; margin-right: auto">
+      <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+      <input id="password" type="password" class="form-control" name="password" placeholder="Please Enter Password" ng-model="main.loginData.password">
+    </div>
+    <br>
+    <div>
+      <input type="submit" class="btn btn-danger" value="Login">
+    </div>
+  </form>
+</div>
 
 
 <div class="jumbotron text-center" ng-show="main.loading">
-	<span class="glyphicon glyphicon-repeat spinner"></span>
-	<p>Loading...</p>
+  <span class="glyphicon glyphicon-repeat spinner"></span>
+  <p>Loading...</p>
 </div>
 
 
 <div class="row show-hide-message" ng-show="main.successMsg">
-	<div class="alert alert-success">{{main.successMsg}}</div>
+  <div class="alert alert-success">{{main.successMsg}}</div>
 </div>
 
 
 <div class="row show-hide-message" ng-show="main.errorMsg">
-	<div class="alert alert-danger">{{main.errorMsg}}</div>
+  <div class="alert alert-danger">{{main.errorMsg}}</div>
 </div>
-
-
