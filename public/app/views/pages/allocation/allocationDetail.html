@@ -1,5 +1,5 @@
-<div class="inner">
-    <table id="detail" class="table table-striped">
+<div class="inner panel-body">
+    <table id="detail" class="table table-striped table-curved" cellspacing="0" width="100%">
       	<thead>	
 	      <tr>
 	        <th align="center">Month</th>
@@ -9,33 +9,32 @@
 	    </thead> 
 	    <tbody ng-repeat="allocRecords in allocCollection">
 	    	<tr>
-	    		<td style="font-weight: bold;">{{allocRecords.project.length > 1 ? "Project" :"" }}</td>
-	    		<td align="center" colspan="10" style="font-weight: bold;">
+	    		<td align="center" colspan="100%" style="font-weight: bold;">
 		    		<font color="green">{{allocRecords.project.length > 0 ? allocRecords.project :"Buffered Time"}}
 		    		</font>
 	    		</td>
 	    	</tr>
 	    	<tr>
 	    		<td style="font-weight: bold;" align="left">
-	    			{{allocRecords.project === "Vacation" ? "Leave" : allocRecords.project === "" ? "Total" : "Allocation"}}
+	    			{{allocRecords.project === "Vacation" ? "Leave" : allocRecords.project === "" ? "Available" : "Allocation"}}
 	    		</td>
 		    	<td ng-repeat="monthlyAlloc in allocRecords.allocation"> 
 		    		<span ng-if="allocRecords.project !='Vacation' && allocRecords.project.length > 0 ">
 		    			<input type="text" ng-model="monthlyAlloc.value" maxlength="2" size="2" 
 		    			value="{{monthlyAlloc.value}}"/> 
 		    		</span>
-		    		<span colspan="10" ng-if="allocRecords.project ==='Vacation'"  style="font-weight:
+		    		<span colspan="100%" ng-if="allocRecords.project ==='Vacation'"  style="font-weight:
 		    			text-align: center" >{{monthlyAlloc.value}} </span>
-		    		<span  colspan="10" ng-if="allocRecords.project.length <= 0" 
-		    		style="font-weight: bold;background-color:{{monthlyAlloc.conflict === true ? 'red' : ''}};
-		    			text-align: center" data-tooltip='Allocation :{{monthlyAlloc.value}}  Allocation :{{monthlyAlloc.value}}'>
+		    		<span  colspan="100%" ng-if="allocRecords.project.length <= 0" 
+		    			style="font-weight: bold;background-color:{{monthlyAlloc.conflict === true ? 'red' : ''}};
+		    			text-align: center" data-tooltip='Actual Mandays: {{monthlyAlloc.actualMandays}}   Tagged: {{monthlyAlloc.percentalloc}}%'>
 		    				{{monthlyAlloc.value}}
   		    		</span>
   		    	</td>
 	    	</tr>
 	    </tbody> 	
     </table>
- </div>
+</div>
 <style>
 #detail {
   table-layout: fixed; 
