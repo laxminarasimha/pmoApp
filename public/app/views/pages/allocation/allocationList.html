@@ -25,7 +25,7 @@
 		                <th>Name</th>
 		                <th>Skill</th>
 		                <th>Region</th>
-		                <th>Location</th>
+		                <th>Location</th>		                
 		                <th align="center">Action</th>
                       </tr>
                     </thead>
@@ -35,8 +35,16 @@
 						<td>{{allocation.mappedResource.resourcename}}</td>
 						<td>{{allocation.skill}}</td>
 						<td>{{allocation.region}}</td>
-						<td>{{allocation.location}}</td>
-						<td align="left"><a class="span" ng-click="updateAllocaiton(allocation.mappedResource.resourcename);">Save</a></td> 
+						<td>{{allocation.location}}</td>						
+						<td align="left">
+						<a class="span" ng-click="updateAllocaiton(allocation.mappedResource.resourcename);">
+                        <span ng-if="allocation.isConflict" class="label label-danger glyphicon                glyphicon-ban-circle">
+                         </span>
+                         <span ng-if="!allocation.isConflict" class="label label-success glyphicon glyphicon-ok-circle">
+                         </span>
+						   Save
+						</a>
+						</td> 
 						
 					</tr>
 				</tbody>

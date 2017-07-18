@@ -75,7 +75,7 @@ app.controller('allocationCtrl', Controller);
      	};
 
      	resourceDetails.push(bufferTotal);
-    	   		
+    	console.log(resourceDetails);
 		return resourceDetails;
 	}
 
@@ -180,9 +180,9 @@ app.controller('allocationCtrl', Controller);
      	return bufferTotal;
     }
      	
-Controller.$inject = ['$scope','DTOptionsBuilder', 'DTColumnBuilder', '$compile','resourceService','projectService','allocationService','leaveService','resourceMappingService','$filter'];
+Controller.$inject = ['$scope','DTOptionsBuilder', 'DTColumnBuilder', '$compile','resourceService','projectService','allocationService','leaveService','resourceMappingService','$filter','monthlyHeaderListService','availableDaysService'];
 
-	function Controller($scope,DTOptionsBuilder, DTColumnBuilder, $compile,resourceService,projectService,allocationService,leaveService,resourceMappingService,$filter) {
+	function Controller($scope,DTOptionsBuilder, DTColumnBuilder, $compile,resourceService,projectService,allocationService,leaveService,resourceMappingService,$filter,monthlyHeaderListService,availableDaysService) {
 
 		$scope.detailDiv =true;
 		$scope.resource = [];
@@ -213,7 +213,11 @@ Controller.$inject = ['$scope','DTOptionsBuilder', 'DTColumnBuilder', '$compile'
 
 
       	getProjectData(projectService,$scope);
-      	getMappedResourceData(resourceMappingService,$scope);
+
+      	$scope.headingList = [];
+        prepareTableHeading($scope,monthlyHeaderListService);
+
+      	getMappedResourceData($scope,allocationService,leaveService,resourceMappingService,availableDaysService,monthlyHeaderListService);
  		//getResourceData(resourceService,$scope);
 		getAlloctionData(allocationService,$scope);
 		getLeaveData(leaveService,$scope);
@@ -313,6 +317,62 @@ Controller.$inject = ['$scope','DTOptionsBuilder', 'DTColumnBuilder', '$compile'
 		}
 		
 		///////////////////////// End  Datatable Code /////////////////////////////////
+
+		$scope.prepareFinalData = function($scope,availableDaysService,monthlyHeaderListService,mappedData){
+
+			 var fromDate = "01-"+$scope.headingList[0];
+	           var toDate = "01-"+$scope.headingList[$scope.headingList.length-1];
+	           var list =  availableDaysService.getData(fromDate,toDate);
+	           console.log(list);
+               for(var i=0; i<list.length;i++){
+                   var name = list[i].resource;
+                   var isConflict = false;
+                     for(var j=0;j<list[i].maps[0].length;j++){
+                        var allocationOBJ = list[i].maps[0][j];                        
+                        
+                        if(isNaN(allocationOBJ.buffertime)){
+                             allocationOBJ.buffertime = 0.0;
+                         }
+                         
+                         if(allocationOBJ.buffertime >= 0){
+                            continue;
+                         }else{
+                             isConflict=true;
+                             break;
+                         }
+
+                      }
+                     
+                       list[i]['isConflict'] = isConflict;                     
+                  
+
+               }
+               //console.log("Here is list==="+list);
+               //console.log(list);
+
+               for(var i=0; i<mappedData.data.length; i++){
+                  for(var j=0; j<list.length;j++){
+                       if(mappedData.data[i].mappedResource.resourcename == list[j].resource){
+                          mappedData.data[i]['isConflict'] = list[j]['isConflict'];
+                          break;
+                       }
+                  }
+               }
+
+	           $scope.mappedResourceData = mappedData.data;
+		        var htm = '';
+		      
+		        angular.forEach($scope.mappedResourceData, function(item){
+		        	htm += '<option>' + item.mappedResource.resourcename + '</option>';
+		        });
+		        
+		        $('#resource-select').append(htm);
+		        $('#resource-select').multiselect('rebuild');
+
+		}
+
+
+
 	}
 
  	
@@ -341,9 +401,13 @@ Controller.$inject = ['$scope','DTOptionsBuilder', 'DTColumnBuilder', '$compile'
      });
 	}
 
-	function getMappedResourceData(resourceMappingService,$scope){
+	function getMappedResourceData($scope,allocationService,leaveService,resourceMappingService,availableDaysService,monthlyHeaderListService){
       resourceMappingService.getMappedResources().then(function(res) {
-         $scope.mappedResourceData = res.data;
+        
+         getGraphData($scope,allocationService,leaveService,resourceMappingService,availableDaysService,monthlyHeaderListService,res);
+         
+
+        /* $scope.mappedResourceData = res.data;
 
         var htm = '';
       
@@ -352,7 +416,7 @@ Controller.$inject = ['$scope','DTOptionsBuilder', 'DTColumnBuilder', '$compile'
         });
         
         $('#resource-select').append(htm);
-        $('#resource-select').multiselect('rebuild');
+        $('#resource-select').multiselect('rebuild');*/
         }).catch(function(err) {
          console.log(err);
      });
@@ -392,5 +456,35 @@ Controller.$inject = ['$scope','DTOptionsBuilder', 'DTColumnBuilder', '$compile'
 	    var multiplier = Math.pow(10, precision || 0);
 	    return Math.round(value * multiplier) / multiplier;
     }
+
+
+    //=======================================//
+    function getGraphData($scope,allocationService,leaveService,resourceMappingService,availableDaysService,monthlyHeaderListService,mappedData){
+        var allocation =[];
+        var resoruceM =[];
+        var leave =[];
+        allocationService.getAllAllocation().then(function(res) {
+                allocation=res.data;
+                leaveService.getLeave().then(function(res) {
+                    leave=res.data;
+                    resourceMappingService.getMappedResources().then(function(res) {
+                        resoruceM = res.data;
+                        availableDaysService.intialize(allocation,resoruceM,leave);
+                        $scope.prepareFinalData($scope,availableDaysService,monthlyHeaderListService,mappedData);
+                     }).catch(function(err) {
+                     console.log(err);
+                    });
+                }).catch(function(err) {
+                    console.log(err);
+                });
+        }).catch(function(err) {
+         console.log(err);
+     });
+    }
+
+    function prepareTableHeading($scope,monthlyHeaderListService){
+        $scope.headingList = monthlyHeaderListService.getHeaderList();
+    }
+    //=======================================//
 
 })();
