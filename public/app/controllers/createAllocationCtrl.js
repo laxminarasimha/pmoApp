@@ -181,15 +181,7 @@ Controller.$inject = ['$scope','resourceService','projectService','resourceMappi
 			    checkedElements[i].selected = false;
 			};
  			$('#resource-select').find($('option')).attr('selected',false);*/
-
-console.log($scope.resource);
-$scope.resource=[];
- 			$("#resource-select option:selected").removeAttr("multiselect-selected-text");
- 			$("#my_select option:selected").prop("selected", false);
-
- 			$("#resource-select option:selected").removeAttr("multiselect-selected-text");
-
-			//$("#resource-select > option").attr("selected",false);
+ 			
 
 		}
 

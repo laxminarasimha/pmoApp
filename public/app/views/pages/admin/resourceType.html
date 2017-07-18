@@ -1,73 +1,72 @@
 <div ng-controller="resourceTypeCtrl">
-  <form name="resourceTypeForm" ng-submit="createResourceType(resourceType)" novalidate>
-    <legend>Resource Type (
-      <label ng-show="resourceType._id!=null">Edit</label>
-      <label ng-hide="resourceType._id!=null">Create</label>)
-    </legend>
-    <div class="panel panel-info">
-      <div class="panel-heading">
-        <div class="row">
-          <div class='col-sm-4'>
-            <div class=form-group>
-              <label>Resource Type:</label>
-              <input type="text" ng-model="resourceType.resourceTypename" name="resourceTypename" ng-required="true" class="form-control input-sm {{errorClass}}"
-              />
-            </div>
+<form name="resourceTypeForm" ng-submit="createResourceType(resourceType)" novalidate>
+<legend>Resource Type (
+  <label ng-show="resourceType._id!=null">Edit</label>
+  <label ng-hide="resourceType._id!=null">Create</label>)
+</legend>
+<div class="panel panel-info">
+        <div class="panel-heading">
+          <div class="row">
+           		<div class='col-sm-4'>
+                   <div  class=form-group>
+                         <label>Resource Type:</label>
+                        <input type="text" ng-model="resourceType.resourceTypename" name="resourceTypename" ng-required="true" class="form-control input-sm {{errorClass}}"/>
+          	       </div>
+              </div>           			  
+          	</div>
+            <div class='row'>      
+              <div class='col-sm-12'>
+                <div align="right"> 
+                  <input type="submit" value="Update" ng-click="saveData(resourceType)" class="btn btn-primary" ng-show="resourceType._id!=null"/>
+                  <input type="submit" value="Create" class="btn btn-primary" ng-hide="resourceType._id!=null"/>             
+                  <button class="btn btn-warning" ng-click="clearFields()" type="button">Clear</button>
+                 </div>
+              </div>
           </div>
-        </div>
-        <div class='row'>
-          <div class='col-sm-12'>
-            <div align="right">
-              <input type="submit" value="Update" ng-click="saveData(resourceType)" class="btn btn-primary" ng-show="resourceType._id!=null"
-              />
-              <input type="submit" value="Create" class="btn btn-primary" ng-hide="resourceType._id!=null" />
-              <button class="btn btn-warning" ng-click="clearFields()" type="button">Clear</button>
-            </div>
-          </div>
-        </div>
-      </div>
+    </div>
 
       <div class="panel-body" ng-show="loading || successMsg || errorMsg">
-        <div class="row">
+        <div class="row" >
           <div class='col-sm-12'>
-            <div class="jumbotron text-center" ng-show="loading">
-              <span class="glyphicon glyphicon-repeat spinner"></span>
-              <p>Loading...</p>
+                <div class="jumbotron text-center" ng-show="loading">
+                  <span class="glyphicon glyphicon-repeat spinner"></span>
+                  <p>Loading...</p>
+                </div>
+                <div class="row show-hide-message" ng-show="successMsg">
+                  <div class="alert alert-success">{{successMsg}}</div>
+                </div>
+                <div class="row show-hide-message" ng-show="errorMsg">
+                  <div class="alert alert-danger">{{errorMsg}}</div>
+                </div>
             </div>
-            <div class="row show-hide-message" ng-show="successMsg">
-              <div class="alert alert-success">{{successMsg}}</div>
-            </div>
-            <div class="row show-hide-message" ng-show="errorMsg">
-              <div class="alert alert-danger">{{errorMsg}}</div>
-            </div>
-          </div>
         </div>
       </div>
 
 
       <div class="panel-footer">
-        <div class="table-responsive">
-          <table class="table table-striped table-curved" cellspacing="0" width="100%">
-            <thead class="bg-primary">
-              <tr>
-                <th>Serial No.</th>
-                <th>Resource Type</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr ng-repeat="x in mongoResourceTypeData">
-                <td>{{ $index + 1 }}</td>
-                <td>{{ x.resourceTypename }}</td>
-                <td>
-                  <a ng-click="editResourceType(x._id)">Edit</a> |
-                  <a ng-click="deleteResourceType(x._id)">Delete</a>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+      				<div class="table-responsive">
+      					<table class="table table-striped table-curved" cellspacing="0" width="100%">
+                <thead class="bg-primary">
+      							<tr >
+                      <th >Serial No.</th>
+      				        <th >Resource Type</th>
+                      <th >Action</th>				   
+      							</tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="x in mongoResourceTypeData">
+                      <td>{{ $index + 1 }}</td>
+                      <td>{{ x.resourceTypename }}</td>
+                      <td>
+                            <a  ng-click="editResourceType(x._id)">Edit</a> |
+                            <a  ng-click="deleteResourceType(x._id)">Delete</a>
+                      </td>
+                    </tr>
+      			   </tbody>
+      		   </table>
+      		  </div>
       </div>
-    </div>
-  </form>
 </div>
+</form> 
+</div>    
+

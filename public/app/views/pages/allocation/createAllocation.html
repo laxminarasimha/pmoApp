@@ -1,125 +1,127 @@
-<form name="createAllocationForm" ng-submit="" novalidate>
-  <legend>Create Allocation</legend>
-  <div class="panel panel-info">
-    <div class="panel-heading">
+<form name="createAllocationForm" ng-submit="" novalidate >
+<legend>Create Allocation</legend>
+<div class="panel panel-info" >  
+  	<div class="panel-heading">  
       <div class='row'>
         <div class='col-sm-3'>
-          <div class=form-group>
-            <label for startDate>Start Date:</label>
-            <input type="text" ng-model="startDate" id="startDt" ng-required="true" class="form-control" />
-          </div>
+             <div  class=form-group>
+                <label for startDate>Start Date:</label>
+         		<input type="text"  ng-model="startDate" id = "startDt"  ng-required="true" class="form-control"/>
+             </div>   
         </div>
-        <div class='col-sm-3'>
-          <div class=form-group>
+        <div class='col-sm-3'>        
+           <div  class=form-group>
             <label for endDate>End Date:</label>
-            <input type="text" ng-model="endDate" id="endDt" ng-required="true" class="form-control" />
-          </div>
-        </div>
+            <input type="text"  ng-model="endDate" id ="endDt"  ng-required="true" class="form-control"/>
+           </div>
+        </div> 
         <div class='col-sm-6' style="padding-top:.5cm;">
-          <div class=form-group>
-            <label for resource>Resources:</label>
-            <select id="resource-select" id="resource" ng-model="resource" required multiple="multiple" multi-select class="form-control"></select>
-          </div>
-        </div>
+            <div  class=form-group>
+            	<label for resource>Resources:</label>	
+				<select id="resource-select" id="resource" ng-model="resource" required multiple="multiple" multi-select class="form-control"></select> 
+           </div>
+         </div>
       </div>
       <div class='row'>
-        <div class='col-sm-12'>
-          <div align="right">
-            <button class="btn btn-primary" type="button" ng-click="createAllocation()">Projection</button>
-            <button class="btn btn-warning" ng-click="clearFields()" type="button">Clear</button>
+          <div class='col-sm-12'>
+             <div align="right">
+                    <button class="btn btn-primary" type="button" ng-click="createAllocation()">Projection</button> 
+                    <button class="btn btn-warning" ng-click="clearFields()" type="button">Clear</button>                   
+              </div>
           </div>
+      </div>
+  </div>
+
+   <div class="panel-body" ng-show="loading || successMsg || errorMsg">
+        <div class="row" >
+          <div class='col-sm-12'>
+                <div class="jumbotron text-center" ng-show="loading">
+                  <span class="glyphicon glyphicon-repeat spinner"></span>
+                  <p>Loading...</p>
+                </div>
+                <div class="row show-hide-message" ng-show="successMsg">
+                  <div class="alert alert-success">{{successMsg}}</div>
+                </div>
+                <div class="row show-hide-message" ng-show="errorMsg">
+                  <div class="alert alert-danger">{{errorMsg}}</div>
+                </div>
+            </div>
         </div>
       </div>
-    </div>
 
-    <div class="panel-body" ng-show="loading || successMsg || errorMsg">
-      <div class="row">
-        <div class='col-sm-12'>
-          <div class="jumbotron text-center" ng-show="loading">
-            <span class="glyphicon glyphicon-repeat spinner"></span>
-            <p>Loading...</p>
-          </div>
-          <div class="row show-hide-message" ng-show="successMsg">
-            <div class="alert alert-success">{{successMsg}}</div>
-          </div>
-          <div class="row show-hide-message" ng-show="errorMsg">
-            <div class="alert alert-danger">{{errorMsg}}</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-
-    <div class="panel-footer">
-      <div class="row" allign="right" style="padding-top: 2px">
-        <div class='col-sm-10' />
-        <div class='col-sm-2'>
-          <button class="btn btn-primary" type="button" ng-click="saveAllocation()">Save</button>
-        </div>
-      </div>
-      <div class="panel-body" style="overflow: scroll;">
-        <table class="table table-striped table-curved" cellspacing="0" width="100%">
-          <thead>
-            <tr>
-              <th>Resource</th>
-              <th>Project</th>
-              <th ng-repeat="data in months">{{data.month}}</th>
-              <th>Action</th>
-            </tr>
-            <thead>
-              <tbody>
-                <tr ng-repeat="allocRows in resourceWiseAllocaiton" id="{{$index}}">
-                  <td>
-                    <span editable-text="allocRows.resource" e-name="resource" e-form="rowform">
+      
+      <div class="panel-footer">
+      		  <div class="row" allign="right" style="padding-top: 2px">
+						<div class='col-sm-10'/>
+						<div class='col-sm-2'>
+						<button class="btn btn-primary" type="button" ng-click="saveAllocation()">Save</button>
+						</div>
+			  </div>	
+              <div class="panel-body" style="overflow: scroll;">
+                  <table class="table table-striped table-curved" cellspacing="0" width="100%">
+                    <thead>
+						<tr>
+					      	<th>Resource</th>
+					      	<th>Project</th>
+					      	<th ng-repeat="data in months">{{data.month}}</th>
+					      	<th>Action</th>
+					    </tr>
+				    <thead>
+                    <tbody>
+					    <tr ng-repeat="allocRows in resourceWiseAllocaiton" id="{{$index}}">
+					      <td>
+					        <span editable-text="allocRows.resource" e-name="resource" e-form="rowform" >
 					          {{ allocRows.resource }}
 					        </span>
-                  </td>
-                  <td>
-                    <span editable-select="allocRows.project" e-name="project" e-form="rowform">
+					      </td>
+					      <td>
+					      	<span editable-select="allocRows.project" e-name="project" e-form="rowform" >
 					          <select  ng-model="allocRows.project" ng-options="item.projectname as item.projectname for item in project |projectfilter:'Vacation'"/>
 					          <!-- <div class="ui-widget">								  
 								<input id="project" ng-model="allocRows.project" ng-keyup="completeProjects()"> -->
 							</div>
 					        </span>
-                  </td>
-                  <td ng-repeat="months in allocRows.allocation">
-                    <span editable-select="alloc.tag" e-name="tag" e-form="rowform">
+					      </td>
+					      <td ng-repeat="months in allocRows.allocation">
+					      	<span editable-select="alloc.tag" e-name="tag"  e-form="rowform">
 					           <input type="text"  name="tagged" ng-model="months.value"  maxlength="4" size="4"/>
 					        </span>
-                  </td>
-                  <td style="white-space: nowrap">
-                    <div class="buttons">
-                      <button type="button" class="btn btn-primary" ng-click="clearAllocation($index)">
+					      </td>
+	     				   <td style="white-space: nowrap">
+						        <div class="buttons">
+						          <button type="button" class="btn btn-primary" ng-click="clearAllocation($index)">
 						          	Clear</button>
-                      <button type="button" class="btn btn-danger" ng-click="removeAllocation($index)">Delete</button>
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
-        </table>
-      </div>
+						          <button type="button" class="btn btn-danger" ng-click="removeAllocation($index)">Delete</button>
+						        </div>  
+	      					</td>
+	    				</tr>
+	    			</tbody>
+                 </table>
+            </div>
+        </div>
     </div>
-  </div>
 </form>
 
-<script>
-  $('#resource-select').multiselect();
+	<script>
+	   $('#resource-select').multiselect();
+		
+      $( "#startDt" ).datepicker({
+         //appendText:"(dd-MMM-yy)",
+         dateFormat:"dd-MM-yy",
+         minDate: new Date()
+         //showOn:"button",
+         //buttonImage: "/images/calendar-icon.png",
+         //buttonImageOnly: true
+      });
+	  
+	  $( "#endDt" ).datepicker({
+         //appendText:"(dd-MMM-yy)",
+         dateFormat:"dd-MM-yy",
+         minDate: new Date()
+         //showOn:"button",
+         //buttonImage: "/images/calendar-icon.png",
+         //buttonImageOnly: true
+      });
 
-  $("#startDt").datepicker({
-    //appendText:"(dd-MMM-yy)",
-    dateFormat: "dd-MM-yy",
-    minDate: new Date()
-    //showOn:"button",
-    //buttonImage: "/images/calendar-icon.png",
-    //buttonImageOnly: true
-  });
 
-  $("#endDt").datepicker({
-    //appendText:"(dd-MMM-yy)",
-    dateFormat: "dd-MM-yy",
-    minDate: new Date()
-    //showOn:"button",
-    //buttonImage: "/images/calendar-icon.png",
-    //buttonImageOnly: true
-  });
-</script>
+   </script>

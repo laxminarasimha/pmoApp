@@ -1,39 +1,60 @@
-<div class="jumbotron text-center">
-  <h1>
-    <img src="..\assets\images\capgemini_header.jpg">
-
-  </h1>
-  <p>Demand and Capacity Application</p>
-  <br> <br>
-  <form ng-submit="main.doLogin(loginData)">
-    <div class="input-group" style="width:50%; margin-left: auto; margin-right: auto">
-      <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-      <input id="username" type="text" class="form-control" name="username" placeholder="Please Enter Username" ng-model="main.loginData.username">
-    </div>
-    <br>
-    <div class="input-group" style="width:50%; margin-left: auto; margin-right: auto">
-      <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
-      <input id="password" type="password" class="form-control" name="password" placeholder="Please Enter Password" ng-model="main.loginData.password">
-    </div>
-    <br>
-    <div>
-      <input type="submit" class="btn btn-danger" value="Login">
-    </div>
-  </form>
+<div class="row" style="margin-top:200px">
+<div class="col-xs-12 col-sm-10 col-md-6 col-sm-offset-2 col-md-offset-3">
+<div class="panel panel-default" >
+  <div class="panel-body">
+    <div class="row" >
+    <div class="col-xs-12">
+    <form role="form" ng-submit="main.doLogin(loginData)">
+      <fieldset>
+      <img src="assets\images\dandmlogo.png" alt="Demand & Capacity" class="pull-right img-responsive">
+        <h2>Please Sign In</h2>
+        <hr class="colorgraph">
+        <div class="form-group">
+                    <input type="text" class="form-control input-lg" name="username" placeholder="Please Enter Username" ng-model="main.loginData.username">
+        </div>
+        <div class="form-group">
+                    <input type="password" class="form-control input-lg" name="password" placeholder="Please Enter Password" ng-model="main.loginData.password">
+        </div>
+        <span class="button-checkbox">
+          <div class="checkbox">
+          <label>
+            <input type="checkbox" value="remember-me"> Remember me
+          </label>
+          <a href="" class="btn btn-link pull-right">Forgot Password?</a>
+        </div>
+          
+        </span>
+        <hr class="colorgraph">
+        <div class="row">
+          <div class="col-xs-6 col-sm-6 col-md-6">
+                        <input type="submit" class="btn btn-lg btn-success btn-block" value="Sign In">
+          </div>
+          <div class="col-xs-6 col-sm-6 col-md-6">
+            <a href="" class="btn btn-lg btn-primary btn-block">Register</a>
+          </div>
+        </div>
+      </fieldset>
+    </form>
+  </div>
+</div>
+  </div>
+</div>
+</div>
 </div>
 
-
 <div class="jumbotron text-center" ng-show="main.loading">
-  <span class="glyphicon glyphicon-repeat spinner"></span>
-  <p>Loading...</p>
+	<span class="glyphicon glyphicon-repeat spinner"></span>
+	<p>Loading...</p>
 </div>
 
 
 <div class="row show-hide-message" ng-show="main.successMsg">
-  <div class="alert alert-success">{{main.successMsg}}</div>
+	<div class="alert alert-success">{{main.successMsg}}</div>
 </div>
 
 
 <div class="row show-hide-message" ng-show="main.errorMsg">
-  <div class="alert alert-danger">{{main.errorMsg}}</div>
+	<div class="alert alert-danger">{{main.errorMsg}}</div>
 </div>
+
+
