@@ -119,7 +119,7 @@ var app = angular.module('appRoutes',['ngRoute'])
           })
 
 	.when('/All Graphs',{
-		templateUrl: 'app/views/pages/reporting/skillsetAvailability.html',
+		templateUrl: 'app/views/pages/reporting/graphs.html',
         authenticated: true
 	})
 

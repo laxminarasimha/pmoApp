@@ -2,7 +2,7 @@
 
  'use strict';
  
-angular.module('pmoApp').controller('slillsetAvailabilityController', Controller);
+angular.module('pmoApp').controller('graphsController', Controller);
  
 Controller.$inject = ['$scope', '$rootScope','$filter', 'locationService', 'resourceMappingService','allocationService','leaveService','availableDaysService','monthlyHeaderListService'];
  var barChartData ;
@@ -51,7 +51,7 @@ var color = Chart.helpers.color;
 
 function createActualResourceCapacityGraph(list,$scope,monthlyHeaderListService){
     //console.log(list);    
-    var resource = {'name':"",
+    /*var resource = {'name':"",
                     'kindid':"",
                     'location':"",
                     'region':"", 
@@ -60,7 +60,7 @@ function createActualResourceCapacityGraph(list,$scope,monthlyHeaderListService)
                     'status':"",
                     'utilisationArray':[]
                    };
-   var resourceUtilisationArray = [];
+        var resources = [];
            for(var i=0; i<list.length;i++){             
              resource.name = list[i].resource;
              resource.kindid = list[i].kindid;
@@ -69,7 +69,7 @@ function createActualResourceCapacityGraph(list,$scope,monthlyHeaderListService)
              resource.resourcetype = list[i].resourcetype;
              resource.skill = list[i].skill;
              resource.status = list[i].status;
-                  var monthlyUtilisationArray = [];
+                 var monthlyUtilisationArray = [];
                  for(var j=0;j<list[i].maps[0].length;j++){
                         var allocationOBJ = list[i].maps[0][j];
                         var sum = 0;
@@ -119,13 +119,24 @@ function createActualResourceCapacityGraph(list,$scope,monthlyHeaderListService)
                                 "value" : utilisation 
                              };
 
-
-
                         monthlyUtilisationArray.push(monthlyUtilisationObject);
 
                  }
+                 resource.utilisationArray.push(monthlyUtilisationArray);
+                 resources.push(resource);
         }
-    console.log(resource);
+
+        for(var i=0; i<resources.length;i++)
+    {
+        angular.forEach(resources[i].utilisationArray, function(value,key)
+        {
+            console.log(value[0].value);
+
+        });
+    }
+    console.log(resources);
+
+    console.log(list);*/
 }
 
 function getGraphData($scope,allocationService,leaveService,resourceMappingService,availableDaysService,monthlyHeaderListService){

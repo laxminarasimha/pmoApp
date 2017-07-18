@@ -120,3 +120,15 @@ heade .nabar {
 .gi-4x{font-size: 4em;}
 .gi-5x{font-size: 5em;}
 .gi-6x{font-size: 6em;}
+
+
+.colorgraph {
+  height: 5px;
+  border-top: 0;
+  background: #51B5E2;//#c4e17f
+  border-radius: 5px;
+  background-image: -webkit-linear-gradient(left, #51B5E2);
+  background-image: -moz-linear-gradient(left,  #51B5E2);
+  background-image: -o-linear-gradient(left, #51B5E2);
+  background-image: linear-gradient(to right, #51B5E2);//#62c2e4
+}
