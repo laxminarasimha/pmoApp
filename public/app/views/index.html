@@ -80,7 +80,7 @@
   <script src="app/controllers/idleTimeCtrl.js"></script>
   <script src="app/controllers/utilisationCtrl.js"></script>
   <script src="app/controllers/dashBoardCtrl.js"></script>
-  <script src="app/controllers/skillsetAvailabilityCtrl.js"></script>
+  <script src="app/controllers/graphsCtrl.js"></script>
   
   
   <!-- Angular Services -->
@@ -120,11 +120,11 @@
   </head>
   <body ng-app="pmoApp" ng-controller="mainCtrl as main" ng-cloak>
 
-  <div id="main" ng-controller="menuCtrl" class="container">
+  <div id="main" ng-controller="menuCtrl" class="container-fluid">
 
 <div class="masthead">
 
-      <div class="row">
+      <div class="row" ng-show="main.isLoggedIn">
         <div class="col-md-8"><img src="assets\images\capgemini_header.jpg" alt="Capgemini"></div>
         <div class="col-md-4"><img src="assets\images\dandmlogo.png" alt="Demand & Capacity" class="pull-right img-responsive"></div>         
       </div>
@@ -176,7 +176,7 @@
 
 
     <!-- Footer  -->
-    <legend></legend>
+
     <div ng-controller="footerCtrl">
       <footer class="container-fluid text-center" >
         <p><span ng-bind="rightToReserveMsg"></span></p>
