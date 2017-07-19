@@ -44,7 +44,6 @@ router.get("/", function(req, res) {
 								 return;
 								 }
 
-								 console.log(data);
 								 res.send(data);
 								 });
 }).post("/", function(req, res) {

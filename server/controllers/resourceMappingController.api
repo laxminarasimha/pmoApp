@@ -19,6 +19,28 @@ router.get("/", function(req, res) {
  }
  res.send(data[0]);
  });
+}).get("/kinId/:kin", function(req, res) {
+ var kinID = req.params.kin;
+ resourceMappingDAO.aggregate([
+                           {$match : {"mappedResource.kinId": kinID}},
+                           { $unwind: "$taggToEuroclear" },
+                           {
+							    $group: {
+							        _id: {key:"$taggToEuroclear.key"},
+							        count: {$sum: "$taggToEuroclear.value"}
+							    }
+							}
+                           
+
+                          ], function(err, data) {
+								 if (err) {
+								 res.send("error");
+								 return;
+								 }
+
+								 console.log(data);
+								 res.send(data);
+								 });
 }).post("/", function(req, res) {
  var obj = req.body;
  var model = new resourceMappingDAO(obj);

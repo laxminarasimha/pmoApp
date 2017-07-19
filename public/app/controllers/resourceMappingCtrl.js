@@ -152,20 +152,8 @@ $scope.editResourceMapping = function (id) {
 }
 
 function createResoucreMap(resourceMappingService,app,$scope){
-    resourceMappingService.createResourceMapping($scope.resourcemap).then(function(res) {
-         if (res.data == "created") {
-            getMappedResourceData(resourceMappingService,$scope);
-            $scope.resourcemap = {
-                'taggToEuroclear': [],
-                'monthlyAvailableActualMandays' : []
-            };
-            app.loading =false;
-            app.successMsg = "Resource mapping created successfully";
-            app.errorMsg = false;
-         }
-         }).catch(function(err) {
-         console.log(err);
-         });
+     checkForAllocationInEachMonth($scope,resourceMappingService,app);     
+       
 }
 
 function saveResoucreMap(resourceMappingService,app,$scope){
@@ -183,6 +171,82 @@ function saveResoucreMap(resourceMappingService,app,$scope){
          }).catch(function(err) {
          console.log(err);
          });
+}
+
+
+function checkForAllocationInEachMonth($scope,resourceMappingService,app){
+  var resourceMap = $scope.resourcemap;
+  var overAllocation = false;
+  var infoMsg = "";
+  for(var i=0;i<resourceMap.taggToEuroclear.length;i++){
+     if(resourceMap.taggToEuroclear[i].value > 100){
+        overAllocation = true;
+        infoMsg = resourceMap.taggToEuroclear[i].key;
+        break;
+     }
+  }
+
+  if(overAllocation){
+            app.loading =false;
+            app.successMsg = false;
+            app.errorMsg = "Over Allocation for Resource for :"+infoMsg;
+            app.errorClass = "error"
+  }else{
+        var kinID = $scope.resourcemap.mappedResource.kinId;
+        resourceMappingService.getMappedResourceForKinID(kinID).then(function(res){
+           console.log(res.data);
+           for(var j=0;j<res.data.length;j++){
+             for(var i=0;i<resourceMap.taggToEuroclear.length;i++){
+                 if(resourceMap.taggToEuroclear[i].key == res.data[j]._id.key){
+                    var sumAllocation = resourceMap.taggToEuroclear[i].value + res.data[j].count;
+                    if(sumAllocation > 100){
+                          overAllocation = true;
+                          infoMsg = resourceMap.taggToEuroclear[i].key;
+                          break;
+                    }else{
+                          continue;
+                    }
+                    
+                 }
+              }
+
+              if(overAllocation){
+                break;
+              }
+           }
+            
+           if(overAllocation){
+                app.loading =false;
+                app.successMsg = false;
+                app.errorMsg = "Kamine again Over Allocation for Resource for :"+infoMsg;
+                app.errorClass = "error"
+            } else{
+                 resourceMappingService.createResourceMapping($scope.resourcemap).then(function(res) {
+                 if (res.data == "created") {
+                    getMappedResourceData(resourceMappingService,$scope);
+                    $scope.resourcemap = {
+                        'taggToEuroclear': [],
+                        'monthlyAvailableActualMandays' : []
+                    };
+                    app.loading =false;
+                    app.successMsg = "Resource mapping created successfully";
+                    app.errorMsg = false;
+                 }
+                 }).catch(function(err) {
+                 console.log(err);
+                 });
+            }
+
+        }).catch(function(err) {
+               console.log(err);
+        });
+  }
+
+  
+  
+ 
+
+  
 }
 
 function prepareData(resourceMappingService,app,holidayListService,$scope,resourcemap,isCreate,monthlyHeaderListService){
@@ -299,7 +363,7 @@ function prepareTagToEuroclearHeading($scope,monthlyHeaderListService){
      for(var i=0;i<$scope.taggedToEuroclearList.length;i++){
        var taggedToEuroclearObject = {
          "key" : $scope.taggedToEuroclearList[i],
-         "value" : resourcemap.taggToEuroclear[i].value
+         "value" : parseInt(resourcemap.taggToEuroclear[i].value)
        };
            taggedToEuroclearArray.push(taggedToEuroclearObject);
      }

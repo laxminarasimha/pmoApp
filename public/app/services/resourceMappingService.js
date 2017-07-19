@@ -17,6 +17,10 @@
        url = globalConfig.apiAddress + "/mappedresource/" + id;
        return $http.get(url);
        },
+       getMappedResourceForKinID: function(Id) {
+       url = globalConfig.apiAddress + "/mappedresource/kinId/" + Id;
+       return $http.get(url);
+       },
        createResourceMapping: function(resourcemap) {
        url = globalConfig.apiAddress + "/mappedresource";
        return $http.post(url, resourcemap);
