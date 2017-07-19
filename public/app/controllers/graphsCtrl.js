@@ -7,8 +7,8 @@ angular.module('pmoApp').controller('graphsController', Controller);
 Controller.$inject = ['$scope', '$rootScope','$filter', 'locationService', 'resourceMappingService','allocationService','leaveService','availableDaysService','monthlyHeaderListService'];
  var barChartData ;
  var colors = ['#7394CB','#E1974D','#84BB5C','#D35D60','#6B4C9A','#9066A7','#AD6A58','#CCC374','#3869B1','#DA7E30','#3F9852','#6B4C9A','#922427','rgba(253, 102, 255, 0.2)','rgba(153, 202, 255, 0.2)'];
- var chartColors = ['rgb(255, 99, 132)','rgb(255, 159, 64)','rgb(255, 205, 86)','rgb(75, 192, 192)','rgb(54, 162, 235)','rgb(153, 102, 255)','rgb(201, 203, 207)','rgba(253, 102, 255)','rgba(153, 202, 255)','rgb(255, 99, 132)','rgb(255, 159, 64)','rgb(255, 205, 86)','rgb(75, 192, 192)','rgb(54, 162, 235)','rgb(153, 102, 255)','rgb(201, 203, 207)','rgba(253, 102, 255)','rgba(153, 202, 255)'];
-var color = Chart.helpers.color;
+  var chartColors = ['rgb(255, 99, 132)','rgb(255, 159, 64)','rgb(255, 205, 86)','rgb(75, 192, 192)','rgb(54, 162, 235)','rgb(153, 102, 255)','rgb(201, 203, 207)','rgba(253, 102, 255)','rgba(153, 202, 255)','rgb(255, 99, 132)','rgb(255, 159, 64)','rgb(255, 205, 86)','rgb(75, 192, 192)','rgb(54, 162, 235)','rgb(153, 102, 255)','rgb(201, 203, 207)','rgba(253, 102, 255)','rgba(153, 202, 255)'];
+ var color = Chart.helpers.color;
  function Controller($scope, $rootScope, $filter, locationService,resourceMappingService,allocationService,leaveService,availableDaysService,monthlyHeaderListService) {
     var app = $scope;	 
     $rootScope.Title = "Reporting";         
@@ -20,7 +20,10 @@ var color = Chart.helpers.color;
     $scope.graphid = "Resource Capacity";
     $scope.barChartData = {        
         datasets: []
-    };
+    }; 
+    $scope.chartlabel ='';  
+    $scope.chartxlabel ='';
+    $scope.chartylabel ='';
     getLocationData(locationService,$scope); 
     getMappedResourceData(resourceMappingService,$scope);
 
@@ -39,29 +42,33 @@ var color = Chart.helpers.color;
 
     getGraphData($scope,allocationService,leaveService,resourceMappingService,availableDaysService,monthlyHeaderListService);
 
-    $scope.getActualResourceCapacity = function(availableDaysService,monthlyHeaderListService){
-        var fromDate = "01-"+$scope.headingList[0];
-        var toDate = "01-"+$scope.headingList[$scope.headingList.length-1];
-        var list =  availableDaysService.getData(fromDate,toDate);        
-        createActualResourceCapacityGraph(list,$scope,monthlyHeaderListService);
-
-       }
+    //getActualResourceCapacity(availableDaysService,monthlyHeaderListService);
     
  }
 
-function createActualResourceCapacityGraph(list,$scope,monthlyHeaderListService){
-    //console.log(list);    
-    /*var resource = {'name':"",
-                    'kindid':"",
-                    'location':"",
-                    'region':"", 
-                    'resourcetype':"",
-                    'skill':"", 
-                    'status':"",
-                    'utilisationArray':[]
-                   };
-        var resources = [];
-           for(var i=0; i<list.length;i++){             
+function getActualResourceCapacity(availableDaysService,monthlyHeaderListService,$scope){
+        var fromDate = "01-"+$scope.headingList[0];
+        var toDate = "01-"+$scope.headingList[$scope.headingList.length-1];
+        var list =  availableDaysService.getData(fromDate,toDate);       
+        createActualResourceUtilizationGraph(list,$scope,monthlyHeaderListService);
+       }
+
+function createActualResourceUtilizationGraph(list,$scope,monthlyHeaderListService){
+    var resources = [];
+    $scope.barChartData = {  datasets: []  };  
+    $scope.chartlabel  = '';  
+    $scope.chartxlabel ='Months';
+    $scope.chartylabel ='Percentage';
+     for(var i=0; i<list.length;i++){ 
+             var resource = {
+                    name:"",
+                    kindid:"",
+                    location:"",
+                    region:"", 
+                    resourcetype:"",
+                    skill:"", 
+                    status:"",
+                    utilisationArray:[]}; 
              resource.name = list[i].resource;
              resource.kindid = list[i].kindid;
              resource.location = list[i].location;
@@ -71,39 +78,36 @@ function createActualResourceCapacityGraph(list,$scope,monthlyHeaderListService)
              resource.status = list[i].status;
                  var monthlyUtilisationArray = [];
                  for(var j=0;j<list[i].maps[0].length;j++){
-                        var allocationOBJ = list[i].maps[0][j];
-                        var sum = 0;
-                        var actualAvailablemandays = 0;
-                        var totalAllocation = 0;
-                        for(var k=0; k<allocationOBJ.allocation.length;k++){
+                      var allocationOBJ = list[i].maps[0][j];
+                      var sum = 0;
+                      var actualAvailablemandays = 0;
+                      var totalAllocation = 0;
+                      for(var k=0; k<allocationOBJ.allocation.length;k++){
                            if(isNaN(allocationOBJ.allocation[k])){
                              allocationOBJ.allocation[k] = 0;
                            }
                            //console.log("Allocation=================="+allocationOBJ.allocation[k]);
                            sum = sum + parseFloat(allocationOBJ.allocation[k]);
-                        }
+                      }
                         
-                        if(isNaN(allocationOBJ.leave)){
+                      if(isNaN(allocationOBJ.leave)){
                              allocationOBJ.leave = 0.0;
                            }
-
-                           //console.log("Leave=================="+allocationOBJ.leave);
-                        if(isNaN(allocationOBJ.buffertime)){
+                        //console.log("Leave=================="+allocationOBJ.leave);
+                      if(isNaN(allocationOBJ.buffertime)){
                              allocationOBJ.buffertime = 0.0;
                          }
-                         //console.log("buffertime=================="+allocationOBJ.buffertime);
+                        //console.log("buffertime=================="+allocationOBJ.buffertime);
                         sum = sum + parseFloat(allocationOBJ.leave);
                         totalAllocation = sum;
 
-                        if(parseFloat(allocationOBJ.buffertime) > 0){
+                      if(parseFloat(allocationOBJ.buffertime) > 0){
                            totalAllocation = totalAllocation + parseFloat(allocationOBJ.buffertime);
                         }
 
-                        sum = sum + parseFloat(allocationOBJ.buffertime);
+                      sum = sum + parseFloat(allocationOBJ.buffertime);
 
                         actualAvailablemandays = sum;                    
-
-
 
                         var utilisation = 0;
                         if(sum == 0.0){
@@ -119,24 +123,51 @@ function createActualResourceCapacityGraph(list,$scope,monthlyHeaderListService)
                                 "value" : utilisation 
                              };
 
+
                         monthlyUtilisationArray.push(monthlyUtilisationObject);
 
                  }
-                 resource.utilisationArray.push(monthlyUtilisationArray);
+                 resource.utilisationArray.push(monthlyUtilisationArray); 
                  resources.push(resource);
+                
         }
 
+        var fillLabels = true;
+        $scope.chartlabels = [];
+
         for(var i=0; i<resources.length;i++)
-    {
-        angular.forEach(resources[i].utilisationArray, function(value,key)
         {
-            console.log(value[0].value);
+          if($scope.locationId === "All" || resources[i].location === $scope.locationId){
+            
+            angular.forEach(resources[i].utilisationArray, function(value,key)
+            {
+                var data = [];
 
-        });
-    }
-    console.log(resources);
+                for(var j=0;j<value.length;j++){
+                    if(fillLabels){
+                        $scope.chartlabels.push(value[j].key);
+                        console.log(value[j].key);
+                    }
+                    data.push(value[j].value);
+                }
+                fillLabels = false;                 
+                var dataset = 
+                        {
+                        label: resources[i].name,                
+                        data : data,
+                        backgroundColor: color(chartColors[i]).alpha(0.5).rgbString(),
+                        borderColor: chartColors[i],
+                        borderWidth: 1
+                        }                            
+                $scope.barChartData.datasets.push(dataset);
+                $scope.barChartData["labels"] = $scope.chartlabels;  
+                $scope.chartlabel = $scope.locationId + " - Recource Utilization";        
+            });
 
-    console.log(list);*/
+        }
+              
+        }
+        createBarGraph($scope);    
 }
 
 function getGraphData($scope,allocationService,leaveService,resourceMappingService,availableDaysService,monthlyHeaderListService){
@@ -150,7 +181,7 @@ function getGraphData($scope,allocationService,leaveService,resourceMappingServi
                     resourceMappingService.getMappedResources().then(function(res) {
                         resoruceM = res.data;
                         availableDaysService.intialize(allocation,resoruceM,leave);
-                        $scope.getActualResourceCapacity(availableDaysService,monthlyHeaderListService);
+                        getActualResourceCapacity(availableDaysService,monthlyHeaderListService,$scope);
                      }).catch(function(err) {
                      console.log(err);
                     });
@@ -164,15 +195,15 @@ function getGraphData($scope,allocationService,leaveService,resourceMappingServi
 
 function prepareTableHeading($scope,monthlyHeaderListService){  
         $scope.headingList = monthlyHeaderListService.getHeaderList();
-    }
+}
 
- function getLocationData(locationService,$scope){
+function getLocationData(locationService,$scope){
           locationService.getLocation().then(function(res) {
              $scope.LocationData = res.data;
              }).catch(function(err) {
              console.log(err);
          });
-     }
+}
 
 function createGraph($scope,resourceMappingService,availableDaysService,monthlyHeaderListService){
     switch ($scope.graphid) {
@@ -183,17 +214,13 @@ function createGraph($scope,resourceMappingService,availableDaysService,monthlyH
                    getMappedSkillData(resourceMappingService,$scope);
                 break;
             case "Remaining Resource Capacity":
-                   $scope.getActualResourceCapacity(availableDaysService,monthlyHeaderListService);
-                break;                
-
-                
+                   getActualResourceCapacity(availableDaysService,monthlyHeaderListService,$scope);
+                break; 
             default:
-                
                 break;
-        }
+    }
      
 }//End OF CreateGraph()
-
 
 
 function getMappedResourceData(resourceMappingService,$scope){
@@ -233,7 +260,7 @@ function getMappedResourceData(resourceMappingService,$scope){
          createStackedBarGraph($scope);
          }).catch(function(err) {
          console.log(err);
-     });
+    });
  }
 
 
@@ -275,7 +302,8 @@ function getMappedResourceData(resourceMappingService,$scope){
 
             datasets.push(dataset);
             fillLabels = false;              
-            $scope.barChartData["labels"] = $scope.chartlabels;          
+            $scope.barChartData["labels"] = $scope.chartlabels; 
+
         }
          })         
          var newData = [];
@@ -325,7 +353,7 @@ function getMappedResourceData(resourceMappingService,$scope){
                         },
                         title:{
                             display:true,
-                            text: $scope.locationId +" Resource Capacity"
+                            text: $scope.chartlabel
                         },
                         tooltips: {
                             mode: 'index',
@@ -344,6 +372,50 @@ function getMappedResourceData(resourceMappingService,$scope){
     });
     }//Endf OF createStackedBarGraph($scope)
     
+
+
+    function createBarGraph($scope){
+        var ctx = CreateCanvas("SkillsetChart");
+        var chart = new Chart(ctx, {
+        type: 'bar',
+        data: $scope.barChartData,
+        scaleLabel: "Hello",
+        options: {
+                        legend: {
+                            display: true,
+                            position:'right',
+                            labels: {
+                                fontColor: 'rgb(255, 99, 132)'
+                            }
+                        },
+                        title:{
+                            display:true,
+                            text: $scope.chartlabel
+                        },
+                        tooltips: {
+                            mode: 'index',
+                            intersect: false
+                        },
+                        responsive: true,
+                        scales: {
+                            xAxes: [{
+                              scaleLabel: {
+                                display: true,
+                                labelString: $scope.chartxlabel
+                              }
+                            }],
+                            yAxes: [{
+                              scaleLabel: {
+                                display: true,
+                                labelString: $scope.chartylabel
+                              }
+                            }]
+                        }
+                    }
+    });
+    }//Endf OF createStackedBarGraph($scope)
+
+
     function CreateCanvas(canvasId){
     
         if (document.contains(document.getElementById("chartSubContainer"))) {
@@ -363,7 +435,5 @@ function getMappedResourceData(resourceMappingService,$scope){
         return ctx;
 
     }
-
-
 
  })();
