@@ -1,7 +1,7 @@
 <div ng-controller="statusCtrl">
 <form name="statusForm" ng-submit="createStatus(status)" novalidate >
-<legend>Personal Information (
-  <label ng-show="statusstatus._id!=null">Edit</label>
+<legend>Status (
+  <label ng-show="status._id!=null">Edit</label>
   <label ng-hide="status._id!=null">Create</label>)
 </legend>
 <div class="panel panel-info"> 
@@ -9,7 +9,7 @@
       <div class='row'>
         <div class='col-sm-3'>
           <div  class=form-group>
-          <label for="user_firstname">Skill Name:</label>                        
+          <label for="user_firstname">Status Name:</label>                        
           <input class="form-control input-sm {{errorClass}}" type="text" ng-model="status.statusname" name="statusname" ng-required="true"/>
           </div>
         </div>
