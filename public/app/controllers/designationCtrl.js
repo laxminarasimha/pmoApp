@@ -22,20 +22,34 @@ angular.module('pmoApp').controller('designationCtrl', Controller);
      app.errorMsg = false;
      app.errorClass = "";
  }
+
+ $scope.deleteConfirmation = function(id,name){
+    $scope.msg = name;
+    $scope.deletedID = id;
+    openDialog();
+
+ }
  
- $scope.deleteDesignation = function(id) {
-     if (confirm('Are you sure to delete?')) {
-     designationService.deleteDesignation(id).then(function(res) {
+ $scope.cancel = function(event){
+    $scope.msg = "";
+    $scope.deletedID = "";
+ }
+ 
+ $scope.delete = function(event) {
+     //if (confirm('Are you sure to delete?')) {
+     designationService.deleteDesignation($scope.deletedID).then(function(res) {
      if (res.data == "deleted") {
        getDesignationData(designationService,$scope);
        app.loading = false;
        app.successMsg = "Designation Deleted successfully";
        app.errorMsg = false;
+       $scope.msg = "";
+       $scope.deletedID = "";
      }
      }).catch(function(err) {
      console.log(err);
      });
-     }
+     //}
  };
  
 $scope.editDesignation = function (id) {
@@ -104,6 +118,10 @@ $scope.editDesignation = function (id) {
          }).catch(function(err) {
          console.log(err);
      });
+ }
+
+ function openDialog(){
+    $('#confirmModal').modal('show');
  }
 
  })();

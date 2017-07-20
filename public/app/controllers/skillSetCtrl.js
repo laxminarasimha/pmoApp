@@ -5,9 +5,9 @@
  
  angular.module('pmoApp').controller('skillSetCtrl', Controller);
  
- Controller.$inject = ['$scope', '$rootScope', 'skillSetService','DTOptionsBuilder', 'DTColumnBuilder','$mdDialog'];
+ Controller.$inject = ['$scope', '$rootScope', 'skillSetService','DTOptionsBuilder', 'DTColumnBuilder'];
   
- function Controller($scope, $rootScope, skillSetService, DTOptionsBuilder, DTColumnBuilder,$mdDialog) {
+ function Controller($scope, $rootScope, skillSetService, DTOptionsBuilder, DTColumnBuilder) {
 
 
  $scope.mongoSkillData = [];
@@ -30,37 +30,35 @@
      app.errorMsg = false;
      app.errorClass = ""
  }
- 
- $scope.deleteSkill = function(event,id) {
-     
-     var confirm = $mdDialog.confirm()
-                  .title('Are you sure to delete the record?')
-                  .textContent('Record will be deleted permanently.')
-                  .ariaLabel('Demand & Capacity')
-                  .targetEvent(event)
-                  .ok('Yes')
-                  .cancel('No');
-    $mdDialog.show(confirm).then(
-                     function() {
 
-                         app.loading = true;
-                         skillSetService.deleteSkillSet(id).then(function(res) {
-                         if (res.data == "deleted") {
-                           //getSkillData(skillSetService,$scope);
-                           getSkillDataCount(skillSetService,$scope);
-                           app.loading = false;
-                           app.successMsg = "Skillset Deleted successfully";
-                           app.errorMsg = false;
-                         }
-                         }).catch(function(err) {
-                         console.log(err);
-                         });
-                        
-                     }, 
-                     function() {
-                        
-                     }
-                  );
+ $scope.deleteConfirmation = function(id,name){
+    $scope.msg = name;
+    $scope.deletedID = id;
+    openDialog();
+
+ }
+ 
+ $scope.cancel = function(event){
+    $scope.msg = "";
+    $scope.deletedID = "";
+ }
+ 
+ $scope.delete = function(event) {
+     
+     app.loading = true;
+     skillSetService.deleteSkillSet($scope.deletedID).then(function(res) {
+     if (res.data == "deleted") {
+       //getSkillData(skillSetService,$scope);
+       getSkillDataCount(skillSetService,$scope);
+       app.loading = false;
+       app.successMsg = "Skillset Deleted successfully";
+       app.errorMsg = false;
+       $scope.msg = "";
+       $scope.deletedID = "";
+     }
+     }).catch(function(err) {
+     console.log(err);
+     });
  };
  
 $scope.editSkill = function (id) {
@@ -174,6 +172,8 @@ function populateTable(page,skillSetService,$scope){
 }
 
 
-
+function openDialog(){
+    $('#confirmModal').modal('show');
+ }
 
  })();

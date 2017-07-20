@@ -24,20 +24,34 @@
      app.errorMsg = false;
      app.errorClass = "";
  }
+
+ $scope.deleteConfirmation = function(id,name){
+    $scope.msg = name;
+    $scope.deletedID = id;
+    openDialog();
+
+ }
  
- $scope.deleteRole = function(id) {
-     if (confirm('Are you sure to delete?')) {
-     roleService.deleteRole(id).then(function(res) {
+ $scope.cancel = function(event){
+    $scope.msg = "";
+    $scope.deletedID = "";
+ }
+ 
+ $scope.delete = function(id) {
+     //if (confirm('Are you sure to delete?')) {
+     roleService.deleteRole($scope.deletedID).then(function(res) {
      if (res.data == "deleted") {
        getRoleData(roleService,$scope);
        app.loading = false;
        app.successMsg = "Role Deleted successfully";
        app.errorMsg = false;
+       $scope.msg = "";
+       $scope.deletedID = "";
      }
      }).catch(function(err) {
      console.log(err);
      });
-     }
+     //}
  };
  
 $scope.editRole = function (id) {
@@ -105,6 +119,10 @@ $scope.editRole = function (id) {
          }).catch(function(err) {
          console.log(err);
      });
+ }
+
+ function openDialog(){
+    $('#confirmModal').modal('show');
  }
 
 })();

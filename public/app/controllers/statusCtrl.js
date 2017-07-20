@@ -23,20 +23,36 @@
      app.errorMsg = false;
      app.errorClass = ""
  }
+
+ $scope.deleteConfirmation = function(id,name){
+    $scope.msg = name;
+    $scope.deletedID = id;
+    openDialog();
+
+ }
  
- $scope.deleteStatus = function(id) {
-     if (confirm('Are you sure to delete?')) {
-     statusService.deleteStatus(id).then(function(res) {
+ $scope.cancel = function(event){
+    $scope.msg = "";
+    $scope.deletedID = "";
+ }
+
+
+ $scope.delete = function(event) {
+    //var dataValue = event.target.attributes.value.value;     
+     statusService.deleteStatus($scope.deletedID).then(function(res) {
      if (res.data == "deleted") {
        getStatusData(statusService,$scope);
         app.loading = false;
-       app.successMsg = "Status Deleted successfully";
-       app.errorMsg = false;
+        app.successMsg = "Status Deleted successfully";
+        app.errorMsg = false;
+        $scope.msg = "";
+        $scope.deletedID = "";
      }
      }).catch(function(err) {
      console.log(err);
      });
-     }
+    
+     
  };
  
 $scope.editStatus = function (id) {
@@ -99,6 +115,10 @@ $scope.editStatus = function (id) {
          }).catch(function(err) {
          console.log(err);
      });
+ }
+
+ function openDialog(){
+    $('#confirmModal').modal('show');
  }
 
  })();
