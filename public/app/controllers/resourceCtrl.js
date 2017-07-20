@@ -3,9 +3,9 @@
  
 angular.module('pmoApp').controller('resourceCtrl', Controller);
  
- Controller.$inject = ['$scope', '$rootScope', 'resourceService','designationService','DTOptionsBuilder', 'DTColumnBuilder'];
+ Controller.$inject = ['$scope', '$rootScope', 'resourceService','designationService','DTOptionsBuilder', 'DTColumnBuilder','skillSetService','locationService','roleService'];
   
- function Controller($scope, $rootScope, resourceService, designationService, DTOptionsBuilder, DTColumnBuilder) {
+ function Controller($scope, $rootScope, resourceService, designationService, DTOptionsBuilder, DTColumnBuilder,skillSetService,locationService,roleService) {
  $scope.mongoResourceData = [];
  
  var app = $scope;
@@ -16,6 +16,17 @@ angular.module('pmoApp').controller('resourceCtrl', Controller);
  $scope.designationList = [];
  getDesignationData(designationService,$scope);
  
+
+ $scope.skillSetList = [];
+ getSkillSetData(skillSetService,$scope);
+ 
+
+ $scope.regionList = [];
+ getLocationData(locationService,$scope);
+
+
+ $scope.roleList = [];
+ getRoleData(roleService,$scope);
   
  $scope.clearFields = function (){
  
@@ -119,5 +130,34 @@ $scope.editResource = function (id) {
          console.log(err);
      });
  }
+
+ function getSkillSetData(skillSetService,$scope){
+       skillSetService.getSkillSets().then(function(res) {
+           $scope.skillSetList = res.data;
+           }).catch(function(err) {
+           console.log(err);
+         });
+ }
+
+function getLocationData(locationService,$scope){
+      locationService.getLocation().then(function(res) {
+         $scope.regionList = res.data;
+         console.log(res.data);
+         }).catch(function(err) {
+         console.log(err);
+     });
+ }
+
+ function getRoleData(roleService,$scope){
+      roleService.getRole().then(function(res) {
+         $scope.roleList = res.data;
+         console.log(res.data);
+         }).catch(function(err) {
+         console.log(err);
+     });
+ }
  
+
+
+
  })();

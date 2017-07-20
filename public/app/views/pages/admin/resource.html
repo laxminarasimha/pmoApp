@@ -41,27 +41,70 @@
           <div class='form-group'>
           <label for="eype">Type</label>
           <select class="form-control input-sm {{errorClass}}" ng-model="resource.etype" name="etype" ng-required="true">
-            <option value="Admin">Admin</option>
-            <option value="Engagement Manager">Engagement Manager</option>
-            <option value="Manager">Manager</option>
-            <option value="User">General User</option>
+         <option value="SAdmin">Super Administrator</option>
+            <option value="Admin">Administrator</option>                        
+            <option value="User" selected="true">General User</option>
           </select>
           </div>
         </div>
       </div>
+
       <div class='row'>
-        <div class='col-sm-12'>
-          <div align="right"> 
+      <div class='col-sm-4'>
+          <div class='form-group'>
+          <label for="baseentity">Base Entity</label>            
+            <select ng-model="resource.baseentity" id="baseentity"  class="form-control input-sm {{errorClass}}">
+              <option ng-repeat="x in regionList" value="{{x.locationname}}">{{x.locationname}}</option>
+           </select>          
+          </div>
+        </div>
+        <div class='col-sm-4'>
+          <div class='form-group'>
+          <label for="skill">Skill</label>
+            <select ng-model="resource.skill" id="skill" class="form-control input-sm {{errorClass}}">
+              <option ng-repeat="x in skillSetList" value="{{x.skillname}}">{{x.skillname}}</option>
+           </select>
+          </div>
+        </div>
+        <div class='col-sm-4'>
+          <div class='form-group'>
+          <label for="eype">Role</label>
+          <select ng-model="resource.role" id="role" class="form-control input-sm {{errorClass}}">
+              <option ng-repeat="x in roleList" value="{{x.rolename}}">{{x.rolename}}</option>
+           </select>
+          </div>
+        </div>
+      </div>
+
+      <div class='row'>
+
+        <div class='col-sm-5'>
+        <div align="left">
+        <div class='form-group'>
+       
+                        <input id="ismanager" type="checkbox" checked="" ng-model="resource.isManager">
+                        <label for="ismanager">
+                            Engagement Manager
+                        </label>
+       
+        </div>
+        </div>
+
+        </div>
+          <div class='col-sm-7'>
+
+          <div align="right">            
             <input type="submit" value="Update" ng-click="saveData(resource)" class="btn btn-primary" ng-show="resource._id!=null"/>
             <input type="submit" value="Create" class="btn btn-primary" ng-hide="resource._id!=null"/>
             <button class="btn btn-warning" ng-click="clearFields()" type="button">Clear</button>
-      </div>
+          </div>
         </div>
       </div>     
     </form>
   </div>
   <div class="panel-body" ng-show="loading || successMsg || errorMsg">
     <div class="row" >
+
       <div class='col-sm-12'>
             <div class="jumbotron text-center" ng-show="loading">
               <span class="glyphicon glyphicon-repeat spinner"></span>
