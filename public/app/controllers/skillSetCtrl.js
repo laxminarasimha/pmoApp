@@ -5,9 +5,9 @@
  
  angular.module('pmoApp').controller('skillSetCtrl', Controller);
  
- Controller.$inject = ['$scope', '$rootScope', 'skillSetService','DTOptionsBuilder', 'DTColumnBuilder'];
+ Controller.$inject = ['$scope', '$rootScope', 'skillSetService','DTOptionsBuilder', 'DTColumnBuilder','$mdDialog'];
   
- function Controller($scope, $rootScope, skillSetService, DTOptionsBuilder, DTColumnBuilder) {
+ function Controller($scope, $rootScope, skillSetService, DTOptionsBuilder, DTColumnBuilder,$mdDialog) {
 
 
  $scope.mongoSkillData = [];
@@ -31,21 +31,36 @@
      app.errorClass = ""
  }
  
- $scope.deleteSkill = function(id) {
-     if (confirm('Are you sure to delete?')) {
-        app.loading = true;
-     skillSetService.deleteSkillSet(id).then(function(res) {
-     if (res.data == "deleted") {
-       //getSkillData(skillSetService,$scope);
-       getSkillDataCount(skillSetService,$scope);
-       app.loading = false;
-       app.successMsg = "Skillset Deleted successfully";
-       app.errorMsg = false;
-     }
-     }).catch(function(err) {
-     console.log(err);
-     });
-     }
+ $scope.deleteSkill = function(event,id) {
+     var html = "<span class='label label-danger'></span>"
+     var confirm = $mdDialog.confirm()
+                  .title(html)
+                  .textContent('Record will be deleted permanently.')
+                  .ariaLabel('Demand & Capacity')
+                  .targetEvent(event)
+                  .ok('Yes')
+                  .cancel('No');
+    $mdDialog.show(confirm).then(
+                     function() {
+
+                         app.loading = true;
+                         skillSetService.deleteSkillSet(id).then(function(res) {
+                         if (res.data == "deleted") {
+                           //getSkillData(skillSetService,$scope);
+                           getSkillDataCount(skillSetService,$scope);
+                           app.loading = false;
+                           app.successMsg = "Skillset Deleted successfully";
+                           app.errorMsg = false;
+                         }
+                         }).catch(function(err) {
+                         console.log(err);
+                         });
+                        
+                     }, 
+                     function() {
+                        
+                     }
+                  );
  };
  
 $scope.editSkill = function (id) {

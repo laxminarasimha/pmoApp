@@ -58,7 +58,7 @@
                   <td>{{ x.skillname }}</td>
                   <td>
                         <a  ng-click="editSkill(x._id)">Edit</a> |
-                        <a  ng-click="deleteSkill(x._id)">Delete</a>
+                        <a  ng-click="deleteSkill($event,x._id)">Delete</a>
                   </td>
                 </tr>
                 </tbody>
