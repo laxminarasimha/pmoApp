@@ -12,7 +12,12 @@ var resourceSchema = new Schema({
       password: { type: String, required: false },
       alias: { type: String, required: false },
       etype: { type: String, required: false },
-      kinId: { type: String, required: false }
+      kinId: { type: String, required: false },
+      baseentity: { type: String, required: false },
+      skill:{ type: String, required: false },
+      status:{ type: String, required: false },
+      isManager:{ type: Boolean, required: false},
+      role:{ type: String, required: false }
     },  
     {
       collection: 'resource'
