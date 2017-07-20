@@ -32,9 +32,9 @@
  }
  
  $scope.deleteSkill = function(event,id) {
-     var html = "<span class='label label-danger'></span>"
+     
      var confirm = $mdDialog.confirm()
-                  .title(html)
+                  .title('Are you sure to delete the record?')
                   .textContent('Record will be deleted permanently.')
                   .ariaLabel('Demand & Capacity')
                   .targetEvent(event)
