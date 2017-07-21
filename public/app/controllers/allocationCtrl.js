@@ -2,6 +2,29 @@
 
 	var app = angular.module('pmoApp');
 
+	app.filter('unique', function () {
+		return function (collection, condition) {
+			var output = [],
+				keys = [];
+			var splitKeys = condition.split('.'); 
+
+			angular.forEach(collection, function (item) {
+				var key = {};
+				angular.copy(item, key);
+				for (var i = 0; i < splitKeys.length; i++) {
+					key = key[splitKeys[i]];    
+				}
+
+				if (keys.indexOf(key) === -1) {
+					keys.push(key);
+					output.push(item);
+				}
+			});
+
+			return output;
+		};
+	});
+
 
 	app.controller('allocationCtrl', Controller);
 
@@ -291,7 +314,6 @@
 			.withOption('order', [0, 'asc']);
 
 		$scope.childInfo = function (resource, event, updateTable) {
-			console.log('function called');
 			var scope = $scope.$new(true);
 
 			var link = angular.element(event.currentTarget),
