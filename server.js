@@ -2,6 +2,7 @@ var express = require('express');
 var morgan = require('morgan');
 var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
+
 var app = express();
 var port = process.env.PORT||3000;
 var router = express.Router();
@@ -25,7 +26,6 @@ var connection = mongoose.connect(mongodbUri, function(err) {
 		console.log('Connection Successful');
 	}
 }); 
-
 
 
 

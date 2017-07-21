@@ -1,0 +1,85 @@
+var express = require("express"),
+ router = express.Router();
+ var multer = require('multer');
+ var uploadDAO = require("../models/uploadDAO.js");
+ var fs = require('fs');
+ 
+ var storage = multer.diskStorage({ //multers disk storage settings
+        destination: function (req, file, cb) {
+            cb(null, './server/uploads/');
+        },
+        filename: function (req, file, cb) {
+            var datetimestamp = Date.now();
+            cb(null, file.fieldname + '-' + datetimestamp + '.' + file.originalname.split('.')[file.originalname.split('.').length -1]);
+        }
+    });
+
+    var upload = multer({ //multer settings
+                    storage: storage
+                }).single('file');
+
+
+
+router.post("/:kin", function(req, res) {
+  var id = req.params.kin;
+ 
+   uploadDAO.find({ kinId : id }, function(err, doc) {
+			 if (err) {
+			 res.send("error");
+			 return;
+			 }
+			  //var base64 = (doc[0].img.data.toString('base64'));
+		      if(doc.length > 0){
+                 
+				 upload(req,res,function(err){
+		            if(err){
+		                 res.json({error_code:1,err_desc:err});
+		                 return;
+		            }
+						 doc[0].img.data = fs.readFileSync(req.file.path);
+						 doc[0].img.contentType = 'image/jpg';
+						 doc[0].save();
+		             res.json({error_code:0,err_desc:null});
+		        });
+
+		      }else{
+
+                   upload(req,res,function(err){
+		            if(err){
+		                 res.json({error_code:1,err_desc:err});
+		                 return;
+		            }
+
+		             var newItem = new uploadDAO();
+						 newItem.img.data = fs.readFileSync(req.file.path);
+						 newItem.img.contentType = 'image/jpg';
+						 newItem.kinId = id;
+						 newItem.save();
+		             res.json({error_code:0,err_desc:null});
+		        });
+
+		      }   
+			 });
+  
+
+});
+
+router.get("/:kin", function(req, res) {
+  var id = req.params.kin;
+
+  uploadDAO.find({ kinId : id }, function(err, doc) {
+	 if (err) {
+	 res.send("error");
+	 return;
+	 }
+	 var base64 = (doc[0].img.data.toString('base64'));
+         res.send(base64); 
+	 });
+ 
+
+});
+
+ 
+module.exports = router;
+
+

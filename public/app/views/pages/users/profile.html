@@ -7,7 +7,33 @@
             </div>
             <div class="panel-body">
               <div class="row">
-                <div class="col-md-3 col-lg-3 " align="center"> <img alt="User Pic" src="../../../../assets/images/unknown.png" class="img-circle img-responsive"> </div>                
+                
+                <div ng-controller="profileCtrls as up" class="col-md-3 col-lg-3 " align="center">
+                  <form   name="up.upload_form">
+                      <img class="img-circle img-responsive" ng-show="!!up.file" ngf-thumbnail="up.file || '../../../../assets/images/unknown.png'" ng-src="data:image/jpg;base64,{{imgData}}"/>
+                      <input 
+                          type="file" 
+                          ngf-select 
+                          ng-model="up.file" 
+                          name="file" 
+                          ngf-pattern="'image/*'"
+                          accept="image/*" 
+                          ngf-max-size="20MB" 
+                          class="btn btn-primary"
+                          />
+                      
+                      <i ng-show="up.upload_form.file.$error.required">*required</i><br>
+                      <i ng-show="up.upload_form.file.$error.maxSize">File too large 
+                      {{up.file.size / 1000000|number:1}}MB: max 20M</i>
+                     <!--  Multiple files
+                      <div class="button" ngf-select ng-model="up.files" ngf-multiple="true">Select</div>
+                      Drop files: <div ngf-drop ng-model="up.files" class="drop-box">Drop</div> -->
+                      <button class="btn btn-primary" type="submit" ng-click="up.submit()">Upload</button>
+                      <p>{{up.progress}}</p>
+                  </form>
+                
+               </div>
+
                 <div class=" col-md-9 col-lg-9 "> 
                   <table class="table table-user-information">
                     <tbody>
@@ -38,15 +64,18 @@
                      
                     </tbody>
                   </table>
-                  <a href="/changepassword" class="btn btn-primary">Change Password</a>           
+                  <a href="/changepassword" class="btn btn-primary pull-right">Change Password</a>           
                 </div>
               </div>
             </div>
-                 <div class="panel-footer">
-                        <a data-original-title="Broadcast Message" data-toggle="tooltip" type="button" class="btn btn-sm btn-primary"><i class="glyphicon glyphicon-envelope"></i></a>                        
-                    </div>
+
+           <div class="panel-footer">
+                  <a data-original-title="Broadcast Message" data-toggle="tooltip" type="button" class="btn btn-sm btn-primary"><i class="glyphicon glyphicon-envelope"></i></a>                        
+            </div>
+
             
-          </div>
+            
+  </div>
 
 
 

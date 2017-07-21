@@ -1,4 +1,4 @@
-angular.module('pmoApp',['appRoutes','userController','userServices', 'ngAnimate','mainController','authServices','appConstants','datatables'])
+angular.module('pmoApp',['appRoutes','userController','userServices', 'ngAnimate','mainController','authServices','appConstants','datatables','ngFileUpload'])
 
 .config(function($httpProvider){
 	$httpProvider.interceptors.push('AuthInterceptors');
