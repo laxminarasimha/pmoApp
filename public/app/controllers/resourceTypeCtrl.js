@@ -24,20 +24,35 @@
      app.errorMsg = false;
      app.errorClass = "";
  }
+
+ $scope.deleteConfirmation = function(id,name){
+    $scope.msg = name;
+    $scope.deletedID = id;
+    openDialog();
+
+ }
  
- $scope.deleteResourceType = function(id) {
-     if (confirm('Are you sure to delete?')) {
-     resourceTypeService.deleteResourceType(id).then(function(res) {
-     if (res.data == "deleted") {
-       getResourceTypeData(resourceTypeService,$scope);
-       app.loading = false;
-       app.successMsg = "ResourceType Deleted successfully";
-       app.errorMsg = false;
-     }
-     }).catch(function(err) {
-     console.log(err);
-     });
-     }
+ $scope.cancel = function(event){
+    $scope.msg = "";
+    $scope.deletedID = "";
+ }
+
+ 
+ $scope.delete = function(event) {
+     //if (confirm('Are you sure to delete?')) {
+         resourceTypeService.deleteResourceType($scope.deletedID).then(function(res) {
+         if (res.data == "deleted") {
+           getResourceTypeData(resourceTypeService,$scope);
+           app.loading = false;
+           app.successMsg = "ResourceType Deleted successfully";
+           app.errorMsg = false;
+           $scope.msg = "";
+           $scope.deletedID = "";
+         }
+         }).catch(function(err) {
+         console.log(err);
+         });
+     //}
  };
  
 $scope.editResourceType = function (id) {
@@ -100,4 +115,8 @@ $scope.editResourceType = function (id) {
      });
  }
 
+
+function openDialog(){
+    $('#confirmModal').modal('show');
+ }
 })();

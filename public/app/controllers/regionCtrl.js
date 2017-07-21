@@ -22,20 +22,34 @@
      app.errorMsg = false;
      app.errorClass = "";
  }
+
+ $scope.deleteConfirmation = function(id,name){
+    $scope.msg = name;
+    $scope.deletedID = id;
+    openDialog();
+
+ }
  
- $scope.deleteRegion = function(id) {
-     if (confirm('Are you sure to delete?')) {
-     regionService.deleteRegion(id).then(function(res) {
-     if (res.data == "deleted") {
-       getRegionData(regionService,$scope);
-       app.loading = false;
-       app.successMsg = "Region Deleted successfully";
-       app.errorMsg = false;
-     }
-     }).catch(function(err) {
-     console.log(err);
-     });
-     }
+ $scope.cancel = function(event){
+    $scope.msg = "";
+    $scope.deletedID = "";
+ }
+ 
+ $scope.delete = function(event) {
+     //if (confirm('Are you sure to delete?')) {
+         regionService.deleteRegion($scope.deletedID).then(function(res) {
+         if (res.data == "deleted") {
+           getRegionData(regionService,$scope);
+           app.loading = false;
+           app.successMsg = "Region Deleted successfully";
+           app.errorMsg = false;
+            $scope.msg = "";
+            $scope.deletedID = "";
+         }
+         }).catch(function(err) {
+         console.log(err);
+         });
+     //}
  };
  
 $scope.editRegion = function (id) {
@@ -96,6 +110,10 @@ $scope.editRegion = function (id) {
          }).catch(function(err) {
          console.log(err);
      });
+ }
+
+ function openDialog(){
+    $('#confirmModal').modal('show');
  }
 
  

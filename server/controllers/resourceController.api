@@ -36,12 +36,17 @@ router.get("/", function(req, res) {
  
 resourceDAO.findByIdAndUpdate(id, {
 	resourcename: obj.resourcename,
-		   email: obj.email,
-		   designation: obj.designation,
-		   alias: obj.alias,
-		   etype: obj.etype,
-		   kinId: obj.kinId
-		   }, 
+		email: obj.email,
+		designation: obj.designation,
+		alias: obj.alias,
+		etype: obj.etype,
+		kinId: obj.kinId,
+		baseentity: obj.baseentity,
+      	skill:	obj.skill,
+      	status:	obj.status,
+      	isManager:	obj.isManager,
+      	role:	obj.role
+   }, 
 function(err) {
  if (err) {
  res.send("error");

@@ -3,9 +3,9 @@
  
 angular.module('pmoApp').controller('resourceCtrl', Controller);
  
- Controller.$inject = ['$scope', '$rootScope', 'resourceService','designationService','DTOptionsBuilder', 'DTColumnBuilder'];
+ Controller.$inject = ['$scope', '$rootScope', 'resourceService','designationService','DTOptionsBuilder', 'DTColumnBuilder','skillSetService','locationService','roleService'];
   
- function Controller($scope, $rootScope, resourceService, designationService, DTOptionsBuilder, DTColumnBuilder) {
+ function Controller($scope, $rootScope, resourceService, designationService, DTOptionsBuilder, DTColumnBuilder,skillSetService,locationService,roleService) {
  $scope.mongoResourceData = [];
  
  var app = $scope;
@@ -16,6 +16,17 @@ angular.module('pmoApp').controller('resourceCtrl', Controller);
  $scope.designationList = [];
  getDesignationData(designationService,$scope);
  
+
+ $scope.skillSetList = [];
+ getSkillSetData(skillSetService,$scope);
+ 
+
+ $scope.regionList = [];
+ getLocationData(locationService,$scope);
+
+
+ $scope.roleList = [];
+ getRoleData(roleService,$scope);
   
  $scope.clearFields = function (){
  
@@ -26,19 +37,33 @@ angular.module('pmoApp').controller('resourceCtrl', Controller);
      app.errorClass = ""
  }
  
- $scope.deleteResource = function(id) {
-     if (confirm('Are you sure to delete?')) {
-     resourceService.deleteResource(id).then(function(res) {
-     if (res.data == "deleted") {
-       getResourceData(resourceService,$scope);
-       app.loading = false;
-       app.successMsg = "Resource Deleted successfully";
-       app.errorMsg = false;
-     }
-     }).catch(function(err) {
-     console.log(err);
-     });
-     }
+ $scope.deleteConfirmation = function(id,name){
+    $scope.msg = name;
+    $scope.deletedID = id;
+    openDialog();
+
+ }
+ 
+ $scope.cancel = function(event){
+    $scope.msg = "";
+    $scope.deletedID = "";
+ }
+
+ $scope.delete = function(event) {
+     //if (confirm('Are you sure to delete?')) {
+         resourceService.deleteResource($scope.deletedID).then(function(res) {
+         if (res.data == "deleted") {
+           getResourceData(resourceService,$scope);
+           app.loading = false;
+           app.successMsg = "Resource Deleted successfully";
+           app.errorMsg = false;
+            $scope.msg = "";
+            $scope.deletedID = "";
+         }
+         }).catch(function(err) {
+         console.log(err);
+         });
+     //}
  };
  
 $scope.editResource = function (id) {
@@ -119,5 +144,36 @@ $scope.editResource = function (id) {
          console.log(err);
      });
  }
+
+ function getSkillSetData(skillSetService,$scope){
+       skillSetService.getSkillSets().then(function(res) {
+           $scope.skillSetList = res.data;
+           }).catch(function(err) {
+           console.log(err);
+         });
+ }
+
+function getLocationData(locationService,$scope){
+      locationService.getLocation().then(function(res) {
+         $scope.regionList = res.data;
+         console.log(res.data);
+         }).catch(function(err) {
+         console.log(err);
+     });
+ }
+
+ function getRoleData(roleService,$scope){
+      roleService.getRole().then(function(res) {
+         $scope.roleList = res.data;
+         console.log(res.data);
+         }).catch(function(err) {
+         console.log(err);
+     });
+ }
  
+
+function openDialog(){
+    $('#confirmModal').modal('show');
+ }
+
  })();

@@ -30,22 +30,35 @@
      app.errorMsg = false;
      app.errorClass = ""
  }
+
+ $scope.deleteConfirmation = function(id,name){
+    $scope.msg = name;
+    $scope.deletedID = id;
+    openDialog();
+
+ }
  
- $scope.deleteSkill = function(id) {
-     if (confirm('Are you sure to delete?')) {
-        app.loading = true;
-     skillSetService.deleteSkillSet(id).then(function(res) {
+ $scope.cancel = function(event){
+    $scope.msg = "";
+    $scope.deletedID = "";
+ }
+ 
+ $scope.delete = function(event) {
+     
+     app.loading = true;
+     skillSetService.deleteSkillSet($scope.deletedID).then(function(res) {
      if (res.data == "deleted") {
        //getSkillData(skillSetService,$scope);
        getSkillDataCount(skillSetService,$scope);
        app.loading = false;
        app.successMsg = "Skillset Deleted successfully";
        app.errorMsg = false;
+       $scope.msg = "";
+       $scope.deletedID = "";
      }
      }).catch(function(err) {
      console.log(err);
      });
-     }
  };
  
 $scope.editSkill = function (id) {
@@ -159,6 +172,8 @@ function populateTable(page,skillSetService,$scope){
 }
 
 
-
+function openDialog(){
+    $('#confirmModal').modal('show');
+ }
 
  })();

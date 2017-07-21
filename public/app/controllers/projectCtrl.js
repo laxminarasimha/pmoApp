@@ -26,20 +26,34 @@ angular.module('pmoApp').controller('projectCtrl', Controller);
      app.errorMsg = false;
      app.errorClass = "";
  }
+
+ $scope.deleteConfirmation = function(id,name){
+    $scope.msg = name;
+    $scope.deletedID = id;
+    openDialog();
+
+ }
  
- $scope.deleteProject = function(id) {
-     if (confirm('Are you sure to delete?')) {
-     projectService.deleteProject(id).then(function(res) {
-     if (res.data == "deleted") {
-       getProjectData(projectService,$scope);
-	   app.loading = false;
-       app.successMsg = "Project Deleted successfully";
-       app.errorMsg = false;
-     }
-     }).catch(function(err) {
-     console.log(err);
-     });
-     }
+ $scope.cancel = function(event){
+    $scope.msg = "";
+    $scope.deletedID = "";
+ }
+ 
+ $scope.delete = function(event) {
+     //if (confirm('Are you sure to delete?')) {
+         projectService.deleteProject($scope.deletedID).then(function(res) {
+         if (res.data == "deleted") {
+           getProjectData(projectService,$scope);
+    	   app.loading = false;
+           app.successMsg = "Project Deleted successfully";
+           app.errorMsg = false;
+           $scope.msg = "";
+           $scope.deletedID = "";
+         }
+         }).catch(function(err) {
+         console.log(err);
+         });
+     //}
  };
  
 $scope.editProject = function (id) {
@@ -125,6 +139,10 @@ function getResourceData(resourceService,$scope){
          }).catch(function(err) {
          console.log(err);
      });
+ }
+
+ function openDialog(){
+    $('#confirmModal').modal('show');
  }
  
    })();
