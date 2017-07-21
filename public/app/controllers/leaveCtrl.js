@@ -32,20 +32,34 @@ angular.module('pmoApp').controller('leaveCtrl', Controller);
          app.errorClass = "";
      }
      
+     $scope.deleteConfirmation = function(id,name){
+        $scope.msg = name;
+        $scope.deletedID = id;
+        openDialog();
+
+     }
+     
+     $scope.cancel = function(event){
+        $scope.msg = "";
+        $scope.deletedID = "";
+     }
+
   
-     $scope.deleteLeave = function(id) {
-         if (confirm('Are you sure to delete?')) {
-         leaveService.deleteLeave(id).then(function(res) {
-         if (res.data == "deleted") {
-           getLeaveData(leaveService,$scope);
-           app.loading = false;
-           app.successMsg = "Leave Deleted successfully";
-           app.errorMsg = false;
-         }
-         }).catch(function(err) {
-         console.log(err);
-         });
-         }
+     $scope.delete = function(event) {
+         //if (confirm('Are you sure to delete?')) {
+             leaveService.deleteLeave($scope.deletedID).then(function(res) {
+             if (res.data == "deleted") {
+               getLeaveData(leaveService,$scope);
+               app.loading = false;
+               app.successMsg = "Leave Deleted successfully";
+               app.errorMsg = false;
+               $scope.msg = "";
+               $scope.deletedID = "";
+             }
+             }).catch(function(err) {
+             console.log(err);
+             });
+         //}
      };
  
     $scope.editLeave = function (id) {
@@ -255,6 +269,10 @@ angular.module('pmoApp').controller('leaveCtrl', Controller);
              console.log(err);
          });
     }
+
+    function openDialog(){
+    $('#confirmModal').modal('show');
+ }
 
      
   })();

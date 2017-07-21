@@ -24,19 +24,33 @@
      app.errorClass = "";
  }
  
- $scope.deleteLocation = function(id) {
-     if (confirm('Are you sure to delete?')) {
-     locationService.deleteLocation(id).then(function(res) {
-     if (res.data == "deleted") {
-       getLocationData(locationService,$scope);
-       app.loading = false;
-       app.successMsg = "Location Deleted successfully";
-       app.errorMsg = false;
-     }
-     }).catch(function(err) {
-     console.log(err);
-     });
-     }
+ $scope.deleteConfirmation = function(id,name){
+    $scope.msg = name;
+    $scope.deletedID = id;
+    openDialog();
+
+ }
+ 
+ $scope.cancel = function(event){
+    $scope.msg = "";
+    $scope.deletedID = "";
+ }
+
+ $scope.delete = function(event) {
+     //if (confirm('Are you sure to delete?')) {
+         locationService.deleteLocation($scope.deletedID).then(function(res) {
+         if (res.data == "deleted") {
+           getLocationData(locationService,$scope);
+           app.loading = false;
+           app.successMsg = "Location Deleted successfully";
+           app.errorMsg = false;
+           $scope.msg = "";
+           $scope.deletedID = "";
+         }
+         }).catch(function(err) {
+         console.log(err);
+         });
+     //}
  };
  
 $scope.editLocation = function (id) {
@@ -97,6 +111,10 @@ $scope.editLocation = function (id) {
          }).catch(function(err) {
          console.log(err);
      });
+ }
+
+ function openDialog(){
+    $('#confirmModal').modal('show');
  }
 
 

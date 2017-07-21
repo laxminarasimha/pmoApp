@@ -37,19 +37,33 @@ angular.module('pmoApp').controller('resourceCtrl', Controller);
      app.errorClass = ""
  }
  
- $scope.deleteResource = function(id) {
-     if (confirm('Are you sure to delete?')) {
-     resourceService.deleteResource(id).then(function(res) {
-     if (res.data == "deleted") {
-       getResourceData(resourceService,$scope);
-       app.loading = false;
-       app.successMsg = "Resource Deleted successfully";
-       app.errorMsg = false;
-     }
-     }).catch(function(err) {
-     console.log(err);
-     });
-     }
+ $scope.deleteConfirmation = function(id,name){
+    $scope.msg = name;
+    $scope.deletedID = id;
+    openDialog();
+
+ }
+ 
+ $scope.cancel = function(event){
+    $scope.msg = "";
+    $scope.deletedID = "";
+ }
+
+ $scope.delete = function(event) {
+     //if (confirm('Are you sure to delete?')) {
+         resourceService.deleteResource($scope.deletedID).then(function(res) {
+         if (res.data == "deleted") {
+           getResourceData(resourceService,$scope);
+           app.loading = false;
+           app.successMsg = "Resource Deleted successfully";
+           app.errorMsg = false;
+            $scope.msg = "";
+            $scope.deletedID = "";
+         }
+         }).catch(function(err) {
+         console.log(err);
+         });
+     //}
  };
  
 $scope.editResource = function (id) {
@@ -158,6 +172,8 @@ function getLocationData(locationService,$scope){
  }
  
 
-
+function openDialog(){
+    $('#confirmModal').modal('show');
+ }
 
  })();

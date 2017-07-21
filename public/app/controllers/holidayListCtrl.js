@@ -24,20 +24,34 @@ angular.module('pmoApp').controller('holidayListCtrl', Controller);
      app.errorMsg = false;
      app.errorClass = "";
  }
+
+ $scope.deleteConfirmation = function(id,name){
+    $scope.msg = name;
+    $scope.deletedID = id;
+    openDialog();
+
+ }
  
- $scope.deleteHoliday = function(id) {
-     if (confirm('Are you sure to delete?')) {
-     holidayListService.deleteHoliday(id).then(function(res) {
-     if (res.data == "deleted") {
-       getHolidayData(holidayListService,$scope);
-       app.loading = false;
-       app.successMsg = "Holiday Deleted successfully";
-       app.errorMsg = false;
-     }
-     }).catch(function(err) {
-     console.log(err);
-     });
-     }
+ $scope.cancel = function(event){
+    $scope.msg = "";
+    $scope.deletedID = "";
+ }
+ 
+ $scope.delete = function(event) {
+     //if (confirm('Are you sure to delete?')) {
+         holidayListService.deleteHoliday($scope.deletedID).then(function(res) {
+         if (res.data == "deleted") {
+           getHolidayData(holidayListService,$scope);
+           app.loading = false;
+           app.successMsg = "Holiday Deleted successfully";
+           app.errorMsg = false;
+           $scope.msg = "";
+           $scope.deletedID = "";
+         }
+         }).catch(function(err) {
+         console.log(err);
+         });
+     //}
  };
  
 $scope.editHoliday = function (id) {
@@ -68,7 +82,6 @@ $scope.editHoliday = function (id) {
  
  $scope.createHoliday = function(holiday) {
      $rootScope.Title = "Create Holiday";
-     alert(holiday.holidayDate);
      $scope.IsSubmit = true;
      if ($scope.holidayForm.$valid) {
          holidayListService.createHoliday(holiday).then(function(res) {
@@ -115,6 +128,10 @@ $scope.editHoliday = function (id) {
          }).catch(function(err) {
          console.log(err);
      });
+ }
+
+ function openDialog(){
+    $('#confirmModal').modal('show');
  }
 
    })();

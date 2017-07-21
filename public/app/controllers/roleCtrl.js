@@ -37,7 +37,7 @@
     $scope.deletedID = "";
  }
  
- $scope.delete = function(id) {
+ $scope.delete = function(event) {
      //if (confirm('Are you sure to delete?')) {
      roleService.deleteRole($scope.deletedID).then(function(res) {
      if (res.data == "deleted") {
