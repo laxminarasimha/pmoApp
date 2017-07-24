@@ -171,19 +171,20 @@
                 <th></th>
                 <th>Resource Name</th>
                 <th>Kin ID</th>
-                <th>Resource Type</th>
-                <th>Region</th>
+                <!-- <th>Resource Type</th> -->
+                <th>Year</th>
+                <!-- <th>Region</th> -->
                 <th>Status</th>
                 <th>Action</th>
               </tr>
             </thead>
             <tbody>
-              <tr ng-repeat="x in mongoMappedResourceData | unique:'mappedResource.resourcename'">
-                <td align="center"><a class="green shortinfo" href="javascript:;" ng-click="childInfo(x.mappedResource.resourcename, $event)" title="Click to view more"><i class="glyphicon glyphicon-plus-sign"></a></td>
+              <tr ng-repeat="x in filterResourceWithYear">
+                <td align="center"><a class="green shortinfo" href="javascript:;" ng-click="childInfo(x.mappedResource.resourcename,x.year, $event)" title="Click to view more"><i class="glyphicon glyphicon-plus-sign"></a></td>
                 <td>{{x.mappedResource.resourcename}}</td>
                 <td>{{x.mappedResource.kinId}}</td>
-                <td>{{x.resourceType}}</td>
-                <td>{{x.region}}</td>
+                <td>{{x.year}}</td>
+                <!-- <td>{{x.region}}</td> -->
                 <td>{{ x.status }}</td>
                 <td>
                   <a ng-click="editResourceMapping()">Edit</a> |
