@@ -72,8 +72,14 @@ router.get("/:kin", function(req, res) {
 	 res.send("error");
 	 return;
 	 }
-	 var base64 = (doc[0].img.data.toString('base64'));
+
+	 if(doc.length > 0){
+	      var base64 = (doc[0].img.data.toString('base64'));
          res.send(base64); 
+     }else{
+      res.send("No Image uploaded");
+     }
+	 
 	 });
  
 
