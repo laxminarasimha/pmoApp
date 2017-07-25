@@ -97,6 +97,18 @@
               <label for startDate>Tagged Start Date:</label>
               <input type="text" ng-model="startDate" id="startDate" class="form-control" ng-change="createMapping();" />
             </div>
+       
+            <!-- <div class="form-group">
+
+                <div class="input-group date form_date col-md-5" data-date="" data-date-format="dd MM yyyy" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
+                    <input class="form-control" size="16" type="text" value="" readonly>
+   					        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                </div>
+
+            </div> -->
+
+
+
           </div>
           <div class='col-sm-3'>
             <div class=form-group>
@@ -213,4 +225,14 @@
     //buttonImageOnly: true
   });
 
+  $('.form_date').datetimepicker({
+        language:  'fr',
+        weekStart: 1,
+        todayBtn:  1,
+		autoclose: 1,
+		todayHighlight: 1,
+		startView: 2,
+		minView: 2,
+		forceParse: 0
+    });
 </script>
