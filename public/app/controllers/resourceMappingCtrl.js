@@ -27,10 +27,7 @@
         $scope.resourceList = [];
         getResourceData(resourceService, $scope);
 
-        //$scope.roleList = [];
-        //getRoleData(roleService,$scope);
-
-
+        
         $scope.locationList = [];
         getLocationData(locationService, $scope);
 
@@ -49,7 +46,7 @@
         getResourceTypeData(resourceTypeService, $scope);
 
         $scope.taggedToEuroclearList = [];
-        // prepareTagToEuroclearHeading($scope, monthlyHeaderListService);
+
 
         $scope.filterResourceWithYear = [];
 
@@ -61,11 +58,12 @@
 
         $scope.createMapping = function () {
 
-            var startYear = new Date($scope.startDate);
-            var endYear = new Date($scope.endDate);
+            console.log($scope.startDate +'-'+ $scope.endDate);
+            console.log($scope.startDate <= $scope.endDate);
 
-            if (startYear <= endYear) {
-                $scope.taggedToEuroclearList = months(startYear, endYear);
+            if ($scope.startDate <= $scope.endDate) {
+                $scope.taggedToEuroclearList = months($scope.startDate, $scope.endDate);
+                console.log( $scope.taggedToEuroclearList);
                 checkPreTagged($scope.resourcemap, $scope.mongoMappedResourceData, $scope.taggedToEuroclearList); // to check if already existed allocaiton 
                 $scope.hidden = "";
             }
@@ -208,7 +206,6 @@
                 tr.addClass('shown');
             }
         }
-
     }
 
     function createDetails(resource, yearSelect, resourceData) {
@@ -276,7 +273,6 @@
             app.errorMsg = "Allocaiton value shouldn't  greater than 100% for the month :" + infoMsg;
             app.errorClass = "error"
         } else {
-
             checkOverAllocation($scope, resourceMap);
 
             if ($scope.errorMsgs.length > 0) {
@@ -704,13 +700,18 @@
         var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
             "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
         var arr = [];
-        var datFrom = new Date(from);
-        var datTo = new Date(to);
-        var fromYear = datFrom.getFullYear();
-        var toYear = datTo.getFullYear();
-        var diffYear = (12 * (toYear - fromYear)) + datTo.getMonth();
+   
+        var datFrom = from.split("/");
+        var datTo = to.split("/");
+        
+        var fromYear = parseInt(datFrom[1]);
+        var toYear =parseInt(datTo[1]);
 
-        for (var i = datFrom.getMonth(); i <= diffYear; i++) {
+        var monthFrom = parseInt(datFrom[0]) - 1;
+        var monthTo = parseInt(datTo[0]) - 1;
+       
+        var diffYear = (12 * (toYear - fromYear)) + monthTo;
+        for (var i = monthFrom; i <= diffYear; i++) {
             arr.push(monthNames[i % 12] + "-" + Math.floor(fromYear + (i / 12)).toString().substr(-2));
         }
 
