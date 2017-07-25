@@ -13,6 +13,7 @@
     "angular": "^1.6.4",
     "bcrypt-node": "^0.1.0",
     "body-parser": "^1.17.2",
+    "excel-export": "^0.5.1",
     "express": "^4.15.3",
     "jsonwebtoken": "^7.4.1",
     "mongoose": "^4.10.7",

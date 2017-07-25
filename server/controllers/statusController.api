@@ -2,6 +2,7 @@ var express = require("express"),
  router = express.Router(),
  statusDAO = require("../models/statusDAO.js");
  
+ 
 router.get("/", function(req, res) {
  statusDAO.find({}, null, {sort:{statusname: 1}},function(err, data) {
  if (err) {
