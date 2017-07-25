@@ -1,9 +1,8 @@
 angular.module('mainController',['authServices'])
-.controller('mainCtrl', function(Auth, $http,$location,$timeout,$rootScope){	
+.controller('mainController', function(Auth, $http,$location,$timeout,$rootScope){	
 	var app = this;
-	app.loadMe = false;
-	$rootScope.$on('$routeChangeStart', function(){	
-
+	app.loadMe = false;	
+	$rootScope.$on('$stateChangeStart', function(){	
 		if(Auth.isLoggedIn()){					
 			app.isLoggedIn = true;			
 			Auth.getUser().then(function(data){										
@@ -56,7 +55,7 @@ angular.module('mainController',['authServices'])
 		Auth.logout();
 		$location.path('/logout');
 		$timeout(function(){
-			$location.path('/')
+			$location.path('/login')
 		}, 2000);
 	};
 
@@ -76,7 +75,7 @@ angular.module('mainController',['authServices'])
 						app.successMsg = "Password Updated.... Please login back with new password";
 						Auth.logout();
 						$timeout(function(){
-							$location.path('/')
+							$location.path('/login')
 						}, 2000);						
 					});					
 				});
