@@ -4,6 +4,7 @@
 
     angular.module('pmoApp').controller('resourceMappingCtrl', Controller);
 
+
     Controller.$inject = ['$scope', '$rootScope', 'DTOptionsBuilder', 'DTColumnBuilder', '$compile', 'resourceMappingService', 'resourceService', 'roleService', 'locationService',
         'regionService', 'skillSetService', 'statusService', 'resourceTypeService', 'holidayListService',
         'monthlyHeaderListService'];
@@ -50,14 +51,13 @@
         $scope.taggedToEuroclearList = [];
         // prepareTagToEuroclearHeading($scope, monthlyHeaderListService);
 
-        //$scope.aggegrateHolidayList = [];
-        //$scope.monthWorkDaysListForLocation = [];
-        //prepareHolidayListForLocation(holidayListService,$scope);
+        $scope.filterResourceWithYear = [];
+
 
         $scope.startDate = "";
         $scope.endDate = "";
         $scope.hidden = "hidden";
-        //$scope.yearDiff = 0;
+        $scope.errorMsgs = new Array();
 
         $scope.createMapping = function () {
 
@@ -67,9 +67,7 @@
             if (startYear <= endYear) {
                 $scope.taggedToEuroclearList = months(startYear, endYear);
                 checkPreTagged($scope.resourcemap, $scope.mongoMappedResourceData, $scope.taggedToEuroclearList); // to check if already existed allocaiton 
-                console.log($scope.taggedToEuroclearList);
                 $scope.hidden = "";
-                // $scope.yearDiff = endYear.getFullYear() - startYear.getFullYear();
             }
         }
 
@@ -78,10 +76,16 @@
                 'taggToEuroclear': [],
                 'monthlyAvailableActualMandays': []
             };
+
             app.loading = false;
             app.successMsg = false;
             app.errorMsg = false;
             app.errorClass = "";
+            $scope.startDate = "";
+            $scope.endDate = "";
+            $scope.taggedToEuroclearList = [];
+            $scope.hidden = "hidden";
+
         }
 
 
@@ -171,13 +175,11 @@
 
         }
 
-        $scope.validateInput = function (obj,value) {
-            if(value > 100){
+        $scope.validateInput = function (obj, value) {
+            if (value > 100) {
                 alert("Mapped should not exceed 100%");
                 return false;
-            }   
-      
-
+            }
         };
 
 
@@ -186,9 +188,9 @@
         $scope.vm.dtInstance = null;
         $scope.vm.dtOptions = DTOptionsBuilder.newOptions().withOption('order', [0, 'asc']);
 
-        $scope.childInfo = function (resource, event) {
+        $scope.childInfo = function (resource, yearSelect, event) {
             var scope = $scope.$new(true);
-            scope.resourcemap = createDetails(resource, $scope.mongoMappedResourceData);
+            scope.resourcemap = createDetails(resource, yearSelect, $scope.mongoMappedResourceData);
 
             var link = angular.element(event.currentTarget),
                 icon = link.find('.glyphicon'),
@@ -210,19 +212,16 @@
 
     }
 
-    function createDetails(resource, resourceData) {
-
+    function createDetails(resource, yearSelect, resourceData) {
         var filterRecord = [];
         angular.forEach(resourceData, function (row) {
-
-            if (row.mappedResource.resourcename === resource) {
+            if (row.mappedResource.resourcename === resource &&
+                row.year === yearSelect) {
                 filterRecord.push(row);
             }
-
         });
         return filterRecord;
     }
-
 
     function createResoucreMap(resourceMappingService, app, $scope) {
         checkForAllocationInEachMonth($scope, resourceMappingService, app);
@@ -239,7 +238,7 @@
                 };
                 $scope.hidden = "hidden";
                 $scope.startDate = "";
-                $scope.startDate = "";
+                $scope.endDate = "";
                 app.loading = false;
                 app.successMsg = "Resource mapping updated successfully";
                 app.errorMsg = false;
@@ -254,6 +253,9 @@
         var resourceMap = $scope.resourcemap;
         var overAllocation = false;
         var infoMsg = "";
+
+        console.log(resourceMap);
+
         for (var i = 0; i < resourceMap.taggToEuroclear.length; i++) {
             if (resourceMap.taggToEuroclear[i].value > 100) {
                 overAllocation = true;
@@ -264,73 +266,90 @@
         if (overAllocation) {
             app.loading = false;
             app.successMsg = false;
-            app.errorMsg = "Over Allocation for Resource for :" + infoMsg;
+            app.errorMsg = "Allocaiton value shouldn't  greater than 100% for the month :" + infoMsg;
             app.errorClass = "error"
         } else {
-            var kinID = resourceMap.mappedResource.kinId;
-            // resourceMappingService.getMappedResourceForKinID(kinID).then(function (res) {
-            // console.log(resourceMap);
-            // for (var j = 0; j < res.data.length; j++) {
-            //     for (var i = 0; i < resourceMap.taggToEuroclear.length; i++) {
-            //         if (resourceMap.taggToEuroclear[i].key == res.data[j]._id.key) {
-            //             var sumAllocation = resourceMap.taggToEuroclear[i].value + res.data[j].count;
-            //             if (sumAllocation > 100) {
-            //                 overAllocation = true;
-            //                 infoMsg = resourceMap.taggToEuroclear[i].key;
-            //                 break;
-            //             }
-            //         }
-            //     }
+            var resource = resourceMap.mappedResource.resourcename;
+            console.log(resource + '===' + resourceMap.taggToEuroclear);
 
-            //     if (overAllocation) {
-            //         break;
-            //     }
-            // }
+            var totalValue = 0;
+            var year = "";
+            var overAllocation = false;
 
-            // if (overAllocation) {
-            //     app.loading = false;
-            //     app.successMsg = false;
-            //     app.errorMsg = "Over Allocation of the Resource for :" + infoMsg;
-            //     app.errorClass = "error"
-            // } else {
-            // var resourceMap = $scope.resourcemap;
-
-            var resourceMapYr = splitResoruceMap($scope.resourcemap, $scope.startDate, $scope.endDate);
-            for (var i = 0; i < resourceMapYr.length; i++) {
-                resourceMappingService.createResourceMapping(resourceMapYr[i]).then(function (res) {
-                    if (res.data == "created") {
-                        getMappedResourceData(resourceMappingService, $scope);
-                        $scope.resourcemap = {
-                            'taggToEuroclear': [],
-                            'monthlyAvailableActualMandays': []
-                        };
-                        app.loading = false;
-                        app.successMsg = "Resource mapping created successfully";
-                        app.errorMsg = false;
-                        $scope.hidden = "hidden";
-                        $scope.startDate = "";
-                        $scope.endDate = "";
+            var existingAlloc = {};
+            
+            angular.forEach(resourceMap.taggToEuroclear, function (taggToEuro) {
+                totalValue = 0;
+                angular.forEach($scope.mongoMappedResourceData, function (oldAloc) {
+                    if (oldAloc.year != "undefined" && oldAloc.year != null)
+                        year = oldAloc.year.substr(2, oldAloc.year.length);
+                    if (oldAloc.mappedResource.resourcename === resource && oldAloc.year.endsWith(year)) {
+                        angular.forEach(oldAloc.taggToEuroclear, function (tag) {
+                            if (taggToEuro.key === tag.key) {
+                                totalValue += tag.value;
+                            }
+                        });
                     }
-                }).catch(function (err) {
-                    console.log(err);
                 });
+                totalValue += taggToEuro.value;
+                if (totalValue > 100) {
+                    var values = "Over Allocation  for the month :" + taggToEuro.key;
+                    values += " and overalloaiton value is " + (parseInt(totalValue) - 100);
+                    $scope.errorMsgs.push(values);
+                }
+
+            });
+
+            console.log($scope.errorMsgs.length);
+            if ($scope.errorMsgs.length > 0) {
+                 app.loading = false;
+                 app.successMsg = false;
+                 app.errorMsg=" ";
+                 app.errorClass = "error";
+            } else {
+                var resourceMapYr = splitResoruceMapByYear($scope.resourcemap, $scope.startDate, $scope.endDate, $scope.mongoMappedResourceData);
+                for (var i = 0; i < resourceMapYr.length; i++) {
+                    if (!resourceMapYr[i].existing) {
+                        resourceMappingService.createResourceMapping(resourceMapYr[i]).then(function (res) {
+                            if (res.data == "created") {
+                                getMappedResourceData(resourceMappingService, $scope);
+                                $scope.resourcemap = {
+                                    'taggToEuroclear': [],
+                                    'monthlyAvailableActualMandays': []
+                                };
+                                app.loading = false;
+                                app.successMsg = "Resource mapping created successfully";
+                                app.errorMsg = false;
+                                $scope.hidden = "hidden";
+                                $scope.startDate = "";
+                                $scope.endDate = "";
+                            }
+                        }).catch(function (err) {
+                            console.log(err);
+                        });
+                    } else {
+                        $scope.resourcemap = resourceMapYr[i];
+                        saveResoucreMap(resourceMappingService, app, $scope);
+
+                    }
+                }
             }
         }
-
-        // }).catch(function (err) {
-        //  console.log(err);
-        // });
     }
 
     function checkPreTagged(resourcemap, mongoMappedResourceData, taggedToEuroclearList) { // to check if already existed allocaiton
 
         var resource = resourcemap.mappedResource.resourcename;
+        var resType = resourcemap.resourceType;
         var array = new Array();
         var value = 0;
+        var yr = "";
 
         angular.forEach(taggedToEuroclearList, function (newTag) {
+            yr = newTag.substr(newTag.length - 2);
             angular.forEach(mongoMappedResourceData, function (preTag) {
-                if (preTag.mappedResource.resourcename === resource) {
+                if (preTag.mappedResource.resourcename === resource && preTag.year.endsWith(yr) &&
+                    resType === preTag.resourceType) {
                     angular.forEach(preTag.taggToEuroclear, function (tag) {
                         if (tag.key === newTag) {
                             value = tag.value;
@@ -344,13 +363,12 @@
                 "value": parseInt(value)
             };
             resourcemap.taggToEuroclear.push(taggedToEuroclearObject);
-
+            value = 0;
         });
-
     }
 
 
-    function splitResoruceMap(resourcemap, from, to) {
+    function splitResoruceMapByYear(resourcemap, from, to, mongoMappedResourceData) {
 
         var maps = new Array();
         var d1 = new Date(from), d2 = new Date(to), years = [];
@@ -371,6 +389,7 @@
             var obj = jQuery.extend({}, resourcemap);
             obj.taggToEuroclear = [];
             obj.monthlyAvailableActualMandays = [];
+            obj.existing = false;
             var tagEurocelar = [];
             var count = 0;
             var tmp = "";
@@ -392,8 +411,58 @@
             maps.push(obj);
         }
 
+        for (var i = 0; i < maps.length; i++) {
+            var obj = maps[i];
+            angular.forEach(mongoMappedResourceData, function (oldData) {
+
+                if ( //obj.mappedResource.kinId === oldData.mappedResource.kindId &&
+                    obj.mappedResource.resourcename === oldData.mappedResource.resourcename &&
+                    obj.resourceType === oldData.resourceType &&
+                    obj.year === oldData.year) {
+                    obj._id = oldData._id;
+                    obj.existing = true;
+                    obj.taggToEuroclear = mergeNewWithOldMappAndSort(obj.taggToEuroclear, oldData.taggToEuroclear);
+                    obj.monthlyAvailableActualMandays = mergeNewWithOldMappAndSort(obj.monthlyAvailableActualMandays, oldData.monthlyAvailableActualMandays);
+                }
+
+            });
+        }
         return maps;
     }
+
+    function mergeNewWithOldMappAndSort(newCollection, oldCollection) {
+        var collection = newCollection;
+        angular.forEach(oldCollection, function (oldItem) {
+            var found = false;
+            angular.forEach(newCollection, function (newItem) {
+                if (oldItem.key == newItem.key) {
+                    found = true;
+                }
+            });
+            if (!found)
+                collection.push(oldItem);
+        });
+
+        var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+        var month1 = "";
+        var month2 = "";
+        for (var i = 0; i < collection.length; i++) {
+            month1 = collection[i].key.substr(0, 3);
+            console.log(month1);
+            for (var k = i; k < collection.length; k++) {
+                month2 = collection[k].key.substr(0, 3);
+                if (monthNames.indexOf(month1) > monthNames.indexOf(month2)) {
+                    var tmp = collection[i];
+                    collection[i] = collection[k];
+                    collection[k] = tmp;
+                }
+            }
+        }
+        return collection;
+
+    }
+
 
     function prepareData(resourceMappingService, app, holidayListService, $scope, resourcemap, isCreate, monthlyHeaderListService) {
 
@@ -413,11 +482,11 @@
         var monthWorkDays = [];
         var taggedToEuroclearList = $scope.taggedToEuroclearList;
         var location = resourcemap.location;
-        var leaveFound = false;
+        var holiday = false;
         var monthyearLabel = "";
 
         for (var j = 0; j < taggedToEuroclearList.length; j++) {
-            leaveFound = false;
+            holiday = false;
             for (var i = 0; i < aggegrateHolidayList.length; i++) {
                 monthyearLabel = theMonths[aggegrateHolidayList[i]._id.month - 1] + '-' + (aggegrateHolidayList[i]._id.year.toString()).substring(2, 4);
                 if (monthyearLabel == taggedToEuroclearList[j]) {
@@ -425,12 +494,12 @@
                     var realWorkDays = workdays - aggegrateHolidayList[i].number;
                     var monthWorkDaysObject = { "location": location, "monthyear": monthyearLabel, "value": realWorkDays };
                     monthWorkDays.push(monthWorkDaysObject);
-                    leaveFound = true;
+                    holiday = true;
                     break;
                 }
             }
 
-            if (!leaveFound) {
+            if (!holiday) {
                 var headeingLabelArray = taggedToEuroclearList[j].split('-');
                 var month = theMonths.indexOf(headeingLabelArray[0]);
                 var year = '20' + headeingLabelArray[1];
@@ -471,9 +540,9 @@
 
         $scope.resourcemap.monthlyAvailableActualMandays = monthlyAvailableActualMandaysArray;
         if (isCreate) {
-            createResoucreMap(resourceMappingService, app, $scope);
+            createResoucreMap(resourceMappingService, app, $scope); //new
         } else {
-            saveResoucreMap(resourceMappingService, app, $scope);
+            saveResoucreMap(resourceMappingService, app, $scope); //update
         }
 
     }
@@ -511,6 +580,34 @@
     }
 
 
+    function filterUniqueResourceWithYear(collection) {
+
+        var output = [],
+            keys = [],
+            cond = [], duplicate = false, item;
+            
+
+        for (var col = 0; col < collection.length; col++) {
+            item = collection[col];
+            duplicate= false;
+            for (var i = 0; i < keys.length; i++) {
+                cond = keys[i].split("-");
+                if (item.mappedResource.resourcename === cond[0]  && item.year === cond[1]) {
+                    duplicate = true;
+                    break;
+                }
+            }
+            if (!duplicate) {
+                output.push(item);
+                keys.push(item.mappedResource.resourcename + "-" + item.year);
+            }
+
+        }
+        return output;
+
+    }
+
+
     function getDaysInMonth(month, year) {
         return new Date(year, month + 1, 0).getDate();
     }
@@ -537,7 +634,7 @@
     function getMappedResourceData(resourceMappingService, $scope) {
         resourceMappingService.getMappedResources().then(function (res) {
             $scope.mongoMappedResourceData = res.data;
-
+            $scope.filterResourceWithYear = filterUniqueResourceWithYear(res.data);
 
         }).catch(function (err) {
             console.log(err);
@@ -552,13 +649,6 @@
         });
     }
 
-    /*function getRoleData(roleService,$scope){
-         roleService.getRole().then(function(res) {
-            $scope.roleList = res.data;
-            }).catch(function(err) {
-            console.log(err);
-        });
-    }*/
 
     function getLocationData(locationService, $scope) {
         locationService.getLocation().then(function (res) {

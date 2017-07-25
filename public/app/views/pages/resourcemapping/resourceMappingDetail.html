@@ -4,12 +4,12 @@
       <table class="table table-striped table-curved" cellspacing="0" width="100%">
         <thead>
           <tr>
-            <b>%Tagged  Year - {{tagEuro.year}}</b>
             <div align="right">
               <input name="action" type="checkbox" value="{{tagEuro._id}}">Action
               <!-- <a ng-click="editResourceMapping(tagEuro._id)">Edit</a> |
               <a ng-click="deleteResourceMapping(tagEuro._id)">Delete</a> -->
             </div>
+            <h4><span class = "label label-primary"><b>%Tagged   -  {{tagEuro.resourceType}}</b></span></h4>
           </tr>
           <tr class="danger">
             <th ng-repeat="column in tagEuro.taggToEuroclear">{{column.key}}</th>
@@ -17,16 +17,17 @@
         </thead>
         <tbody>
           <tr>
-            <th ng-repeat="column in tagEuro.taggToEuroclear">{{column.value}}</th>
+            <th ng-repeat="column in tagEuro.taggToEuroclear">{{column.value}}%</th>
           </tr>
         </tbody>
       </table>
+
       <table class="table table-striped table-curved" cellspacing="0" width="100%">
         <thead>
-          <tr><b>Available Actual Mandays</b></tr>
-          <tr class="danger">
-            <th ng-repeat="column in tagEuro.monthlyAvailableActualMandays">{{column.key}}</th>
-          </tr>
+           <h4><span class = "label label-primary"><b>Available Actual Mandays - {{tagEuro.resourceType}}</b></span></h4>
+            <tr class="danger">
+              <th ng-repeat="column in tagEuro.monthlyAvailableActualMandays">{{column.key}}</th>
+            </tr>
         </thead>
         <tbody>
           <tr>
