@@ -3,9 +3,9 @@
  
 angular.module('pmoApp').controller('projectCtrl', Controller);
  
- Controller.$inject = ['$scope', '$rootScope', 'projectService','regionService','resourceService', 'DTOptionsBuilder', 'DTColumnBuilder'];
+ Controller.$inject = ['$scope', '$rootScope', 'projectService','regionService','resourceService', 'DTOptionsBuilder', 'DTColumnBuilder','$window'];
   
- function Controller($scope, $rootScope, projectService,regionService,resourceService, DTOptionsBuilder, DTColumnBuilder) {
+ function Controller($scope, $rootScope, projectService,regionService,resourceService, DTOptionsBuilder, DTColumnBuilder,$window) {
  $scope.mongoProjectData = [];
  $scope.regionList = [];
  var app = $scope;
@@ -113,6 +113,33 @@ $scope.editProject = function (id) {
         $scope.vm.dtOptions = DTOptionsBuilder.newOptions().withOption('order', [0, 'asc']);
          
 //=============================================================//
+
+   $scope.exportToExcel = function(){
+         projectService.getExportToExcelData().then(function(res) {  
+              var byteCharacters = $window.atob(res.data);
+                    var byteArrays = [];
+                    var contentType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+                    var sliceSize = sliceSize || 512;
+                    for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+                      var slice = byteCharacters.slice(offset, offset + sliceSize);
+                      var byteNumbers = new Array(slice.length);
+                      for (var i = 0; i < slice.length; i++) {
+                        byteNumbers[i] = slice.charCodeAt(i);
+                      }
+                      var byteArray = new Uint8Array(byteNumbers);
+                      byteArrays.push(byteArray);
+                    }
+                    var blob = new Blob(byteArrays, {type: contentType});
+                    var blobUrl = URL.createObjectURL(blob);
+                    $window.location = blobUrl;
+                    //$window.open(blob);
+
+             }).catch(function(err) {
+             console.log(err);
+         });
+
+       }
+
 
  }
 

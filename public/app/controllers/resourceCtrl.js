@@ -129,7 +129,7 @@ $scope.editResource = function (id) {
 //=============================================================//
 
     $scope.exportToExcel = function(){
-         resourceService.getResourcesExportToExcel().then(function(res) {  
+         resourceService.getExportToExcelData().then(function(res) {  
               var byteCharacters = $window.atob(res.data);
                     var byteArrays = [];
                     var contentType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';

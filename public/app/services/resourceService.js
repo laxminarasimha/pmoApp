@@ -29,7 +29,7 @@
        url = globalConfig.apiAddress + "/resource/" + id;
        return $http.delete(url);
        },
-       getResourcesExportToExcel: function() {
+       getExportToExcelData: function() {
        url = globalConfig.apiAddress + "/resource/excel";
        return $http.get(url);
        },
