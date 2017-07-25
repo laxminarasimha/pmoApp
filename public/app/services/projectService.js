@@ -28,7 +28,12 @@
        deleteProject: function(id) {
        url = globalConfig.apiAddress + "/project/" + id;
        return $http.delete(url);
+       },
+       getExportToExcelData: function() {
+       url = globalConfig.apiAddress + "/project/excel";
+       return $http.get(url);
        }
-   };
- }
-  })();
+    };
+}
+
+})();

@@ -28,7 +28,11 @@
        deleteResource: function(id) {
        url = globalConfig.apiAddress + "/resource/" + id;
        return $http.delete(url);
-       }
+       },
+       getExportToExcelData: function() {
+       url = globalConfig.apiAddress + "/resource/excel";
+       return $http.get(url);
+       },
    };
  }
   })();

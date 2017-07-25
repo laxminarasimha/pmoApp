@@ -1,0 +1,50 @@
+
+<div class="masthead">
+      <div class="row">
+        <div class="col-md-8"><img src="..\assets\images\capgemini_header.jpg" alt="Capgemini"></div>
+        <div class="col-md-4"><img src="..\assets\images\dandmlogo.png" alt="Demand & Capacity" class="pull-right img-responsive"></div>         
+      </div>
+<nav class="navbar navbar-custom"  >
+      <div class="container-fluid">    
+        <div class="collapse navbar-collapse" id="myNavbar">
+              <ul class="nav navbar-nav">
+                <li ng-repeat="menu in menuData">
+                 <a class="text-white"                                              
+                      ng-if="menu.submenu.length == 0"
+                      href="/{{menu.name}}" 
+                      onclick="return true;">{{menu.name}}                       
+                 </a>
+                 <a class="text-white" 
+                      ng-if="menu.submenu.length > 0"
+                      href="#"
+                      data-toggle="{{ menu.submenu.length > 0 ? 'dropdown' : 'undefined'}}"                      
+                      onclick="return false;">{{menu.name}} 
+                      <b ng-if="menu.submenu.length > 0" class="caret"></b>
+                 </a>
+                     <ul class="dropdown-menu">
+                     <li ng-repeat="subMenuData in menu.submenu">
+                      <a href="/{{subMenuData.page !=null ? subMenuData.page : subMenuData.name}}">{{subMenuData.name}}</a></li>
+                  </ul> 
+                                    
+                </li>                           
+                
+              </ul>
+              <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><img src="assets\images\person.png" width="25" height="25"><b> Welcome {{main.username}}</b><span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                  <li><a  href="/changepassword" role="button">Change Password</a></li>
+                  <li><a  href="/profile" role="button">Profile</a></li>
+                  <li role="separator" class="divider"></li>
+                  <li> <a href="#" ng-click="main.logout();"  role="button">Logout</a></li>
+
+                  
+                </ul>
+                </li>
+              </ul>          
+        </div>    
+      </div>
+    </nav>
+
+</div>
+

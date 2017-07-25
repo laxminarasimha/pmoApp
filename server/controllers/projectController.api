@@ -1,6 +1,8 @@
 var express = require("express"),
  router = express.Router(),
  projectDAO = require("../models/projectDAO.js");
+  var nodeExcel=require("excel-export");
+  var theMonths = new Array("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec");
  
 router.get("/", function(req, res) {
  projectDAO.find({},null, {sort:{projectname: 1}}, function(err, data) {
@@ -9,6 +11,66 @@ router.get("/", function(req, res) {
  return;
  }
  res.send(data);
+ });
+}).get("/excel/", function(req, res) {
+ projectDAO.find({},null, {sort:{projectname: 1}}, function(err, data) {
+ if (err) {
+ res.send("error");
+ return;
+ }
+
+//======================================
+var conf={}
+    conf.cols=[{
+            caption:'Se. No.',
+            type:'number',
+            width:3
+        },
+        {
+            caption:'Project Name',
+            type:'string',
+            width:20
+        },
+        {
+            caption:'Region Name',
+            type:'string',
+            width:20
+        },
+        {
+            caption:'Manager',
+            type:'string',
+            width:50
+        },
+        {
+            caption:'Start Date',
+            type:'date',
+            width:30
+        },
+        {
+            caption:'End Date',
+            type:'date',
+            width:50
+        }
+        ];
+  
+
+var arr=[];
+for(var i=0;i<data.length;i++){
+    
+  var startDate = data[i].startDate.getDate() + '-' + theMonths[data[i].startDate.getMonth()] + '-' + 
+                  data[i].startDate.getFullYear();
+  var endDate = data[i].endDate.getDate() + '-' + theMonths[data[i].endDate.getMonth()] + '-' + 
+                  data[i].endDate.getFullYear();
+	var a= [i+1,data[i].projectname,data[i].regionname,data[i].manager,startDate,endDate];
+	arr.push(a);
+}
+
+conf.rows=arr;
+
+var result=nodeExcel.execute(conf);
+return res.status(200).send(new Buffer(result.toString(), 'binary').toString('base64'));
+//======================================
+
  });
 }).get("/:id", function(req, res) {
  var id = req.params.id;

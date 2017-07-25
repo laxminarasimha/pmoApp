@@ -41,7 +41,7 @@
   <script src="assets/js/angular.min.js"></script>
   <!-- Angular (necessary for DataTable plugins) -->
   <script src="assets/js/angular-datatables.min.js"></script>
-  <script src="assets/js/angular-route.min.js"></script>
+  <script src="//unpkg.com/angular-ui-router/release/angular-ui-router.min.js"></script>  
   <script src="assets/js/angular-animate.min.js"></script>
   <script src="assets/js/bootstrap-multiselect.js"></script>
 
@@ -128,70 +128,11 @@
   
 
   </head>
-  <body ng-app="pmoApp" ng-controller="mainCtrl as main" ng-cloak>
+  <body ng-app="pmoApp" ng-controller="mainController as main"  ng-cloak>
 
-  <div id="main" ng-controller="menuCtrl" class="container-fluid">
-
-<div class="masthead">
-
-      <div class="row" ng-show="main.isLoggedIn">
-        <div class="col-md-8"><img src="assets\images\capgemini_header.jpg" alt="Capgemini"></div>
-        <div class="col-md-4"><img src="assets\images\dandmlogo.png" alt="Demand & Capacity" class="pull-right img-responsive"></div>         
-      </div>
-
-<nav class="navbar navbar-custom"  ng-show="main.isLoggedIn">
-      <div class="container-fluid">    
-        <div class="collapse navbar-collapse" id="myNavbar">
-              <ul class="nav navbar-nav">
-                <li ng-repeat="menu in menuData">
-                 <a class="text-white"                                              
-                      ng-if="menu.submenu.length == 0"
-                      href="/{{menu.name}}" 
-                      onclick="return true;">{{menu.name}}                       
-                 </a>
-                 <a class="text-white" 
-                      ng-if="menu.submenu.length > 0"
-                      href="#"
-                      data-toggle="{{ menu.submenu.length > 0 ? 'dropdown' : 'undefined'}}"                      
-                      onclick="return false;">{{menu.name}} 
-                      <b ng-if="menu.submenu.length > 0" class="caret"></b>
-                 </a>
-                     <ul class="dropdown-menu">
-                     <li ng-repeat="subMenuData in menu.submenu">
-                      <a href="/{{subMenuData.page !=null ? subMenuData.page : subMenuData.name}}">{{subMenuData.name}}</a></li>
-                  </ul> 
-                                    
-                </li>                           
-                
-              </ul>
-              <ul class="nav navbar-nav navbar-right">
-                <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><img src="assets\images\person.png" width="25" height="25"><b> Welcome {{main.username}}</b><span class="caret"></span></a>
-                <ul class="dropdown-menu">
-                  <li><a  href="/changepassword" role="button">Change Password</a></li>
-                  <li><a  href="/profile" role="button">Profile</a></li>
-                  <li role="separator" class="divider"></li>
-                  <li> <a href="#" ng-click="main.logout();" ng-show="main.isLoggedIn" role="button">Logout</a></li>
-                </ul>
-                </li>
-              </ul>          
-        </div>    
-      </div>
-    </nav>
-</div>
-    <div ng-view>
-      
-    </div>
-
-
-    <!-- Footer  -->
-
-    <div ng-controller="footerCtrl">
-      <footer class="container-fluid text-center" >
-        <p><span ng-bind="rightToReserveMsg"></span></p>
-      </footer>
-    </div>
-   </div>
+   <div ui-view="header"></div>
+   <div ui-view="container"></div>    
+   <div ui-view="footer"></div>
 
     <!-- Include all compiled plugins (below), or include individual files as needed -->
 
