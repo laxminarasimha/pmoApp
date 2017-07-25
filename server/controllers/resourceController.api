@@ -1,6 +1,7 @@
 var express = require("express"),
  router = express.Router(),
  resourceDAO = require("../models/resourceDAO.js");
+ var nodeExcel=require("excel-export");
  
 router.get("/", function(req, res) {
  resourceDAO.find({},null, {sort:{resourcename: 1}}, function(err, data) {
@@ -9,6 +10,61 @@ router.get("/", function(req, res) {
  return;
  }
  res.send(data);
+ });
+}).get("/excel/", function(req, res) {
+ resourceDAO.find({},null, {sort:{resourcename: 1}}, function(err, data) {
+ if (err) {
+ res.send("error");
+ return;
+ }
+
+//======================================
+var conf={}
+    conf.cols=[{
+            caption:'Se. No.',
+            type:'number',
+            width:3
+        },
+        {
+            caption:'Kin Id',
+            type:'string',
+            width:20
+        },
+        {
+            caption:'Alias',
+            type:'string',
+            width:20
+        },
+        {
+            caption:'Resource Name',
+            type:'string',
+            width:50
+        },
+        {
+            caption:'Designation',
+            type:'string',
+            width:30
+        },
+        {
+            caption:'E-mail',
+            type:'string',
+            width:50
+        }
+        ];
+  
+
+var arr=[];
+for(var i=0;i<data.length;i++){
+	var a= [i+1,data[i].kinId,data[i].alias,data[i].resourcename,data[i].designation,data[i].email];
+	arr.push(a);
+}
+
+conf.rows=arr;
+
+var result=nodeExcel.execute(conf);
+return res.status(200).send(new Buffer(result.toString(), 'binary').toString('base64'));
+//======================================
+
  });
 }).get("/:id", function(req, res) {
  var id = req.params.id;

@@ -162,7 +162,6 @@
         $scope.createResourceMapping = function (resourcemap) {
             $rootScope.Title = "Create resourcemap";
             $scope.IsSubmit = true;
-            //if (false) {
             if ($scope.resourceMappingForm.$valid) {
                 prepareTaggedToEuroclearData($scope, resourcemap);
                 prepareData(resourceMappingService, app, holidayListService, $scope, resourcemap, true, monthlyHeaderListService);
@@ -229,23 +228,33 @@
     }
 
     function saveResoucreMap(resourceMappingService, app, $scope) {
-        resourceMappingService.updateResourceMapping($scope.resourcemap).then(function (res) {
-            if (res.data == "updated") {
-                getMappedResourceData(resourceMappingService, $scope);
-                $scope.resourcemap = {
-                    'taggToEuroclear': [],
-                    'monthlyAvailableActualMandays': []
-                };
-                $scope.hidden = "hidden";
-                $scope.startDate = "";
-                $scope.endDate = "";
-                app.loading = false;
-                app.successMsg = "Resource mapping updated successfully";
-                app.errorMsg = false;
-            }
-        }).catch(function (err) {
-            console.log(err);
-        });
+
+        checkOverAllocation($scope, resourceMap);
+
+        if ($scope.errorMsgs.length > 1) {
+            app.loading = false;
+            app.successMsg = false;
+            app.errorMsg = " ";
+            app.errorClass = "error";
+        } else {
+            resourceMappingService.updateResourceMapping($scope.resourcemap).then(function (res) {
+                if (res.data == "updated") {
+                    getMappedResourceData(resourceMappingService, $scope);
+                    $scope.resourcemap = {
+                        'taggToEuroclear': [],
+                        'monthlyAvailableActualMandays': []
+                    };
+                    $scope.hidden = "hidden";
+                    $scope.startDate = "";
+                    $scope.endDate = "";
+                    app.loading = false;
+                    app.successMsg = "Resource mapping updated successfully";
+                    app.errorMsg = false;
+                }
+            }).catch(function (err) {
+                console.log(err);
+            });
+        }
     }
 
 
@@ -253,8 +262,6 @@
         var resourceMap = $scope.resourcemap;
         var overAllocation = false;
         var infoMsg = "";
-
-        console.log(resourceMap);
 
         for (var i = 0; i < resourceMap.taggToEuroclear.length; i++) {
             if (resourceMap.taggToEuroclear[i].value > 100) {
@@ -269,43 +276,14 @@
             app.errorMsg = "Allocaiton value shouldn't  greater than 100% for the month :" + infoMsg;
             app.errorClass = "error"
         } else {
-            var resource = resourceMap.mappedResource.resourcename;
-            console.log(resource + '===' + resourceMap.taggToEuroclear);
 
-            var totalValue = 0;
-            var year = "";
-            var overAllocation = false;
+            checkOverAllocation($scope, resourceMap);
 
-            var existingAlloc = {};
-            
-            angular.forEach(resourceMap.taggToEuroclear, function (taggToEuro) {
-                totalValue = 0;
-                angular.forEach($scope.mongoMappedResourceData, function (oldAloc) {
-                    if (oldAloc.year != "undefined" && oldAloc.year != null)
-                        year = oldAloc.year.substr(2, oldAloc.year.length);
-                    if (oldAloc.mappedResource.resourcename === resource && oldAloc.year.endsWith(year)) {
-                        angular.forEach(oldAloc.taggToEuroclear, function (tag) {
-                            if (taggToEuro.key === tag.key) {
-                                totalValue += tag.value;
-                            }
-                        });
-                    }
-                });
-                totalValue += taggToEuro.value;
-                if (totalValue > 100) {
-                    var values = "Over Allocation  for the month :" + taggToEuro.key;
-                    values += " and overalloaiton value is " + (parseInt(totalValue) - 100);
-                    $scope.errorMsgs.push(values);
-                }
-
-            });
-
-            console.log($scope.errorMsgs.length);
             if ($scope.errorMsgs.length > 0) {
-                 app.loading = false;
-                 app.successMsg = false;
-                 app.errorMsg=" ";
-                 app.errorClass = "error";
+                app.loading = false;
+                app.successMsg = false;
+                app.errorMsg = " ";
+                app.errorClass = "error";
             } else {
                 var resourceMapYr = splitResoruceMapByYear($scope.resourcemap, $scope.startDate, $scope.endDate, $scope.mongoMappedResourceData);
                 for (var i = 0; i < resourceMapYr.length; i++) {
@@ -335,6 +313,37 @@
                 }
             }
         }
+    }
+
+
+    function checkOverAllocation($scope, resourceMap) {
+
+        var resource = resourceMap.mappedResource.resourcename;
+        var totalValue = 0;
+        var year = "";
+        angular.forEach(resourceMap.taggToEuroclear, function (taggToEuro) {
+            totalValue = 0;
+            angular.forEach($scope.mongoMappedResourceData, function (oldAloc) {
+                if (oldAloc.year != "undefined" && oldAloc.year != null)
+                    year = oldAloc.year.substr(2, oldAloc.year.length);
+                if (oldAloc.mappedResource.resourcename === resource && oldAloc.year.endsWith(year)) {
+                    angular.forEach(oldAloc.taggToEuroclear, function (tag) {
+                        if (taggToEuro.key === tag.key) {
+                            totalValue += tag.value;
+                        }
+                    });
+                }
+            });
+            totalValue += taggToEuro.value;
+            if (totalValue > 100) {
+                var values = "Over Allocation  for the month :" + taggToEuro.key;
+                values += " and overalloaiton value is " + (parseInt(totalValue) - 100);
+                $scope.errorMsgs.push(values);
+            }
+
+        });
+
+        return $scope.errorMsgs;
     }
 
     function checkPreTagged(resourcemap, mongoMappedResourceData, taggedToEuroclearList) { // to check if already existed allocaiton
@@ -585,14 +594,14 @@
         var output = [],
             keys = [],
             cond = [], duplicate = false, item;
-            
+
 
         for (var col = 0; col < collection.length; col++) {
             item = collection[col];
-            duplicate= false;
+            duplicate = false;
             for (var i = 0; i < keys.length; i++) {
                 cond = keys[i].split("-");
-                if (item.mappedResource.resourcename === cond[0]  && item.year === cond[1]) {
+                if (item.mappedResource.resourcename === cond[0] && item.year === cond[1]) {
                     duplicate = true;
                     break;
                 }
