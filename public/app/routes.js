@@ -31,6 +31,9 @@ var app = angular.module('appRoutes',['ui.router'])
             'footer':{
               templateUrl: 'app/views/pages/users/footer.html'              
             }
+          },
+          resolve :{
+          	loggedIn:onlyLoggedIn
           }
           
       })
@@ -267,38 +270,22 @@ var app = angular.module('appRoutes',['ui.router'])
 	 $locationProvider.html5Mode(true);
 });
 
+
 app.run(['$rootScope','Auth','$location',function($rootScope, Auth, $location){
 
     $rootScope.$on('$stateChangeStart', function(e, toState, toParams, fromState, fromParams) {
-        if (toState.name.indexOf('root') > -1 && !Auth.isLoggedIn()) {
-            // If logged out and transitioning to a logged in page:
-            e.preventDefault();
-            $state.go('public.login');
-        } else if (toState.name.indexOf('public') > -1 || Auth.isLoggedIn()) {
-            // If logged in and transitioning to a logged out page:
-            e.preventDefault();
-            $state.go('/Home');
-        };
+        console.log("Inside stateChangeStart");
     });
 
-
-
-	/*$rootScope.$on('$scopeChangeStart', function(event, next, current){	
-
-		if(next.$$route.authenticated ==  true){	
-			if(!Auth.isLoggedIn()){
-				event.preventDefault();
-				$location.path('/login');
-			}		
-				
-		}else if(next.$$route.authenticated == false){
-			if(Auth.isLoggedIn()){
-				console.log('Check1');
-				event.preventDefault();
-				$location.path('/Home');
-
-			}
-		}
-	});*/
-
 }]);
+
+var onlyLoggedIn = function ($location,$q,Auth) {
+    var deferred = $q.defer();
+    if (Auth.isLoggedIn()) {
+        deferred.resolve();
+    } else {
+        deferred.reject();        
+        $location.url('/login');
+    }
+    return deferred.promise;
+};

@@ -34,7 +34,7 @@ angular.module('mainController',['authServices'])
 		app.loading =true;
 		app.errorMsg = false;	
 		app.successMsg = false;
-		Auth.login(app.loginData).then(function(data){
+		Auth.login(app.loginData).then(function(data){			
 			if(data.data.success){				
 				app.loading =false;
 				app.successMsg = data.data.message + '... Redirecting';
