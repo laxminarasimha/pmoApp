@@ -9,23 +9,18 @@
    <title ng-bind="'D&C -' + $state.current.data.pageTitle"></title>
   <!-- Cascade Style Sheets -->
 
-
   <link href="assets/css/bootstrap.min.css" rel="stylesheet"> 
   <link href="assets/css/animate.css" rel="stylesheet">
   <link href="assets/css/style.css" rel="stylesheet">
   <link href ="assets/css/jquery-ui.css" rel="stylesheet"><!-- For calender -->
-   <link href="assets/css/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
+  <link href="assets/css/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
   
-
-
   <link rel="stylesheet" href="assets/css/bootstrap.min.css"> 
   <link rel='stylesheet' href="assets/css/font-awesome.min.css">  
   <link rel="stylesheet" href="assets/css/buttons.dataTables.min.css">
   <link rel="stylesheet" href="assets/css/customDatatable.css">
   <link rel="stylesheet" href="assets/css/bootstrap-multiselect.css" />
    
-
-
   <!-- Cascade Style Sheets for Datatable -->
   <link rel="stylesheet" href="assets/css/datatables.bootstrap.css">
 
@@ -34,11 +29,11 @@
   <script src="assets/js/jquery.dataTables.min.js"></script>
   
   <script src="assets/js/jquery-ui.js"></script><!-- For calender --> 
-
   <script src="assets/js/jquery.bootpag.min.js"></script><!-- For Pagination --> 
 
   <!-- Main Angular Files -->
   <script src="assets/js/angular.min.js"></script>
+
   <!-- Angular (necessary for DataTable plugins) -->
   <script src="assets/js/angular-datatables.min.js"></script>
   <script src="//unpkg.com/angular-ui-router/release/angular-ui-router.min.js"></script>  
@@ -49,14 +44,7 @@
   <script src="assets/js/ng-file-upload.min.js"></script><!-- For File Upload --> 
   <script src="assets/js/ng-file-upload-shim.min.js"></script><!-- For File Upload -->
 
-  
-
   <script src="assets/js/Chart.bundle.js"></script>
-  
-  
-  
-
-  
 
   <!-- Angular Config/routes -->
   <script src="app/app.js"></script>
@@ -86,7 +74,6 @@
   <script src="app/controllers/dashBoardCtrl.js"></script>
   <script src="app/controllers/graphsCtrl.js"></script>
   <script src="app/controllers/profileCtrls.js"></script><!-- For File Upload -->
-  
   
   <!-- Angular Services -->
    <script src="app/services/availableDaysService.js"></script>
@@ -128,7 +115,7 @@
   
 
   </head>
-  <body ng-controller="mainController as main"  ng-cloak>
+  <body ng-controller="mainController as main" ng-cloak>
    <div ui-view="header"></div>
    <div ui-view="container"></div>    
    <div ui-view="footer"></div>

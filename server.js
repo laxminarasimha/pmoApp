@@ -19,7 +19,10 @@ app.use('/api',appRoutes);
 
 //var mongodbUri = 'mongodb://laxmi:Laxmi123@ds119810.mlab.com:19810/pmodb';
 var mongodbUri = 'mongodb://10.109.7.156:27017/pmodev';
-var connection = mongoose.connect(mongodbUri, function(err) {	
+
+var options = {};
+
+var connection = mongoose.connect(mongodbUri,options, function(err) {	
 	if(err){
 		console.log('Not Connected to the databse:' + err);
 	} else {
@@ -39,4 +42,3 @@ app.get('*', function(req,res){
 app.listen(port, function(){
 	console.log('Running the Server on port : ' + port);
 });
-
