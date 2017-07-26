@@ -1,19 +1,30 @@
 <form name="createAllocationForm" ng-submit="" novalidate>
   <legend>Create Allocation</legend>
   <div class="panel panel-info">
-    <div class="panel-heading">
+    <div class="panel-heading" align="center">
       <div class='row'>
         <div class='col-sm-3'>
-          <div class=form-group>
-            <label for startDate>Start Date:</label>
-            <input type="text" ng-model="startDate" id="startDt" ng-required="true" class="form-control" />
+          <div class="form-group">
+            <label for startDate>Allocation Start Month:</label>
+            <div class="input-group date form_date " data-date-format="dd MM yyyy" data-link-format="yyyy-mm-dd">
+              <input class="form-control" type="text" ng-model="startDate" class="form-control" readonly>
+              <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+            </div>
           </div>
+
+
         </div>
         <div class='col-sm-3'>
-          <div class=form-group>
-            <label for endDate>End Date:</label>
-            <input type="text" ng-model="endDate" id="endDt" ng-required="true" class="form-control" />
+
+          <div class="form-group">
+            <label for startDate>Allocation End Month:</label>
+            <div class="input-group date form_date " data-date-format="dd MM yyyy" data-link-format="yyyy-mm-dd">
+              <input class="form-control" type="text" ng-model="endDate" class="form-control" readonly>
+              <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+            </div>
           </div>
+
+
         </div>
         <div class='col-sm-6' style="padding-top:.5cm;">
           <div class=form-group>
@@ -62,6 +73,7 @@
           <thead>
             <tr>
               <th>Resource</th>
+              <th>Type</th>
               <th>Project</th>
               <th ng-repeat="data in months">{{data.month}}</th>
               <th>Action</th>
@@ -75,9 +87,14 @@
 					        </span>
                   </td>
                   <td>
+                    <span editable-select="allocRows.resourcetype" e-name="resourcetype" e-form="rowform">
+                        <select ng-model="allocRows.resourcetype" ng-options="item.resourceTypename as item.resourceTypename for item in resourceTypeList" />
+                    </span>
+                  </td>
+                  <td>
                     <span editable-select="allocRows.project" e-name="project" e-form="rowform">
-					          <select  ng-model="allocRows.project" ng-options="item.projectname as item.projectname for item in project |projectfilter:'Vacation'"/>
-					         					        </span>
+					            <select  ng-model="allocRows.project" ng-options="item.projectname as item.projectname for item in project | projectfilter:'Vacation'"/>
+					         	</span>
                   </td>
                   <td ng-repeat="months in allocRows.allocation">
                     <span editable-select="alloc.tag" e-name="tag" e-form="rowform">
@@ -102,22 +119,21 @@
 <script>
   $('#resource-select').multiselect();
 
-  $("#startDt").datepicker({
-    //appendText:"(dd-MMM-yy)",
-    dateFormat: "dd-MM-yy",
-    minDate: new Date()
-    //showOn:"button",
-    //buttonImage: "/images/calendar-icon.png",
-    //buttonImageOnly: true
-  });
+  $('.form_date').datetimepicker({
+    // format: "mm/yyyy",
+    // startView: "year",
+    // minView: "year",
+    // autoclose: 1,
+    // startDate: '-0m'
 
-  $("#endDt").datepicker({
-    //appendText:"(dd-MMM-yy)",
-    dateFormat: "dd-MM-yy",
-    minDate: new Date()
-    //showOn:"button",
-    //buttonImage: "/images/calendar-icon.png",
-    //buttonImageOnly: true
+     weekStart: 1,
+        todayBtn: 1,
+        autoclose: 1,
+        todayHighlight: 1,
+        startView: 2,
+        minView: 2,
+        forceParse: 0,
+        startDate: '-0m'
   });
 
 </script>

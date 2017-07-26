@@ -57,7 +57,7 @@ angular.module('pmoApp').controller('holidayListCtrl', Controller);
 $scope.editHoliday = function (id) {
      $rootScope.Title = "Edit Holiday";
      holidayListService.getHolidayForID(id).then(function(res) {
-     //res.data.holidayDate =  $filter('date')(new Date(res.data.holidayDate), 'dd-MMM-yy');
+     res.data.holidayDate =  $filter('date')(new Date(res.data.holidayDate), 'dd-MMM-yy');
      $scope.holiday = res.data;
      }).catch(function(err) {
      console.log(err);

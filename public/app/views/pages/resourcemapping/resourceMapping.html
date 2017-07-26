@@ -125,25 +125,31 @@
 
           </div>
         </div>
-        <div class="panel-body" style="overflow-x: scroll; overflow-y:visible; display:{{hidden}}">
-          <b>%Tagged </b>
-          <table class="table table-striped table-curved" cellspacing="0">
-            <thead>
-              <tr class="danger">
-                <th ng-repeat="column in taggedToEuroclearList">{{column}}</th>
-              </tr>
-              <thead>
-                <tbody>
-                  <tr>
-                    <td ng-repeat="column in taggedToEuroclearList track by $index">
-                      <input id="taggToEuroclear{{column}}" ng-model="resourcemap.taggToEuroclear[$index].value" required="true" type="text" maxlength="3"
-                        size="5" class="form-control input-sm {{errorClass}}" ng-change="validateInput(this,resourcemap.taggToEuroclear[$index].value)"
-                      />
-                    </td>
+        <div class="table-responsive">
+          <div class='box-header' style='overflow-y:visible; display:{{hidden}}'>
+            <b>Tagged %</b>
+
+            <div class='box-content'>
+              <table class="table table-striped table-curved " cellspacing="0 ">
+                <thead>
+                  <tr class="danger ">
+                    <th ng-repeat="column in taggedToEuroclearList ">{{column}}</th>
                   </tr>
-                </tbody>
-          </table>
+                  <thead>
+                    <tbody>
+                      <tr>
+                        <td ng-repeat="column in taggedToEuroclearList track by $index">
+                          <input id="taggToEuroclear{{column}} " ng-model="resourcemap.taggToEuroclear[$index].value
+            " required="true " type="text " maxlength="3 " size="5 " class="form-control input-sm {{errorClass}} " ng-change="validateInput(this,resourcemap.taggToEuroclear[$index].value) "
+                          />
+                        </td>
+                      </tr>
+                    </tbody>
+              </table>
+            </div>
+          </div>
         </div>
+
         <div class='row'>
           <div class='col-sm-12'>
             <div align="right">
@@ -155,9 +161,6 @@
           </div>
         </div>
       </div>
-
-
-
       <div class="panel-body" ng-show="loading || successMsg || errorMsg">
         <div class="row">
           <div class='col-sm-12'>

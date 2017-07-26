@@ -6,13 +6,13 @@
 		return function (collection, condition) {
 			var output = [],
 				keys = [];
-			var splitKeys = condition.split('.'); 
+			var splitKeys = condition.split('.');
 
 			angular.forEach(collection, function (item) {
 				var key = {};
 				angular.copy(item, key);
 				for (var i = 0; i < splitKeys.length; i++) {
-					key = key[splitKeys[i]];    
+					key = key[splitKeys[i]];
 				}
 
 				if (keys.indexOf(key) === -1) {
@@ -245,50 +245,50 @@
 
 
 
-		$scope.createAllocation = function () {
+		// $scope.createAllocation = function () {
 
-			if ($scope.resource.length <= 0) {
-				alert('Please select a resource');
-				return;
-			}
+		// 	if ($scope.resource.length <= 0) {
+		// 		alert('Please select a resource');
+		// 		return;
+		// 	}
 
-			Date.prototype.monthName = function () {
-				return this.toUTCString().split(' ')[2]
-			};
+		// 	Date.prototype.monthName = function () {
+		// 		return this.toUTCString().split(' ')[2]
+		// 	};
 
-			var monthCol = months($scope.startDate, $scope.endDate);
-			angular.forEach(monthCol, function (label) {
-				$scope.monthWiseAllocation = {
-					month: label,  // this is allocation month name
-					value: 0,
-				}
-				$scope.months.push($scope.monthWiseAllocation);
-			});
+		// 	var monthCol = months($scope.startDate, $scope.endDate);
+		// 	angular.forEach(monthCol, function (label) {
+		// 		$scope.monthWiseAllocation = {
+		// 			month: label,  // this is allocation month name
+		// 			value: 0,
+		// 		}
+		// 		$scope.months.push($scope.monthWiseAllocation);
+		// 	});
 
-			for (var res = 0; res < $scope.resource.length; res++) {
-				$scope.rowWiseAllocation = {
-					resource: $scope.resource[res],
-					project: $scope.projselect,
-					startdate: $scope.startDate,
-					enddate: $scope.endDate,
-					allocation: [],
-					rowSelect: true
-				};
+		// 	for (var res = 0; res < $scope.resource.length; res++) {
+		// 		$scope.rowWiseAllocation = {
+		// 			resource: $scope.resource[res],
+		// 			project: $scope.projselect,
+		// 			startdate: $scope.startDate,
+		// 			enddate: $scope.endDate,
+		// 			allocation: [],
+		// 			rowSelect: true
+		// 		};
 
-				angular.forEach($scope.months, function (item) {
-					var obj = new allocObject(item);
-					$scope.rowWiseAllocation.allocation.push(obj);
-				});
+		// 		angular.forEach($scope.months, function (item) {
+		// 			var obj = new allocObject(item);
+		// 			$scope.rowWiseAllocation.allocation.push(obj);
+		// 		});
 
-				$scope.resourceWiseAllocaiton.push($scope.rowWiseAllocation);
-			}
+		// 		$scope.resourceWiseAllocaiton.push($scope.rowWiseAllocation);
+		// 	}
 
-			$scope.resource = [];
-			$scope.detailDiv = false;
+		// 	$scope.resource = [];
+		// 	$scope.detailDiv = false;
 
-			console.log($scope.resourceWiseAllocaiton);
+		// 	console.log($scope.resourceWiseAllocaiton);
 
-		}
+		// }
 
 		$scope.updateAllocaiton = function (resource, event) {
 			angular.forEach($scope.allocationList, function (item) {
@@ -352,6 +352,8 @@
 
 		$scope.prepareFinalData = function ($scope, availableDaysService, monthlyHeaderListService, mappedData) {
 
+			console.log(mappedData);
+
 			var fromDate = "01-" + $scope.headingList[0];
 			var toDate = "01-" + $scope.headingList[$scope.headingList.length - 1];
 			var list = availableDaysService.getData(fromDate, toDate);
@@ -376,16 +378,16 @@
 
 			}
 
-			for (var i = 0; i < mappedData.data.length; i++) {
+			for (var i = 0; i < mappedData.length; i++) {
 				for (var j = 0; j < list.length; j++) {
-					if (mappedData.data[i].mappedResource.resourcename == list[j].resource) {
-						mappedData.data[i]['isConflict'] = list[j]['isConflict'];
+					if (mappedData[i].mappedResource.resourcename === list[j].resource) {
+						mappedData[i]['isConflict'] = list[j]['isConflict'];
 						break;
 					}
 				}
 			}
 
-			$scope.mappedResourceData = mappedData.data;
+			$scope.mappedResourceData = mappedData;
 			var htm = '';
 
 			angular.forEach($scope.mappedResourceData, function (item) {
@@ -426,7 +428,19 @@
 
 	function getMappedResourceData($scope, allocationService, leaveService, resourceMappingService, availableDaysService, monthlyHeaderListService) {
 		resourceMappingService.getMappedResources().then(function (res) {
-			getGraphData($scope, allocationService, leaveService, resourceMappingService, availableDaysService, monthlyHeaderListService, res);
+
+			var collection = res.data;
+
+			var resource = [], keys = [], item;
+			for (var col = 0; col < collection.length; col++) {
+				item = collection[col];
+				if (keys.indexOf(item.mappedResource.resourcename) <= -1) {
+					resource.push(item);
+					keys.push(item.mappedResource.resourcename);
+				}
+			}
+
+			getGraphData($scope, allocationService, leaveService, resourceMappingService, availableDaysService, monthlyHeaderListService, resource);
 			//$scope.mappedResourceData = res.data;
 
 		}).catch(function (err) {

@@ -67,6 +67,8 @@ angular.module('pmoApp').controller('leaveCtrl', Controller);
         
          $rootScope.Title = "Edit Leave";
          leaveService.getLeaveForID(id).then(function(res) {
+         res.data.fromDate =  $filter('date')(new Date(res.data.fromDate), 'dd-MMM-yy');
+         res.data.toDate =  $filter('date')(new Date(res.data.toDate), 'dd-MMM-yy');
          $scope.leave = res.data;
          }).catch(function(err) {
          console.log(err);
@@ -317,7 +319,6 @@ angular.module('pmoApp').controller('leaveCtrl', Controller);
     function getLeavesForresource(leaveService,resourcename,$scope){
             
             leaveService.getLeaveForResourceName(resourcename).then(function(res) {
-            console.log(res.data);
             var flag = false;
            
             var leaves = res.data;
@@ -333,7 +334,7 @@ angular.module('pmoApp').controller('leaveCtrl', Controller);
                           flag= true;
                         break;
                     }else if(new Date($scope.leave.toDate) >= new Date(leaves[i].fromDate) && 
-                          new Date($scope.leave.fromDate) <= new Date(leaves[i].toDate)){
+                          new Date($scope.leave.toDate) <= new Date(leaves[i].toDate)){
                          console.log(" 3 duplicate date"+ leaves[i].fromDate +'-'+leaves[i].toDate);
                           flag= true;
                           break;
