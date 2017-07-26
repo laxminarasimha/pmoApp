@@ -7,7 +7,6 @@ angular.module('mainController',['authServices'])
 		if(Auth.isLoggedIn()){					
 			app.isLoggedIn = true;			
 			Auth.getUser().then(function(data){										
-			if(data.data.resourcename !== ""){	
 				app.username = data.data.resourcename;
 				app.email = data.data.email;
 				app._id = data.data._id;
@@ -15,14 +14,6 @@ angular.module('mainController',['authServices'])
 				app.designation = data.data.designation;
 				app.alias = data.data.alias;
 				app.loadMe = true;
-			}else{
-				app.isLoggedIn = false;
-				app.username = '';
-				app.loadMe = false;				
-				Auth.logout();	
-				$location.path('/login');					
-			}
-
 		});
 		}else{			
 			app.isLoggedIn = false;

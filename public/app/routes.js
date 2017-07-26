@@ -310,8 +310,17 @@ app.run(['$rootScope','Auth','$location','$state', '$stateParams',function($root
 
 var onlyLoggedIn = function ($location,$q,Auth) {
     var deferred = $q.defer();
+    //console.log("check1")
+    //console.log(Auth.isLoggedIn());
     if (Auth.isLoggedIn()) {
-        deferred.resolve();
+        Auth.getUser().then(function(data){
+        if(angular.isUndefined(data.data.message)){
+          deferred.resolve();
+        }else{
+          deferred.reject();        
+          $location.url('/login');
+        }
+        });
     } else {
         deferred.reject();        
         $location.url('/login');

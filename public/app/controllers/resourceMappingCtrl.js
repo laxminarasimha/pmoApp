@@ -96,28 +96,41 @@
 
         }
 
+        $scope.deleteConfirmation = function(id,name){
+            $scope.msg = name;
+            $scope.deletedID = id;
+            openDialog();
+
+         }
+         
+         $scope.cancel = function(event){
+            $scope.msg = "";
+            $scope.deletedID = "";
+         }
 
         $scope.deleteResourceMapping = function (id) {
             var selectedId = document.getElementsByName("action");
             if (selectedId.length <= 0) {
                 alert('Please select records to delete.')
             } else {
-                if (confirm('Are you sure to delete?')) {
+                //if (confirm('Are you sure to delete?')) {
                     for (var record = 0; record < selectedId.length; record++) {
                         if (selectedId[record].checked) {
                             resourceMappingService.deleteResourceMapping(selectedId[record].value).then(function (res) {
                                 if (res.data == "deleted") {
                                     getMappedResourceData(resourceMappingService, $scope);
                                     app.loading = false;
-                                    app.successMsg = "Resource mapping Deleted successfully";
+                                    app.successMsg = "Resource mapping deleted successfully";
                                     app.errorMsg = false;
+                                    $scope.msg = "";
+                                    $scope.deletedID = "";
                                 }
                             }).catch(function (err) {
                                 console.log(err);
                             });
                         }
                     }
-                }
+                //}
             }
         };
 
@@ -724,6 +737,10 @@
         }
 
         return arr;
+    }
+
+    function openDialog(){
+    $('#confirmModal').modal('show');
     }
 
 })();
