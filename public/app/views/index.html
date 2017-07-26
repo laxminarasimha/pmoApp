@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" ng-app="pmoApp">
   <head>
     <base href="/">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-   <title>::Demand & Capacity::</title>
+   <title ng-bind="'D&C -' + $state.current.data.pageTitle"></title>
   <!-- Cascade Style Sheets -->
 
 
@@ -128,7 +128,7 @@
   
 
   </head>
-  <body ng-app="pmoApp" ng-controller="mainController as main"  ng-cloak>
+  <body ng-controller="mainController as main"  ng-cloak>
    <div ui-view="header"></div>
    <div ui-view="container"></div>    
    <div ui-view="footer"></div>

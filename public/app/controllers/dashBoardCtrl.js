@@ -11,7 +11,7 @@ Controller.$inject = ['$scope', '$rootScope','$filter','dashboardService','resou
  function Controller($scope, $rootScope, $filter,dashboardService,resourceService) {
      
 	 var app = $scope;
-	 $rootScope.Title = "Reporting";
+	   $rootScope.Title = "Dash Board";
      app.ProjectData = [];
      app.ResourceData = [];
      var projects = [];
