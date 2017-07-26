@@ -3,9 +3,9 @@
  
 angular.module('pmoApp').controller('holidayListCtrl', Controller);
 
- Controller.$inject = ['$scope', '$rootScope', 'holidayListService','locationService','DTOptionsBuilder', 'DTColumnBuilder'];
+ Controller.$inject = ['$scope', '$rootScope', 'holidayListService','locationService','DTOptionsBuilder', 'DTColumnBuilder','$filter'];
   
- function Controller($scope, $rootScope, holidayListService, locationService, DTOptionsBuilder, DTColumnBuilder) {
+ function Controller($scope, $rootScope, holidayListService, locationService, DTOptionsBuilder, DTColumnBuilder,$filter) {
  $scope.mongoHolidayData = [];
  $scope.locationList = [];
  var app = $scope;
@@ -36,7 +36,7 @@ angular.module('pmoApp').controller('holidayListCtrl', Controller);
     $scope.msg = "";
     $scope.deletedID = "";
  }
- 
+
  $scope.delete = function(event) {
      //if (confirm('Are you sure to delete?')) {
          holidayListService.deleteHoliday($scope.deletedID).then(function(res) {
@@ -57,6 +57,7 @@ angular.module('pmoApp').controller('holidayListCtrl', Controller);
 $scope.editHoliday = function (id) {
      $rootScope.Title = "Edit Holiday";
      holidayListService.getHolidayForID(id).then(function(res) {
+     //res.data.holidayDate =  $filter('date')(new Date(res.data.holidayDate), 'dd-MMM-yy');
      $scope.holiday = res.data;
      }).catch(function(err) {
      console.log(err);
@@ -66,6 +67,7 @@ $scope.editHoliday = function (id) {
  
  $scope.saveData = function(holiday) {
      if ($scope.holidayForm.$valid) {
+        console.log(holiday.holidayDate);
      holidayListService.updateHoliday(holiday).then(function(res) {
      if (res.data == "updated") {
         getHolidayData(holidayListService,$scope);
