@@ -1,8 +1,9 @@
 angular.module('mainController',['authServices'])
-.controller('mainController', function(Auth, $http,$location,$timeout,$rootScope){	
+.controller('mainController', function(Auth, $http,$location,$timeout,$rootScope,$scope){	
 	var app = this;
-	app.loadMe = false;	
-	$rootScope.$on('$stateChangeStart', function(){	
+	app.loadMe = false;		
+
+	$rootScope.$on('$locationChangeStart', function(){	
 		if(Auth.isLoggedIn()){					
 			app.isLoggedIn = true;			
 			Auth.getUser().then(function(data){										
@@ -33,12 +34,23 @@ angular.module('mainController',['authServices'])
 	this.doLogin = function(loginData){
 		app.loading =true;
 		app.errorMsg = false;	
-		app.successMsg = false;
+		app.successMsg = false;		
 		Auth.login(app.loginData).then(function(data){			
 			if(data.data.success){				
-				app.loading =false;
-				app.successMsg = data.data.message + '... Redirecting';
-				$timeout(function(){$location.path('/Home');
+				Auth.getUser().then(function(data){										
+					app.username = data.data.resourcename;
+					app.email = data.data.email;
+					app._id = data.data._id;
+					app.kinId = data.data.kinId;
+					app.designation = data.data.designation;
+					app.alias = data.data.alias;
+					app.loadMe = true;
+				});
+		
+			app.loading =false;
+			app.successMsg = data.data.message + '... Redirecting';
+
+			$timeout(function(){$location.path('/Home');
 					app.loginData = '';
 					app.successMsg = false;
 				},2000);

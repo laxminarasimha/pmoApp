@@ -61,14 +61,21 @@ router.get("/", function(req, res) {
  var id = req.params.id;
  var obj = req.body;
  
-holidayListDAO.findByIdAndUpdate(id, { locationname: obj.locationname, holidayDate: obj.holidayDate, comments: obj.comments}, 
-function(err) {
+ //For date filed dont use findByIdAndUpdate. previous date is stored in that case. else use in all case. 
+
+ holidayListDAO.find({ _id: id }, function(err, data) {
  if (err) {
  res.send("error");
  return;
  }
+ var model = data[0];
+ model.locationname = obj.locationname;
+ model.holidayDate = obj.holidayDate;
+ model.comments = obj.comments;
+ model.save();
  res.send("updated");
  });
+
 }).delete("/:id", function(req, res) {
  var id = req.params.id;
  holidayListDAO.findByIdAndRemove(id, function(err) {
