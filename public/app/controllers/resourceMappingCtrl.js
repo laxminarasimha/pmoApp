@@ -27,9 +27,6 @@
         $scope.resourceList = [];
         getResourceData(resourceService, $scope);
 
-        //$scope.roleList = [];
-        //getRoleData(roleService,$scope);
-
 
         $scope.locationList = [];
         getLocationData(locationService, $scope);
@@ -49,23 +46,27 @@
         getResourceTypeData(resourceTypeService, $scope);
 
         $scope.taggedToEuroclearList = [];
-        // prepareTagToEuroclearHeading($scope, monthlyHeaderListService);
+
 
         $scope.filterResourceWithYear = [];
 
 
         $scope.startDate = "";
         $scope.endDate = "";
-        $scope.hidden = "hidden";
+        $scope.hidden = "none";
         $scope.errorMsgs = new Array();
 
         $scope.createMapping = function () {
 
-            var startYear = new Date($scope.startDate);
-            var endYear = new Date($scope.endDate);
+            var strDt = $scope.startDate.split("/");
+            var endDt = $scope.endDate.split("/");
 
-            if (startYear <= endYear) {
-                $scope.taggedToEuroclearList = months(startYear, endYear);
+            var date_1 = new Date(strDt[1], parseInt(strDt[0]) - 1);
+            var date_2 = new Date(endDt[1], parseInt(endDt[0]) - 1);
+
+            if (date_2 >= date_1) {
+                $scope.taggedToEuroclearList = months($scope.startDate, $scope.endDate);
+                console.log($scope.taggedToEuroclearList);
                 checkPreTagged($scope.resourcemap, $scope.mongoMappedResourceData, $scope.taggedToEuroclearList); // to check if already existed allocaiton 
                 $scope.hidden = "";
             }
@@ -84,7 +85,7 @@
             $scope.startDate = "";
             $scope.endDate = "";
             $scope.taggedToEuroclearList = [];
-            $scope.hidden = "hidden";
+            $scope.hidden = "none";
 
         }
 
@@ -208,7 +209,6 @@
                 tr.addClass('shown');
             }
         }
-
     }
 
     function createDetails(resource, yearSelect, resourceData) {
@@ -229,7 +229,7 @@
 
     function saveResoucreMap(resourceMappingService, app, $scope) {
 
-        checkOverAllocation($scope, resourceMap);
+        checkOverAllocation($scope, $scope.resourcemap);
 
         if ($scope.errorMsgs.length > 1) {
             app.loading = false;
@@ -244,7 +244,7 @@
                         'taggToEuroclear': [],
                         'monthlyAvailableActualMandays': []
                     };
-                    $scope.hidden = "hidden";
+                    $scope.hidden = "none";
                     $scope.startDate = "";
                     $scope.endDate = "";
                     app.loading = false;
@@ -276,7 +276,6 @@
             app.errorMsg = "Allocaiton value shouldn't  greater than 100% for the month :" + infoMsg;
             app.errorClass = "error"
         } else {
-
             checkOverAllocation($scope, resourceMap);
 
             if ($scope.errorMsgs.length > 0) {
@@ -298,7 +297,7 @@
                                 app.loading = false;
                                 app.successMsg = "Resource mapping created successfully";
                                 app.errorMsg = false;
-                                $scope.hidden = "hidden";
+                                $scope.hidden = "none";
                                 $scope.startDate = "";
                                 $scope.endDate = "";
                             }
@@ -380,8 +379,14 @@
     function splitResoruceMapByYear(resourcemap, from, to, mongoMappedResourceData) {
 
         var maps = new Array();
-        var d1 = new Date(from), d2 = new Date(to), years = [];
-        for (var i = d1.getFullYear(); i <= d2.getFullYear(); i++) {
+
+
+        var strYr = from.split("/");
+        var endYr = to.split("/");
+
+     
+        var strYr = from.split("/")[1],  endYr=to.split("/")[1], years = [];
+        for (var i = strYr; i <= endYr; i++) {
             years.push(i);
         }
 
@@ -458,7 +463,6 @@
         var month2 = "";
         for (var i = 0; i < collection.length; i++) {
             month1 = collection[i].key.substr(0, 3);
-            console.log(month1);
             for (var k = i; k < collection.length; k++) {
                 month2 = collection[k].key.substr(0, 3);
                 if (monthNames.indexOf(month1) > monthNames.indexOf(month2)) {
@@ -565,13 +569,6 @@
         }
     }
 
-
-    // function prepareTagToEuroclearHeading($scope, monthlyHeaderListService) {
-
-    //    // $scope.taggedToEuroclearList = monthlyHeaderListService.getHeaderList();
-    //    $scope.taggedToEuroclearList=[];
-
-    // }
 
     function prepareTaggedToEuroclearData($scope, resourcemap) {
         var taggedToEuroclearArray = [];
@@ -704,13 +701,18 @@
         var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
             "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
         var arr = [];
-        var datFrom = new Date(from);
-        var datTo = new Date(to);
-        var fromYear = datFrom.getFullYear();
-        var toYear = datTo.getFullYear();
-        var diffYear = (12 * (toYear - fromYear)) + datTo.getMonth();
 
-        for (var i = datFrom.getMonth(); i <= diffYear; i++) {
+        var datFrom = from.split("/");
+        var datTo = to.split("/");
+
+        var fromYear = parseInt(datFrom[1]);
+        var toYear = parseInt(datTo[1]);
+
+        var monthFrom = parseInt(datFrom[0]) - 1;
+        var monthTo = parseInt(datTo[0]) - 1;
+
+        var diffYear = (12 * (toYear - fromYear)) + monthTo;
+        for (var i = monthFrom; i <= diffYear; i++) {
             arr.push(monthNames[i % 12] + "-" + Math.floor(fromYear + (i / 12)).toString().substr(-2));
         }
 

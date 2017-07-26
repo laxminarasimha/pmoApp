@@ -93,32 +93,39 @@
         </div>
         <div class='row'>
           <div class='col-sm-3'>
-            <div class=form-group>
+
+            <!-- <div class=form-group>
               <label for startDate>Tagged Start Date:</label>
               <input type="text" ng-model="startDate" id="startDate" class="form-control" ng-change="createMapping();" />
-            </div>
-       
-            <!-- <div class="form-group">
-
-                <div class="input-group date form_date col-md-5" data-date="" data-date-format="dd MM yyyy" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
-                    <input class="form-control" size="16" type="text" value="" readonly>
-   					        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-                </div>
-
             </div> -->
 
+            <div class="form-group">
+              <label for startDate>Tagged Start Date:</label>
+              <div class="input-group date form_date " data-date="" data-date-format="dd MM yyyy" data-link-format="yyyy-mm-dd">
+                <input class="form-control" type="text" ng-model="startDate" ng-change="createMapping();" readonly>
+                <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+              </div>
+            </div>
 
 
           </div>
           <div class='col-sm-3'>
-            <div class=form-group>
+            <!-- <div class=form-group>
               <label for endDate>Tagged End Date:</label>
               <input type="text" ng-model="endDate" id="endDate" class="form-control" ng-change="createMapping();" />
+            </div> -->
+
+            <div class="form-group">
+              <label for endDate>Tagged End Date:</label>
+              <div class="input-group date form_date " data-date="" data-date-format="dd MM yyyy" data-link-format="yyyy-mm-dd">
+                <input class="form-control" type="text" ng-model="endDate" ng-change="createMapping();" readonly>
+                <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+              </div>
             </div>
+
           </div>
         </div>
-
-        <div class="panel-body" style="overflow-x: scroll; overflow-y:visible; visibility:{{hidden}}">
+        <div class="panel-body" style="overflow-x: scroll; overflow-y:visible; display:{{hidden}}">
           <b>%Tagged </b>
           <table class="table table-striped table-curved" cellspacing="0">
             <thead>
@@ -137,7 +144,6 @@
                 </tbody>
           </table>
         </div>
-
         <div class='row'>
           <div class='col-sm-12'>
             <div align="right">
@@ -148,9 +154,9 @@
             </div>
           </div>
         </div>
-
-
       </div>
+
+
 
       <div class="panel-body" ng-show="loading || successMsg || errorMsg">
         <div class="row">
@@ -162,10 +168,10 @@
             <div class="row show-hide-message" ng-show="successMsg">
               <div class="alert alert-success">{{successMsg}}</div>
             </div>
-            <div class="row show-hide-message" ng-show="errorMsg" >
+            <div class="row show-hide-message" ng-show="errorMsg">
               <div class="alert alert-danger" ng-repeat="errorMsg in errorMsgs track by $index">{{errorMsg}}</div>
             </div>
-           
+
           </div>
         </div>
       </div>
@@ -207,32 +213,12 @@
 </div>
 
 <script>
-  $("#startDate").datepicker({
-    //appendText:"(dd-MMM-yy)",
-    dateFormat: "dd-MM-yy",
-    minDate: new Date()
-    //showOn:"button",
-    //buttonImage: "/images/calendar-icon.png",
-    //buttonImageOnly: true
-  });
-
-  $("#endDate").datepicker({
-    //appendText:"(dd-MMM-yy)",
-    dateFormat: "dd-MM-yy",
-    minDate: new Date()
-    //showOn:"button",
-    //buttonImage: "/images/calendar-icon.png",
-    //buttonImageOnly: true
-  });
-
   $('.form_date').datetimepicker({
-        language:  'fr',
-        weekStart: 1,
-        todayBtn:  1,
-		autoclose: 1,
-		todayHighlight: 1,
-		startView: 2,
-		minView: 2,
-		forceParse: 0
-    });
+    format: "mm/yyyy",
+    startView: "year",
+    minView: "year",
+    autoclose: 1,
+    startDate: '-0m'
+  });
+
 </script>
