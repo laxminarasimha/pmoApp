@@ -38,7 +38,7 @@
             <div class="form-group">
               <label>Start  Date:</label>
               <div class="input-group date form_date " data-date="" data-date-format="dd MM yyyy" data-link-format="yyyy-mm-dd">
-                <input class="form-control" type="text" ng-model="leave.fromDate" readonly>
+                <input class="form-control" type="text" ng-model="leave.fromDate" readonly jqdatepicker>
                 <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
               </div>
             </div>
@@ -49,7 +49,7 @@
             
 
               <div class="input-group date form_date " data-date="" data-date-format="dd MM yyyy" data-link-format="yyyy-mm-dd">
-                <input class="form-control" type="text" ng-model="leave.toDate" readonly>
+                <input class="form-control" type="text" ng-model="leave.toDate" readonly jqdatepicker>
                 <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
               </div>
 
@@ -58,7 +58,7 @@
           <div class='col-sm-3'>
             <div class=form-group>
               <label>No of days leaves:</label>
-              <input type="text" style="width:50px;" name="numberOfLeaves" ng-model="leave.numberOfLeaves" ng-value="numberofdays(leave.fromDate,leave.toDate)"
+              <input type="text" style="width:50px;" name="numberOfLeaves" ng-model="leave.numberOfLeaves" ng-value="numberofdays(leave.fromDate,leave.toDate,leave.resourcename)"
                 disabled class="form-control" />
             </div>
           </div>

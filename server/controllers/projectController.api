@@ -95,13 +95,21 @@ return res.status(200).send(new Buffer(result.toString(), 'binary').toString('ba
 }).put("/:id", function(req, res) {
  var id = req.params.id;
  var obj = req.body;
- 
- projectDAO.findByIdAndUpdate(id, { projectname: obj.projectname,regionname:obj.regionname,manager: obj.manager, startDate:obj.startDate,endDate:obj.endDate}, 
-function(err) {
+
+//For date filed dont use findByIdAndUpdate. previous date is stored in that case. else use in all case. 
+
+projectDAO.find({ _id: id }, function(err, data) {
  if (err) {
  res.send("error");
  return;
  }
+ var model = data[0];
+ model.projectname = obj.projectname;
+ model.regionname = obj.regionname;
+ model.manager = obj.manager;
+ model.startDate = obj.startDate;
+ model.endDate = obj.endDate;
+ model.save();
  res.send("updated");
  });
 }).delete("/:id", function(req, res) {

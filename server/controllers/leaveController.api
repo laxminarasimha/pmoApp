@@ -19,6 +19,16 @@ router.get("/", function(req, res) {
  }
  res.send(data[0]);
  });
+ }).get("/kin/:resourcename", function(req, res) {
+ console.log("welcome");
+ var name = req.params.resourcename;
+ leaveDAO.find({ resourcename: name }, function(err, data) {
+ if (err) {
+ res.send("error");
+ return;
+ }
+ res.send(data);
+ });
  }).post("/", function(req, res) {
  var obj = req.body;
  var model = new leaveDAO(obj);
@@ -33,17 +43,24 @@ router.get("/", function(req, res) {
 }).put("/:id", function(req, res) {
  var id = req.params.id;
  var obj = req.body;
- console.log("fromDate leave Service:+fromDate");
-  console.log("toDate leave Service:+toDate");
-  console.log("numberOfLeaves leave Service:+numberOfLeaves");
- leaveDAO.findByIdAndUpdate(id, { resourcename: obj.resourcename,locationname:obj.locationname,fromDate:obj.fromDate,toDate:obj.toDate,numberOfLeaves:obj.numberOfLeaves,leavedaysinmonth:obj.leavedaysinmonth}, 
-function(err) {
+ //For date filed dont use findByIdAndUpdate. previous date is stored in that case. else use in all case. 
+
+ leaveDAO.find({ _id: id }, function(err, data) {
  if (err) {
  res.send("error");
  return;
  }
+ var model = data[0];
+ model.resourcename = obj.resourcename;
+ model.locationname = obj.locationname;
+ model.fromDate = obj.fromDate;
+ model.toDate = obj.toDate;
+ model.numberOfLeaves = obj.numberOfLeaves;
+ model.leavedaysinmonth = obj.leavedaysinmonth;
+ model.save();
  res.send("updated");
  });
+
 }).delete("/:id", function(req, res) {
  var id = req.params.id;
  leaveDAO.findByIdAndRemove(id, function(err) {

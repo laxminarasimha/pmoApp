@@ -13,6 +13,7 @@ angular.module('pmoApp').controller('leaveCtrl', Controller);
      $scope.toDate;
      $scope.fromDate;
      $scope.numberOfLeaves;
+     $scope.resourcename;
 
 
      var app = $scope;
@@ -100,10 +101,16 @@ angular.module('pmoApp').controller('leaveCtrl', Controller);
          if ($scope.leaveForm.$valid) {           
             leave.fromDate=$scope.leave.fromDate;
             leave.toDate=$scope.leave.toDate;
+            leave.resourcename=$scope.leave.resourcename;
             leave.numberOfLeaves=$scope.numberOfLeaves;
             leave.leavedaysinmonth=$scope.monthwiseLeave;
-             console.log(leave);
-            leaveService.createLeave(leave).then(function(res) {
+            console.log(leave);
+            app.loading =false;
+            app.errorMsg = false;
+             getLeavesForresource(leaveService,leave.resourcename,$scope);
+             
+               
+            /*leaveService.createLeave(leave).then(function(res) {
         
              if (res.data == "created") {
                 getLeaveData(leaveService,$scope);
@@ -114,7 +121,7 @@ angular.module('pmoApp').controller('leaveCtrl', Controller);
              }
              }).catch(function(err) {
              console.log(err);
-             });
+             });*/
          }else{
                 app.loading =false;
                 app.successMsg = false;
@@ -124,29 +131,41 @@ angular.module('pmoApp').controller('leaveCtrl', Controller);
      
     };
 
-    $scope.numberofdays = function (fromDate,toDate) {
-        
+    $scope.numberofdays = function (fromDate,toDate,resourcename) {
+            
             if(toDate != null && fromDate !=null) {
+                if (new Date(fromDate) > new Date(toDate)){  
+                    console.log("Start Date should be less than End date");        
+                    app.loading =false;
+                    app.successMsg = false;
+                    app.errorMsg = "Start Date should be less than End date";
+                    app.errorClass = "error"
+                }else{
+                     app.loading =false;
+                     app.errorMsg = false;
+                 
+               
                var holidays = {};
                 holidays["holiday"] = $scope.holidayList.split(",");
-        		var aDay = 24 * 60 * 60 * 1000,
-        		daysDiff = parseInt((new Date(toDate).getTime()-new Date(fromDate).getTime())/aDay,10)+1;
-        		
-        		if (daysDiff>0) {  
-            		for (var i = new Date(fromDate).getTime(), lst = new Date(toDate).getTime(); i <= lst; i += aDay) {
-            		var d = new Date(i);
-            		if (d.getDay() == 6 || d.getDay() == 0 // weekend
-            		|| holidays.holiday.indexOf(formatDate(d)) != -1) {
-                      daysDiff--;
-                }
-            }
-            
-            	
-                $scope.numberOfLeaves = daysDiff;                
-                monthwiseLeave(daysDiff,fromDate,toDate,$scope);
+                var aDay = 24 * 60 * 60 * 1000,
+                daysDiff = parseInt((new Date(toDate).getTime()-new Date(fromDate).getTime())/aDay,10)+1;
                 
-            	return  $scope.numberOfLeaves;
-            }
+                if (daysDiff>0) {  
+                    for (var i = new Date(fromDate).getTime(), lst = new Date(toDate).getTime(); i <= lst; i += aDay) {
+                    var d = new Date(i);
+                    if (d.getDay() == 6 || d.getDay() == 0 // weekend
+                    || holidays.holiday.indexOf(formatDate(d)) != -1) {
+                      daysDiff--;
+                     }
+                    }
+                           
+                    $scope.numberOfLeaves = daysDiff;                
+                    monthwiseLeave(daysDiff,fromDate,toDate,$scope);
+                    
+                    return  $scope.numberOfLeaves;
+                }
+                     
+            }                
         }
     };
 
@@ -203,8 +222,7 @@ angular.module('pmoApp').controller('leaveCtrl', Controller);
         }
           
     }
-
-    
+ 
     $scope.getHolidayDataForLoaction = function (location){
           console.log(location);
           holidayListService.getLocationHolidays(location).then(function(res) {
@@ -270,9 +288,66 @@ angular.module('pmoApp').controller('leaveCtrl', Controller);
          });
     }
 
+    function save(isDuplicate,leaveService,$scope){
+       if(!isDuplicate){
+                console.log("true...");
+                leaveService.createLeave($scope.leave).then(function(res) {
+    
+                 if (res.data == "created") {
+                    getLeaveData(leaveService,$scope);
+                    $scope.leave = {};
+                    $scope.loading =false;
+                    $scope.successMsg = "Leave created successfully";
+                    $scope.errorMsg = false;
+                 }
+                 }).catch(function(err) {
+                 console.log(err);
+                 });
+             }else{
+                    console.log("false.............");
+                    $scope.loading =false;
+                    $scope.successMsg = "You have already applied with this dates.";
+                    $scope.errorMsg = false;
+             }
+
+    }
+
+
+
+    function getLeavesForresource(leaveService,resourcename,$scope){
+            
+            leaveService.getLeaveForResourceName(resourcename).then(function(res) {
+            console.log(res.data);
+            var flag = false;
+           
+            var leaves = res.data;
+            for(var i = 0;i<leaves.length;i++){
+                  if( new Date($scope.leave.fromDate) >=  new Date(leaves[i].fromDate)   &&
+                        new Date($scope.leave.toDate) <= new Date(leaves[i].toDate)){
+                        console.log(" 1 duplicate date"+ leaves[i].fromDate +'-'+leaves[i].toDate);
+                        flag= true;
+                        break;
+                    }else if(new Date($scope.leave.fromDate) >= new Date(leaves[i].fromDate) && 
+                          new Date($scope.leave.fromDate) <= new Date(leaves[i].toDate)){
+                          console.log(" 2 duplicate date"+ leaves[i].fromDate +'-'+leaves[i].toDate);
+                          flag= true;
+                        break;
+                    }else if(new Date($scope.leave.toDate) >= new Date(leaves[i].fromDate) && 
+                          new Date($scope.leave.fromDate) <= new Date(leaves[i].toDate)){
+                         console.log(" 3 duplicate date"+ leaves[i].fromDate +'-'+leaves[i].toDate);
+                          flag= true;
+                          break;
+                    }
+                }
+                save(flag,leaveService,$scope);
+           
+        });
+       
+    }
+
     function openDialog(){
     $('#confirmModal').modal('show');
- }
+    }
 
      
   })();
