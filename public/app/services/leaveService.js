@@ -29,6 +29,12 @@
        url = globalConfig.apiAddress + "/leave/" + id;
        return $http.delete(url);
        },
+       getLeaveForResourceName: function(resourcename) {
+       url = globalConfig.apiAddress + "/leave/kin/" + resourcename;
+       console.log("URL:"+url);
+       return $http.get(url);
+       }
+
     };
  }
   })();
