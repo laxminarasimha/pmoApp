@@ -44,20 +44,21 @@
 	};
 
 
-	Controller.$inject = ['$scope', 'projectService', 'resourceMappingService', 'allocationService','resourceTypeService', '$filter'];
+	Controller.$inject = ['$scope', 'projectService', 'resourceMappingService', 'allocationService', 'resourceTypeService', '$filter'];
 
-	function Controller($scope,projectService, resourceMappingService, allocationService,resourceTypeService, $filter) {
+	function Controller($scope, projectService, resourceMappingService, allocationService, resourceTypeService, $filter) {
 
 		$scope.detailDiv = true;
 		$scope.resource = [];
 		$scope.resourceWiseAllocaiton = [];
-		$scope.resourceTypeList=[];
+		$scope.resourceTypeList = [];
 		$scope.startDate;
 		$scope.endDate;
 		$scope.months = [];
 		$scope.mappedResourceData = [];
 		$scope.successMsg = "";
 		$scope.errorMsg = "";
+		$scope.hidden = "none";
 
 		function allocObject(object) {
 			var month;
@@ -115,7 +116,7 @@
 				$scope.rowWiseAllocation = {
 					resource: $scope.resource[res],
 					project: $scope.projselect,
-					resourcetype:	$scope.resourcetype,
+					resourcetype: $scope.resourcetype,
 					startdate: $scope.startDate,
 					enddate: $scope.endDate,
 					allocation: [],
@@ -131,10 +132,11 @@
 			}
 			$scope.resource = [];
 			$scope.detailDiv = false;
+			$scope.hidden = "";
+
 		}
 
 		$scope.saveAllocation = function () {
-			console.log($scope.resourceWiseAllocaiton);
 			if ($scope.resourceWiseAllocaiton.length > 0) {
 				angular.forEach($scope.resourceWiseAllocaiton, function (item) {
 					if (item.rowSelect) {// if row delete in screen,then it should not save
@@ -144,11 +146,12 @@
 							return;
 						}
 
-						console.log(item);
-
 						allocationService.createAllocation(item).then(function (res) {
 							if (res.data == "created") {
 								$scope.successMsg = "Allocaiton created successfully";
+								$('#resource-select').multiselect('rebuild');
+								$scope.startDate = "";
+								$scope.endDate = "";
 							}
 						}).catch(function (err) {
 							console.log(err);
@@ -158,7 +161,6 @@
 			} else {
 				$scope.errorMsg = "Please select a project.";
 			}
-
 		}
 
 		$scope.cancel = function () {
@@ -184,19 +186,12 @@
 		}
 
 		$scope.clearFields = function () {
+			$('#resource-select').multiselect('rebuild');
 			$scope.startDate = "";
 			$scope.endDate = "";
 			$scope.months = [];
 			$scope.resourceWiseAllocaiton = [];
-			/*var checkedElements =$('#resource-select');
-			console.log(checkedElements.length);
-			for(var i = 0, length = checkedElements.length; i < length; i++) {	
-				console.log(checkedElements[i].selected);
-			checkedElements[i].selected = false;
-		};
-			$('#resource-select').find($('option')).attr('selected',false);*/
-
-
+			$scope.hidden = "none";
 		}
 
 
