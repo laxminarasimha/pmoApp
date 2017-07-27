@@ -37,31 +37,35 @@
           </div>
 
           <div class='col-sm-3'>
-            <!--<div  class=form-group>
+            <div  class=form-group>
             <label for="role">Role</label>
-            <select ng-model="resourcemap.role" id="role" class="form-control">
+            <select ng-model="resourcemap.mappedResource.role" id="role" class="form-control input-sm {{errorClass}}" disabled>
               <option ng-repeat="x in roleList" value="{{x.rolename}}">{{x.rolename}}</option>
            </select>
-           </div>-->
-            <div class=form-group>
-              <label for="resourceType">Type</label>
-              <select ng-model="resourcemap.resourceType" id="resourceType" class="form-control input-sm {{errorClass}}">
-              <option ng-repeat="x in resourceTypeList" value="{{x.resourceTypename}}">{{x.resourceTypename}}</option>
-           </select>
-            </div>
+           </div>
+            
           </div>
         </div>
 
         <div class='row'>
-
           <div class='col-sm-3'>
             <div class=form-group>
               <label for="location">Location</label>
-              <select ng-model="resourcemap.location" id="location" class="form-control input-sm {{errorClass}}">
+              <select ng-model="resourcemap.mappedResource.baseentity" id="location" class="form-control input-sm {{errorClass}}" disabled>
               <option ng-repeat="x in locationList" value="{{x.locationname}}">{{x.locationname}}</option>
            </select>
             </div>
           </div>
+
+          <div class='col-sm-3'>
+            <div class=form-group>
+              <label for="skill">Skill</label>
+              <select ng-model="resourcemap.mappedResource.skill" id="skill" class="form-control input-sm {{errorClass}}" disabled>
+              <option ng-repeat="x in skillSetList" value="{{x.skillname}}">{{x.skillname}}</option>
+           </select>
+            </div>
+          </div>
+
           <div class='col-sm-3'>
             <div class=form-group>
               <label for="region">Region</label>
@@ -71,21 +75,21 @@
             </div>
           </div>
 
-          <div class='col-sm-3'>
-            <div class=form-group>
-              <label for="skill">Skill</label>
-              <select ng-model="resourcemap.skill" id="skill" class="form-control input-sm {{errorClass}}">
-              <option ng-repeat="x in skillSetList" value="{{x.skillname}}">{{x.skillname}}</option>
-           </select>
-            </div>
-          </div>
+          
 
 
           <div class='col-sm-3'>
-            <div class=form-group>
+            <!--<div class=form-group>
               <label for="status">Status</label>
               <select ng-model="resourcemap.status" id="status" class="form-control input-sm {{errorClass}}">
               <option ng-repeat="x in statusList" value="{{x.statusname}}">{{x.statusname}}</option>
+           </select>
+            </div>-->
+
+            <div class=form-group>
+              <label for="resourceType">Type</label>
+              <select ng-model="resourcemap.resourceType" id="resourceType" class="form-control input-sm {{errorClass}}">
+              <option ng-repeat="x in resourceTypeList" value="{{x.resourceTypename}}">{{x.resourceTypename}}</option>
            </select>
             </div>
           </div>

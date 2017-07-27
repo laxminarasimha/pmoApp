@@ -41,6 +41,9 @@
         $scope.statusList = [];
         getStatusData(statusService, $scope);
 
+        $scope.roleList = [];
+        getRoleData(roleService,$scope);
+
 
         $scope.resourceTypeList = [];
         getResourceTypeData(resourceTypeService, $scope);
@@ -715,6 +718,15 @@
         }).catch(function (err) {
             console.log(err);
         });
+    }
+
+    function getRoleData(roleService,$scope){
+      roleService.getRole().then(function(res) {
+         $scope.roleList = res.data;
+         console.log(res.data);
+         }).catch(function(err) {
+         console.log(err);
+     });
     }
 
     function months(from, to) {
