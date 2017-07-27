@@ -6,16 +6,16 @@ var mongoose = require("mongoose"),
 var leaveSchema = new Schema(
                   {
                    _id: { type: objectId, auto: true },
-                   resourcename: { type: String, required: true },
-        				   locationname: { type: String, required: true },
-        				   fromDate: { type: Date, required: true },
-        				   toDate: { type: Date, required: true },
+                   resourcename: { type: String, required: false },
+        				   locationname: { type: String, required: false },
+        				   fromDate: { type: Date, required: false },
+        				   toDate: { type: Date, required: false },
                    subDocument: {
                           subDate: {
                               type: Date,
                           },
                       },
-        				   numberOfLeaves: { type: String, required: true },
+        				   numberOfLeaves: { type: String, required: false },
                    leavedaysinmonth:[]
                   }, 
                   {
