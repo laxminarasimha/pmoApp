@@ -2,36 +2,43 @@
 {
 "id" : "1",
 "name" : "Home",
-"submenu" : []
+"submenu" : [],
+"role" : ["SAdmin","Admin"]
 },
 {
 "id" : "2",
 "name" : "Resource Mapping" ,
-"submenu" : []
+"submenu" : [],
+"role" : ["SAdmin","Admin"]
 },
 {
 "id" : "3",
 "name" : "Allocation",
-"submenu" : [{"id":"1", "name":"List","page":"allocationList"},{"id":"2", "name":"Create","page":"createAllocation"}]
+"submenu" : [{"id":"1", "name":"List","page":"allocationList"},{"id":"2","name":"Create","page":"createAllocation"}],
+"role" : ["SAdmin","Admin"]
 },
 {
 "id" : "4",
 "name" : "Data" ,
-"submenu" : [{"id":"1", "name":"IdleTime"},{"id":"2", "name":"Utilisation"},{"id":"3", "name":"AvailableActualMandays"}]
+"submenu" : [{"id":"1", "name":"IdleTime"},{"id":"2", "name":"Utilisation"},{"id":"3", "name":"AvailableActualMandays"}],
+"role" : ["SAdmin","Admin"]
 },
 {
 "id" : "5",
 "name" : "Reports",
-"submenu" : [{"id":"1", "name":"All Graphs"},{"id":"1", "name":"FinlandGraph"}]
+"submenu" : [{"id":"1", "name":"All Graphs"},{"id":"1", "name":"FinlandGraph"}],
+"role" : ["SAdmin","Admin"]
 },
 {
 "id" : "6",
 "name" : "Admin",
-"submenu" : [{"id":"1", "name":"SkillSet"},{"id":"2", "name":"Resource"},{"id":"3", "name":"Status"},{"id":"4", "name":"Designation"},{"id":"5", "name":"Role"},{"id":"6", "name":"Region"},{"id":"7", "name":"Location"},{"id":"8", "name":"Holiday List"},{"id":"9", "name":"Project"},{"id":"10", "name":"Resource Type"}]
+"submenu" : [{"id":"1", "name":"SkillSet"},{"id":"2", "name":"Resource"},{"id":"3", "name":"Status"},{"id":"4", "name":"Designation"},{"id":"5", "name":"Role"},{"id":"6", "name":"Region"},{"id":"7", "name":"Location"},{"id":"8", "name":"Holiday List"},{"id":"9", "name":"Project"},{"id":"10", "name":"Resource Type"}],
+"role" : ["SAdmin","Admin"]
 },
 {
 "id" : "7",
 "name" : "Add Leave" ,
-"submenu" : []
+"submenu" : [],
+"role" : ["SAdmin","Admin","User"]
 }
 ]
