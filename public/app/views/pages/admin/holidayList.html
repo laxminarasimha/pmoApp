@@ -21,8 +21,11 @@
          <div class='col-sm-4'>
           <div  class=form-group>
                   <label>Holiday  Date: </label>
-                  <input type="text" ng-model="holiday.holidayDate" id = "holidayDateID" name="holidayDate" ng-required="true" class="form-control input-sm {{errorClass}}"/>
-                  <!--<img src="..\assets\images\calendar-icon.png"/>-->
+                  
+                   <div class="input-group date holidayDate" data-date="" data-date-format="dd-MM-yy" data-link-format="yyyy-mm-dd">
+                    <input class="form-control" type="text" ng-model="holiday.holidayDate" readonly ng-required="true" class="form-control input-sm {{errorClass}}">
+                    <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                  </div>
                   
              
           </div>
@@ -131,15 +134,16 @@
 </div>    
 
 <script>
-   $(function() {
-      $( "#holidayDateID" ).datepicker({
-         //appendText:"(dd-MMM-yy)",
-         dateFormat:"dd-MM-yy",
-       //  minDate: new Date(),
-         beforeShowDay: $.datepicker.noWeekends
-         //showOn:"button",
-         //buttonImage: "/images/calendar-icon.png",
-         //buttonImageOnly: true
+    $(function () {
+      $('.holidayDate').datetimepicker({
+        weekStart: 1,
+        todayBtn: 1,
+        autoclose: 1,
+        todayHighlight: 1,
+        startView: 2,
+        minView: 2,
+        forceParse: 0,
+        startDate: '-0m'
       });
-   });
-</script>
+    });
+  </script>

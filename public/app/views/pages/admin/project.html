@@ -33,14 +33,21 @@
 				<div class="row">				
 				    <div class='col-sm-3'>
 					   <div  class=form-group>
-					     <label>Start  Date:</label>
-						 <input type="text" ng-model="project.startDate" id = "startDateID" name="startDate" ng-required="true" class="form-control input-sm {{errorClass}}" jqdatepicker/>
+					     <label>Start  Date:</label>						 
+			              <div class="input-group date startDate " data-date="" data-date-format="dd-MM-yy" data-link-format="yyyy-mm-dd">
+			                <input class="form-control" type="text" ng-model="project.startDate" readonly ng-required="true" class="form-control input-sm {{errorClass}}">
+			                <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+			              </div>
+
 					   </div>
 					</div>
 					<div class='col-sm-3'>
 					   <div  class=form-group>
-					     <label>End  Date:</label>
-						 <input type="text" ng-model="project.endDate" id = "endDateID" name="endDate" ng-required="true" class="form-control input-sm {{errorClass}}" jqdatepicker/>
+					     <label>End  Date:</label>						 
+						 <div class="input-group date endDate " data-date="" data-date-format="dd-MM-yy" data-link-format="yyyy-mm-dd">
+			                <input class="form-control" type="text" ng-model="project.endDate" readonly ng-required="true" class="form-control input-sm {{errorClass}}">
+			                <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+			              </div>
 					   </div>
 					</div>				   
 				</div>
@@ -141,23 +148,26 @@
 
 
 <script>
-   $(function() {
-      $( "#startDateID" ).datepicker({
-         //appendText:"(dd-MMM-yy)",
-         dateFormat:"dd-MM-yy",
-         minDate: new Date()
-         //showOn:"button",
-         //buttonImage: "/images/calendar-icon.png",
-         //buttonImageOnly: true
+    $(function () {
+      $('.startDate').datetimepicker({
+        weekStart: 1,
+        todayBtn: 1,
+        autoclose: 1,
+        todayHighlight: 1,
+        startView: 2,
+        minView: 2,
+        forceParse: 0,
+        startDate: '-0m'
       });
-	  
-	  $( "#endDateID" ).datepicker({
-         //appendText:"(dd-MMM-yy)",
-         dateFormat:"dd-MM-yy",
-         minDate: new Date()
-         //showOn:"button",
-         //buttonImage: "/images/calendar-icon.png",
-         //buttonImageOnly: true
+      $('.endDate').datetimepicker({
+        weekStart: 1,
+        todayBtn: 1,
+        autoclose: 1,
+        todayHighlight: 1,
+        startView: 2,
+        minView: 2,
+        forceParse: 0,
+        startDate: '-0m'
       });
-   });
-</script>
+    });
+  </script>
