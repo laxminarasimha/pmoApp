@@ -27,6 +27,8 @@ angular.module('pmoApp').controller('resourceCtrl', Controller);
 
  $scope.roleList = [];
  getRoleData(roleService,$scope);
+
+ //sendEmail(resourceService);
   
  $scope.clearFields = function (){
  
@@ -104,6 +106,7 @@ $scope.editResource = function (id) {
             app.loading =false;
             app.successMsg = "Resource created successfully";
             app.errorMsg = false;
+            //sendEmail(resourceService,resource);
          }else{
             app.loading =false;
             app.successMsg = "Resource Updated successfully";
@@ -154,6 +157,14 @@ $scope.editResource = function (id) {
 
        }
 
+}
+
+function sendEmail(resourceService,resource){
+    resourceService.sendEmailToResource(resource).then(function(res) {
+         //$scope.mongoResourceData = res.data;
+         }).catch(function(err) {
+         console.log(err);
+     });
 }
 
  function getResourceData(resourceService,$scope){
