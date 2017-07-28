@@ -17,8 +17,7 @@ var app = angular.module('appRoutes',['ui.router'])
 			  controllerAs:'main'		      
        		 }       		
        	},
-    data : { pageTitle: 'Login' }  		
-
+    data : { pageTitle: 'Login'}
 	})
 
 	.state('root', {
@@ -36,7 +35,7 @@ var app = angular.module('appRoutes',['ui.router'])
           resolve :{
           	loggedIn:onlyLoggedIn
           },
-          data : { pageTitle: 'Home' }
+          data : { pageTitle: 'Home',roles: ['ADMIN'] }
           
       })
 
@@ -47,7 +46,7 @@ var app = angular.module('appRoutes',['ui.router'])
               templateUrl: 'app/views/pages/reporting/dashboard.html'
             }
           },
-          data : { pageTitle: 'Home' }
+          data : { pageTitle: 'Home',roles: ['ADMIN'] }
 
         })
 
@@ -58,7 +57,7 @@ var app = angular.module('appRoutes',['ui.router'])
               templateUrl: 'app/views/pages/users/logout.html'	
        		 }       		
        	},
-        data : { pageTitle: 'Logout' }
+        data : { pageTitle: 'Logout',roles: ['ADMIN'] }
 		
 
 	})
@@ -70,7 +69,7 @@ var app = angular.module('appRoutes',['ui.router'])
               templateUrl: 'app/views/pages/about.html'
        		 }
        	},
-    data : { pageTitle: 'About' }	
+    data : { pageTitle: 'About',roles: ['ADMIN'] }	
 	})
 
 	.state('root.register',{
@@ -82,7 +81,7 @@ var app = angular.module('appRoutes',['ui.router'])
 				controllerAs: 'register',
        		 }
        	},
-    data : { pageTitle: 'Register' } 		
+    data : { pageTitle: 'Register',roles: ['ADMIN'] } 		
 	})
 
 	.state('root.changepassword',{
@@ -92,7 +91,7 @@ var app = angular.module('appRoutes',['ui.router'])
               	templateUrl: 'app/views/pages/users/changepassword.html'		      	     
        		 }
        	},
-    data : { pageTitle: 'Change Password' } 
+    data : { pageTitle: 'Change Password',roles: ['ADMIN'] } 
 	})
 
 	.state('root.profile',{
@@ -102,7 +101,7 @@ var app = angular.module('appRoutes',['ui.router'])
               	templateUrl: 'app/views/pages/users/profile.html'		      	     
        		 }
        	},
-        data : { pageTitle: 'Profile' } 
+        data : { pageTitle: 'Profile',roles: ['ADMIN'] } 
 	})
 
 	.state('root.SkillSet',{
@@ -113,7 +112,7 @@ var app = angular.module('appRoutes',['ui.router'])
               	controllerAs: 'skill'	      	     
        		 }
        	},
-    data : { pageTitle: 'Skill Set' } 
+    data : { pageTitle: 'Skill Set',roles: ['ADMIN'] } 
 	})
 
 	.state('root.Project',{
@@ -123,7 +122,7 @@ var app = angular.module('appRoutes',['ui.router'])
               	templateUrl: 'app/views/pages/admin/project.html'
        		 }
        	},
-    data : { pageTitle: 'Project' } 
+    data : { pageTitle: 'Project',roles: ['ADMIN'] } 
 	})
 
 	.state('root.Status',{
@@ -133,7 +132,7 @@ var app = angular.module('appRoutes',['ui.router'])
               	templateUrl: 'app/views/pages/admin/status.html'
        		 }
        	},
-    data : { pageTitle: 'Status' } 
+    data : { pageTitle: 'Status',roles: ['ADMIN'] } 
 	})
 	
 
@@ -144,7 +143,7 @@ var app = angular.module('appRoutes',['ui.router'])
               	templateUrl: 'app/views/pages/admin/role.html'
        		 }
        	},
-    data : { pageTitle: 'Role' } 
+    data : { pageTitle: 'Role',roles: ['ADMIN'] } 
 	})
 
 	.state('root.Designation',{
@@ -154,7 +153,7 @@ var app = angular.module('appRoutes',['ui.router'])
               	templateUrl: 'app/views/pages/admin/designation.html'
        		 }
        	},
-    data : { pageTitle: 'Designation' } 
+    data : { pageTitle: 'Designation',roles: ['ADMIN'] } 
 	})
 
 	.state('root.Resource',{
@@ -164,7 +163,7 @@ var app = angular.module('appRoutes',['ui.router'])
               	templateUrl: 'app/views/pages/admin/resource.html'
        		 }
        	},
-    data : { pageTitle: 'Resource' } 
+    data : { pageTitle: 'Resource',roles: ['ADMIN'] } 
 	})
 
 	.state('root.Holiday List',{
@@ -174,7 +173,7 @@ var app = angular.module('appRoutes',['ui.router'])
               	templateUrl: 'app/views/pages/admin/holidayList.html'
        		 }
        	},
-    data : { pageTitle: 'Holiday List' } 
+    data : { pageTitle: 'Holiday List',roles: ['ADMIN'] } 
 	})
 
 
@@ -185,7 +184,7 @@ var app = angular.module('appRoutes',['ui.router'])
               	templateUrl: 'app/views/pages/admin/region.html'
        		 }
        	},
-    data : { pageTitle: 'Region' } 
+    data : { pageTitle: 'Region',roles: ['ADMIN'] } 
 	})
 
 
@@ -196,7 +195,7 @@ var app = angular.module('appRoutes',['ui.router'])
               	templateUrl: 'app/views/pages/admin/location.html'
        		 }
        	},
-    data : { pageTitle: 'Location' } 
+    data : { pageTitle: 'Location',roles: ['ADMIN'] } 
 	})
 
 
@@ -207,7 +206,7 @@ var app = angular.module('appRoutes',['ui.router'])
               	templateUrl: 'app/views/pages/admin/leave.html'
        		 }
        	},
-    data : { pageTitle: 'Add Leave' }  
+    data : { pageTitle: 'Add Leave',roles: ['ADMIN'] }  
 	})
 
 
@@ -219,7 +218,7 @@ var app = angular.module('appRoutes',['ui.router'])
               	controller : 'allocationCtrl'
        		 }
        	},
-    data : { pageTitle: 'Allocation List' }        
+    data : { pageTitle: 'Allocation List',roles: ['ADMIN'] }        
 	})
 
 	.state('root.createAllocation',{
@@ -230,7 +229,7 @@ var app = angular.module('appRoutes',['ui.router'])
               	controller : 'createAllocationCtrl'
        		 }
        	},
-    data : { pageTitle: 'Create Allocation' }
+    data : { pageTitle: 'Create Allocation',roles: ['ADMIN'] }
 	})
 
 	.state('root.Resource Mapping',{
@@ -240,7 +239,7 @@ var app = angular.module('appRoutes',['ui.router'])
               	templateUrl: 'app/views/pages/resourcemapping/resourceMapping.html'              	
        		 }
        	},
-    data : { pageTitle: 'Resource Mapping' }
+    data : { pageTitle: 'Resource Mapping',roles: ['ADMIN'] }
 	})
 
 
@@ -251,7 +250,7 @@ var app = angular.module('appRoutes',['ui.router'])
               	templateUrl: 'app/views/pages/admin/resourceType.html'
        		 }
        	},
-    data : { pageTitle: 'Resource Type' }
+    data : { pageTitle: 'Resource Type',roles: ['ADMIN'] }
 	})
 
 	.state('root.AvailableActualMandays',{
@@ -261,7 +260,7 @@ var app = angular.module('appRoutes',['ui.router'])
               	templateUrl: 'app/views/pages/data/AvailableActualMandays.html'
        		 }
        	},
-    data : { pageTitle: 'Available Actual Mandays' } 
+    data : { pageTitle: 'Available Actual Mandays',roles: ['ADMIN'] } 
 	})
 
 	.state('root.IdleTime',{
@@ -281,7 +280,7 @@ var app = angular.module('appRoutes',['ui.router'])
               	templateUrl: 'app/views/pages/data/Utilisation.html'
        		 }
        	},
-    data : { pageTitle: 'Utilisation' } 
+    data : { pageTitle: 'Utilisation',roles: ['ADMIN'] } 
 	})
 
 	.state('root.All Graphs',{
@@ -291,19 +290,42 @@ var app = angular.module('appRoutes',['ui.router'])
               	templateUrl: 'app/views/pages/reporting/graphs.html'
        		 }
        	},
-    data : { pageTitle: 'All Graphs' } 
+    data : { pageTitle: 'All Graphs',roles: ['ADMIN'] } 
 	})
-            
-	 $locationProvider.html5Mode(true);
+
+  .state('root.Graphs',{
+    url:'/Graphs',
+    views: {
+            'container@': {
+                templateUrl: 'app/views/pages/reporting/graphs/graph.html'
+              },
+            'filters@root.Graphs':{
+              templateUrl: 'app/views/pages/reporting/graphs/filter.html'                   
+            }
+
+        },
+    data : { pageTitle: 'Graphs',roles: ['ADMIN'] } 
+  })
+	
+  $locationProvider.html5Mode(true);
 });
 
 
 app.run(['$rootScope','Auth','$location','$state', '$stateParams',function($rootScope, Auth, $location,$state, $stateParams){
     $rootScope.$state = $state;
     $rootScope.$stateParams = $stateParams;
+   
+    
     $rootScope.$on('$locationChangeSuccess', function(e, toState, toParams, fromState, fromParams) {
+   
     });
+    
+    
+
     $rootScope.$on('$locationChangeStart', function(e, toState, toParams, fromState, fromParams) {
+
+      
+
     });
 
 }]);

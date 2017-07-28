@@ -14,10 +14,23 @@ div.dataTables_length select {
 div.dataTables_filter label {
     font-weight: normal;
     float: right;
+    padding-bottom: 5px;
 }
 div.dataTables_filter input {
     width: 16em;
+    -moz-border-radius-topright: 30px; 
+    -webkit-border-top-right-radius: 30px; 
+    border-top-right-radius: 30px; 
+    -moz-border-radius-bottomright: 30px; 
+    -webkit-border-bottom-right-radius: 30px; 
+    border-bottom-right-radius: 30px; 
+    border: 1px solid #337ab7; 
+    outline:0; 
+    height:25px; 
+    width: 275px; 
+    padding-right:10px; 
 }
+
 div.dataTables_info {
     padding-top: 8px;
 }

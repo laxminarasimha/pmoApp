@@ -125,6 +125,39 @@ $scope.editResource = function (id) {
         $scope.vm = {};
         $scope.vm.dtInstance = null;  
         $scope.vm.dtOptions = DTOptionsBuilder.newOptions().withOption('order', [0, 'asc']);
+
+        var lang = {
+            "decimal":        "",
+            "emptyTable":     "No data available in table",
+            "info":           "Showing _START_ to _END_ of _TOTAL_ entries",
+            "infoEmpty":      "Showing 0 to 0 of 0 entries",
+            "infoFiltered":   "(filtered from _MAX_ total entries)",
+            "infoPostFix":    "",
+            "thousands":      ",",
+            "lengthMenu":     "Show _MENU_ entries",
+            "loadingRecords": "Loading...",
+            "processing":     "Processing...",
+            "search":         "Search:",
+            "zeroRecords":    "No matching records found",
+            "paginate": {
+                "first":      "First",
+                "last":       "Last",
+                "next":       "Next",
+                "previous":   "Previous",                
+            },
+            "aria": {
+                "sortAscending":  ": activate to sort column ascending",
+                "sortDescending": ": activate to sort column descending"
+            }
+        }
+
+        $scope.vm.dtOptions.withOption('language', lang);
+
+
+        $scope.vm.dtOptions.withOption('drawCallback', function() {
+                 angular.element('.paginate_button.first').on('click', function() { alert('first')} )
+                angular.element('.paginate_button.next').on('click', function() { alert('next')} )             
+        })
          
 //=============================================================//
 

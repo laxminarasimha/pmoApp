@@ -1,3 +1,4 @@
+
 <div ng-controller="resourceCtrl">
 <form name="resourceForm" ng-submit="createResource(resource)" novalidate>
 <legend>Personal Information (<label ng-show="resource._id!=null">Edit</label><label ng-hide="resource._id!=null">Create</label>)</legend>
@@ -147,11 +148,11 @@
   <div class='panel-body' align="right">
     <input type="button" value="Export to Excel" ng-click="exportToExcel()" class="btn btn-primary"/>
   </div>
- 
+
 
   <div class="panel-footer">   
    <div class="panel-body"> 
-      <table class="table table-striped table-curved" cellspacing="0" width="100%" datatable="ng" dt-options="vm.dtOptions" dt-instance="vm.dtInstance">
+      <table id="myTable" class="table table-striped table-curved" cellspacing="0" datatable="ng" dt-options="vm.dtOptions" dt-instance="vm.dtInstance">
 
         <thead class="bg-primary">
           <tr>
@@ -161,25 +162,33 @@
           <th >Designation</th>
           <th >Email Id</th>
           <th >Access Type</th>
-
-          <th >Action</th>           
+          <th>Action</th>           
           </tr>
         </thead>
 
         <tbody>
-          <tr ng-repeat="x in mongoResourceData">
-            <td>{{ $index + 1 }}</td>
-            <td>{{ x.kinId }}</td>
-            <td>{{ x.resourcename }}({{ x.alias }})</td>
-            <td>{{ x.designation }}</td>
-            <td>{{ x.email }}</td>
-            <td>{{ x.etype }}</td>            
-            <td>
-            <a  class="btn btn-primary" ng-click="editResource(x._id)">Edit</a>
-            <a  class="btn btn-primary" data-toggle="modal" 
-                      ng-click="deleteConfirmation(x._id,'Name:'+x.resourcename+',Kin ID:'+x.kinId+',Designation:'+x.designation)">Delete</a>
-            </td>
-          </tr>
+
+           <tr ng-repeat="x in mongoResourceData">
+                  <!--<td>{{ $index + 1 }}</td>-->
+                  <td>{{ $index + 1 }}</td>
+                  <td>{{ x.kinId }}</td>
+                  <td>{{ x.resourcename }}({{ x.alias }})</td>
+                  <td>{{ x.designation }}</td>
+                  <td>{{ x.email }}</td>
+                  <td>{{ x.etype }}</td>    
+                  <td style="width:3%;text-align:center">
+                  <span class="label">
+                  <a class="green"  ng-click="editResource(x._id)"><i class="glyphicon glyphicon-pencil"></i></a> 
+                  </span>
+                  <span class="label">
+                  <a class="red"  data-toggle="modal" 
+                      ng-click="deleteConfirmation(x._id,'Name:'+x.resourcename+',Kin ID:'+x.kinId+',Designation:'+x.designation)"><i class="glyphicon glyphicon-remove"></i></a>
+                  </span>
+                  </td>
+                </tr>
+
+
+
         </tbody>
       </table>
     </div>
