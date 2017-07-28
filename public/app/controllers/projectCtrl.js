@@ -3,9 +3,9 @@
  
 angular.module('pmoApp').controller('projectCtrl', Controller);
  
- Controller.$inject = ['$scope', '$rootScope', 'projectService','regionService','resourceService', 'DTOptionsBuilder', 'DTColumnBuilder','$window'];
+ Controller.$inject = ['$scope', '$rootScope', 'projectService','regionService','resourceService', 'DTOptionsBuilder', 'DTColumnBuilder','$window','$filter'];
   
- function Controller($scope, $rootScope, projectService,regionService,resourceService, DTOptionsBuilder, DTColumnBuilder,$window) {
+ function Controller($scope, $rootScope, projectService,regionService,resourceService, DTOptionsBuilder, DTColumnBuilder,$window,$filter) {
  $scope.mongoProjectData = [];
  $scope.regionList = [];
  var app = $scope;
@@ -59,6 +59,8 @@ angular.module('pmoApp').controller('projectCtrl', Controller);
 $scope.editProject = function (id) {
      $rootScope.Title = "Edit Project";
      projectService.getProjectForID(id).then(function(res) {
+         res.data.startDate =  $filter('date')(new Date(res.data.startDate), 'dd-MMM-yy');
+         res.data.endDate =  $filter('date')(new Date(res.data.endDate), 'dd-MMM-yy');
      $scope.project = res.data;
      }).catch(function(err) {
      console.log(err);

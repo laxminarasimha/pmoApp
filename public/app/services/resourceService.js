@@ -33,6 +33,10 @@
        url = globalConfig.apiAddress + "/resource/excel";
        return $http.get(url);
        },
+       sendEmailToResource: function(resource) {
+       url = globalConfig.apiAddress + "/resource/email";
+       return $http.post(url,resource);
+       }
    };
  }
   })();

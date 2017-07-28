@@ -2,6 +2,7 @@ var express = require("express"),
  router = express.Router(),
  resourceDAO = require("../models/resourceDAO.js");
  var nodeExcel=require("excel-export");
+ var nodemailer = require('nodemailer');
  
 router.get("/", function(req, res) {
  resourceDAO.find({},null, {sort:{resourcename: 1}}, function(err, data) {
@@ -86,6 +87,35 @@ return res.status(200).send(new Buffer(result.toString(), 'binary').toString('ba
  }
  res.send("created");
  });
+}).post("/email/", function(req, res) {
+console.log("==========E-mail==========");
+//=======================
+
+var transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: 'email id',
+        pass: 'password'
+      }
+});
+
+var mailOptions = {
+  from: 'email id',
+  to: 'rishi.gupta@capgemini.com',
+  subject: 'Sending Email using Node.js',
+  text: 'That was easy!'
+};
+
+transporter.sendMail(mailOptions, function(error, info){
+  if (error) {
+    console.log(error);
+  } else {
+    console.log('Email sent: ' + info.response);
+  }
+});
+
+//========================
+
 }).put("/:id", function(req, res) {
  var id = req.params.id;
  var obj = req.body;

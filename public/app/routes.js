@@ -189,7 +189,7 @@ var app = angular.module('appRoutes',['ui.router'])
 
 
 	.state('root.Location',{
-		url:'/AllLocation',
+		url:'/Location',
 		views: {
             'container@': {
               	templateUrl: 'app/views/pages/admin/location.html'

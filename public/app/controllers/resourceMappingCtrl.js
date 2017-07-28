@@ -41,6 +41,9 @@
         $scope.statusList = [];
         getStatusData(statusService, $scope);
 
+        $scope.roleList = [];
+        getRoleData(roleService,$scope);
+
 
         $scope.resourceTypeList = [];
         getResourceTypeData(resourceTypeService, $scope);
@@ -63,12 +66,19 @@
 
             var date_1 = new Date(strDt[1], parseInt(strDt[0]) - 1);
             var date_2 = new Date(endDt[1], parseInt(endDt[0]) - 1);
-
-            if (date_2 >= date_1) {
-                $scope.taggedToEuroclearList = months($scope.startDate, $scope.endDate);
-                console.log($scope.taggedToEuroclearList);
-                checkPreTagged($scope.resourcemap, $scope.mongoMappedResourceData, $scope.taggedToEuroclearList); // to check if already existed allocaiton 
-                $scope.hidden = "";
+            if (date_1 != "Invalid Date" && date_2 != "Invalid Date") {
+                if (date_2 >= date_1) {
+                    $scope.taggedToEuroclearList = months($scope.startDate, $scope.endDate);
+                    console.log($scope.taggedToEuroclearList);
+                    checkPreTagged($scope.resourcemap, $scope.mongoMappedResourceData, $scope.taggedToEuroclearList); // to check if already existed allocaiton 
+                    $scope.hidden = "";
+                } else {
+                    app.loading = false;
+                    app.successMsg = false;
+                    app.errorMsg = " ";
+                    app.errorClass = "error";
+                    $scope.errorMsgs.push("Please Enter valid date range");
+                }
             }
         }
 
@@ -349,7 +359,7 @@
             totalValue += taggToEuro.value;
             if (totalValue > 100) {
                 var values = "Over Allocation  for the month :" + taggToEuro.key;
-                values += " and overalloaiton value is " + (parseInt(totalValue) - 100);
+                values += " and overalloaiton value is " + (parseInt(totalValue) - 100) + "% more";
                 $scope.errorMsgs.push(values);
             }
 
@@ -397,8 +407,8 @@
         var strYr = from.split("/");
         var endYr = to.split("/");
 
-     
-        var strYr = from.split("/")[1],  endYr=to.split("/")[1], years = [];
+
+        var strYr = from.split("/")[1], endYr = to.split("/")[1], years = [];
         for (var i = strYr; i <= endYr; i++) {
             years.push(i);
         }
@@ -708,6 +718,15 @@
         }).catch(function (err) {
             console.log(err);
         });
+    }
+
+    function getRoleData(roleService,$scope){
+      roleService.getRole().then(function(res) {
+         $scope.roleList = res.data;
+         console.log(res.data);
+         }).catch(function(err) {
+         console.log(err);
+     });
     }
 
     function months(from, to) {
