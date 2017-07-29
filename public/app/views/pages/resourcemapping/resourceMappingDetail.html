@@ -12,12 +12,12 @@
             <h4><span class = "label label-primary"><b>%Tagged   -  {{tagEuro.resourceType}}</b></span></h4>
           </tr>
           <tr class="danger">
-            <th ng-repeat="column in tagEuro.taggToEuroclear">{{column.key}}</th>
+            <th style="text-align: center;color:green" ng-repeat="column in tagEuro.taggToEuroclear">{{column.key}}</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <th ng-repeat="column in tagEuro.taggToEuroclear">{{column.value}}%</th>
+            <th style="text-align: center;color:green" ng-repeat="column in tagEuro.taggToEuroclear">{{column.value}}%</th>
           </tr>
         </tbody>
       </table>
@@ -26,12 +26,12 @@
         <thead>
            <h4><span class = "label label-primary"><b>Available Actual Mandays - {{tagEuro.resourceType}}</b></span></h4>
             <tr class="danger">
-              <th ng-repeat="column in tagEuro.monthlyAvailableActualMandays">{{column.key}}</th>
+              <th style="text-align: center;color:green" ng-repeat="column in tagEuro.monthlyAvailableActualMandays">{{column.key}}</th>
             </tr>
         </thead>
         <tbody>
           <tr>
-            <th ng-repeat="column in tagEuro.monthlyAvailableActualMandays">{{column.value}}</th>
+            <th style="text-align: center;color:green" ng-repeat="column in tagEuro.monthlyAvailableActualMandays">{{column.value}}</th>
           </tr>
         </tbody>
       </table>

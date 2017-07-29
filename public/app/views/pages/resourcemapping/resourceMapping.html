@@ -137,12 +137,12 @@
               <table class="table table-striped table-curved " cellspacing="0 ">
                 <thead>
                   <tr class="danger ">
-                    <th ng-repeat="column in taggedToEuroclearList ">{{column}}</th>
+                    <th style="text-align: center;color:green" ng-repeat="column in taggedToEuroclearList ">{{column}}</th>
                   </tr>
                   <thead>
                     <tbody>
                       <tr>
-                        <td ng-repeat="column in taggedToEuroclearList track by $index">
+                        <td  ng-repeat="column in taggedToEuroclearList track by $index">
                           <input id="taggToEuroclear{{column}} " ng-model="resourcemap.taggToEuroclear[$index].value
             " required="true " type="text " maxlength="3 " size="5 " class="form-control input-sm {{errorClass}} " ng-change="validateInput(this,resourcemap.taggToEuroclear[$index].value) "
                           />

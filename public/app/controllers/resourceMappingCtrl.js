@@ -437,16 +437,12 @@
                             break;
                         }
                     }
-
-                    // console.log(resourcemap.monthlyAvailableActualMandays[rs]);
-                    //obj.taggToEuroclear.push(resourcemap.taggToEuroclear[rs]);
                 }
             }
 
             for (var rs = 0; rs < tagLength; rs++) {
                 tmp = String(resourcemap.monthlyAvailableActualMandays[rs].key);
                 if (tmp.endsWith(yrs)) {
-                    //obj.monthlyAvailableActualMandays.push(resourcemap.monthlyAvailableActualMandays[rs]);
                     for (var i = 0; i < obj.monthlyAvailableActualMandays.length; i++) {
                         if (obj.monthlyAvailableActualMandays[i].key === resourcemap.monthlyAvailableActualMandays[rs].key) {
                             obj.monthlyAvailableActualMandays[i].value = resourcemap.monthlyAvailableActualMandays[rs].value;
