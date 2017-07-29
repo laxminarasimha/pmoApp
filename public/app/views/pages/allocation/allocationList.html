@@ -25,17 +25,19 @@
 					<th>Skill</th>
 					<th>Region</th>
 					<th>Location</th>
+					<th>Year</th>
 					<th align="center">Action</th>
 				</tr>
 			</thead>
 			<tbody>
-				<tr ng-repeat="allocation in mappedResourceData">
-					<td align="center"><a class="green shortinfo" href="javascript:;" ng-click="childInfo(allocation.mappedResource.resourcename, $event)"
+				<tr ng-repeat="allocation in mappingValue">
+					<td align="center"><a class="green shortinfo" href="javascript:;" ng-click="childInfo(allocation.mappedResource.resourcename,allocation.year, $event)"
 						 title="Click to view more"><i class="glyphicon glyphicon-plus-sign"></a></td>
 					<td>{{allocation.mappedResource.resourcename}}</td>
 					<td>{{allocation.skill}}</td>
 					<td>{{allocation.region}}</td>
 					<td>{{allocation.location}}</td>
+					<td>{{allocation.year}}</td>
 					<td align="left">
 						<a class="span" ng-click="updateAllocaiton(allocation.mappedResource.resourcename,$event);">
                         <span ng-if="allocation.isConflict" class="label label-danger glyphicon                glyphicon-ban-circle">

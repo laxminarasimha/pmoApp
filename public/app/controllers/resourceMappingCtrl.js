@@ -42,7 +42,7 @@
         getStatusData(statusService, $scope);
 
         $scope.roleList = [];
-        getRoleData(roleService,$scope);
+        getRoleData(roleService, $scope);
 
 
         $scope.resourceTypeList = [];
@@ -99,17 +99,17 @@
 
         }
 
-        $scope.deleteConfirmation = function(id,name){
+        $scope.deleteConfirmation = function (id, name) {
             $scope.msg = name;
             $scope.deletedID = id;
             openDialog();
 
-         }
-         
-         $scope.cancel = function(event){
+        }
+
+        $scope.cancel = function (event) {
             $scope.msg = "";
             $scope.deletedID = "";
-         }
+        }
 
         $scope.deleteResourceMapping = function (id) {
             var selectedId = document.getElementsByName("action");
@@ -117,22 +117,22 @@
                 alert('Please select records to delete.')
             } else {
                 //if (confirm('Are you sure to delete?')) {
-                    for (var record = 0; record < selectedId.length; record++) {
-                        if (selectedId[record].checked) {
-                            resourceMappingService.deleteResourceMapping(selectedId[record].value).then(function (res) {
-                                if (res.data == "deleted") {
-                                    getMappedResourceData(resourceMappingService, $scope);
-                                    app.loading = false;
-                                    app.successMsg = "Resource mapping deleted successfully";
-                                    app.errorMsg = false;
-                                    $scope.msg = "";
-                                    $scope.deletedID = "";
-                                }
-                            }).catch(function (err) {
-                                console.log(err);
-                            });
-                        }
+                for (var record = 0; record < selectedId.length; record++) {
+                    if (selectedId[record].checked) {
+                        resourceMappingService.deleteResourceMapping(selectedId[record].value).then(function (res) {
+                            if (res.data == "deleted") {
+                                getMappedResourceData(resourceMappingService, $scope);
+                                app.loading = false;
+                                app.successMsg = "Resource mapping deleted successfully";
+                                app.errorMsg = false;
+                                $scope.msg = "";
+                                $scope.deletedID = "";
+                            }
+                        }).catch(function (err) {
+                            console.log(err);
+                        });
                     }
+                }
                 //}
             }
         };
@@ -165,7 +165,7 @@
                 $scope.taggedToEuroclearList.push($scope.resourcemap.taggToEuroclear[i].key);
             }
 
-            console.log($scope.taggedToEuroclearList);
+            //console.log($scope.taggedToEuroclearList);
             $scope.hidden = "";
 
         };
@@ -402,11 +402,8 @@
     function splitResoruceMapByYear(resourcemap, from, to, mongoMappedResourceData) {
 
         var maps = new Array();
-
-
         var strYr = from.split("/");
         var endYr = to.split("/");
-
 
         var strYr = from.split("/")[1], endYr = to.split("/")[1], years = [];
         for (var i = strYr; i <= endYr; i++) {
@@ -424,8 +421,8 @@
             yrs = year.substr(year.length - 2);
 
             var obj = jQuery.extend({}, resourcemap);
-            obj.taggToEuroclear = [];
-            obj.monthlyAvailableActualMandays = [];
+            obj.taggToEuroclear = monthsWithYear(year);
+            obj.monthlyAvailableActualMandays = monthsWithYear(year);
             obj.existing = false;
             var tagEurocelar = [];
             var count = 0;
@@ -434,14 +431,28 @@
             for (var rs = 0; rs < tagLength; rs++) {
                 tmp = String(resourcemap.taggToEuroclear[rs].key);
                 if (tmp.endsWith(yrs)) {
-                    obj.taggToEuroclear.push(resourcemap.taggToEuroclear[rs]);
+                    for (var i = 0; i < obj.taggToEuroclear.length; i++) {
+                        if (obj.taggToEuroclear[i].key === resourcemap.taggToEuroclear[rs].key) {
+                            obj.taggToEuroclear[i].value = resourcemap.taggToEuroclear[rs].value;
+                            break;
+                        }
+                    }
+
+                    // console.log(resourcemap.monthlyAvailableActualMandays[rs]);
+                    //obj.taggToEuroclear.push(resourcemap.taggToEuroclear[rs]);
                 }
             }
 
             for (var rs = 0; rs < tagLength; rs++) {
                 tmp = String(resourcemap.monthlyAvailableActualMandays[rs].key);
                 if (tmp.endsWith(yrs)) {
-                    obj.monthlyAvailableActualMandays.push(resourcemap.monthlyAvailableActualMandays[rs]);
+                    //obj.monthlyAvailableActualMandays.push(resourcemap.monthlyAvailableActualMandays[rs]);
+                    for (var i = 0; i < obj.monthlyAvailableActualMandays.length; i++) {
+                        if (obj.monthlyAvailableActualMandays[i].key === resourcemap.monthlyAvailableActualMandays[rs].key) {
+                            obj.monthlyAvailableActualMandays[i].value = resourcemap.monthlyAvailableActualMandays[rs].value;
+                            break;
+                        }
+                    }
                 }
             }
             obj.year = year;
@@ -501,7 +512,6 @@
 
 
     function prepareData(resourceMappingService, app, holidayListService, $scope, resourcemap, isCreate, monthlyHeaderListService) {
-
         prepareHolidayListForLocation(resourceMappingService, app, holidayListService, $scope, resourcemap, isCreate, monthlyHeaderListService);
     }
 
@@ -538,7 +548,7 @@
             if (!holiday) {
                 var headeingLabelArray = taggedToEuroclearList[j].split('-');
                 var month = theMonths.indexOf(headeingLabelArray[0]);
-                var year = '20' + headeingLabelArray[1];
+                var year = headeingLabelArray[1];
                 var workdays = getWorkDays(month, year);
                 var monthWorkDaysObject = { "location": location, "monthyear": taggedToEuroclearList[j], "value": workdays };
                 monthWorkDays.push(monthWorkDaysObject);
@@ -592,7 +602,6 @@
         }
     }
 
-
     function prepareTaggedToEuroclearData($scope, resourcemap) {
         var taggedToEuroclearArray = [];
         var taggedToEuroclearObject = {};
@@ -615,7 +624,6 @@
             keys = [],
             cond = [], duplicate = false, item;
 
-
         for (var col = 0; col < collection.length; col++) {
             item = collection[col];
             duplicate = false;
@@ -630,10 +638,8 @@
                 output.push(item);
                 keys.push(item.mappedResource.resourcename + "-" + item.year);
             }
-
         }
         return output;
-
     }
 
 
@@ -650,7 +656,6 @@
             }
         }
         return workdays;
-
     }
 
     function isWorkDay(year, month, day) {
@@ -658,7 +663,6 @@
         var dayOfWeek = date.getDay();
         return (dayOfWeek >= 1 && dayOfWeek <= 5); // Sun = 0, Mon = 1, and so forth
     }
-
 
     function getMappedResourceData(resourceMappingService, $scope) {
         resourceMappingService.getMappedResources().then(function (res) {
@@ -678,7 +682,6 @@
         });
     }
 
-
     function getLocationData(locationService, $scope) {
         locationService.getLocation().then(function (res) {
             $scope.locationList = res.data;
@@ -694,7 +697,6 @@
             console.log(err);
         });
     }
-
 
     function getSkillSetData(skillSetService, $scope) {
         skillSetService.getSkillSets().then(function (res) {
@@ -720,13 +722,12 @@
         });
     }
 
-    function getRoleData(roleService,$scope){
-      roleService.getRole().then(function(res) {
-         $scope.roleList = res.data;
-         console.log(res.data);
-         }).catch(function(err) {
-         console.log(err);
-     });
+    function getRoleData(roleService, $scope) {
+        roleService.getRole().then(function (res) {
+            $scope.roleList = res.data;
+        }).catch(function (err) {
+            console.log(err);
+        });
     }
 
     function months(from, to) {
@@ -751,8 +752,26 @@
         return arr;
     }
 
-    function openDialog(){
-    $('#confirmModal').modal('show');
+    function monthsWithYear(year) {
+        var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+            "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+        var arr = [];
+        function Object(key, value) {
+            this.key = key;
+            this.value = value;
+        };
+
+        for (var i = 0; i < monthNames.length; i++) {
+            arr.push(new Object(monthNames[i] + "-" + year.substr(-2), 0));
+        }
+
+
+        return arr;
+    }
+
+    function openDialog() {
+        $('#confirmModal').modal('show');
     }
 
 })();

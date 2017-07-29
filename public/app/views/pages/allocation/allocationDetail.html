@@ -1,57 +1,64 @@
 <div class="inner container-fluid">
-  <table id="detail" class="table table-striped table-curved" cellspacing="0" width="100%">
-    <thead>
-      <tr>
-        <th align="center">Month</th>
-        <th align="center" ng-repeat="month in monthLabel">{{month}}</th>
-      </tr>
-      <tr>
-    </thead>
-    <tbody ng-repeat="allocRecords in allocCollection">
-      <tr>
-        <td align="center" colspan="100%" style="font-weight: bold;">
-          <font color="green">{{allocRecords.project.length > 0 ? allocRecords.project :"Buffered Time"}}
-          </font>
+  <div class="panel-body">
+    <div ng-if="allocCollection.length <= 0">
+         <span style="margin:auto; display:table;">Allocation has not done yet.</span>
+    </div>
+    <table class="table table-striped table-curved" cellspacing="0" width="100%" ng-repeat="allocRecords in allocCollection">
+
+      <thead>
+        <td colspan="12%">
+          <h4><span class="label label-primary"><b>{{allocRecords.resourcetype}} Allocaiton</b></span></h4>
         </td>
-      </tr>
-      <tr>
-        <td style="font-weight: bold;" align="left">
-          {{allocRecords.project === "Vacation" ? "Leave" : allocRecords.project === "" ? "Available" : "Allocation"}}
+        <td style="border-left:none;">
+          <span style="margin:auto; display:table;"><input name="action" type="checkbox"/>Action</span>
         </td>
-        <td ng-repeat="monthlyAlloc in allocRecords.allocation">
-          <span ng-if="allocRecords.project !='Vacation' && allocRecords.project.length > 0 ">
+        </tr>
+        <tr>
+          <th style="text-align: center;background-color:cyan;color:blue;">Months</th>
+          <th align="center" style="text-align: center; background-color:cyan;color:blue;" ng-repeat="month in monthLabel">{{month}}</th>
+        </tr>
+        <tr class="danger">
+          <th style="text-align: center;color:green;">Available Days</th>
+          <th style="text-align: center;color:green;" ng-repeat="days in allocRecords.availabledays"  ng-value="{{$index}}" data-tooltip='Tagged - {{allocRecords.mapppercent[$index].value}} %'>
+            
+            {{days.value}}</th>
+        </tr>
+        <tr>
+      </thead>
+
+      <tbody ng-repeat="records in allocRecords.allocation">
+        <tr>
+          <td align="center" colspan="100%" style="font-weight: bold;">
+            <font color="green">{{records.project.length > 0 ? records.project :"Buffered Time"}}
+            </font>
+          </td>
+        </tr>
+        <tr>
+          <td style="font-weight: bold;text-align: center;color:green;">
+            {{records.project === "Vacation" ? "Leave" : records.project === "" ? "Available" : "Allocation"}}
+          </td>
+
+          <td ng-repeat="monthlyAlloc in records.allocation">
+
+            <span>
 		    			<input type="text" ng-model="monthlyAlloc.value" maxlength="2" size="2" 
 		    			value="{{monthlyAlloc.value}}"/> 
 		    		</span>
-          <span colspan="100%" ng-if="allocRecords.project ==='Vacation'" style="font-weight:
+            <!-- <span colspan="100%" ng-if="allocRecords.project ==='Vacation'" style="font-weight:
 		    			text-align: center">{{monthlyAlloc.value}} </span>
-          <span colspan="100%" ng-if="allocRecords.project.length <= 0" style="font-weight: bold;background-color:{{monthlyAlloc.conflict === true ? 'red' : ''}};
+            <span colspan="100%" ng-if="allocRecords.project.length <= 0" style="font-weight: bold;background-color:{{monthlyAlloc.conflict === true ? 'red' : ''}};
 		    			text-align: center" data-tooltip='Actual Mandays: {{monthlyAlloc.actualMandays}}   Tagged: {{monthlyAlloc.percentalloc}}%'>
 		    				{{monthlyAlloc.value}}
-  		    		</span>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+  		    		</span> -->
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>
+
+
 <style>
-  #detail {
-    table-layout: fixed;
-    width: 100%;
-  }
-
-  #detail td,
-  th {
-    vertical-align: top;
-    padding: 10px;
-    width: 100px;
-  }
-
-  .inner {
-    overflow-x: scroll;
-    overflow-y: visible;
-    width: 1500px;
-  }
   /**
  * Tooltip Styles
  */

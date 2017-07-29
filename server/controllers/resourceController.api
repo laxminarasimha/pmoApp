@@ -2,7 +2,7 @@ var express = require("express"),
  router = express.Router(),
  resourceDAO = require("../models/resourceDAO.js");
  var nodeExcel=require("excel-export");
- var nodemailer = require('nodemailer');
+ //var nodemailer = require('nodemailer');
  
 router.get("/", function(req, res) {
  resourceDAO.find({},null, {sort:{resourcename: 1}}, function(err, data) {
@@ -91,7 +91,7 @@ return res.status(200).send(new Buffer(result.toString(), 'binary').toString('ba
 console.log("==========E-mail==========");
 //=======================
 
-var transporter = nodemailer.createTransport({
+/*var transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
         user: 'email id',
@@ -113,7 +113,7 @@ transporter.sendMail(mailOptions, function(error, info){
     console.log('Email sent: ' + info.response);
   }
 });
-
+*/
 //========================
 
 }).put("/:id", function(req, res) {

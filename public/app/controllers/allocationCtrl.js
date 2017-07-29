@@ -41,28 +41,27 @@
 	})
 
 
-	function filter(scope, collection, resource, mappedResourceData, leaveList, showdetail) {
+	function filter(scope, collection, resource, year, mappedResourceData, leaveList, showdetail) {
 		if (showdetail) return; // if details is going to close then return
 
-		var resourceDetails = [];
+		var allocationDetails = [];
 		var sMonth = [];
 		var eMonth = [];
 
 		angular.forEach(collection, function (item) {
-			if (item.resource === resource) {
-				resourceDetails.push(item);
+			if (item.resource === resource && item.year === year) {
+				allocationDetails.push(item);
 				sMonth.push(item.startdate);
 				eMonth.push(item.enddate);
 			}
 		});
 
-		sMonth.sort(date_sort_asc);
-		eMonth.sort(date_sort_desc);
+		// sMonth.sort(date_sort_asc);
+		// eMonth.sort(date_sort_desc);
 
-		scope.monthLabel = months(sMonth[0], eMonth[0]);
+		scope.monthLabel = months(year);
 
-
-		angular.forEach(resourceDetails, function (item) {
+		angular.forEach(allocationDetails, function (item) {
 			item.allocation = eachMonthAllocaiton(scope.monthLabel, item.allocation);
 
 		});
@@ -75,30 +74,78 @@
 			allocation: eachMonthLeave(scope.monthLabel, leaveList),
 		};
 
-		resourceDetails.push(leaveAllocation);
+		//allocationDetails.push(leaveAllocation);
 
 		//// Buffer time Calculate ////////////////////
 
-		var actualMandays = [];
-		var tagToEurocelar = [];
+		//var actualMandays = [];
+		//var tagToEurocelar = [];
+		// var mappedToResource =[];
+
+		// console.log(mappedResourceData);
+
+		// for (var user = 0; user < mappedResourceData.length; user++) {
+
+		// 	if (mappedResourceData[user].mappedResource.resourcename === resource && mappedResourceData.year === year) {
+		// 		mappedToResource.push(mappedResourceData[user]);
+		// 	}
+		// }
+
+		// var bufferTotal = {
+		// 	resource: resource,
+		// 	project: "",
+		// 	allocation: bufferTime(allocationDetails, actualMandays, tagToEurocelar, scope.monthLabel),
+		// };
+
+		//allocationDetails.push(bufferTotal);
+
+
+		var mappedToResource = [];
 
 		for (var user = 0; user < mappedResourceData.length; user++) {
-
-			if (mappedResourceData[user].mappedResource.resourcename === resource) {
-				actualMandays.push(mappedResourceData[user].monthlyAvailableActualMandays);
-				tagToEurocelar.push(mappedResourceData[user].taggToEuroclear);
-				break;
+			if (mappedResourceData[user].mappedResource.resourcename === resource && mappedResourceData[user].year === year) {
+				mappedToResource.push(mappedResourceData[user]);
 			}
 		}
 
-		var bufferTotal = {
-			resource: resource,
-			project: "",
-			allocation: bufferTime(resourceDetails, actualMandays, tagToEurocelar, scope.monthLabel),
-		};
+		var resoruceType = null;
+		var object = null;
+		var collection = [];
+		var oldObject = null;
 
-		resourceDetails.push(bufferTotal);
-		return resourceDetails;
+		for (var k = 0; k < allocationDetails.length; k++) {
+			resoruceType = allocationDetails[k].resourcetype;
+
+			angular.forEach(collection, function (item) {
+				if (item.resourcetype === resoruceType) {
+					oldObject = item;
+					return;
+				}
+			});
+
+			if (oldObject != null) {
+				oldObject.allocation.push(allocationDetails[k]);
+			} else {
+				object = new Object();
+				collection.push(object);
+				object.allocation = [];
+				object.resourcetype = allocationDetails[k].resourcetype;
+				object.year = allocationDetails[k].year;
+				object.allocation.push(allocationDetails[k]);
+
+				for (var j = 0; j < mappedToResource.length; j++) {
+					if (mappedToResource[j].resourceType === allocationDetails[k].resourcetype) {
+						object.availabledays = mappedToResource[j].monthlyAvailableActualMandays;
+						object.mapppercent = mappedToResource[j].taggToEuroclear;
+						break;
+					}
+				}
+			}
+			oldObject = null;
+		}
+
+		console.log(collection);
+		return collection;
 	}
 
 	function eachMonthAllocaiton(source, target) {
@@ -122,6 +169,8 @@
 			newAlloc.push(new Object(month, tempAlloc));
 
 		});
+
+		//console.log(newAlloc);
 
 		return newAlloc;
 	};
@@ -206,9 +255,9 @@
 
 	function Controller($scope, DTOptionsBuilder, DTColumnBuilder, $compile, resourceService, projectService, allocationService, leaveService, resourceMappingService, $filter, monthlyHeaderListService, availableDaysService) {
 
-		$scope.detailDiv = true;
+		//$scope.detailDiv = true;
 		$scope.resource = [];
-		$scope.projects = [];
+		//$scope.projects = [];
 		$scope.resourceWiseAllocaiton = [];
 		$scope.startDate;
 		$scope.endDate;
@@ -216,6 +265,7 @@
 		$scope.allocationList = [];
 		$scope.leaveList = [];
 		$scope.mappedResourceData = [];
+		$scope.mappingValue = [];
 		$scope.conflict = false;
 
 
@@ -234,10 +284,10 @@
 		};
 
 
-		getProjectData(projectService, $scope);
+		//getProjectData(projectService, $scope);
 
-		$scope.headingList = [];
-		prepareTableHeading($scope, monthlyHeaderListService);
+		//$scope.headingList = [];
+		//prepareTableHeading($scope, monthlyHeaderListService);
 
 		getMappedResourceData($scope, allocationService, leaveService, resourceMappingService, availableDaysService, monthlyHeaderListService);
 		getAlloctionData(allocationService, $scope);
@@ -313,7 +363,7 @@
 		$scope.vm.dtOptions = DTOptionsBuilder.newOptions()
 			.withOption('order', [0, 'asc']);
 
-		$scope.childInfo = function (resource, event, updateTable) {
+		$scope.childInfo = function (resource, year, event, updateTable) {
 			var scope = $scope.$new(true);
 
 			var link = angular.element(event.currentTarget),
@@ -328,7 +378,7 @@
 			if (updateTable == null)
 				childShown = row.child.isShown();
 
-			scope.allocCollection = filter(scope, $scope.allocationList, resource, $scope.mappedResourceData, leaves, childShown);
+			scope.allocCollection = filter(scope, $scope.allocationList, resource, year, $scope.mappedResourceData, leaves, childShown);
 
 			if (updateTable) {
 				row.child($compile('<div tmpl class="clearfix"></div>')(scope)).show();
@@ -350,64 +400,65 @@
 
 		///////////////////////// End  Datatable Code /////////////////////////////////
 
-		$scope.prepareFinalData = function ($scope, availableDaysService, monthlyHeaderListService, mappedData) {
+		// 	$scope.prepareFinalData = function ($scope, availableDaysService, monthlyHeaderListService, mappedData) {
 
-			console.log(mappedData);
+		// 		console.log(mappedData);
 
-			var fromDate = "01-" + $scope.headingList[0];
-			var toDate = "01-" + $scope.headingList[$scope.headingList.length - 1];
-			var list = availableDaysService.getData(fromDate, toDate);
-			for (var i = 0; i < list.length; i++) {
-				var name = list[i].resource;
-				var isConflict = false;
-				for (var j = 0; j < list[i].maps[0].length; j++) {
-					var allocationOBJ = list[i].maps[0][j];
+		// 		var fromDate = "01-" + $scope.headingList[0];
+		// 		var toDate = "01-" + $scope.headingList[$scope.headingList.length - 1];
+		// 		var list = availableDaysService.getData(fromDate, toDate);
+		// 		for (var i = 0; i < list.length; i++) {
+		// 			var name = list[i].resource;
+		// 			var isConflict = false;
+		// 			for (var j = 0; j < list[i].maps[0].length; j++) {
+		// 				var allocationOBJ = list[i].maps[0][j];
 
-					if (isNaN(allocationOBJ.buffertime)) {
-						allocationOBJ.buffertime = 0.0;
-					}
+		// 				if (isNaN(allocationOBJ.buffertime)) {
+		// 					allocationOBJ.buffertime = 0.0;
+		// 				}
 
-					if (allocationOBJ.buffertime >= 0) {
-						continue;
-					} else {
-						isConflict = true;
-						break;
-					}
-				}
-				list[i]['isConflict'] = isConflict;
+		// 				if (allocationOBJ.buffertime >= 0) {
+		// 					continue;
+		// 				} else {
+		// 					isConflict = true;
+		// 					break;
+		// 				}
+		// 			}
+		// 			list[i]['isConflict'] = isConflict;
 
-			}
+		// 		}
 
-			for (var i = 0; i < mappedData.length; i++) {
-				for (var j = 0; j < list.length; j++) {
-					if (mappedData[i].mappedResource.resourcename === list[j].resource) {
-						mappedData[i]['isConflict'] = list[j]['isConflict'];
-						break;
-					}
-				}
-			}
+		// 		for (var i = 0; i < mappedData.length; i++) {
+		// 			for (var j = 0; j < list.length; j++) {
+		// 				if (mappedData[i].mappedResource.resourcename === list[j].resource) {
+		// 					mappedData[i]['isConflict'] = list[j]['isConflict'];
+		// 					break;
+		// 				}
+		// 			}
+		// 		}
 
-			$scope.mappedResourceData = mappedData;
-			var htm = '';
+		// 		$scope.mappedResourceData = mappedData;
+		// 		var htm = '';
 
-			angular.forEach($scope.mappedResourceData, function (item) {
-				htm += '<option>' + item.mappedResource.resourcename + '</option>';
-			});
+		// 		angular.forEach($scope.mappedResourceData, function (item) {
+		// 			htm += '<option>' + item.mappedResource.resourcename + '</option>';
+		// 		});
 
-			$('#resource-select').append(htm);
-			$('#resource-select').multiselect('rebuild');
+		// 		$('#resource-select').append(htm);
+		// 		$('#resource-select').multiselect('rebuild');
 
-		}
-	}
+		// 	}
+		// }
 
 
-	function getProjectData(projectService, $scope) {
-		projectService.getProject().then(function (res) {
-			$scope.project = res.data;
-		}).catch(function (err) {
-			console.log(err);
-		});
+		// function getProjectData(projectService, $scope) {
+		// 	projectService.getProject().then(function (res) {
+		// 		$scope.project = res.data;
+		// 	}).catch(function (err) {
+		// 		console.log(err);
+		// 	});
 
+		// }
 	}
 
 	function getAlloctionData(allocationService, $scope) {
@@ -430,18 +481,21 @@
 		resourceMappingService.getMappedResources().then(function (res) {
 
 			var collection = res.data;
+			var key = "";
 
 			var resource = [], keys = [], item;
 			for (var col = 0; col < collection.length; col++) {
 				item = collection[col];
-				if (keys.indexOf(item.mappedResource.resourcename) <= -1) {
+				key = item.mappedResource.resourcename + '-' + item.year;
+				if (keys.indexOf(key) <= -1) {
 					resource.push(item);
-					keys.push(item.mappedResource.resourcename);
+					keys.push(key);
 				}
 			}
 
-			getGraphData($scope, allocationService, leaveService, resourceMappingService, availableDaysService, monthlyHeaderListService, resource);
-			//$scope.mappedResourceData = res.data;
+			//getGraphData($scope, allocationService, leaveService, resourceMappingService, availableDaysService, monthlyHeaderListService, resource);
+			$scope.mappedResourceData = res.data;
+			$scope.mappingValue = resource;
 
 		}).catch(function (err) {
 			console.log(err);
@@ -461,18 +515,18 @@
 		return 0;
 	}
 
-	function months(from, to) {
+	function months(year) {
 		var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
 			"Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 		var arr = [];
-		var datFrom = new Date(from);
-		var datTo = new Date(to);
-		var fromYear = datFrom.getFullYear();
-		var toYear = datTo.getFullYear();
-		var diffYear = (12 * (toYear - fromYear)) + datTo.getMonth();
+		//var datFrom = new Date(from);
+		//var datTo = new Date(to);
+		//var fromYear = datFrom.getFullYear();
+		//var toYear = datTo.getFullYear();
+		//var diffYear = (12 * (toYear - fromYear)) + datTo.getMonth();
 
-		for (var i = datFrom.getMonth(); i <= diffYear; i++) {
-			arr.push(monthNames[i % 12] + "-" + Math.floor(fromYear + (i / 12)).toString().substr(-2));
+		for (var i = 0; i < monthNames.length; i++) {
+			arr.push(monthNames[i] + "-" + year.substr(-2));
 		}
 
 		return arr;
@@ -484,31 +538,32 @@
 	}
 
 
-	function getGraphData($scope, allocationService, leaveService, resourceMappingService, availableDaysService, monthlyHeaderListService, mappedData) {
-		var allocation = [];
-		var resoruceM = [];
-		var leave = [];
-		allocationService.getAllAllocation().then(function (res) {
-			allocation = res.data;
-			leaveService.getLeave().then(function (res) {
-				leave = res.data;
-				resourceMappingService.getMappedResources().then(function (res) {
-					resoruceM = res.data;
-					availableDaysService.intialize(allocation, resoruceM, leave);
-					$scope.prepareFinalData($scope, availableDaysService, monthlyHeaderListService, mappedData);
-				}).catch(function (err) {
-					console.log(err);
-				});
-			}).catch(function (err) {
-				console.log(err);
-			});
-		}).catch(function (err) {
-			console.log(err);
-		});
-	}
+	// function getGraphData($scope, allocationService, leaveService, resourceMappingService, availableDaysService, monthlyHeaderListService, mappedData) {
+	// 	var allocation = [];
+	// 	var resoruceM = [];
+	// 	var leave = [];
+	// 	allocationService.getAllAllocation().then(function (res) {
+	// 		allocation = res.data;
+	// 		leaveService.getLeave().then(function (res) {
+	// 			leave = res.data;
+	// 			resourceMappingService.getMappedResources().then(function (res) {
+	// 				resoruceM = res.data;
+	// 				availableDaysService.intialize(allocation, resoruceM, leave);
+	// 				$scope.prepareFinalData($scope, availableDaysService, monthlyHeaderListService, mappedData);
+	// 			}).catch(function (err) {
+	// 				console.log(err);
+	// 			});
+	// 		}).catch(function (err) {
+	// 			console.log(err);
+	// 		});
+	// 	}).catch(function (err) {
+	// 		console.log(err);
+	// 	});
+	// }
 
-	function prepareTableHeading($scope, monthlyHeaderListService) {
-		$scope.headingList = monthlyHeaderListService.getHeaderList();
-	}
+	// function prepareTableHeading($scope, monthlyHeaderListService) {
+	// 	$scope.headingList = monthlyHeaderListService.getHeaderList();
+	// }
+
 
 })();
