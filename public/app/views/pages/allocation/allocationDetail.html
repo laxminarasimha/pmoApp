@@ -1,10 +1,12 @@
 <div class="inner container-fluid">
   <div class="panel-body">
     <div ng-if="allocCollection.length <= 0">
-         <span style="margin:auto; display:table;">Allocation has not done yet.</span>
+      <!-- <span style="margin:auto; display:table;">Allocation has not done yet.</span> -->
+      <span style="margin:auto; display:table;color:blue;"><b>Allocation has not done yet.</b></span>
     </div>
-    <table class="table table-striped table-curved" cellspacing="0" width="100%" ng-repeat="allocRecords in allocCollection">
 
+
+    <table class="table table-striped table-curved" cellspacing="0" width="100%" ng-repeat="allocRecords in allocCollection">
       <thead>
         <td colspan="12%">
           <h4><span class="label label-primary"><b>{{allocRecords.resourcetype}} Allocaiton</b></span></h4>
@@ -18,10 +20,11 @@
           <th align="center" style="text-align: center; background-color:cyan;color:blue;" ng-repeat="month in monthLabel">{{month}}</th>
         </tr>
         <tr class="danger">
-          <th style="text-align: center;color:green;">Available Days</th>
-          <th style="text-align: center;color:green;" ng-repeat="days in allocRecords.availabledays"  ng-value="{{$index}}" data-tooltip='Tagged - {{allocRecords.mapppercent[$index].value}} %'>
-            
-            {{days.value}}</th>
+          <th style="text-align: center;background-color:gray;color:blue;">Available Days</th>
+          <th style="text-align: center;background-color:gray;color:blue;" ng-repeat="days in allocRecords.availabledays" ng-value="{{$index}}"
+            data-tooltip='Tagged - {{allocRecords.mappercent[$index].value}} %'>
+            {{days.value}}
+          </th>
         </tr>
         <tr>
       </thead>
@@ -29,8 +32,8 @@
       <tbody ng-repeat="records in allocRecords.allocation">
         <tr>
           <td align="center" colspan="100%" style="font-weight: bold;">
-            <font color="green">{{records.project.length > 0 ? records.project :"Buffered Time"}}
-            </font>
+            <span style="text-align: center;color:blue;">{{records.project.length > 0 ? records.project :"Buffered Time"}}
+            </span>
           </td>
         </tr>
         <tr>
@@ -38,11 +41,10 @@
             {{records.project === "Vacation" ? "Leave" : records.project === "" ? "Available" : "Allocation"}}
           </td>
 
-          <td ng-repeat="monthlyAlloc in records.allocation">
-
+          <td ng-repeat="monthlyAlloc in records.allocation" ng-value="{{$index}}">
             <span>
-		    			<input type="text" ng-model="monthlyAlloc.value" maxlength="2" size="2" 
-		    			value="{{monthlyAlloc.value}}"/> 
+              <input type="text" style="background-color:{{allocRecords.monthtot[$index] < 0 ? 'pink':''}}; color:green;" class="form-control" ng-model="monthlyAlloc.value" 
+                        maxlength="2" size="2"/> 
 		    		</span>
             <!-- <span colspan="100%" ng-if="allocRecords.project ==='Vacation'" style="font-weight:
 		    			text-align: center">{{monthlyAlloc.value}} </span>
@@ -54,6 +56,23 @@
         </tr>
       </tbody>
     </table>
+    <table class="table table-striped table-curved" cellspacing="0" width="100%">
+      <thead>
+        <td colspan="12%">
+          <h4><span class="label label-primary"><b>Vacation</b></span></h4>
+        </td>
+        <tr>
+          <th style="text-align: center;background-color:cyan;color:blue;">Months</th>
+          <th align="center" style="text-align: center; background-color:cyan;color:blue;" ng-repeat="month in monthLabel">{{month}}</th>
+        </tr>
+        <tr>
+          <th style="text-align: center;background-color:gray;color:blue;">Days</th>
+          <th style="text-align: center;background-color:gray;color:blue;" ng-repeat="leave in allocCollection.vacation">
+            {{leave.value}}
+          </th>
+        </tr>
+        <table>
+
   </div>
 </div>
 

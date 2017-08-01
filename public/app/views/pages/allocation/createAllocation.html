@@ -82,23 +82,23 @@
               <tbody>
                 <tr ng-repeat="allocRows in resourceWiseAllocaiton" id="{{$index}}">
                   <td>
-                    <span editable-text="allocRows.resource" e-name="resource" e-form="rowform">
+                    <span class="form-control" editable-text="allocRows.resource" e-name="resource" e-form="rowform">
 					          {{ allocRows.resource }}
 					        </span>
                   </td>
                   <td>
-                    <span editable-select="allocRows.resourcetype" e-name="resourcetype" e-form="rowform">
-                        <select ng-model="allocRows.resourcetype" ng-options="item.resourceTypename as item.resourceTypename for item in resourceTypeList" />
+                    <span  editable-select="allocRows.resourcetype" e-name="resourcetype" e-form="rowform">
+                        <select class="form-control" ng-model="allocRows.resourcetype" ng-options="item.resourceTypename as item.resourceTypename for item in resourceTypeList" />
                     </span>
                   </td>
                   <td>
-                    <span editable-select="allocRows.project" e-name="project" e-form="rowform">
-					            <select  ng-model="allocRows.project" ng-options="item.projectname as item.projectname for item in project | projectfilter:'Vacation'"/>
+                    <span  editable-select="allocRows.project" e-name="project" e-form="rowform">
+					            <select  class="form-control" ng-model="allocRows.project" ng-options="item.projectname as item.projectname for item in project | projectfilter:'Vacation'"/>
 					         	</span>
                   </td>
                   <td ng-repeat="months in allocRows.allocation">
                     <span editable-select="alloc.tag" e-name="tag" e-form="rowform">
-					           <input type="text"  name="tagged" ng-model="months.value"  maxlength="4" size="4"/>
+					           <input class="form-control" type="text"  name="tagged" ng-model="months.value"  maxlength="4" size="4"/>
 					        </span>
                   </td>
                   <td style="white-space: nowrap">

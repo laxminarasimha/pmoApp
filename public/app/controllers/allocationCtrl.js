@@ -45,14 +45,14 @@
 		if (showdetail) return; // if details is going to close then return
 
 		var allocationDetails = [];
-		var sMonth = [];
-		var eMonth = [];
+		//var sMonth = [];
+		//var eMonth = [];
 
 		angular.forEach(collection, function (item) {
 			if (item.resource === resource && item.year === year) {
 				allocationDetails.push(item);
-				sMonth.push(item.startdate);
-				eMonth.push(item.enddate);
+				//sMonth.push(item.startdate);
+				//eMonth.push(item.enddate);
 			}
 		});
 
@@ -68,11 +68,11 @@
 
 		//// Vacation  Calculate ////////////////////
 
-		var leaveAllocation = {
-			resource: resource,
-			project: "Vacation",
-			allocation: eachMonthLeave(scope.monthLabel, leaveList),
-		};
+		// var leaveAllocation = {
+		// 	resource: resource,
+		// 	project: "Vacation",
+		// 	allocation: eachMonthLeave(scope.monthLabel, leaveList),
+		// };
 
 		//allocationDetails.push(leaveAllocation);
 
@@ -132,21 +132,33 @@
 				object.resourcetype = allocationDetails[k].resourcetype;
 				object.year = allocationDetails[k].year;
 				object.allocation.push(allocationDetails[k]);
+				object.availabledays = [];
+				object.mappercent = [];
 
 				for (var j = 0; j < mappedToResource.length; j++) {
 					if (mappedToResource[j].resourceType === allocationDetails[k].resourcetype) {
 						object.availabledays = mappedToResource[j].monthlyAvailableActualMandays;
-						object.mapppercent = mappedToResource[j].taggToEuroclear;
+						object.mappercent = mappedToResource[j].taggToEuroclear;
 						break;
 					}
 				}
+
+				if (object.availabledays.length <= 0) {
+					var arr = monthsWithYear(object.year);
+					object.availabledays = arr;
+					object.mappercent = arr;
+
+				}
+
 			}
 			oldObject = null;
 		}
 
-		console.log(collection);
+		checkOverAllocaiton(collection);
+		collection.vacation =  vacation(leaveList, year);
 		return collection;
 	}
+
 
 	function eachMonthAllocaiton(source, target) {
 
@@ -167,15 +179,32 @@
 
 			});
 			newAlloc.push(new Object(month, tempAlloc));
-
 		});
-
-		//console.log(newAlloc);
 
 		return newAlloc;
 	};
 
-	function eachMonthLeave(source, target) {
+
+	function vacation(leaveCollection, year) {
+
+		var vacationList = monthsWithYear(year);
+		angular.forEach(leaveCollection, function (leave) {
+			angular.forEach(leave.leavedaysinmonth, function (days) {
+				angular.forEach(vacationList, function (leavedays) {
+					if (days.month === leavedays.key) {
+						leavedays.value = parseInt(leavedays.value) + parseInt(days.value);
+
+					}
+				});
+			});
+		});
+
+		return vacationList;
+
+	}
+
+
+	/*function eachMonthLeave(source, target) {
 
 		function Object(month, value) {  // new object create for each month Leave
 			this.month = month;
@@ -199,10 +228,35 @@
 			leaves.push(new Object(monthLabel, temp));
 		});
 		return leaves;
-	};
+	};*/
 
 
-	function bufferTime(resourceDetails, actualMandays, tagToEurocelar, monthLabel) {
+
+	function checkOverAllocaiton(collection) {
+		var totalalloc = null;
+		var count = 0;
+		angular.forEach(collection, function (item) {
+			totalalloc = new Array();
+			totalalloc = Array(12).fill(0);
+			angular.forEach(item.allocation, function (alloc) {
+				count = 0;
+				angular.forEach(alloc.allocation, function (monthlyAloc) {
+					totalalloc[count] = totalalloc[count] + parseInt(monthlyAloc.value);
+					count++;
+				});
+			});
+
+			for (var k = 0; k < item.availabledays.length; k++) {
+				totalalloc[k] = parseInt(item.availabledays[k].value) - totalalloc[k];
+			}
+			item.monthtot = totalalloc;
+
+		});
+
+	}
+
+
+	/*function bufferTime(resourceDetails, actualMandays, tagToEurocelar, monthLabel) {
 
 		var total = [];
 		var bufferTotal = [];
@@ -249,7 +303,7 @@
 			});
 		});
 		return bufferTotal;
-	}
+	}*/
 
 	Controller.$inject = ['$scope', 'DTOptionsBuilder', 'DTColumnBuilder', '$compile', 'resourceService', 'projectService', 'allocationService', 'leaveService', 'resourceMappingService', '$filter', 'monthlyHeaderListService', 'availableDaysService'];
 
@@ -340,9 +394,9 @@
 
 		// }
 
-		$scope.updateAllocaiton = function (resource, event) {
+		$scope.updateAllocaiton = function (resource,year, event) {
 			angular.forEach($scope.allocationList, function (item) {
-				if (item.resource === resource) {
+				if (item.resource === resource && item.year === year) {
 					allocationService.updateAllocation(item).then(function (res) {
 						if (res.data == "updated") {
 							console.log('updated');
@@ -352,7 +406,7 @@
 					});
 				}
 			});
-			$scope.childInfo(resource, event, true);
+			$scope.childInfo(resource, year, event, true);
 		}
 
 
@@ -519,15 +573,26 @@
 		var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
 			"Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 		var arr = [];
-		//var datFrom = new Date(from);
-		//var datTo = new Date(to);
-		//var fromYear = datFrom.getFullYear();
-		//var toYear = datTo.getFullYear();
-		//var diffYear = (12 * (toYear - fromYear)) + datTo.getMonth();
-
 		for (var i = 0; i < monthNames.length; i++) {
 			arr.push(monthNames[i] + "-" + year.substr(-2));
 		}
+		return arr;
+	}
+
+	function monthsWithYear(year) {
+		var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+			"Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+		var arr = [];
+		function Object(key, value) {
+			this.key = key;
+			this.value = value;
+		};
+
+		for (var i = 0; i < monthNames.length; i++) {
+			arr.push(new Object(monthNames[i] + "-" + year.substr(-2), 0));
+		}
+
 
 		return arr;
 	}
