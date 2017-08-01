@@ -41,7 +41,7 @@
 	})
 
 
-	function filter(scope, collection, resource, year, mappedResourceData, leaveList, showdetail) {
+	function filter(scope, collection, resource, year, mappedResourceData, leaveList, holidayList, showdetail) {
 		if (showdetail) return; // if details is going to close then return
 
 		var allocationDetails = [];
@@ -51,13 +51,9 @@
 		angular.forEach(collection, function (item) {
 			if (item.resource === resource && item.year === year) {
 				allocationDetails.push(item);
-				//sMonth.push(item.startdate);
-				//eMonth.push(item.enddate);
 			}
 		});
 
-		// sMonth.sort(date_sort_asc);
-		// eMonth.sort(date_sort_desc);
 
 		scope.monthLabel = months(year);
 
@@ -66,38 +62,6 @@
 
 		});
 
-		//// Vacation  Calculate ////////////////////
-
-		// var leaveAllocation = {
-		// 	resource: resource,
-		// 	project: "Vacation",
-		// 	allocation: eachMonthLeave(scope.monthLabel, leaveList),
-		// };
-
-		//allocationDetails.push(leaveAllocation);
-
-		//// Buffer time Calculate ////////////////////
-
-		//var actualMandays = [];
-		//var tagToEurocelar = [];
-		// var mappedToResource =[];
-
-		// console.log(mappedResourceData);
-
-		// for (var user = 0; user < mappedResourceData.length; user++) {
-
-		// 	if (mappedResourceData[user].mappedResource.resourcename === resource && mappedResourceData.year === year) {
-		// 		mappedToResource.push(mappedResourceData[user]);
-		// 	}
-		// }
-
-		// var bufferTotal = {
-		// 	resource: resource,
-		// 	project: "",
-		// 	allocation: bufferTime(allocationDetails, actualMandays, tagToEurocelar, scope.monthLabel),
-		// };
-
-		//allocationDetails.push(bufferTotal);
 
 
 		var mappedToResource = [];
@@ -134,6 +98,7 @@
 				object.allocation.push(allocationDetails[k]);
 				object.availabledays = [];
 				object.mappercent = [];
+				object.vacation = vacation(leaveList, year);
 
 				for (var j = 0; j < mappedToResource.length; j++) {
 					if (mappedToResource[j].resourceType === allocationDetails[k].resourcetype) {
@@ -155,7 +120,14 @@
 		}
 
 		checkOverAllocaiton(collection);
-		collection.vacation =  vacation(leaveList, year);
+		//collection.vacation = vacation(leaveList, year);
+
+
+		// for (var k = 0; k < daysInMonth.length; k++) {
+		// 	console.log(daysInMonth[k].key);
+		// }
+
+		console.log(collection);
 		return collection;
 	}
 
@@ -205,15 +177,15 @@
 
 
 	/*function eachMonthLeave(source, target) {
-
+	
 		function Object(month, value) {  // new object create for each month Leave
 			this.month = month;
 			this.value = value > 0 ? value : 0;
 		}
-
+	
 		var temp = 0;
 		var leaves = [];
-
+	
 		angular.forEach(source, function (monthLabel) {
 			temp = 0;
 			angular.forEach(target, function (leaves) {
@@ -257,10 +229,10 @@
 
 
 	/*function bufferTime(resourceDetails, actualMandays, tagToEurocelar, monthLabel) {
-
+	
 		var total = [];
 		var bufferTotal = [];
-
+	
 		function Object(month, value, conflict, actualMandays, percentalloc) {  // new object create for each month Leave
 			this.month = month;
 			this.value = value;
@@ -268,7 +240,7 @@
 			this.actualMandays;
 			this.percentalloc;
 		}
-
+	
 		angular.forEach(resourceDetails, function (eachRows) {
 			count = 0;
 			angular.forEach(eachRows.allocation, function (months) {
@@ -276,13 +248,13 @@
 				count++;
 			});
 		});
-
+	
 		var count = 0;
 		angular.forEach(total, function (eachMonthTotal) {
 			bufferTotal.push(new Object(monthLabel[count], eachMonthTotal));
 			count++;
 		});
-
+	
 		var lreturn = false;
 		angular.forEach(bufferTotal, function (buffTot) {
 			lreturn = false;
@@ -305,9 +277,9 @@
 		return bufferTotal;
 	}*/
 
-	Controller.$inject = ['$scope', 'DTOptionsBuilder', 'DTColumnBuilder', '$compile', 'resourceService', 'projectService', 'allocationService', 'leaveService', 'resourceMappingService', '$filter', 'monthlyHeaderListService', 'availableDaysService'];
+	Controller.$inject = ['$scope', 'DTOptionsBuilder', 'DTColumnBuilder', '$compile', 'resourceService', 'projectService', 'allocationService', 'leaveService', 'resourceMappingService', '$filter', 'monthlyHeaderListService', 'availableDaysService', 'holidayListService'];
 
-	function Controller($scope, DTOptionsBuilder, DTColumnBuilder, $compile, resourceService, projectService, allocationService, leaveService, resourceMappingService, $filter, monthlyHeaderListService, availableDaysService) {
+	function Controller($scope, DTOptionsBuilder, DTColumnBuilder, $compile, resourceService, projectService, allocationService, leaveService, resourceMappingService, $filter, monthlyHeaderListService, availableDaysService, holidayListService) {
 
 		//$scope.detailDiv = true;
 		$scope.resource = [];
@@ -321,6 +293,7 @@
 		$scope.mappedResourceData = [];
 		$scope.mappingValue = [];
 		$scope.conflict = false;
+		$scope.holidayList = [];
 
 
 		function allocObject(object) {
@@ -343,58 +316,14 @@
 		//$scope.headingList = [];
 		//prepareTableHeading($scope, monthlyHeaderListService);
 
-		getMappedResourceData($scope, allocationService, leaveService, resourceMappingService, availableDaysService, monthlyHeaderListService);
+		getMappedResourceData($scope, resourceMappingService, holidayListService);
 		getAlloctionData(allocationService, $scope);
 		getLeaveData(leaveService, $scope);
+		getHolidayData(holidayListService, $scope, new Date().getFullYear()); // get all the date from current year
 
 
 
-		// $scope.createAllocation = function () {
-
-		// 	if ($scope.resource.length <= 0) {
-		// 		alert('Please select a resource');
-		// 		return;
-		// 	}
-
-		// 	Date.prototype.monthName = function () {
-		// 		return this.toUTCString().split(' ')[2]
-		// 	};
-
-		// 	var monthCol = months($scope.startDate, $scope.endDate);
-		// 	angular.forEach(monthCol, function (label) {
-		// 		$scope.monthWiseAllocation = {
-		// 			month: label,  // this is allocation month name
-		// 			value: 0,
-		// 		}
-		// 		$scope.months.push($scope.monthWiseAllocation);
-		// 	});
-
-		// 	for (var res = 0; res < $scope.resource.length; res++) {
-		// 		$scope.rowWiseAllocation = {
-		// 			resource: $scope.resource[res],
-		// 			project: $scope.projselect,
-		// 			startdate: $scope.startDate,
-		// 			enddate: $scope.endDate,
-		// 			allocation: [],
-		// 			rowSelect: true
-		// 		};
-
-		// 		angular.forEach($scope.months, function (item) {
-		// 			var obj = new allocObject(item);
-		// 			$scope.rowWiseAllocation.allocation.push(obj);
-		// 		});
-
-		// 		$scope.resourceWiseAllocaiton.push($scope.rowWiseAllocation);
-		// 	}
-
-		// 	$scope.resource = [];
-		// 	$scope.detailDiv = false;
-
-		// 	console.log($scope.resourceWiseAllocaiton);
-
-		// }
-
-		$scope.updateAllocaiton = function (resource,year, event) {
+		$scope.updateAllocaiton = function (resource, year, loc, event) {
 			angular.forEach($scope.allocationList, function (item) {
 				if (item.resource === resource && item.year === year) {
 					allocationService.updateAllocation(item).then(function (res) {
@@ -406,7 +335,7 @@
 					});
 				}
 			});
-			$scope.childInfo(resource, year, event, true);
+			$scope.childInfo(resource, year,loc, event, loc, true);
 		}
 
 
@@ -417,7 +346,7 @@
 		$scope.vm.dtOptions = DTOptionsBuilder.newOptions()
 			.withOption('order', [0, 'asc']);
 
-		$scope.childInfo = function (resource, year, event, updateTable) {
+		$scope.childInfo = function (resource, year, location, event, updateTable) {
 			var scope = $scope.$new(true);
 
 			var link = angular.element(event.currentTarget),
@@ -432,7 +361,9 @@
 			if (updateTable == null)
 				childShown = row.child.isShown();
 
-			scope.allocCollection = filter(scope, $scope.allocationList, resource, year, $scope.mappedResourceData, leaves, childShown);
+
+
+			scope.allocCollection = filter(scope, $scope.allocationList, resource, year, $scope.mappedResourceData, leaves, $scope.holidayList, childShown);
 
 			if (updateTable) {
 				row.child($compile('<div tmpl class="clearfix"></div>')(scope)).show();
@@ -531,7 +462,8 @@
 		});
 	}
 
-	function getMappedResourceData($scope, allocationService, leaveService, resourceMappingService, availableDaysService, monthlyHeaderListService) {
+
+	function getMappedResourceData($scope, resourceMappingService, holidayListService) {
 		resourceMappingService.getMappedResources().then(function (res) {
 
 			var collection = res.data;
@@ -554,6 +486,54 @@
 		}).catch(function (err) {
 			console.log(err);
 		});
+	}
+
+
+	function getHolidayData(holidayListService, $scope, year) {
+		holidayListService.getLocationHolidaysWithYear(year).then(function (res) {
+			$scope.holidayList = res.data;
+		}).catch(function (err) {
+			console.log(err);
+		});
+	}
+
+
+	function daysInMonthIAndYear(year,holidays) {
+		var holidayList = [];
+		var monthWiseDays = [];
+
+
+		//holidayList.push(formatDate(new Date(value.holidayDate), 'yyyy-MM-dd'));
+
+
+		var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+		var days = 0;
+
+		function Object(key, value) {
+			this.key = key;
+			this.value = value;
+		};
+
+		for (var month = 0; month < monthNames.length; month++) {
+			var date = new Date(year, month, 1);
+			var days = [];
+			var tmp = 0;
+			while (date.getMonth() === month) {
+				var tmpDate = new Date(date);
+				var weekDay = tmpDate.getDay();
+
+				if (weekDay % 6) { // exclude 0=Sunday and 6=Saturday
+					// if (holidayList.indexOf(formatDate(tmpDate)) === -1) {
+					// 	days.push(tmpDate);
+					// }
+				}
+				date.setDate(date.getDate() + 1);
+			}
+			monthWiseDays.push(new Object(monthNames[month] + "-" + year.substr(-2), days.length));
+		}
+		//console.log(monthWiseDays);
+		return monthWiseDays;
+
 	}
 
 
@@ -600,6 +580,19 @@
 	function round(value, precision) {
 		var multiplier = Math.pow(10, precision || 0);
 		return Math.round(value * multiplier) / multiplier;
+	}
+
+	function formatDate(date) {
+		var d = new Date(date),
+			dArr = [d.getFullYear(),
+			pad(d.getMonth() + 1),
+			pad(d.getDate())];
+		return dArr.join('-');
+	}
+
+
+	function pad(num) {
+		return ("0" + num).slice(-2);
 	}
 
 

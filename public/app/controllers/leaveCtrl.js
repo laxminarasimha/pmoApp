@@ -226,7 +226,6 @@
         }
 
         $scope.getHolidayDataForLoaction = function (location) {
-            console.log(location);
             holidayListService.getLocationHolidays(location).then(function (res) {
                 angular.forEach(res.data, function (value, index) {
                     var today = $filter('date')(new Date(value.holidayDate), 'yyyy-MM-dd');

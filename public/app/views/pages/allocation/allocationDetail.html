@@ -20,8 +20,8 @@
           <th align="center" style="text-align: center; background-color:cyan;color:blue;" ng-repeat="month in monthLabel">{{month}}</th>
         </tr>
         <tr class="danger">
-          <th style="text-align: center;background-color:gray;color:blue;">Available Days</th>
-          <th style="text-align: center;background-color:gray;color:blue;" ng-repeat="days in allocRecords.availabledays" ng-value="{{$index}}"
+          <th style="text-align: center;background-color:gray;color:yellow;">Available Days</th>
+          <th style="text-align: center;background-color:gray;color:yellow;" ng-repeat="days in allocRecords.availabledays" ng-value="{{$index}}"
             data-tooltip='Tagged - {{allocRecords.mappercent[$index].value}} %'>
             {{days.value}}
           </th>
@@ -32,7 +32,7 @@
       <tbody ng-repeat="records in allocRecords.allocation">
         <tr>
           <td align="center" colspan="100%" style="font-weight: bold;">
-            <span style="text-align: center;color:blue;">{{records.project.length > 0 ? records.project :"Buffered Time"}}
+            <span style="text-align: center;color:blue;">{{records.project}}
             </span>
           </td>
         </tr>
@@ -55,8 +55,22 @@
           </td>
         </tr>
       </tbody>
+      <tfoot>
+        <tr>
+          <td align="center" colspan="100%" style="font-weight: bold;">
+            <span style="text-align: center;color:blue;">Vacation </span>
+          </td>
+        </tr>
+        <tr style="font-weight: bold;text-align: center;color:green;">
+          <td style="text-align: center;background-color:yellow;color:blue;">Days</td>
+          <td style="text-align: center;background-color:yellow;color:blue;" ng-repeat="records in allocRecords.vacation">
+            {{records.value}}
+          </td>
+        </tr>
+
+      </tfoot>
     </table>
-    <table class="table table-striped table-curved" cellspacing="0" width="100%">
+    <!-- <table class="table table-striped table-curved" cellspacing="0" width="100%">
       <thead>
         <td colspan="12%">
           <h4><span class="label label-primary"><b>Vacation</b></span></h4>
@@ -71,7 +85,7 @@
             {{leave.value}}
           </th>
         </tr>
-        <table>
+    </table> -->
 
   </div>
 </div>
