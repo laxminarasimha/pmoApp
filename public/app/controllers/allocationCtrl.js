@@ -99,6 +99,7 @@
 				object.availabledays = [];
 				object.mappercent = [];
 				object.vacation = vacation(leaveList, year);
+				object.readonly = monthsReadonly(year);
 
 				for (var j = 0; j < mappedToResource.length; j++) {
 					if (mappedToResource[j].resourceType === allocationDetails[k].resourcetype) {
@@ -335,8 +336,10 @@
 					});
 				}
 			});
-			$scope.childInfo(resource, year,loc, event, loc, true);
+			$scope.childInfo(resource, year, loc, event, loc, true);
 		}
+
+		
 
 
 		///////////////////////// start Datatable Code /////////////////////////////////
@@ -446,6 +449,14 @@
 		// }
 	}
 
+
+	function checkmonth (index) {
+			console.log(index);
+			var currentMonth = new Date().getMonth();
+			return index < currentMonth;
+
+		}
+
 	function getAlloctionData(allocationService, $scope) {
 		allocationService.getAllAllocation().then(function (res) {
 			$scope.allocationList = res.data;
@@ -498,7 +509,7 @@
 	}
 
 
-	function daysInMonthIAndYear(year,holidays) {
+	function daysInMonthIAndYear(year, holidays) {
 		var holidayList = [];
 		var monthWiseDays = [];
 
@@ -555,6 +566,16 @@
 		var arr = [];
 		for (var i = 0; i < monthNames.length; i++) {
 			arr.push(monthNames[i] + "-" + year.substr(-2));
+		}
+		return arr;
+	}
+
+	function monthsReadonly(year) {
+	
+		var arr = [];
+		var currentMont = new Date().getMonth();
+		for (var i = 0; i < 12; i++) {
+			arr.push(i < currentMont);
 		}
 		return arr;
 	}

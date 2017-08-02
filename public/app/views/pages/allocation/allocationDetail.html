@@ -32,7 +32,7 @@
       <tbody ng-repeat="records in allocRecords.allocation">
         <tr>
           <td align="center" colspan="100%" style="font-weight: bold;">
-            <span style="text-align: center;color:blue;">{{records.project}}
+            <span style="text-align: center;color:blue;background-color:gray;">{{records.project}}
             </span>
           </td>
         </tr>
@@ -43,8 +43,8 @@
 
           <td ng-repeat="monthlyAlloc in records.allocation" ng-value="{{$index}}">
             <span>
-              <input type="text" style="background-color:{{allocRecords.monthtot[$index] < 0 ? 'pink':''}}; color:green;" class="form-control" ng-model="monthlyAlloc.value" 
-                        maxlength="2" size="2"/> 
+              <input type="text" style="text-align: center;background-color:{{allocRecords.monthtot[$index] < 0 ? 'pink':''}}; color:green;"
+               class="form-control" ng-model="monthlyAlloc.value"   maxlength="2" size="2" required="true" ng-readonly="{{allocRecords.readonly[$index]}}"/> 
 		    		</span>
             <!-- <span colspan="100%" ng-if="allocRecords.project ==='Vacation'" style="font-weight:
 		    			text-align: center">{{monthlyAlloc.value}} </span>
@@ -58,7 +58,7 @@
       <tfoot>
         <tr>
           <td align="center" colspan="100%" style="font-weight: bold;">
-            <span style="text-align: center;color:blue;">Vacation </span>
+            <span style="text-align: center;color:blue;background-color:gray;">Vacation </span>
           </td>
         </tr>
         <tr style="font-weight: bold;text-align: center;color:green;">
@@ -159,3 +159,11 @@
     opacity: 1;
   }
 </style>
+
+<script>
+  (function(){
+$('input').prop('readonly',true);
+  })();
+
+
+ </script> 

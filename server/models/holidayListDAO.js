@@ -1,7 +1,7 @@
 var mongoose = require("mongoose"),
  Schema = mongoose.Schema,
  objectId = mongoose.Schema.ObjectId;
- //var timeZone = require('mongoose-timezone');
+ var timeZone = require('mongoose-timezone');
  
 var holidaySchema = new Schema(
                   {

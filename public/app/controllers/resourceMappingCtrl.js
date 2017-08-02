@@ -205,6 +205,12 @@
             }
         };
 
+        $scope.checkmonth = function (index){
+            var currentMonth = new Date().getMonth();
+            return index < currentMonth;
+           
+        }
+
 
         //=========================Data table==========================//
         $scope.vm = {};
