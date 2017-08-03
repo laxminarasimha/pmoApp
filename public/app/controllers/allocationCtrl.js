@@ -205,9 +205,11 @@
 			}
 		}
 
+		//Buffer time
+
 		for (var k = 0; k < 12; k++) {
-			var total = totalAllocDays[k].value + leaves[k].value;
-			bufferTime[k].value = round((daysInMonthList[k].value - total), 1);
+
+			bufferTime[k].value = round((daysInMonthList[k].value - totalAllocDays[k].value), 1);
 		}
 
 	}
@@ -436,7 +438,6 @@
 	function daysInMonthAndYear(year, holidays) {
 		var holidayList = [];
 		var monthWiseDays = [];
-
 
 		angular.forEach(holidays, function (holiday) {
 			holidayList.push(formatDate(holiday.holidayDate));
