@@ -126,9 +126,10 @@ $scope.editResource = function (id) {
 
   //=========================Data table==========================//
         $scope.vm = {};
+
         $scope.vm.dtInstance = null;  
         $scope.vm.dtOptions = DTOptionsBuilder.newOptions().withOption('order', [0, 'asc']);
-
+        
         var lang = {
             "decimal":        "",
             "emptyTable":     "No data available in table",
@@ -154,13 +155,25 @@ $scope.editResource = function (id) {
             }
         }
 
+        $scope.vm.dtOptions.withDOM('Bfrtip');
+                
+        $scope.vm.dtOptions.withOption('buttons',['copy', 'print', 'pdf','excel'/*,
+            {
+                text: 'Export to Excel',
+                action: function ( e, dt, node, config ) {
+                    $scope.exportToExcel();
+                }
+            }*/]);
+
         $scope.vm.dtOptions.withOption('language', lang);
 
 
-        $scope.vm.dtOptions.withOption('drawCallback', function() {
+        /*$scope.vm.dtOptions.withOption('drawCallback', function() {
                  angular.element('.paginate_button.first').on('click', function() { alert('first')} )
                 angular.element('.paginate_button.next').on('click', function() { alert('next')} )             
-        })
+        })*/
+
+
          
 //=============================================================//
 
