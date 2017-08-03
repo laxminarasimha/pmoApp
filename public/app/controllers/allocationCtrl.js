@@ -120,20 +120,9 @@
 		}
 
 		var daysinMonht = daysInMonthAndYear(year, holidayList);
-
 		scope.bufferTime = monthsWithYear(year);
-
 		checkOverAllocaiton(collection, year, leaveList, daysinMonht, scope.bufferTime);
 
-		//collection.vacation = vacation(leaveList, year);
-
-
-		// for (var k = 0; k < daysInMonth.length; k++) {
-		// 	console.log(daysInMonth[k].key);
-		// }
-
-		console.log(collection);
-		console.log(scope.bufferTime);
 		return collection;
 	}
 
@@ -160,54 +149,6 @@
 
 		return newAlloc;
 	};
-
-
-	// function vacation(leaveCollection, year) {
-
-	// 	var vacationList = monthsWithYear(year);
-	// 	angular.forEach(leaveCollection, function (leave) {
-	// 		angular.forEach(leave.leavedaysinmonth, function (days) {
-	// 			angular.forEach(vacationList, function (leavedays) {
-	// 				if (days.month === leavedays.key) {
-	// 					leavedays.value = parseInt(leavedays.value) + parseInt(days.value);
-
-	// 				}
-	// 			});
-	// 		});
-	// 	});
-
-	// 	return vacationList;
-
-	// }
-
-
-	/*function eachMonthLeave(source, target) {
-	
-		function Object(month, value) {  // new object create for each month Leave
-			this.month = month;
-			this.value = value > 0 ? value : 0;
-		}
-	
-		var temp = 0;
-		var leaves = [];
-	
-		angular.forEach(source, function (monthLabel) {
-			temp = 0;
-			angular.forEach(target, function (leaves) {
-				angular.forEach(leaves.leavedaysinmonth, function (leave) {
-					if (leave.month === monthLabel) {
-						temp = leave.value;
-						return;
-					}
-				});
-				if (temp > 0) return;
-			});
-			leaves.push(new Object(monthLabel, temp));
-		});
-		return leaves;
-	};*/
-
-
 
 	function checkOverAllocaiton(alloCollection, year, leaveList, daysInMonthList, bufferTime) {
 
@@ -237,7 +178,6 @@
 
 
 		// map indivial leaves to map a 12 months map
-
 		var leaves = monthsWithYear(year);
 		angular.forEach(leaveList, function (leave) {
 			angular.forEach(leave.leavedaysinmonth, function (days) {
@@ -252,7 +192,6 @@
 
 
 		//adjust the leave with each allocaiton type 
-
 		for (var adj = 0; adj < alloCollection.length; adj++) {
 			var item = alloCollection[adj];
 			for (var k = 0; k < 12; k++) {
@@ -262,68 +201,23 @@
 					var percentV = (leaves[k].value * percent) / 100;
 					item.vacation[k].value = round(percentV);
 				}
-				bufferTime[k].value = round((daysInMonthList[k].value - total), 1);
+
 			}
 		}
+
+		for (var k = 0; k < 12; k++) {
+			var total = totalAllocDays[k].value + leaves[k].value;
+			bufferTime[k].value = round((daysInMonthList[k].value - total), 1);
+		}
+
 	}
 
-
-	/*function bufferTime(resourceDetails, actualMandays, tagToEurocelar, monthLabel) {
-	
-		var total = [];
-		var bufferTotal = [];
-	
-		function Object(month, value, conflict, actualMandays, percentalloc) {  // new object create for each month Leave
-			this.month = month;
-			this.value = value;
-			this.conflict = conflict;
-			this.actualMandays;
-			this.percentalloc;
-		}
-	
-		angular.forEach(resourceDetails, function (eachRows) {
-			count = 0;
-			angular.forEach(eachRows.allocation, function (months) {
-				total[count] = parseInt(months.value) + parseInt((total[count] > 0 ? total[count] : 0));
-				count++;
-			});
-		});
-	
-		var count = 0;
-		angular.forEach(total, function (eachMonthTotal) {
-			bufferTotal.push(new Object(monthLabel[count], eachMonthTotal));
-			count++;
-		});
-	
-		var lreturn = false;
-		angular.forEach(bufferTotal, function (buffTot) {
-			lreturn = false;
-			angular.forEach(actualMandays, function (actualTime) {
-				angular.forEach(actualTime, function (mappedDay, $index) {
-					if (mappedDay.key === buffTot.month) {
-						buffTot.value = round((mappedDay.value - buffTot.value), 1);
-						buffTot.actualMandays = mappedDay.value;
-						buffTot.conflict = buffTot.value < 0 ? true : false;
-						if (tagToEurocelar[0][$index].key === (mappedDay.key)) {
-							buffTot.percentalloc = tagToEurocelar[0][$index].value;
-						}
-						lreturn = true;
-						return;
-					}
-				});
-				if (lreturn) return;
-			});
-		});
-		return bufferTotal;
-	}*/
 
 	Controller.$inject = ['$scope', 'DTOptionsBuilder', 'DTColumnBuilder', '$compile', 'resourceService', 'projectService', 'allocationService', 'leaveService', 'resourceMappingService', '$filter', 'monthlyHeaderListService', 'availableDaysService', 'holidayListService'];
 
 	function Controller($scope, DTOptionsBuilder, DTColumnBuilder, $compile, resourceService, projectService, allocationService, leaveService, resourceMappingService, $filter, monthlyHeaderListService, availableDaysService, holidayListService) {
 
-		//$scope.detailDiv = true;
 		$scope.resource = [];
-		//$scope.projects = [];
 		$scope.resourceWiseAllocaiton = [];
 		$scope.startDate;
 		$scope.endDate;
@@ -351,11 +245,6 @@
 		};
 
 
-		//getProjectData(projectService, $scope);
-
-		//$scope.headingList = [];
-		//prepareTableHeading($scope, monthlyHeaderListService);
-
 		getMappedResourceData($scope, resourceMappingService, holidayListService);
 		getAlloctionData(allocationService, $scope);
 		getLeaveData(leaveService, $scope);
@@ -376,7 +265,6 @@
 			});
 			$scope.childInfo(resource, year, loc, event, loc, true);
 		}
-
 
 
 		///////////////////////// start Datatable Code /////////////////////////////////
@@ -581,7 +469,6 @@
 
 		}
 		return monthWiseDays;
-
 	}
 
 
@@ -631,7 +518,6 @@
 			arr.push(new Object(monthNames[i] + "-" + year.substr(-2), 0));
 		}
 
-
 		return arr;
 	}
 
@@ -647,7 +533,6 @@
 			pad(d.getDate())];
 		return dArr.join('-');
 	}
-
 
 	function pad(num) {
 		return ("0" + num).slice(-2);
