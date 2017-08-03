@@ -142,7 +142,6 @@
             var id = 0;
             var count = 0;
             for (var i = 0; i < selectedId.length; i++) {
-                console.log(selectedId[i].checked);
                 if (selectedId[i].checked) {
                     id = selectedId[i].value;
                     count++;
@@ -205,10 +204,13 @@
             }
         };
 
-        $scope.checkmonth = function (index){
-            var currentMonth = new Date().getMonth();
-            return index < currentMonth;
-           
+        $scope.checkmonth = function (length, index) {
+            if (length >= 12) {
+                var currentMonth = new Date().getMonth();
+                return index < currentMonth;
+            }
+            return false;
+
         }
 
 
@@ -258,9 +260,10 @@
 
     function saveResoucreMap(resourceMappingService, app, $scope) {
 
-        checkOverAllocation($scope, $scope.resourcemap);
+        $scope.errorMsgs = [];
+        checkOverAllocation($scope, $scope.resourcemap, true);
 
-        if ($scope.errorMsgs.length > 1) {
+        if ($scope.errorMsgs.length >= 1) {
             app.loading = false;
             app.successMsg = false;
             app.errorMsg = " ";
@@ -288,6 +291,7 @@
 
 
     function checkForAllocationInEachMonth($scope, resourceMappingService, app) {
+
         var resourceMap = $scope.resourcemap;
         var overAllocation = false;
         var infoMsg = "";
@@ -305,8 +309,8 @@
             app.errorMsg = "Allocaiton value shouldn't  greater than 100% for the month :" + infoMsg;
             app.errorClass = "error"
         } else {
-            checkOverAllocation($scope, resourceMap);
-
+            $scope.errorMsgs = [];
+            checkOverAllocation($scope, resourceMap, false);
             if ($scope.errorMsgs.length > 0) {
                 app.loading = false;
                 app.successMsg = false;
@@ -344,24 +348,38 @@
     }
 
 
-    function checkOverAllocation($scope, resourceMap) {
+    function checkOverAllocation($scope, resourceMap, isEdit) {
 
         var resource = resourceMap.mappedResource.resourcename;
         var totalValue = 0;
         var year = "";
+
         angular.forEach(resourceMap.taggToEuroclear, function (taggToEuro) {
             totalValue = 0;
             angular.forEach($scope.mongoMappedResourceData, function (oldAloc) {
-                if (oldAloc.year != "undefined" && oldAloc.year != null)
+                if (oldAloc.year != "undefined" && oldAloc.year != null) {
                     year = oldAloc.year.substr(2, oldAloc.year.length);
-                if (oldAloc.mappedResource.resourcename === resource && oldAloc.year.endsWith(year)) {
-                    angular.forEach(oldAloc.taggToEuroclear, function (tag) {
-                        if (taggToEuro.key === tag.key) {
-                            totalValue += tag.value;
+                    if (oldAloc.mappedResource.resourcename === resource && oldAloc.year.endsWith(year)) {
+                        if (!isEdit) {
+                            angular.forEach(oldAloc.taggToEuroclear, function (tag) {
+                                if (taggToEuro.key === tag.key) {
+                                    totalValue += tag.value;
+                                }
+                            });
+                        } else {
+                            if (oldAloc.resourceType != resourceMap.resourceType) {
+                                angular.forEach(oldAloc.taggToEuroclear, function (tag) {
+                                    if (taggToEuro.key === tag.key) {
+                                        totalValue += tag.value;
+                                    }
+                                });
+
+                            }
                         }
-                    });
+                    }
                 }
             });
+
             totalValue += taggToEuro.value;
             if (totalValue > 100) {
                 var values = "Over Allocation  for the month :" + taggToEuro.key;
@@ -518,7 +536,7 @@
     }
 
     function prepareHolidayListForLocation(resourceMappingService, app, holidayListService, $scope, resourcemap, isCreate, monthlyHeaderListService) {
-        holidayListService.getAggegrateLocationHolidays(resourcemap.location).then(function (res) {
+        holidayListService.getAggegrateLocationHolidays(resourcemap.mappedResource.baseentity).then(function (res) {
             prepareWorkingDaysForGivenRange(resourceMappingService, app, $scope, res.data, resourcemap, isCreate, monthlyHeaderListService);
         }).catch(function (err) {
             console.log(err);
@@ -532,6 +550,7 @@
         var location = resourcemap.location;
         var holiday = false;
         var monthyearLabel = "";
+
 
         for (var j = 0; j < taggedToEuroclearList.length; j++) {
             holiday = false;
@@ -562,13 +581,13 @@
 
 
     function prepareActualAvailableMandaysData(resourceMappingService, app, $scope, resourcemap, monthWorkDaysListForLocation, isCreate, monthlyHeaderListService) {
+
         var theMonths = monthlyHeaderListService.getMonthList();
         var taggedToEuroclearList = $scope.taggedToEuroclearList;
         var monthlyAvailableActualMandaysArray = [];
         var mappedResourceLocation = resourcemap.location;
 
         for (var j = 0; j < taggedToEuroclearList.length; j++) {
-
             for (var k = 0; k < monthWorkDaysListForLocation.length; k++) {
                 if ((mappedResourceLocation == monthWorkDaysListForLocation[k].location)
                     && (taggedToEuroclearList[j] == monthWorkDaysListForLocation[k].monthyear)) {
@@ -585,6 +604,7 @@
                 }
             }
         }
+
 
         $scope.resourcemap.monthlyAvailableActualMandays = monthlyAvailableActualMandaysArray;
         if (isCreate) {

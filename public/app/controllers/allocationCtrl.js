@@ -45,8 +45,6 @@
 		if (showdetail) return; // if details is going to close then return
 
 		var allocationDetails = [];
-		//var sMonth = [];
-		//var eMonth = [];
 
 		angular.forEach(collection, function (item) {
 			if (item.resource === resource && item.year === year) {
@@ -62,8 +60,6 @@
 
 		});
 
-
-
 		var mappedToResource = [];
 
 		for (var user = 0; user < mappedResourceData.length; user++) {
@@ -76,6 +72,8 @@
 		var object = null;
 		var collection = [];
 		var oldObject = null;
+		var readonly = monthsReadonly(year);
+
 
 		for (var k = 0; k < allocationDetails.length; k++) {
 			resoruceType = allocationDetails[k].resourcetype;
@@ -98,8 +96,9 @@
 				object.allocation.push(allocationDetails[k]);
 				object.availabledays = [];
 				object.mappercent = [];
-				object.vacation = vacation(leaveList, year);
-				object.readonly = monthsReadonly(year);
+				object.vacation = monthsWithYear(year);
+				object.readonly = readonly;
+
 
 				for (var j = 0; j < mappedToResource.length; j++) {
 					if (mappedToResource[j].resourceType === allocationDetails[k].resourcetype) {
@@ -120,7 +119,12 @@
 			oldObject = null;
 		}
 
-		checkOverAllocaiton(collection);
+		var daysinMonht = daysInMonthAndYear(year, holidayList);
+
+		scope.bufferTime = monthsWithYear(year);
+
+		checkOverAllocaiton(collection, year, leaveList, daysinMonht, scope.bufferTime);
+
 		//collection.vacation = vacation(leaveList, year);
 
 
@@ -129,6 +133,7 @@
 		// }
 
 		console.log(collection);
+		console.log(scope.bufferTime);
 		return collection;
 	}
 
@@ -149,7 +154,6 @@
 					tempAlloc = oldMonth.value;
 					return;
 				}
-
 			});
 			newAlloc.push(new Object(month, tempAlloc));
 		});
@@ -158,23 +162,23 @@
 	};
 
 
-	function vacation(leaveCollection, year) {
+	// function vacation(leaveCollection, year) {
 
-		var vacationList = monthsWithYear(year);
-		angular.forEach(leaveCollection, function (leave) {
-			angular.forEach(leave.leavedaysinmonth, function (days) {
-				angular.forEach(vacationList, function (leavedays) {
-					if (days.month === leavedays.key) {
-						leavedays.value = parseInt(leavedays.value) + parseInt(days.value);
+	// 	var vacationList = monthsWithYear(year);
+	// 	angular.forEach(leaveCollection, function (leave) {
+	// 		angular.forEach(leave.leavedaysinmonth, function (days) {
+	// 			angular.forEach(vacationList, function (leavedays) {
+	// 				if (days.month === leavedays.key) {
+	// 					leavedays.value = parseInt(leavedays.value) + parseInt(days.value);
 
-					}
-				});
-			});
-		});
+	// 				}
+	// 			});
+	// 		});
+	// 	});
 
-		return vacationList;
+	// 	return vacationList;
 
-	}
+	// }
 
 
 	/*function eachMonthLeave(source, target) {
@@ -205,12 +209,16 @@
 
 
 
-	function checkOverAllocaiton(collection) {
+	function checkOverAllocaiton(alloCollection, year, leaveList, daysInMonthList, bufferTime) {
+
 		var totalalloc = null;
 		var count = 0;
-		angular.forEach(collection, function (item) {
+		var totalAllocDays = monthsWithYear(year);
+
+		angular.forEach(alloCollection, function (item) {
 			totalalloc = new Array();
 			totalalloc = Array(12).fill(0);
+
 			angular.forEach(item.allocation, function (alloc) {
 				count = 0;
 				angular.forEach(alloc.allocation, function (monthlyAloc) {
@@ -220,12 +228,43 @@
 			});
 
 			for (var k = 0; k < item.availabledays.length; k++) {
-				totalalloc[k] = parseInt(item.availabledays[k].value) - totalalloc[k];
+				totalalloc[k] = item.availabledays[k].value - totalalloc[k];        				// this check the status of mapping value with allocaiton value only
+				totalAllocDays[k].value = totalAllocDays[k].value + item.availabledays[k].value;  // this sums actual available days as per mapping percentage
 			}
 			item.monthtot = totalalloc;
 
 		});
 
+
+		// map indivial leaves to map a 12 months map
+
+		var leaves = monthsWithYear(year);
+		angular.forEach(leaveList, function (leave) {
+			angular.forEach(leave.leavedaysinmonth, function (days) {
+				angular.forEach(leaves, function (leaveDay) {
+					if (leaveDay.key === days.month) {
+						leaveDay.value = leaveDay.value + days.value;
+
+					}
+				});
+			});
+		});
+
+
+		//adjust the leave with each allocaiton type 
+
+		for (var adj = 0; adj < alloCollection.length; adj++) {
+			var item = alloCollection[adj];
+			for (var k = 0; k < 12; k++) {
+				var total = totalAllocDays[k].value + leaves[k].value;
+				if (total > daysInMonthList[k].value) {
+					var percent = item.mappercent[k].value;
+					var percentV = (leaves[k].value * percent) / 100;
+					item.vacation[k].value = round(percentV);
+				}
+				bufferTime[k].value = round((daysInMonthList[k].value - total), 1);
+			}
+		}
 	}
 
 
@@ -323,7 +362,6 @@
 		getHolidayData(holidayListService, $scope, new Date().getFullYear()); // get all the date from current year
 
 
-
 		$scope.updateAllocaiton = function (resource, year, loc, event) {
 			angular.forEach($scope.allocationList, function (item) {
 				if (item.resource === resource && item.year === year) {
@@ -339,7 +377,6 @@
 			$scope.childInfo(resource, year, loc, event, loc, true);
 		}
 
-		
 
 
 		///////////////////////// start Datatable Code /////////////////////////////////
@@ -359,14 +396,13 @@
 				row = table.row(tr);
 
 			var leaves = $filter('filter')($scope.leaveList, { resourcename: resource });
+			var holidays = $filter('filter')($scope.holidayList, { year: year, locationname: location });
 
 			var childShown = false;
 			if (updateTable == null)
 				childShown = row.child.isShown();
 
-
-
-			scope.allocCollection = filter(scope, $scope.allocationList, resource, year, $scope.mappedResourceData, leaves, $scope.holidayList, childShown);
+			scope.allocCollection = filter(scope, $scope.allocationList, resource, year, $scope.mappedResourceData, leaves, holidays, childShown);
 
 			if (updateTable) {
 				row.child($compile('<div tmpl class="clearfix"></div>')(scope)).show();
@@ -450,12 +486,12 @@
 	}
 
 
-	function checkmonth (index) {
-			console.log(index);
-			var currentMonth = new Date().getMonth();
-			return index < currentMonth;
+	function checkmonth(index) {
+		console.log(index);
+		var currentMonth = new Date().getMonth();
+		return index < currentMonth;
 
-		}
+	}
 
 	function getAlloctionData(allocationService, $scope) {
 		allocationService.getAllAllocation().then(function (res) {
@@ -509,13 +545,14 @@
 	}
 
 
-	function daysInMonthIAndYear(year, holidays) {
+	function daysInMonthAndYear(year, holidays) {
 		var holidayList = [];
 		var monthWiseDays = [];
 
 
-		//holidayList.push(formatDate(new Date(value.holidayDate), 'yyyy-MM-dd'));
-
+		angular.forEach(holidays, function (holiday) {
+			holidayList.push(formatDate(holiday.holidayDate));
+		});
 
 		var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 		var days = 0;
@@ -534,15 +571,15 @@
 				var weekDay = tmpDate.getDay();
 
 				if (weekDay % 6) { // exclude 0=Sunday and 6=Saturday
-					// if (holidayList.indexOf(formatDate(tmpDate)) === -1) {
-					// 	days.push(tmpDate);
-					// }
+					if (holidayList.indexOf(formatDate(tmpDate)) === -1) {
+						days.push(tmpDate);
+					}
 				}
 				date.setDate(date.getDate() + 1);
 			}
 			monthWiseDays.push(new Object(monthNames[month] + "-" + year.substr(-2), days.length));
+
 		}
-		//console.log(monthWiseDays);
 		return monthWiseDays;
 
 	}
@@ -571,7 +608,7 @@
 	}
 
 	function monthsReadonly(year) {
-	
+
 		var arr = [];
 		var currentMont = new Date().getMonth();
 		for (var i = 0; i < 12; i++) {
