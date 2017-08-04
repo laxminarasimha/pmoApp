@@ -63,6 +63,7 @@ var page = parseInt(req.params.page),
  
  skillSetDAO.findByIdAndUpdate(id, { skillname: obj.skillname}, 
 function(err) {
+console.log("Update Error:"+err);
  if (err) {
  res.send("error");
  return;

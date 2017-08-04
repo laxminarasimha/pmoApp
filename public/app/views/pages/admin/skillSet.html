@@ -1,5 +1,5 @@
 <div ng-controller="skillSetCtrl">
-<form name="skillForm" ng-submit="createSkill(skill)" novalidate >
+<form name="skillForm"  novalidate >
 <legend>Skill Set (
   <label ng-show="skill._id!=null">Edit</label>
   <label ng-hide="skill._id!=null">Create</label>)
@@ -19,7 +19,7 @@
         <div class='col-sm-12'>
           <div align="right"> 
            <input type="submit" value="Update" ng-click="saveData(skill)" class="btn btn-primary input-sm" ng-show="skill._id!=null"/>
-            <input type="submit" value="Create" class="btn btn-primary input-sm" ng-hide="skill._id!=null"/>
+            <input type="submit" value="Create" ng-click="createSkill(skill)" class="btn btn-primary input-sm" ng-hide="skill._id!=null"/>
             <button class="btn btn-warning input-sm" ng-click="clearFields()" type="button">Clear</button>
           </div>
         </div>

@@ -26,6 +26,11 @@
        url = globalConfig.apiAddress + "/skillset/" + id;
        return $http.get(url);
        },
+       getSkillSetsForName: function(skillname) {
+       url = globalConfig.apiAddress + "/skillset/skillname/" + skillname;
+       return $http.get(url);
+       },
+
        createSkillSet: function(skillset) {
        url = globalConfig.apiAddress + "/skillset";
        return $http.post(url, skillset);
