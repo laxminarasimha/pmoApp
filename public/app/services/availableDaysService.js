@@ -99,10 +99,9 @@
 
         var vRecord = allocFilter.resourcetype + '-' + allocFilter.year + '-' + allocFilter.resourcetype;
         if (duplicateCheck.indexOf(vRecord) === -1) {
-          // console.log(allocFilter);
           var object = new Object();
           object.type = allocFilter.resourcetype;
-          object.allocation = mapAllocation(nResource.resource, months, allocationFilter, object.type, leavesFilter, mappedResourceData);
+          object.allocation = mapAllocation(nResource.resource, months, allocationFilter, object.type, leavesFilter, mappedResourceData, object.type, allocFilter.year);
           nResource.maps.push(object);
           duplicateCheck.push(vRecord);
         }
@@ -113,11 +112,10 @@
       allocationObj.push(nResource);
     });
 
-    console.log(allocationObj);
     return allocationObj;
   }
 
-  function mapAllocation(resource, months, allocationFilter, type, leaves, mappedResourceData) {
+  function mapAllocation(resource, months, allocationFilter, type, leaves, mappedResourceData, resourcetype, year) {
 
     var allocation = [];
 
@@ -134,6 +132,7 @@
 
       var vAlloc = new Allocation();
       vAlloc.month = month;
+      var filterMappedResource;
 
       angular.forEach(allocationFilter, function (alloc) {
         if (alloc.resourcetype === type) {
@@ -148,8 +147,15 @@
         }
       });
 
-      setLeave(vAlloc, leaves);
-      setAvailableTime(vAlloc, resource, mappedResourceData);
+      for (var user = 0; user < mappedResourceData.length; user++) {
+        if (mappedResourceData[user].mappedResource.resourcename === resource && mappedResourceData[user].resourceType === resourcetype
+          && mappedResourceData[user].year == year) {
+          filterMappedResource = mappedResourceData[user];
+        }
+      }
+
+      setLeave(vAlloc, leaves, filterMappedResource);
+      setBufferTime(vAlloc, resource, filterMappedResource);
       allocation.push(vAlloc);
     });
 
@@ -158,9 +164,10 @@
   }
 
 
-  function setLeave(object, leaves) {
+  function setLeave(object, leaves, mappedResourceData) {
 
     object.leave = 0;
+
     angular.forEach(leaves, function (leave) {
       angular.forEach(leave.leavedaysinmonth, function (monthD) {
         if (monthD.month === object.month) {
@@ -169,29 +176,41 @@
         }
       });
     });
-  }
 
-  function setAvailableTime(object, resource, mappedResourceData) {
-    object.buffertime = 0;
-    var actualMandays = [];
 
-    for (var user = 0; user < mappedResourceData.length; user++) {
-      if (mappedResourceData[user].mappedResource.resourcename === resource) {
-        angular.forEach(mappedResourceData[user].monthlyAvailableActualMandays, function (item) {
-          console.log(item.key === object.month);
-          if (item.key === object.month) {
-            var allocaiton = object.allocation;
-            var sum = 0, data = 0;
-            for (var i = 0, len = allocaiton.length; i <len; i++) {
-              sum += Math.round(allocaiton[i]);
-            }
-            sum = sum + parseInt(object.leave);
-            object.buffertime = round((item.value - sum), 1);
-            return;
-          }
-        });
+    for (var adj = 0; adj < mappedResourceData.taggToEuroclear.length; adj++) {
+
+      if (mappedResourceData.taggToEuroclear[adj].key === object.month) {
+        var percent = mappedResourceData.taggToEuroclear[adj].value;
+        var percentV = (object.leave * percent) / 100;
+        object.leave = round(percentV, 1);
       }
     }
+
+  }
+
+  function setBufferTime(object, resource, mappedResourceData) {
+
+    object.buffertime = 0;
+    var actualMandays = [];
+    var mappedDays = 0;
+
+    for (var user = 0; user < mappedResourceData.monthlyAvailableActualMandays.length; user++) {
+      if (mappedResourceData.monthlyAvailableActualMandays[user].key === object.month) {
+        mappedDays = mappedResourceData.monthlyAvailableActualMandays[user].value;
+        break;
+      }
+    }
+
+    var vBuffer = 0;
+
+    for (var k = 0; k < object.allocation.length; k++) {
+      vBuffer = vBuffer + parseInt(object.allocation[k]);
+    }
+
+    vBuffer = vBuffer + object.leave;
+    object.buffertime = round((mappedDays - vBuffer), 1);
+
   }
 
 
