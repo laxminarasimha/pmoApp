@@ -91,6 +91,7 @@
 				object = new Object();
 				collection.push(object);
 				object.allocation = [];
+				object.buffertime = [];
 				object.resourcetype = allocationDetails[k].resourcetype;
 				object.year = allocationDetails[k].year;
 				object.allocation.push(allocationDetails[k]);
@@ -114,15 +115,11 @@
 					object.mappercent = arr;
 
 				}
-
 			}
 			oldObject = null;
 		}
 
-		var daysinMonht = daysInMonthAndYear(year, holidayList);
-		scope.bufferTime = monthsWithYear(year);
-		checkOverAllocaiton(collection, year, leaveList, daysinMonht, scope.bufferTime);
-
+		checkOverAllocaiton(scope, collection, year, leaveList, mappedToResource, resource);
 		return collection;
 	}
 
@@ -150,31 +147,11 @@
 		return newAlloc;
 	};
 
-	function checkOverAllocaiton(alloCollection, year, leaveList, daysInMonthList, bufferTime) {
+	function checkOverAllocaiton(scope, alloCollection, year, leaveList, mappedResourceData, resource) {
 
-		var totalalloc = null;
+		var buffertime = null;
 		var count = 0;
 		var totalAllocDays = monthsWithYear(year);
-
-		angular.forEach(alloCollection, function (item) {
-			totalalloc = new Array();
-			totalalloc = Array(12).fill(0);
-
-			angular.forEach(item.allocation, function (alloc) {
-				count = 0;
-				angular.forEach(alloc.allocation, function (monthlyAloc) {
-					totalalloc[count] = totalalloc[count] + parseInt(monthlyAloc.value);
-					count++;
-				});
-			});
-
-			for (var k = 0; k < item.availabledays.length; k++) {
-				totalalloc[k] = item.availabledays[k].value - totalalloc[k];        				// this check the status of mapping value with allocaiton value only
-				totalAllocDays[k].value = totalAllocDays[k].value + item.availabledays[k].value;  // this sums actual available days as per mapping percentage
-			}
-			item.monthtot = totalalloc;
-
-		});
 
 
 		// map indivial leaves to map a 12 months map
@@ -195,21 +172,53 @@
 		for (var adj = 0; adj < alloCollection.length; adj++) {
 			var item = alloCollection[adj];
 			for (var k = 0; k < 12; k++) {
-				var total = totalAllocDays[k].value + leaves[k].value;
-				if (total > daysInMonthList[k].value) {
-					var percent = item.mappercent[k].value;
-					var percentV = (leaves[k].value * percent) / 100;
-					item.vacation[k].value = round(percentV);
-				}
-
+				var percent = item.mappercent[k].value;
+				var percentV = (leaves[k].value * percent) / 100;
+				item.vacation[k].value = round(percentV, 1);
 			}
 		}
 
-		//Buffer time
 
-		for (var k = 0; k < 12; k++) {
+		angular.forEach(alloCollection, function (item) {
 
-			bufferTime[k].value = round((daysInMonthList[k].value - totalAllocDays[k].value), 1);
+			buffertime = new Array();
+			buffertime = Array(12).fill(0);
+
+			angular.forEach(item.allocation, function (alloc) {
+				count = 0;
+				angular.forEach(alloc.allocation, function (monthlyAloc) {
+					buffertime[count] = buffertime[count] + round(monthlyAloc.value, 1);
+					count++;
+				});
+			});
+
+			for (var k = 0; k < item.availabledays.length; k++) {
+				buffertime[k] = round((item.availabledays[k].value - buffertime[k]), 1);        // this check the status of mapping value with allocaiton value only with add leaves
+				buffertime[k] = round((buffertime[k] - item.vacation[k].value), 1);	            // minus the leave days from totaldays as well
+				totalAllocDays[k].value = totalAllocDays[k].value + item.availabledays[k].value;  // this sums actual available days as per mapping percentage
+			}
+
+			item.buffertime = buffertime;
+
+		});
+
+		if (alloCollection.length <= 0 && mappedResourceData.length > 0) {
+
+			scope.noallocation = [];
+			function NoAllocation() {
+				this.type;
+				this.availableday = [];
+				this.percent = [];
+			}
+			for (var map = 0; map < mappedResourceData.length; map++) {
+				var noalloc = new NoAllocation();
+				noalloc.type = mappedResourceData[map].resourceType;
+				noalloc.availableday = mappedResourceData[map].monthlyAvailableActualMandays;
+				noalloc.percent = mappedResourceData[map].taggToEuroclear;
+				scope.noallocation.push(noalloc);
+
+			}
+
 		}
 
 	}
