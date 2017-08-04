@@ -12,6 +12,4 @@ var skillSetSchema = new Schema(
                   }
                   );
  
-var skillSetDAO = mongoose.model('skillset', skillSetSchema);
- 
-module.exports = skillSetDAO;
+x
