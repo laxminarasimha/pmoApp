@@ -11,6 +11,7 @@ angular.module('pmoApp').controller('designationCtrl', Controller);
  var app = $scope;
  
  $rootScope.Title = "Designation Listing";
+ 
  getDesignationData(designationService,$scope);
  
   
@@ -107,7 +108,8 @@ $scope.editDesignation = function (id) {
         $scope.vm = {};
         $scope.vm.dtInstance = null;  
         $scope.vm.dtOptions = DTOptionsBuilder.newOptions().withOption('order', [0, 'asc']);
-         
+        $scope.vm.dtOptions.withDOM('Bfrtip');
+        $scope.vm.dtOptions.withOption('buttons',['copy', 'print', 'pdf','excel']);
 //=============================================================//
 
  }
