@@ -12,4 +12,3 @@ var skillSetSchema = new Schema(
                   }
                   );
  
-x
