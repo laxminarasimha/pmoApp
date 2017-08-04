@@ -122,7 +122,7 @@
                     </thead>
                     <tbody>
                         <tr ng-repeat="resourceVar in utilisationData">
-                            <td>{{ resourceVar.name}}</td>
+                            <td>{{ resourceVar.name +'-'+resourceVar.resourcetype}}</td>
                             <td ng-repeat="column in headingList">                              
                               <div ng-repeat="utilisationTime in resourceVar.utilisationArray">
                                   <div ng-if="utilisationTime.key==column">

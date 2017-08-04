@@ -98,20 +98,23 @@ angular.module('pmoApp').controller('utilisationCtrl', Controller);
            var fromDate = "01-"+$scope.headingList[0];
            var toDate = "01-"+$scope.headingList[$scope.headingList.length-1];
            var list =  availableDaysService.getData(fromDate,toDate);
+           //console.log("List====");
+           //console.log(list);
            var resourceUtilisationArray = [];
            for(var i=0; i<list.length;i++){
-             var resourceObj = new Resource();
-             resourceObj.name = list[i].resource;
-             resourceObj.kindid = list[i].kindid;
-             resourceObj.location = list[i].location;
-             resourceObj.region = list[i].region;
-             resourceObj.resourcetype = list[i].resourcetype;
-             resourceObj.skill = list[i].skill;
-             resourceObj.status = list[i].status;
-             //console.log("list[i].resource=================="+list[i].resource);
-             var monthlyUtilisationArray = [];
-                 for(var j=0;j<list[i].maps[0].length;j++){
-                        var allocationOBJ = list[i].maps[0][j];
+            
+             for(var l=0;l<list[i].maps.length;l++){
+                   var resourceObj = new Resource();
+                       resourceObj.name = list[i].resource;
+                       resourceObj.kinid = list[i].kinid;
+                       resourceObj.location = list[i].location;
+                       resourceObj.region = list[i].region;
+                       resourceObj.resourcetype = list[i].maps[l].type;
+                       resourceObj.skill = list[i].skill;
+                       resourceObj.status = list[i].status;
+                   var monthlyUtilisationArray = [];
+                for(var j=0;j<list[i].maps[l].allocation.length;j++){
+                        var allocationOBJ = list[i].maps[l].allocation[j];
                         var sum = 0;
                         var actualAvailablemandays = 0;
                         var totalAllocation = 0;
@@ -164,8 +167,12 @@ angular.module('pmoApp').controller('utilisationCtrl', Controller);
                         monthlyUtilisationArray.push(monthlyUtilisationObject);
 
                  }
+
                  resourceObj.utilisationArray = monthlyUtilisationArray;
                  resourceUtilisationArray.push(resourceObj);
+             }
+                 
+                 
                  
            }
               //console.log(resourceUtilisationArray);
@@ -181,9 +188,9 @@ angular.module('pmoApp').controller('utilisationCtrl', Controller);
 
 //====================================================//
 
-function Resource(name,kindid,location,region,resourcetype,skill,status,utilisationArray){
+function Resource(name,kinid,location,region,resourcetype,skill,status,utilisationArray){
         this.name =name
-        this.kindid = kindid;
+        this.kinid = kinid;
         this.location = location;
         this.region = region;
         this.resourcetype = resourcetype;
