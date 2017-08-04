@@ -22,6 +22,7 @@
 				<tr>
 					<th> </th>
 					<th>Name</th>
+					<th>Year</th>
 					<th>Skill</th>
 					<th>Region</th>
 					<th>Location</th>
@@ -29,19 +30,20 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr ng-repeat="allocation in mappedResourceData">
-					<td align="center"><a class="green shortinfo" href="javascript:;" ng-click="childInfo(allocation.mappedResource.resourcename, $event)"
+				<tr ng-repeat="allocation in mappingValue">
+					<td align="center"><a class="green shortinfo" href="javascript:;" ng-click="childInfo(allocation.mappedResource.resourcename,allocation.year,allocation.mappedResource.baseentity, $event)"
 						 title="Click to view more"><i class="glyphicon glyphicon-plus-sign"></a></td>
 					<td>{{allocation.mappedResource.resourcename}}</td>
+					<td>{{allocation.year}}</td>
 					<td>{{allocation.skill}}</td>
 					<td>{{allocation.region}}</td>
-					<td>{{allocation.location}}</td>
+					<td>{{allocation.mappedResource.baseentity}}</td>
 					<td align="left">
-						<a class="span" ng-click="updateAllocaiton(allocation.mappedResource.resourcename,$event);">
-                        <span ng-if="allocation.isConflict" class="label label-danger glyphicon                glyphicon-ban-circle">
+						<a class="span" ng-click="updateAllocaiton(allocation.mappedResource.resourcename,allocation.year,allocation.mappedResource.baseentity,$event);">
+                        <!-- <span ng-if="allocation.isConflict" class="label label-danger glyphicon                glyphicon-ban-circle">
                          </span>
                          <span ng-if="!allocation.isConflict" class="label label-success glyphicon glyphicon-ok-circle">
-                         </span>
+                         </span> -->
 						   Save
 						</a>
 					</td>

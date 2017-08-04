@@ -67,9 +67,6 @@
 			return {
 				month: object.month,
 				value: object.value,
-				date: object.date,
-				project: object.project,
-				label: object.label,
 			}
 		};
 
@@ -117,8 +114,8 @@
 					resource: $scope.resource[res],
 					project: $scope.projselect,
 					resourcetype: $scope.resourcetype,
-					startdate: $scope.startDate,
-					enddate: $scope.endDate,
+					//startdate: $scope.startDate,
+					//enddate: $scope.endDate,
 					allocation: [],
 					rowSelect: true
 				};
@@ -138,7 +135,8 @@
 
 		$scope.saveAllocation = function () {
 			if ($scope.resourceWiseAllocaiton.length > 0) {
-				angular.forEach($scope.resourceWiseAllocaiton, function (item) {
+				var allocationYearWise = splitAllocationByYear($scope.resourceWiseAllocaiton, $scope.startDate, $scope.endDate);
+				angular.forEach(allocationYearWise, function (item) {
 					if (item.rowSelect) {// if row delete in screen,then it should not save
 						if (item.project === undefined && typeof item.project === "undefined") {
 							$scope.errorMsg = "Please select a project.";
@@ -241,6 +239,62 @@
 			}
 			return output;
 
+		}
+
+		function splitAllocationByYear(entryAllocaiton, from, to) {
+
+			var maps = new Array();
+			var obj, year, allocLength, entryAlloc, yrs;
+			var strYr = from.split("/");
+			var endYr = to.split("/");
+
+			var strYr = from.split("/")[1], endYr = to.split("/")[1], years = [];
+			for (var i = strYr; i <= endYr; i++) {
+				years.push(i);
+			}
+
+			for (var yr = 0; yr < years.length; yr++) {
+				year = String(years[yr]);
+				yrs = year.substr(year.length - 2);
+
+				for (var allocRec = 0; allocRec < entryAllocaiton.length; allocRec++) {
+
+					allocLength = entryAllocaiton[allocRec].allocation.length;
+					entryAlloc = entryAllocaiton[allocRec].allocation;
+					//obj = Object.create(entryAllocaiton[allocRec]);
+					obj = jQuery.extend({}, entryAllocaiton[allocRec]);
+					obj.allocation = [];
+					obj.year = year;
+					var month = "";
+
+					for (var rs = 0; rs < allocLength; rs++) {
+						month = String(entryAlloc[rs].month);
+						if (month.endsWith(yrs)) {
+							obj.allocation.push(entryAlloc[rs]);
+						}
+					}
+					maps.push(obj);
+				}
+
+			}
+
+			// for (var i = 0; i < maps.length; i++) {
+			// 	var obj = maps[i];
+			// 	angular.forEach(mongoMappedResourceData, function (oldData) {
+
+			// 		if ( //obj.mappedResource.kinId === oldData.mappedResource.kindId &&
+			// 			obj.mappedResource.resourcename === oldData.mappedResource.resourcename &&
+			// 			obj.resourceType === oldData.resourceType &&
+			// 			obj.year === oldData.year) {
+			// 			obj._id = oldData._id;
+			// 			obj.existing = true;
+			// 			obj.taggToEuroclear = mergeNewWithOldMappAndSort(obj.taggToEuroclear, oldData.taggToEuroclear);
+			// 			obj.monthlyAvailableActualMandays = mergeNewWithOldMappAndSort(obj.monthlyAvailableActualMandays, oldData.monthlyAvailableActualMandays);
+			// 		}
+
+			// 	});
+			// }
+			return maps;
 		}
 
 

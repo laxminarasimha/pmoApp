@@ -2,7 +2,7 @@ var express = require("express"),
  router = express.Router(),
  resourceDAO = require("../models/resourceDAO.js");
  var nodeExcel=require("excel-export");
- var nodemailer = require('nodemailer');
+ //var nodemailer = require('nodemailer');
  
 router.get("/", function(req, res) {
  resourceDAO.find({},null, {sort:{resourcename: 1}}, function(err, data) {
@@ -89,15 +89,17 @@ return res.status(200).send(new Buffer(result.toString(), 'binary').toString('ba
  });
 }).post("/email/", function(req, res) {
 console.log("==========E-mail==========");
-//=======================
 
 var transporter = nodemailer.createTransport({
-      host: 'IN-HYD-MAIL2.corp.capgemini.com',
+      host: 'gmail',
       port: 465,
       secure: true, // secure:true for port 465, secure:false for port 587
+
+/*var transporter = nodemailer.createTransport({
+      service: 'gmail',
       auth: {
-          user: 'rishi.gupta@capgemini.com',
-          pass: 'aIeee&3096'
+          user: '',
+          pass: ''
       }
 });
 
@@ -115,7 +117,7 @@ transporter.sendMail(mailOptions, function(error, info){
     console.log('Email sent: ' + info.response);
   }
 });
-
+*/
 //========================
 
 }).put("/:id", function(req, res) {

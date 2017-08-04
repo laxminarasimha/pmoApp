@@ -46,6 +46,19 @@ router.get("/", function(req, res) {
 
 								 res.send(data);
 								 });
+}).get("/aggegrate/byyear/:year", function(req, res) {
+	console.log('inside api');
+ //var loc = req.params.location;
+  var yr = req.params.year;
+
+  holidayListDAO.find({ year: { $gte: yr }}, function(err, data) {
+ 						 if (err) {
+								 res.send("error");
+								 return;
+								 }
+
+								 res.send(data);
+								 });
 }).post("/", function(req, res) {
  var obj = req.body;
  var model = new holidayListDAO(obj);
@@ -72,6 +85,7 @@ router.get("/", function(req, res) {
  model.locationname = obj.locationname;
  model.holidayDate = obj.holidayDate;
  model.comments = obj.comments;
+ model.year = obj.year;
  model.save();
  res.send("updated");
  });

@@ -8,8 +8,7 @@ var allocationSchema = new Schema(
     resource: { type: String, required: true },
     resourcetype: { type: String, required: true },
     project: { type: String, required: true },
-    startdate: { type: String, required: true },
-    enddate: { type: String, required: true },
+    year: { type: String, required: true },
     allocation: []
   },
   {
