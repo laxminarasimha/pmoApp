@@ -5,9 +5,9 @@
  
  angular.module('pmoApp').controller('skillSetCtrl', Controller);
  
- Controller.$inject = ['$scope', '$rootScope', 'skillSetService','DTOptionsBuilder', 'DTColumnBuilder'];
+ Controller.$inject = ['$scope', '$filter','$rootScope', 'skillSetService','DTOptionsBuilder', 'DTColumnBuilder'];
   
- function Controller($scope, $rootScope, skillSetService, DTOptionsBuilder, DTColumnBuilder) {
+ function Controller($scope, $filter, $rootScope, skillSetService, DTOptionsBuilder, DTColumnBuilder) {
 
 
  $scope.mongoSkillData = [];
@@ -73,6 +73,14 @@ $scope.editSkill = function (id) {
      if (res.data == "updated") {
         getSkillData(skillSetService,$scope);        
         $scope.skill = {};
+        app.loading =false;
+        app.successMsg = "Skillset Updated successfully";
+        app.errorMsg = false;
+     }else{
+         app.loading =false;
+         app.successMsg = "Skillset is already exist";
+         app.errorMsg = false;
+         app.errorClass = "error"
      }
      }).catch(function(err) {
      console.log(err);
@@ -86,32 +94,34 @@ $scope.editSkill = function (id) {
      app.errorMsg = false;            
      $rootScope.Title = "Create Skill Set";
      $scope.IsSubmit = true;
-     if ($scope.skillForm.$valid) {
-         skillSetService.createSkillSet(skill).then(function(res) {            
+    
+    if ($scope.skillForm.$valid) {
+         skillSetService.createSkillSet(skill).then(function(res) {   
+            
          if (res.data == "created") {
             getSkillData(skillSetService,$scope);
             $scope.skill = {};
             app.loading =false;
             app.successMsg = "Skillset created successfully";
             app.errorMsg = false;
-         } else
-         {
-            app.loading =false;
-            app.successMsg = "Skillset Updated successfully";
-            app.errorMsg = false;
+         }else{
+             app.loading =false;
+             app.errorMsg = "Skillset already exist";
+             app.successMsg = false;
+             app.errorClass = "error"
          }
          }).catch(function(err) {
          console.log(err);
          });
-     }else
+     }else 
      {
             app.loading =false;
             app.successMsg = false;
             app.errorMsg = "Please Enter Required value";
             app.errorClass = "error"
      }
-
-     
+      
+         
  }
 
  //=========================Data table==========================//

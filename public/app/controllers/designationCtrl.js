@@ -11,6 +11,7 @@ angular.module('pmoApp').controller('designationCtrl', Controller);
  var app = $scope;
  
  $rootScope.Title = "Designation Listing";
+ 
  getDesignationData(designationService,$scope);
  
   

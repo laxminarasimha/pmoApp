@@ -118,6 +118,7 @@ angular.module('pmoApp').controller('idleTimeCtrl', Controller);
            var fromDate = "01-"+$scope.headingList[0];
            var toDate = "01-"+$scope.headingList[$scope.headingList.length-1];
            var list =  availableDaysService.getData(fromDate,toDate);
+           console.log("List====");
            console.log(list);
            var resourceIdleTimeArray = [];
            for(var i=0; i<list.length;i++){
@@ -176,7 +177,7 @@ angular.module('pmoApp').controller('idleTimeCtrl', Controller);
                  resourceIdleTimeArray.push(resourceObj);
                  
            }
-              console.log(resourceIdleTimeArray);
+              //console.log(resourceIdleTimeArray);
               $scope.idleTimeData = resourceIdleTimeArray;
 
         }

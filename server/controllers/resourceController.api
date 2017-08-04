@@ -89,18 +89,16 @@ return res.status(200).send(new Buffer(result.toString(), 'binary').toString('ba
  });
 }).post("/email/", function(req, res) {
 console.log("==========E-mail==========");
-//=======================
-
 /*var transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
-        user: 'email id',
-        pass: 'password'
+          user: '',
+          pass: ''
       }
 });
 
 var mailOptions = {
-  from: 'email id',
+  from: 'rishi.gupta@capgemini.com',
   to: 'rishi.gupta@capgemini.com',
   subject: 'Sending Email using Node.js',
   text: 'That was easy!'
