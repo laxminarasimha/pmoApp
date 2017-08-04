@@ -125,9 +125,15 @@
                     </thead>
                     <tbody>                           
                         <tr ng-repeat="resourceVar in mappedResourceList">
-                            <td>{{ resourceVar.mappedResource.resourcename}}</td>
-                            <td ng-repeat="mandays in resourceVar.monthlyAvailableActualMandays">
-                              <span class="label label-default">{{mandays.value}}</span></td>                    
+                            <td>{{ resourceVar.mappedResource.resourcename + '-' + resourceVar.resourceType}}</td>
+                            <td ng-repeat="column in headingList">
+                              <div ng-repeat="mandays in resourceVar.monthlyAvailableActualMandays">
+                                  <div ng-if="mandays.key==column">
+                                    <span class="label label-default">{{mandays.value}}</span></td>
+                                  </div>
+                             </div>
+
+                            </td>
                         </tr>
                     </tbody>
                   </table>

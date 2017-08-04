@@ -118,22 +118,27 @@ angular.module('pmoApp').controller('idleTimeCtrl', Controller);
            var fromDate = "01-"+$scope.headingList[0];
            var toDate = "01-"+$scope.headingList[$scope.headingList.length-1];
            var list =  availableDaysService.getData(fromDate,toDate);
-           console.log("List====");
-           console.log(list);
+           //console.log("List====");
+           //console.log(list);
            var resourceIdleTimeArray = [];
            for(var i=0; i<list.length;i++){
-             var resourceObj = new Resource();
-             resourceObj.name = list[i].resource;
-             resourceObj.kindid = list[i].kindid;
-             resourceObj.location = list[i].location;
-             resourceObj.region = list[i].region;
-             resourceObj.resourcetype = list[i].resourcetype;
-             resourceObj.skill = list[i].skill;
-             resourceObj.status = list[i].status;
+             
              //console.log("list[i].resource=================="+list[i].resource);
-             var monthlyIdleTimeArray = [];
-                 for(var j=0;j<list[i].maps[0].length;j++){
-                        var allocationOBJ = list[i].maps[0][j];
+             
+             for(var l=0;l<list[i].maps.length;l++){
+               var resourceObj = new Resource();
+                   resourceObj.name = list[i].resource;
+                   resourceObj.kinid = list[i].kinid;
+                   resourceObj.location = list[i].location;
+                   resourceObj.region = list[i].region;
+                   resourceObj.resourcetype = list[i].maps[l].type;
+                   resourceObj.skill = list[i].skill;
+                   resourceObj.status = list[i].status;
+               var monthlyIdleTimeArray = [];
+                     //console.log("Allocation111=================="+list[i].maps[l].allocation);
+                  for(var j=0;j<list[i].maps[l].allocation.length;j++){
+                        var allocationOBJ = list[i].maps[l].allocation[j];
+                        //console.log("Allocation=================="+allocationOBJ);
                         var sum = 0;
                         for(var k=0; k<allocationOBJ.allocation.length;k++){
                            if(isNaN(allocationOBJ.allocation[k])){
@@ -173,8 +178,13 @@ angular.module('pmoApp').controller('idleTimeCtrl', Controller);
                         monthlyIdleTimeArray.push(monthlyIdleTimeObject);
 
                  }
+                 //console.log(monthlyIdleTimeArray);
                  resourceObj.idleTimeArray = monthlyIdleTimeArray;
                  resourceIdleTimeArray.push(resourceObj);
+                 
+             }
+                 
+                 
                  
            }
               //console.log(resourceIdleTimeArray);
@@ -187,9 +197,9 @@ angular.module('pmoApp').controller('idleTimeCtrl', Controller);
 
 //====================================================//
 
-function Resource(name,kindid,location,region,resourcetype,skill,status,idleTimeArray){
+function Resource(name,kinid,location,region,resourcetype,skill,status,idleTimeArray){
         this.name =name;
-        this.kindid = kindid;
+        this.kinid = kinid;
         this.location = location;
         this.region = region;
         this.resourcetype = resourcetype;
