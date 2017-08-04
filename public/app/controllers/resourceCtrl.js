@@ -28,7 +28,7 @@ angular.module('pmoApp').controller('resourceCtrl', Controller);
  $scope.roleList = [];
  getRoleData(roleService,$scope);
 
- //sendEmail(resourceService);
+ //sendEmail(resourceService,null);
   
  $scope.clearFields = function (){
  
