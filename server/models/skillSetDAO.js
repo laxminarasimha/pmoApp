@@ -5,13 +5,10 @@ var mongoose = require("mongoose"),
 var skillSetSchema = new Schema(
                   {
                    _id: { type: objectId, auto: true  },
-                   skillname: { type: String, required: false, index: { unique: true } }
+                   skillname: { type: String, required: false,index: { unique: true } }
                   }, 
                   {
                     collection: 'skillset'
                   }
                   );
  
-var skillSetDAO = mongoose.model('skillset', skillSetSchema);
- 
-module.exports = skillSetDAO;

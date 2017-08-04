@@ -5,9 +5,9 @@
  
  angular.module('pmoApp').controller('locationCtrl', Controller);
  
- Controller.$inject = ['$scope', '$rootScope', 'locationService'];
+ Controller.$inject = ['$scope', '$rootScope', 'locationService','DTOptionsBuilder', 'DTColumnBuilder'];
   
- function Controller($scope, $rootScope, locationService) {
+ function Controller($scope, $rootScope, locationService,DTOptionsBuilder, DTColumnBuilder) {
  $scope.mongoLocationData = [];
  var app = $scope;
  
@@ -103,6 +103,14 @@ $scope.editLocation = function (id) {
      }
      
  }
+
+ //=========================Data table==========================//
+        $scope.vm = {};
+        $scope.vm.dtInstance = null;  
+        $scope.vm.dtOptions = DTOptionsBuilder.newOptions().withOption('order', [0, 'asc']);
+        $scope.vm.dtOptions.withDOM('Bfrtip');
+        $scope.vm.dtOptions.withOption('buttons',['copy', 'print', 'pdf','excel']);
+//=============================================================//
  }
 
  function getLocationData(locationService,$scope){

@@ -14,12 +14,9 @@
 
  var app = $scope;
          
- //=========================//
- getSkillDataCount(skillSetService,$scope);
- //=========================//
  $rootScope.Title = "Skill Set Listing";
 
- //getSkillData(skillSetService,$scope);
+ getSkillData(skillSetService,$scope);
  
   
  $scope.clearFields = function (){
@@ -48,8 +45,7 @@
      app.loading = true;
      skillSetService.deleteSkillSet($scope.deletedID).then(function(res) {
      if (res.data == "deleted") {
-       //getSkillData(skillSetService,$scope);
-       getSkillDataCount(skillSetService,$scope);
+       getSkillData(skillSetService,$scope);       
        app.loading = false;
        app.successMsg = "Skillset Deleted successfully";
        app.errorMsg = false;
@@ -75,8 +71,7 @@ $scope.editSkill = function (id) {
      if ($scope.skillForm.$valid) {
      skillSetService.updateSkillSet(skill).then(function(res) {
      if (res.data == "updated") {
-        //getSkillData(skillSetService,$scope);
-        getSkillDataCount(skillSetService,$scope);
+        getSkillData(skillSetService,$scope);        
         $scope.skill = {};
         app.loading =false;
         app.successMsg = "Skillset Updated successfully";
@@ -104,16 +99,15 @@ $scope.editSkill = function (id) {
          skillSetService.createSkillSet(skill).then(function(res) {   
             
          if (res.data == "created") {
-            //getSkillData(skillSetService,$scope);
-            getSkillDataCount(skillSetService,$scope);
+            getSkillData(skillSetService,$scope);
             $scope.skill = {};
             app.loading =false;
             app.successMsg = "Skillset created successfully";
             app.errorMsg = false;
          }else{
              app.loading =false;
-             app.successMsg = "Skillset is already exist";
-             app.errorMsg = false;
+             app.errorMsg = "Skillset already exist";
+             app.successMsg = false;
              app.errorClass = "error"
          }
          }).catch(function(err) {
@@ -131,10 +125,11 @@ $scope.editSkill = function (id) {
  }
 
  //=========================Data table==========================//
-        //$scope.vm = {};
-        //$scope.vm.dtInstance = null;  
-        //$scope.vm.dtOptions = DTOptionsBuilder.newOptions().withOption('order', [0, 'asc']);
-         
+        $scope.vm = {};
+        $scope.vm.dtInstance = null;  
+        $scope.vm.dtOptions = DTOptionsBuilder.newOptions().withOption('order', [0, 'asc']);
+        $scope.vm.dtOptions.withDOM('Bfrtip');
+        $scope.vm.dtOptions.withOption('buttons',['copy', 'print', 'pdf','excel']);
 //=============================================================//
 
 
@@ -148,7 +143,7 @@ $scope.editSkill = function (id) {
      });
  }
 
- function getSkillDataCount(skillSetService,$scope){
+/* function getSkillDataCount(skillSetService,$scope){
       skillSetService.getSkillSetsCount().then(function(res) {
          $scope.totalRecords = res.data.data;
          $scope.size = 10;
@@ -179,7 +174,7 @@ function populateTable(page,skillSetService,$scope){
          console.log(err);
      });
 
-}
+}*/
 
 
 function openDialog(){

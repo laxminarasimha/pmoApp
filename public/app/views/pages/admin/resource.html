@@ -1,6 +1,6 @@
 
 <div ng-controller="resourceCtrl">
-<form name="resourceForm" ng-submit="createResource(resource)" novalidate>
+<form name="resourceForm" novalidate>
 <legend>Personal Information (<label ng-show="resource._id!=null">Edit</label><label ng-hide="resource._id!=null">Create</label>)</legend>
 <div class="panel panel-info">    
   <div class="panel-heading">
@@ -96,7 +96,7 @@
 
           <div align="right">            
             <input type="submit" value="Update" ng-click="saveData(resource)" class="btn btn-primary" ng-show="resource._id!=null"/>
-            <input type="submit" value="Create" class="btn btn-primary" ng-hide="resource._id!=null"/>
+            <input type="submit" value="Create" ng-click="createResource(resource)" class="btn btn-primary" ng-hide="resource._id!=null"/>
             <button class="btn btn-warning" ng-click="clearFields()" type="button">Clear</button>
           </div>
         </div>
@@ -174,11 +174,11 @@
                   <td>{{ x.etype }}</td>    
                   <td style="width:3%;text-align:center">
                   <span class="label">
-                  <a class="green"  ng-click="editResource(x._id)"><i class="glyphicon glyphicon-pencil"></i></a> 
+                  <a class="green"  ng-click="editResource(x._id)" title="Edit Record"><i class="glyphicon glyphicon-pencil"></i></a> 
                   </span>
                   <span class="label">
                   <a class="red"  data-toggle="modal" 
-                      ng-click="deleteConfirmation(x._id,'Name:'+x.resourcename+',Kin ID:'+x.kinId+',Designation:'+x.designation)"><i class="glyphicon glyphicon-remove"></i></a>
+                      ng-click="deleteConfirmation(x._id,'Name:'+x.resourcename+',Kin ID:'+x.kinId+',Designation:'+x.designation)" title="Delete Record"><i class="glyphicon glyphicon-remove"></i></a>
                   </span>
                   </td>
                 </tr>
