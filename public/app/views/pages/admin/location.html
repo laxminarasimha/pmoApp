@@ -1,5 +1,5 @@
 <div ng-controller="locationCtrl">
-<form name="locationForm" ng-submit="createLocation(location)" novalidate>
+<form name="locationForm" novalidate>
 <legend>Location (
   <label ng-show="location._id!=null">Edit</label>
   <label ng-hide="location._id!=null">Create</label>)
@@ -19,7 +19,7 @@
             <div class='col-sm-12'>
               <div align="right"> 
                  <input type="submit" value="Update" ng-click="saveData(location)" class="btn btn-primary" ng-show="location._id!=null"/>
-                <input type="submit" value="Create" class="btn btn-primary" ng-hide="location._id!=null"/>             
+                <input type="submit" value="Create" ng-click="createLocation(location)" class="btn btn-primary" ng-hide="location._id!=null"/>             
                 <button class="btn btn-warning" ng-click="clearFields()" type="button">Clear</button>
               </div>
             </div>
@@ -68,24 +68,26 @@
   </div>
        
       <div class="panel-footer">
-      				<div class="table-responsive">
-      					<table class="table table-striped table-curved" cellspacing="0" width="100%">
+      				<div class="panel-body">
+      					<table class="table table-striped table-curved" cellspacing="0" width="100%" datatable="ng" dt-options="vm.dtOptions" dt-instance="vm.dtInstance">
                 <thead class="bg-primary">
       							<tr>
-      								<th >Serial No.</th>
       								<th >Location name</th>
       								<th >Action</th>				   
       							</tr>
                     </thead>
                     <tbody>
                     <tr ng-repeat="x in mongoLocationData">
-                      <td>{{ $index + 1 }}</td>
                       <td>{{ x.locationname }}</td>
-                      <td>
-                            <a  class="btn btn-primary" ng-click="editLocation(x._id)">Edit</a> 
-                            <a  class="btn btn-primary" data-toggle="modal" 
-                                 ng-click="deleteConfirmation(x._id,x.locationname)">Delete</a>
-                      </td>
+                         <td style="width:3%;text-align:center">
+                  <span class="label">
+                  <a class="green"  ng-click="editLocation(x._id)" title="Edit Record"><i class="glyphicon glyphicon-pencil"></i></a> 
+                  </span>
+                  <span class="label">
+                  <a class="red"  data-toggle="modal" 
+                      ng-click="deleteConfirmation(x._id,x.locationname)" title="Delete Record"><i class="glyphicon glyphicon-remove"></i></a>
+                  </span>
+                  </td>
                     </tr>
       						  </tbody>
       					</table>

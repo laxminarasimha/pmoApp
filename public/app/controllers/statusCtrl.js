@@ -4,9 +4,9 @@
  
  angular.module('pmoApp').controller('statusCtrl', Controller);
  
- Controller.$inject = ['$scope', '$rootScope', 'statusService'];
+ Controller.$inject = ['$scope', '$rootScope', 'statusService','DTOptionsBuilder', 'DTColumnBuilder'];
   
- function Controller($scope, $rootScope, statusService) {
+ function Controller($scope, $rootScope, statusService,DTOptionsBuilder, DTColumnBuilder) {
  $scope.mongoStatusData = [];
  
  var app = $scope;
@@ -107,6 +107,14 @@ $scope.editStatus = function (id) {
      }
      
  }
+
+ //=========================Data table==========================//
+        $scope.vm = {};
+        $scope.vm.dtInstance = null;  
+        $scope.vm.dtOptions = DTOptionsBuilder.newOptions().withOption('order', [0, 'asc']);
+        $scope.vm.dtOptions.withDOM('Bfrtip');
+        $scope.vm.dtOptions.withOption('buttons',['copy', 'print', 'pdf','excel']);
+//=============================================================//
  }
 
  function getStatusData(statusService,$scope){

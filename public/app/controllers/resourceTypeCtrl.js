@@ -6,9 +6,9 @@
  
  angular.module('pmoApp').controller('resourceTypeCtrl', Controller);
  
- Controller.$inject = ['$scope', '$rootScope', 'resourceTypeService'];
+ Controller.$inject = ['$scope', '$rootScope', 'resourceTypeService','DTOptionsBuilder', 'DTColumnBuilder'];
   
- function Controller($scope, $rootScope, resourceTypeService) {
+ function Controller($scope, $rootScope, resourceTypeService,DTOptionsBuilder, DTColumnBuilder) {
  $scope.mongoResourceTypeData = [];
  var app = $scope;
  
@@ -105,6 +105,13 @@ $scope.editResourceType = function (id) {
      }
      
  }
+ //=========================Data table==========================//
+        $scope.vm = {};
+        $scope.vm.dtInstance = null;  
+        $scope.vm.dtOptions = DTOptionsBuilder.newOptions().withOption('order', [0, 'asc']);
+        $scope.vm.dtOptions.withDOM('Bfrtip');
+        $scope.vm.dtOptions.withOption('buttons',['copy', 'print', 'pdf','excel']);
+//=============================================================//
  }
 
  function getResourceTypeData(resourceTypeService,$scope){

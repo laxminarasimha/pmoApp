@@ -4,9 +4,9 @@
  
  angular.module('pmoApp').controller('regionCtrl', Controller);
  
- Controller.$inject = ['$scope', '$rootScope', 'regionService'];
+ Controller.$inject = ['$scope', '$rootScope', 'regionService','DTOptionsBuilder', 'DTColumnBuilder'];
   
- function Controller($scope, $rootScope, regionService) {
+ function Controller($scope, $rootScope, regionService,DTOptionsBuilder, DTColumnBuilder) {
  $scope.mongoRegionData = [];
  var app = $scope;
  
@@ -102,7 +102,18 @@ $scope.editRegion = function (id) {
      }
      
  }
+
+ //=========================Data table==========================//
+        $scope.vm = {};
+        $scope.vm.dtInstance = null;  
+        $scope.vm.dtOptions = DTOptionsBuilder.newOptions().withOption('order', [0, 'asc']);
+        $scope.vm.dtOptions.withDOM('Bfrtip');
+        $scope.vm.dtOptions.withOption('buttons',['copy', 'print', 'pdf','excel']);
+//=============================================================//
+
  }
+
+
 
  function getRegionData(regionService,$scope){
       regionService.getRegion().then(function(res) {
