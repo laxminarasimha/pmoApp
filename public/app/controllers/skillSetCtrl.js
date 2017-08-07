@@ -78,8 +78,8 @@ $scope.editSkill = function (id) {
         app.errorMsg = false;
      }else{
          app.loading =false;
-         app.successMsg = "Skillset is already exist";
-         app.errorMsg = false;
+         app.errorMsg = "Skillset already exist";
+         app.successMsg = false;
          app.errorClass = "error"
      }
      }).catch(function(err) {
