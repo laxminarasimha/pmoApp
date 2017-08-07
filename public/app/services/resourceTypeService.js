@@ -16,6 +16,10 @@
        url = globalConfig.apiAddress + "/resourceType/" + id;
        return $http.get(url);
        },
+       getResourceTypenameForName: function(resourceTypename) {
+       url = globalConfig.apiAddress + "/resourceType/resourceTypename/" + resourceTypename;
+       return $http.get(url);
+       },
        createResourceType: function(resourceType) {
        url = globalConfig.apiAddress + "/resourceType";
        return $http.post(url, resourceType);

@@ -5,7 +5,7 @@ var mongoose = require("mongoose"),
 var skillSetSchema = new Schema(
                   {
                    _id: { type: objectId, auto: true  },
-                   skillname: { type: String, required: false,index: { unique: true }, caseInsensitive : true  }
+                   skillname: { type: String, required: false }
                   }, 
                   {
                     collection: 'skillset'

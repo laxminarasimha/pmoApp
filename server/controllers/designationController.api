@@ -19,6 +19,47 @@ router.get("/", function(req, res) {
  }
  res.send(data[0]);
  });
+}).get("/designationname/:designationname", function(req, res) {
+ var designation = req.params.designationname;
+ console.log("designation:"+designation);
+ designationDAO.aggregate([
+      {
+      $project: {
+        //Convert EndUser to UpperCase
+        "designationname": {
+          "$let": {
+          "vars": {
+              "designationVar": "$designationname"
+            },
+            "in": {
+              //conversion to upper case
+              "$toUpper": "$$designationVar"
+            }
+          }
+        },       
+      }
+    },
+ 
+    // Stage 2: match using in operator
+    {
+      $match: {
+        "designationname" : {
+          "$in" : [
+            designation.toUpperCase()
+          ]
+        }
+      }
+    }
+ 
+  ], function(err, data) {
+	 if (err) {
+	 res.send("error");
+	 return;
+	 }
+
+	 console.log(data);
+	 res.send(data);
+	 });
 }).post("/", function(req, res) {
  var obj = req.body;
  var model = new designationDAO(obj);
@@ -34,14 +75,14 @@ router.get("/", function(req, res) {
  var id = req.params.id;
  var obj = req.body;
  
-designationDAO.findByIdAndUpdate(id, { designationname: obj.designationname}, 
-function(err) {
- if (err) {
- res.send("error");
- return;
- }
- res.send("updated");
- });
+ designationDAO.findByIdAndUpdate(id, { designationname: obj.designationname}, 
+ function(err) {
+  if (err) {
+    res.send("error");
+    return;
+  }
+  res.send("updated");
+  });
 }).delete("/:id", function(req, res) {
  var id = req.params.id;
  designationDAO.findByIdAndRemove(id, function(err) {

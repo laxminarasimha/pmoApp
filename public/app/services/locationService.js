@@ -16,6 +16,10 @@
        url = globalConfig.apiAddress + "/location/" + id;
        return $http.get(url);
        },
+       getLocationForName: function(locationname) {
+       url = globalConfig.apiAddress + "/location/locationname/" + locationname;
+       return $http.get(url);
+       },
        createLocation: function(location) {
        url = globalConfig.apiAddress + "/location";
        return $http.post(url, location);

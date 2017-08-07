@@ -65,17 +65,39 @@ $scope.editLocation = function (id) {
  
  $scope.saveData = function(location) {
      if ($scope.locationForm.$valid) {
-     locationService.updateLocation(location).then(function(res) {
-     if (res.data == "updated") {
-        getLocationData(locationService,$scope);
-        $scope.location = {};
-        app.loading =false;
-        app.successMsg = "Location Updated successfully";
-        app.errorMsg = false;
-     }
-     }).catch(function(err) {
-     console.log(err);
-     });
+        locationService.getLocationForName($scope.location.locationname).then(function(res) {
+            if(res.data.length == 0){
+              locationService.updateLocation(location).then(function(res) {
+            
+                     if (res.data == "updated") {
+                       getLocationData(locationService,$scope);
+                        $scope.location = {};
+                        app.loading =false;
+                        app.successMsg = "Location Updated successfully";
+                        app.errorMsg = false;
+                     }
+                     }).catch(function(err) {
+                         console.log(err);
+                         app.loading =false;
+                         app.errorMsg = "Error in creation";
+                         app.successMsg = false;
+                         app.errorClass = "error";
+                     });
+            }else  if(res.data.length > 0){
+                         app.loading =false;
+                         app.errorMsg = "Location already exist";
+                         app.successMsg = false;
+                         app.errorClass = "error";
+            }
+         }).catch(function(err) {
+         console.log(err);
+        }); 
+     }else 
+     {
+            app.loading =false;
+            app.successMsg = false;
+            app.errorMsg = "Please Enter Required value";
+            app.errorClass = "error"
      }
  };
  
@@ -83,18 +105,34 @@ $scope.editLocation = function (id) {
      $rootScope.Title = "Create Location";
      $scope.IsSubmit = true;
      if ($scope.locationForm.$valid) {
-         locationService.createLocation(location).then(function(res) {
-         if (res.data == "created") {
-            getLocationData(locationService,$scope);
-            $scope.location = {};
-            app.loading =false;
-            app.successMsg = "Location created successfully";
-            app.errorMsg = false;
-         }
+        locationService.getLocationForName($scope.location.locationname).then(function(res) {
+            if(res.data.length == 0){
+              locationService.createLocation(location).then(function(res) {
+            
+                     if (res.data == "created") {
+                       getLocationData(locationService,$scope);
+                        $scope.location = {};
+                        app.loading =false;
+                        app.successMsg = "Location created successfully";
+                        app.errorMsg = false;
+                     }
+                     }).catch(function(err) {
+                         console.log(err);
+                         app.loading =false;
+                         app.errorMsg = "Error in creation";
+                         app.successMsg = false;
+                         app.errorClass = "error";
+                     });
+            }else  if(res.data.length > 0){
+                         app.loading =false;
+                         app.errorMsg = "Location already exist";
+                         app.successMsg = false;
+                         app.errorClass = "error";
+            }
          }).catch(function(err) {
          console.log(err);
-         });
-     }else
+        }); 
+     }else 
      {
             app.loading =false;
             app.successMsg = false;

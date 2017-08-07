@@ -46,6 +46,49 @@ var page = parseInt(req.params.page),
 									 }
 									 res.send(data);
 									 });
+}).get("/skillname/:skillname", function(req, res) {
+ var skill = req.params.skillname;
+console.log("skill:"+skill);
+ skillSetDAO.aggregate([
+      {
+      $project: {
+        //Convert EndUser to UpperCase
+        "skillname": {
+          "$let": {
+            //var declaration
+            "vars": {
+              "skillVar": "$skillname"
+            },
+            "in": {
+              //conversion to upper case
+              "$toUpper": "$$skillVar"
+            }
+          }
+        },
+       
+      }
+    },
+ 
+    // Stage 2: match using in operator
+    {
+      $match: {
+        "skillname" : {
+          "$in" : [
+            skill.toUpperCase()
+          ]
+        }
+      }
+    }
+ 
+  ], function(err, data) {
+	 if (err) {
+	 res.send("error");
+	 return;
+	 }
+
+	 console.log(data);
+	 res.send(data);
+	 });
 }).post("/", function(req, res) {
  var obj = req.body;
  var model = new skillSetDAO(obj);

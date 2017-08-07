@@ -16,6 +16,11 @@
        url = globalConfig.apiAddress + "/role/" + id;
        return $http.get(url);
        },
+
+       getRoleForName: function(rolename) {
+       url = globalConfig.apiAddress + "/role/rolename/" + rolename;
+       return $http.get(url);
+       },
        createRole: function(role) {
        url = globalConfig.apiAddress + "/role";
        return $http.post(url, role);
