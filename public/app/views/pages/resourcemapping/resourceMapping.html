@@ -214,9 +214,12 @@
                 <th>Resource Name</th>
                 <th>Kin ID</th>
                 <!-- <th>Resource Type</th> -->
+                <th>Designation</th>
+                <th>Role</th>
+                <th>Location</th>
+                <th>Skill</th>
                 <th>Year</th>
-                <!-- <th>Region</th> -->
-                <th>Status</th>
+                <th>Region</th>
                 <th>Action</th>
               </tr>
             </thead>
@@ -224,11 +227,14 @@
               <tr ng-repeat="x in filterResourceWithYear">
                 <td align="center"><a class="green shortinfo" href="javascript:;" ng-click="childInfo(x.mappedResource.resourcename,x.year, $event)"
                     title="Click to view more"><i class="glyphicon glyphicon-plus-sign"></a></td>
-                <td>{{x.mappedResource.resourcename}}</td>
+                <td>{{x.mappedResource.resourcename +' ('+x.mappedResource.alias+')'}}</td>
                 <td>{{x.mappedResource.kinId}}</td>
+                <td>{{x.mappedResource.designation}}</td>
+                <td>{{x.mappedResource.role}}</td>
+                <td>{{ x.mappedResource.baseentity }}</td>
+                <td>{{ x.mappedResource.skill }}</td>
                 <td>{{x.year}}</td>
-                <!-- <td>{{x.region}}</td> -->
-                <td>{{ x.status }}</td>
+                <td>{{x.region}}</td>
                 <td>
                   <a class="btn btn-primary" ng-click="editResourceMapping()">Edit</a>
                   <a class="btn btn-primary" data-toggle="modal" ng-click="deleteConfirmation(x._id,'Name:'+x.mappedResource.resourcename+',Kin Id:'+x.mappedResource.kinId+',Year:'+x.year)">Delete</a>
