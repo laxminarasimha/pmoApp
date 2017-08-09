@@ -92,13 +92,12 @@
         </tr>
       </thead>
       <tbody ng-repeat="noalloc in noallocation">
-        
         <tr>
           <td align="center" colspan="100%" style="font-weight: bold;">
             <span style="text-align: center;background-color:gray;color:yellow;">{{noalloc.type}}</span>
           </td>
         </tr>
-        <tr class="danger">
+        <tr>
           <th style="text-align: center;background-color:gray;color:yellow;">Available Days</th>
           <th style="text-align: center;background-color:gray;color:yellow;" ng-repeat="days in noalloc.availableday" ng-value="{{$index}}"
             data-tooltip='Tagged - {{noalloc.percent[$index].value}} %'>

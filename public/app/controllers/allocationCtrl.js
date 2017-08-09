@@ -202,6 +202,11 @@
 
 		});
 
+
+		// if there is not allocation done yet,so it only shows the available mandays after deduct leaves on the months
+
+		console.log(leaves);
+
 		if (alloCollection.length <= 0 && mappedResourceData.length > 0) {
 
 			scope.noallocation = [];
@@ -210,11 +215,16 @@
 				this.availableday = [];
 				this.percent = [];
 			}
+
 			for (var map = 0; map < mappedResourceData.length; map++) {
 				var noalloc = new NoAllocation();
 				noalloc.type = mappedResourceData[map].resourceType;
 				noalloc.availableday = mappedResourceData[map].monthlyAvailableActualMandays;
 				noalloc.percent = mappedResourceData[map].taggToEuroclear;
+				for (var month = 0; month < leaves.length ; month++){
+					 noalloc.availableday[month].value = round((noalloc.availableday[month].value - leaves[month].value),1);
+				}
+
 				scope.noallocation.push(noalloc);
 
 			}
