@@ -144,8 +144,7 @@
                       <tr>
                         <td ng-repeat="column in taggedToEuroclearList track by $index">
                           <input id="taggToEuroclear{{column}}" ng-model="resourcemap.taggToEuroclear[$index].value
-            " required="true " type="text " maxlength="3 " size="5 " class="form-control input-sm {{errorClass}}" 
-            ng-change="validateInput(this,resourcemap.taggToEuroclear[$index].value)"
+            " required="true " type="text " maxlength="3 " size="5 " class="form-control input-sm {{errorClass}}" ng-change="validateInput(this,resourcemap.taggToEuroclear[$index].value)"
                             ng-readonly="checkmonth(taggedToEuroclearList.length,$index)" />
                         </td>
                       </tr>
@@ -160,7 +159,8 @@
             <div align="right">
               <input type="button" value="Update" ng-click="saveData(resourcemap)" class="btn btn-primary" ng-show="resourcemap._id!=null"
               />
-              <input type="submit" value="Create" ng-click="saveData(resourcemap)" class="btn btn-primary" ng-hide="resourcemap._id!=null" />
+              <input type="submit" value="Create" ng-click="saveData(resourcemap)" class="btn btn-primary" ng-hide="resourcemap._id!=null"
+              />
               <button class="btn btn-warning" ng-click="clearFields()" type="button">Clear</button>
             </div>
           </div>
@@ -235,9 +235,18 @@
                 <td>{{ x.mappedResource.skill }}</td>
                 <td>{{x.year}}</td>
                 <td>{{x.region}}</td>
-                <td>
+                <!-- <td>
                   <a class="btn btn-primary" ng-click="editResourceMapping()">Edit</a>
                   <a class="btn btn-primary" data-toggle="modal" ng-click="deleteConfirmation(x._id,'Name:'+x.mappedResource.resourcename+',Kin Id:'+x.mappedResource.kinId+',Year:'+x.year)">Delete</a>
+                </td> -->
+                <td style="width:3%;text-align:center">
+                  <span class="label">
+                  <a class="green"  ng-click="editResourceMapping()" title="Edit Record"><i class="glyphicon glyphicon-pencil"></i></a> 
+                  </span>
+                  <span class="label">
+                  <a class="red"  data-toggle="modal" 
+                      ng-click="deleteConfirmation(x._id,'Name:'+x.mappedResource.resourcename+',Kin Id:'+x.mappedResource.kinId+',Year:'+x.year)" title="Delete Record"><i class="glyphicon glyphicon-remove"></i></a>
+                  </span>
                 </td>
               </tr>
             </tbody>

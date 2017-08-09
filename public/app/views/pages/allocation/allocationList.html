@@ -38,14 +38,16 @@
 					<td>{{allocation.skill}}</td>
 					<td>{{allocation.region}}</td>
 					<td>{{allocation.mappedResource.baseentity}}</td>
-					<td align="left">
-						<a class="span" ng-click="updateAllocaiton(allocation.mappedResource.resourcename,allocation.year,allocation.mappedResource.baseentity,$event);">
-                        <!-- <span ng-if="allocation.isConflict" class="label label-danger glyphicon                glyphicon-ban-circle">
-                         </span>
-                         <span ng-if="!allocation.isConflict" class="label label-success glyphicon glyphicon-ok-circle">
-                         </span> -->
-						   Save
-						</a>
+
+					<td style="width:3%;text-align:center">
+						<span class="label">
+                  			<a class="green" ng-click="updateAllocaiton(allocation.mappedResource.resourcename,allocation.year,allocation.mappedResource.baseentity,$event);" title="Save Record"><i class="glyphicon glyphicon-pencil"></i></a> 
+                  		</span>
+						<span class="label">
+                  			<a class="red"  data-toggle="modal" 
+					  		ng-click"" title="Delete Allociton">
+					 		 <i class="glyphicon glyphicon-remove"></i></a>
+                 		 </span>
 					</td>
 				</tr>
 			</tbody>
