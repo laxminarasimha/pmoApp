@@ -23,7 +23,7 @@
                   <label>Holiday  Date: </label>
                   
                    <div class="input-group date holidayDate" data-date="" data-date-format="dd-MM-yy" data-link-format="yyyy-mm-dd">
-                    <input class="form-control" type="text" ng-model="holiday.holidayDate" readonly ng-required="true" class="form-control input-sm {{errorClass}}">
+                    <input class="form-control" type="text" ng-model="holiday.holidayDate" readonly ng-required="true" class="form-control input-sm {{errorClass}}"/>
                     <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                   </div>
                   
@@ -145,7 +145,8 @@
         startView: 2,
         minView: 2,
         forceParse: 0,
-        startDate: '-0m'
+        startDate: '-0m',
+        daysOfWeekDisabled: [0,6]
       });
     });
   </script>
