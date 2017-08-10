@@ -177,13 +177,14 @@
       });
     });
 
+    if (mappedResourceData != null) {
 
-    for (var adj = 0; adj < mappedResourceData.taggToEuroclear.length; adj++) {
-
-      if (mappedResourceData.taggToEuroclear[adj].key === object.month) {
-        var percent = mappedResourceData.taggToEuroclear[adj].value;
-        var percentV = (object.leave * percent) / 100;
-        object.leave = round(percentV, 1);
+      for (var adj = 0; adj < mappedResourceData.taggToEuroclear.length; adj++) {
+        if (mappedResourceData.taggToEuroclear[adj].key === object.month) {
+          var percent = mappedResourceData.taggToEuroclear[adj].value;
+          var percentV = (object.leave * percent) / 100;
+          object.leave = round(percentV, 1);
+        }
       }
     }
 
@@ -194,14 +195,14 @@
     object.buffertime = 0;
     var actualMandays = [];
     var mappedDays = 0;
-
-    for (var user = 0; user < mappedResourceData.monthlyAvailableActualMandays.length; user++) {
-      if (mappedResourceData.monthlyAvailableActualMandays[user].key === object.month) {
-        mappedDays = mappedResourceData.monthlyAvailableActualMandays[user].value;
-        break;
+    if (mappedResourceData != null) {
+      for (var user = 0; user < mappedResourceData.monthlyAvailableActualMandays.length; user++) {
+        if (mappedResourceData.monthlyAvailableActualMandays[user].key === object.month) {
+          mappedDays = mappedResourceData.monthlyAvailableActualMandays[user].value;
+          break;
+        }
       }
     }
-
     var vBuffer = 0;
 
     for (var k = 0; k < object.allocation.length; k++) {

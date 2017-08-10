@@ -204,12 +204,13 @@
             }
         };
 
-        $scope.checkmonth = function (length, index) {
-            if (length >= 12) {
-                var currentMonth = new Date().getMonth();
-                return index < currentMonth;
-            }
-            return false;
+        $scope.checkmonth = function (value) {
+            // if (length >= 12) {
+            //     var currentMonth = new Date().getMonth();
+            //     return index < currentMonth;
+            // }
+            // return false;
+            console.log(value);
 
         }
 
