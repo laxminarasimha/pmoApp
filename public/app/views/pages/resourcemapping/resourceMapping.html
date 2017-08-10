@@ -145,7 +145,7 @@
                         <td ng-repeat="column in taggedToEuroclearList track by $index">
                           <input id="taggToEuroclear{{column}}" ng-model="resourcemap.taggToEuroclear[$index].value
             " required="true " type="text " maxlength="3 " size="5 " class="form-control input-sm {{errorClass}}" ng-change="validateInput(this,resourcemap.taggToEuroclear[$index].value)"
-                            ng-readonly="checkmonth(taggedToEuroclearList.length,$index)" />
+                            ng-readonly="checkmonth(taggedToEuroclearList[$index])" />
                         </td>
                       </tr>
                     </tbody>
