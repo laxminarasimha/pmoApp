@@ -80,45 +80,59 @@ $scope.editResource = function (id) {
  
  $scope.saveData = function(resource) {
      if ($scope.resourceForm.$valid) {        
-     resourceService.updateResource(resource).then(function(res) {
-     if (res.data == "updated") {
-        getResourceData(resourceService,$scope);
-        $scope.resource = {};
-     }
-     }).catch(function(err) {
-     console.log(err);
-     });
-     }
+         resourceService.updateResource(resource).then(function(res) {
+         if (res.data == "updated") {
+            getResourceData(resourceService,$scope);
+            $scope.resource = {};
+         }
+         }).catch(function(err) {
+         console.log(err);
+         });
+         }
+
+
  };
  
  $scope.createResource = function(resource) {
      $rootScope.Title = "Create Resource";
      $scope.IsSubmit = true;
      if ($scope.resourceForm.$valid) {
-        app.loading =true;
+         app.loading =true;
         //Password = "default";
         $scope.resource.password = '$2a$10$z14k1dcNp7nPmB1s.ApNNe4NLYu.UbKd1lKcgARc3fDTeoPW9GlAC';
-         resourceService.createResource(resource).then(function(res) {
-         if (res.data == "created") {
-            app.loading =true;
-            getResourceData(resourceService,$scope);            
-            $scope.resource = {};
-            app.loading =false;
-            app.successMsg = "Resource created successfully";
-            app.errorMsg = false;
-            //sendEmail(resourceService,resource);
-         }else{
-            app.loading =false;
-            app.successMsg = "Resource Updated successfully";
-            app.errorMsg = false;
-         }
+      resourceService.getResourceForKinId($scope.resource.kinId).then(function(res) {
+            if(res.data.length == 0){
+              resourceService.createResource(resource).then(function(res) {  
+            
+                     if (res.data == "created") {
+                        getResourceData(resourceService,$scope); 
+                        $scope.resource = {};
+                        app.loading =false;
+                        app.successMsg = "Resource created successfully";
+                        app.errorMsg = false;
+                        //sendEmail(resourceService,resource);
+                     }
+                     }).catch(function(err) {
+                         console.log(err);
+                         app.loading =false;
+                         app.errorMsg = "Error in creation";
+                         app.successMsg = false;
+                         app.errorClass = "error";
+                     });
+            }else  if(res.data.length > 0){
+                         app.loading =false;
+                         app.errorMsg = "Resource already exist";
+                         app.successMsg = false;
+                         app.errorClass = "error";
+            }
          }).catch(function(err) {
          console.log(err);
-         });
-     }else{
+        }); 
+     }else 
+     {
             app.loading =false;
             app.successMsg = false;
-            app.errorMsg = "Please Fill All Required Fields(*)";
+            app.errorMsg = "Please Enter Required value";
             app.errorClass = "error"
      }
      

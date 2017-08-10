@@ -76,6 +76,50 @@ return res.status(200).send(new Buffer(result.toString(), 'binary').toString('ba
  }
  res.send(data[0]);
  });
+}).get("/kinId/:kinId", function(req, res) {
+ var kin = req.params.kinId;
+ var obj = req.body;
+console.log("kin:"+kin);
+ resourceDAO.aggregate([
+      {
+      $project: {
+        //Convert EndUser to UpperCase
+        "kinId": {
+          "$let": {
+            //var declaration
+            "vars": {
+              "kinVar": "$kinId"
+            },
+            "in": {
+              //conversion to upper case
+              "$toUpper": "$$kinVar"
+            }
+          }
+        },
+       
+      }
+    },
+ 
+    // Stage 2: match using in operator
+    {
+      $match: {
+        "kinId" : {
+          "$in" : [
+            kin.toUpperCase()
+          ]
+        }
+      }
+    }
+ 
+  ], function(err, data) {
+   if (err) {
+   res.send("error");
+   return;
+   }
+
+   console.log(data);
+   res.send(data);
+   });
 }).post("/", function(req, res) {
  var obj = req.body;
  var model = new resourceDAO(obj);
