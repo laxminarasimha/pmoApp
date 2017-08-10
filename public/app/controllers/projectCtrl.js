@@ -82,24 +82,43 @@ $scope.editProject = function (id) {
      console.log(err);
      });
      }
+
+    
  };
  
  $scope.createProject = function(project) {
      $rootScope.Title = "Create Project";
      $scope.IsSubmit = true;
      if ($scope.projectForm.$valid) {
-         projectService.createProject(project).then(function(res) {
-         if (res.data == "created") {
-            getProjectData(projectService,$scope);
-            $scope.project = {};
-			app.loading =false;
-            app.successMsg = "Project created successfully";
-            app.errorMsg = false;
-         }
+         projectService.getProjectForName($scope.project.projectname,$scope.project.regionname).then(function(res) {
+            console.log(res.data.length);
+            if(res.data.length == 0){
+              projectService.createProject(project).then(function(res) {  
+            
+                     if (res.data == "created") {
+                        getProjectData(projectService,$scope); 
+                        $scope.project = {};
+                        app.loading =false;
+                        app.successMsg = "Project created successfully";
+                        app.errorMsg = false;                        
+                     }
+                     }).catch(function(err) {
+                         console.log(err);
+                         app.loading =false;
+                         app.errorMsg = "Error in creation";
+                         app.successMsg = false;
+                         app.errorClass = "error";
+                     });
+            }else  if(res.data.length > 0){
+                         app.loading =false;
+                         app.errorMsg = "Project already exist";
+                         app.successMsg = false;
+                         app.errorClass = "error";
+            }
          }).catch(function(err) {
          console.log(err);
-         });
-     }else
+        }); 
+     }else 
      {
             app.loading =false;
             app.successMsg = false;
