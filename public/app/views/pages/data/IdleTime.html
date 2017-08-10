@@ -117,12 +117,15 @@
                     <thead class="bg-primary">
                       <tr>
                         <th>Resource name</th>
+                        <th>Resource type</th>
                          <th ng-repeat="column in headingList">{{column}}</th>  
                       </tr>
                     </thead>
                     <tbody>
-                        <tr ng-repeat="resourceVar in idleTimeData">
-                            <td>{{ resourceVar.name +'-'+resourceVar.resourcetype}}</td>
+                        <tr ng-repeat="resourceVar in idleTimeData">                       
+                            <td>{{ resourceVar.name }}</td>
+                            <td>{{ resourceVar.resourcetype}}</td>
+
                             <td ng-repeat="column in headingList">                              
                               <div ng-repeat="idleTime in resourceVar.idleTimeArray">
                                   <div ng-if="idleTime.key==column">
