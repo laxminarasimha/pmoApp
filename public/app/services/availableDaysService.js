@@ -114,8 +114,6 @@
   }
 
   function mapAllocation(resource, months, allocationFilter, leaves, mappedResourceData, resourcetype, year) {
-    console.log('called' + resourcetype + '-' + year);
-    console.log(resourcetype);
 
     var allocation = [];
 
