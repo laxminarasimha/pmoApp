@@ -139,3 +139,25 @@ heade .nabar {
 .dataTables_filter{
   padding-bottom: 5px;
 }
+
+.bd-callout {
+    padding-left: 1.25rem;
+    margin-top: 1.25rem;
+    margin-bottom: 1.25rem;
+    border: 1px solid #eee;
+    border-left-width: .25rem;
+    border-radius: .25rem;
+}
+
+.bd-callout-text {
+    border-left-color: #337ab7;
+}
+
+.bd-callout-text h4 {
+    color: #337ab7;
+}
+
+.bd-callout h4 {
+    margin-top: 0;
+    margin-bottom: .25rem;
+}

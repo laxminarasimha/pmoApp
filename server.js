@@ -39,6 +39,7 @@ var connection = mongoose.connect(mongodbUri,options, function(err) {
 app.get('*', function(req,res){
 	res.sendFile(path.join(__dirname + '/public/app/views/index.html'));
 })
+
 app.listen(port, function(){
 	console.log('Running the Server on port : ' + port);
 });
