@@ -64,42 +64,84 @@ $scope.editRegion = function (id) {
  
  $scope.saveData = function(region) {
      if ($scope.regionForm.$valid) {
-     regionService.updateRegion(region).then(function(res) {
-     if (res.data == "updated") {
-        getRegionData(regionService,$scope);
-        $scope.region = {};
-        app.loading =false;
-        app.successMsg = "Region Updated successfully";
-        app.errorMsg = false;
-     }
-     }).catch(function(err) {
-     console.log(err);
-     });
-     }
- };
- 
- $scope.createRegion = function(region) {
-     $rootScope.Title = "Create Region";
-     $scope.IsSubmit = true;
-     if ($scope.regionForm.$valid) {
-         regionService.createRegion(region).then(function(res) {
-         if (res.data == "created") {
-            getRegionData(regionService,$scope);
-            $scope.region = {};
-            app.loading =false;
-            app.successMsg = "Region created successfully";
-            app.errorMsg = false;
-         }
+         regionService.getRegionForName($scope.region.regionname).then(function(res) {
+            if(res.data.length == 0){
+              regionService.updateRegion(region).then(function(res) {
+            
+                     if (res.data == "updated") {
+                        getRegionData(regionService,$scope);
+                        $scope.skill = {};
+                        app.loading =false;
+                        app.successMsg = "Region updated successfully";
+                        app.errorMsg = false;
+                     }
+                     }).catch(function(err) {
+                         console.log(err);
+                         app.loading =false;
+                         app.errorMsg = "Error in creation";
+                         app.successMsg = false;
+                         app.errorClass = "error";
+                     });
+            }else  if(res.data.length > 0){
+                         app.loading =false;
+                         app.errorMsg = "Region already exist";
+                         app.successMsg = false;
+                         app.errorClass = "error";
+            }
          }).catch(function(err) {
          console.log(err);
-         });
-     }else
+        }); 
+     }else 
      {
             app.loading =false;
             app.successMsg = false;
             app.errorMsg = "Please Enter Required value";
             app.errorClass = "error"
      }
+      
+
+
+ };
+ 
+ $scope.createRegion = function(region) {
+     $rootScope.Title = "Create Region";
+     $scope.IsSubmit = true;
+     if ($scope.regionForm.$valid) {
+        regionService.getRegionForName($scope.region.regionname).then(function(res) {
+            if(res.data.length == 0){
+              regionService.createRegion(region).then(function(res) {
+            
+                     if (res.data == "created") {
+                        getRegionData(regionService,$scope);
+                        $scope.skill = {};
+                        app.loading =false;
+                        app.successMsg = "Region created successfully";
+                        app.errorMsg = false;
+                     }
+                     }).catch(function(err) {
+                         console.log(err);
+                         app.loading =false;
+                         app.errorMsg = "Error in creation";
+                         app.successMsg = false;
+                         app.errorClass = "error";
+                     });
+            }else  if(res.data.length > 0){
+                         app.loading =false;
+                         app.errorMsg = "Region already exist";
+                         app.successMsg = false;
+                         app.errorClass = "error";
+            }
+         }).catch(function(err) {
+         console.log(err);
+        }); 
+     }else 
+     {
+            app.loading =false;
+            app.successMsg = false;
+            app.errorMsg = "Please Enter Required value";
+            app.errorClass = "error"
+     }
+      
      
  }
 

@@ -178,6 +178,7 @@
 			}
 		}
 
+		var isConflict = false;
 
 		angular.forEach(alloCollection, function (item) {
 
@@ -196,11 +197,20 @@
 				buffertime[k] = round((item.availabledays[k].value - buffertime[k]), 1);        // this check the status of mapping value with allocaiton value only with add leaves
 				buffertime[k] = round((buffertime[k] - item.vacation[k].value), 1);	            // minus the leave days from totaldays as well
 				totalAllocDays[k].value = totalAllocDays[k].value + item.availabledays[k].value;  // this sums actual available days as per mapping percentage
+
+				if (buffertime[k] < 0) {
+					isConflict = true;
+				}
 			}
 
+
 			item.buffertime = buffertime;
+			item.isConflict = isConflict;
 
 		});
+
+
+		// if there is not allocation done yet,so it only shows the available mandays after deduct leaves on the months
 
 		if (alloCollection.length <= 0 && mappedResourceData.length > 0) {
 
@@ -210,11 +220,16 @@
 				this.availableday = [];
 				this.percent = [];
 			}
+
 			for (var map = 0; map < mappedResourceData.length; map++) {
 				var noalloc = new NoAllocation();
 				noalloc.type = mappedResourceData[map].resourceType;
 				noalloc.availableday = mappedResourceData[map].monthlyAvailableActualMandays;
 				noalloc.percent = mappedResourceData[map].taggToEuroclear;
+				for (var month = 0; month < leaves.length; month++) {
+					noalloc.availableday[month].value = round((noalloc.availableday[month].value - leaves[month].value), 1);
+				}
+
 				scope.noallocation.push(noalloc);
 
 			}
@@ -262,7 +277,7 @@
 		getHolidayData(holidayListService, $scope, new Date().getFullYear()); // get all the date from current year
 
 
-		$scope.updateAllocaiton = function (resource, year, loc, event) {
+		$scope.updateAllocaiton = function (resource, year, loc, rowIndex, event) {
 			angular.forEach($scope.allocationList, function (item) {
 				if (item.resource === resource && item.year === year) {
 					allocationService.updateAllocation(item).then(function (res) {
@@ -274,7 +289,8 @@
 					});
 				}
 			});
-			$scope.childInfo(resource, year, loc, event, loc, true);
+
+			$scope.childInfo(resource, year, loc, rowIndex, event, true);
 		}
 
 
@@ -285,9 +301,9 @@
 		$scope.vm.dtOptions = DTOptionsBuilder.newOptions()
 			.withOption('order', [0, 'asc']);
 
-		$scope.childInfo = function (resource, year, location, event, updateTable) {
-			var scope = $scope.$new(true);
+		$scope.childInfo = function (resource, year, location, listIndex, event, updateTable) {
 
+			var scope = $scope.$new(true);
 			var link = angular.element(event.currentTarget),
 				icon = link.find('.glyphicon'),
 				tr = link.parent().parent(),
@@ -302,6 +318,18 @@
 				childShown = row.child.isShown();
 
 			scope.allocCollection = filter(scope, $scope.allocationList, resource, year, $scope.mappedResourceData, leaves, holidays, childShown);
+
+
+			if (typeof scope.allocCollection !== "undefined") {
+				var isConflict = false;
+				angular.forEach(scope.allocCollection, function (item) {
+					if (item.isConflict)
+						isConflict = true;
+				});
+
+				$scope.mappingValue[listIndex].isConflict = isConflict;
+			}
+
 
 			if (updateTable) {
 				row.child($compile('<div tmpl class="clearfix"></div>')(scope)).show();

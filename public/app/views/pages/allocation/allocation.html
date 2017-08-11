@@ -1,0 +1,244 @@
+<div>
+    <ul class="nav nav-pills">
+        <li class="active">
+            <a href="#list" data-toggle="tab">Old Allocation</a>
+        </li>
+        <li><a href="#create" data-toggle="tab">Create Allocaiton</a>
+        </li>
+
+    </ul>
+
+    <div class="tab-content clearfix">
+        <div class="tab-pane active" id="list">
+            <div class="tab-content" ng-controller="allocationCtrl">
+                <div class="tab-pane active" id="tab1">
+                    <div class="panel-body" ng-show="loading || successMsg || errorMsg">
+                        <div class="row">
+                            <div class='col-sm-12'>
+                                <div class="jumbotron text-center" ng-show="loading">
+                                    <span class="glyphicon glyphicon-repeat spinner"></span>
+                                    <p>Loading...</p>
+                                </div>
+                                <div class="row show-hide-message" ng-show="successMsg">
+                                    <div class="alert alert-success">{{successMsg}}</div>
+                                </div>
+                                <div class="row show-hide-message" ng-show="errorMsg">
+                                    <div class="alert alert-danger">{{errorMsg}}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel-footer">
+                        <div class="panel-body">
+                            <table class="table table-striped table-curved" cellspacing="0" width="100%" datatable="ng" dt-options="vm.dtOptions" dt-instance="vm.dtInstance">
+                                <thead class="bg-primary">
+                                    <tr>
+                                        <th> </th>
+                                        <th style="text-align: center;">Name</th>
+                                        <th style="text-align: center;">Year</th>
+                                        <th style="text-align: center;">Skill</th>
+                                        <th style="text-align: center;">Region</th>
+                                        <th style="text-align: center;">Location</th>
+                                        <th style="text-align: center;">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="allocation in mappingValue" ng-value="{{$index}}">
+                                        <td style="text-align: center;"><a class="green shortinfo" href="javascript:;" ng-click="childInfo(allocation.mappedResource.resourcename,allocation.year,allocation.mappedResource.baseentity,$index, $event)"
+                                                title="Click to view more"><i class="glyphicon glyphicon-plus-sign"></a></td>
+                                        <td style="text-align: center;">{{allocation.mappedResource.resourcename}}</td>
+                                        <td style="text-align: center;">{{allocation.year}}</td>
+                                        <td style="text-align: center;">{{allocation.skill}}</td>
+                                        <td style="text-align: center;">{{allocation.region}}</td>
+                                        <td style="text-align: center;">{{allocation.mappedResource.baseentity}}</td>
+
+                                        <td style="width:7%;" align="center">
+
+                                            <span class="label" style="display: {{allocation.isConflict ? '' : 'none'}}">
+                  			<a class="red"  data-toggle="modal" 
+					  		 ng-click="childInfo(allocation.mappedResource.resourcename,allocation.year,allocation.mappedResource.baseentity,$index, $event)" title="Conflict in  Allociton">
+					 		 <i class="glyphicon glyphicon-flash"></i></a>
+                 		 </span>
+                                            <span class="label">
+                  			<a class="green" ng-click="updateAllocaiton(allocation.mappedResource.resourcename,allocation.year,allocation.mappedResource.baseentity,$index,$event);" title="Save Allocation"><i class="glyphicon glyphicon-pencil"></i></a> 
+                  		</span>
+                                            <span class="label">
+                  			<a class="red"  data-toggle="modal" 
+					  		ng-click"" title="Delete Allociton">
+					 		 <i class="glyphicon glyphicon-remove"></i></a>
+                 		 </span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <style>
+                        #conflict {
+                            background: red;
+                            width: 10px;
+                            height: 10px;
+                            position: relative;
+                            text-align: center;
+                            -webkit-transform: rotate(20deg);
+                            -moz-transform: rotate(20deg);
+                            -ms-transform: rotate(20deg);
+                            -o-transform: rotate(20eg);
+                        }
+
+                        #conflict:before {
+                            content: "";
+                            position: absolute;
+                            top: 10;
+                            left: 0;
+                            height: 10px;
+                            width: 10px;
+                            background: red;
+                            -webkit-transform: rotate(135deg);
+                            -moz-transform: rotate(135deg);
+                            -ms-transform: rotate(135deg);
+                            -o-transform: rotate(135deg);
+                        }
+                    </style>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-pane" id="create">
+            <form name="createAllocationForm" ng-submit="" novalidate ng-controller="createAllocationCtrl">
+                <legend>Create Allocation</legend>
+                <div class="panel panel-info">
+                    <div class="panel-heading" align="center">
+                        <div class='row'>
+                            <div class='col-sm-3'>
+                                <div class="form-group">
+                                    <label for startDate>Allocation Start Month:</label>
+                                    <div class="input-group date form_date " data-date-format="dd MM yyyy" data-link-format="yyyy-mm-dd">
+                                        <input class="form-control" type="text" ng-model="startDate" class="form-control" readonly>
+                                        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col-sm-3'>
+
+                                <div class="form-group">
+                                    <label for startDate>Allocation End Month:</label>
+                                    <div class="input-group date form_date " data-date-format="dd MM yyyy" data-link-format="yyyy-mm-dd">
+                                        <input class="form-control" type="text" ng-model="endDate" class="form-control" readonly>
+                                        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col-sm-6' style="padding-top:.5cm;">
+                                <div class=form-group>
+                                    <label for resource>Resources:</label>
+                                    <select id="resource-select" id="resource" ng-model="resource" required multiple="multiple" multi-select class="form-control"></select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class='row'>
+                            <div class='col-sm-12'>
+                                <div align="right">
+                                    <button class="btn btn-primary" type="button" ng-click="createAllocation()">Projection</button>
+                                    <button class="btn btn-warning" ng-click="clearFields()" type="button">Clear</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel-body" ng-show="loading || successMsg || errorMsg">
+                        <div class="row">
+                            <div class='col-sm-12'>
+                                <div class="jumbotron text-center" ng-show="loading">
+                                    <span class="glyphicon glyphicon-repeat spinner"></span>
+                                    <p>Loading...</p>
+                                </div>
+                                <div class="row show-hide-message" ng-show="successMsg">
+                                    <div class="alert alert-success">{{successMsg}}</div>
+                                </div>
+                                <div class="row show-hide-message" ng-show="errorMsg">
+                                    <div class="alert alert-danger">{{errorMsg}}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="panel-footer" style='overflow-y:visible; display:{{hidden}}'>
+                        <div class="row" allign="right" style="padding-top: 2px">
+                            <div class='col-sm-10' />
+                            <div class='col-sm-2'>
+                                <button class="btn btn-primary" type="button" ng-click="saveAllocation()">Save</button>
+                            </div>
+                        </div>
+                        <div class="panel-body" style="overflow: scroll;">
+                            <table class="table table-striped table-curved" cellspacing="0" width="100%">
+                                <thead>
+                                    <tr>
+                                        <th>Resource</th>
+                                        <th>Type</th>
+                                        <th>Project</th>
+                                        <th ng-repeat="data in months">{{data.month}}</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="allocRows in resourceWiseAllocaiton" id="{{$index}}">
+                                        <td>
+                                            <span class="form-control" editable-text="allocRows.resource" e-name="resource" e-form="rowform">
+                                                        {{ allocRows.resource }}
+                                                    </span>
+                                        </td>
+                                        <td>
+                                            <span editable-select="allocRows.resourcetype" e-name="resourcetype" e-form="rowform">
+                                                        <select class="form-control" ng-model="allocRows.resourcetype" ng-options="item.resourceTypename as item.resourceTypename for item in resourceTypeList" />
+                                                    </span>
+                                        </td>
+                                        <td>
+                                            <span editable-select="allocRows.project" e-name="project" e-form="rowform">
+                                                        <select  class="form-control" ng-model="allocRows.project" ng-options="item.projectname as item.projectname for item in project | projectfilter:'Vacation'"/>
+                                                    </span>
+                                        </td>
+                                        <td ng-repeat="months in allocRows.allocation">
+                                            <span editable-select="alloc.tag" e-name="tag" e-form="rowform">
+                                                        <input class="form-control" type="text"  name="tagged" ng-model="months.value"  maxlength="4" size="4"/>
+                                                    </span>
+                                        </td>
+                                        <td style="white-space: nowrap">
+                                            <div class="buttons">
+                                                <button type="button" class="btn btn-primary" ng-click="clearAllocation($index)">Clear</button>
+                                                <button type="button" class="btn btn-danger" ng-click="removeAllocation($index)">Delete</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    $('#resource-select').multiselect();
+
+    $('.form_date').datetimepicker({
+        format: "mm/yyyy",
+        startView: "year",
+        minView: "year",
+        autoclose: 1,
+        startDate: '-0m'
+    });
+
+</script>
+
+<style>
+    body {
+        padding: 10px;
+    }
+</style>

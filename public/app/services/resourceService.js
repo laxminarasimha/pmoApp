@@ -21,6 +21,10 @@
        url = globalConfig.apiAddress + "/resource";
        return $http.post(url, resource);
        },
+       getResourceForKinId: function(kinId) {
+       url = globalConfig.apiAddress + "/resource/kinId/" + kinId;
+       return $http.get(url);
+       },
        updateResource: function(resource) {
        url = globalConfig.apiAddress + "/resource/" + resource._id;
        return $http.put(url, resource);

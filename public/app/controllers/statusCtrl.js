@@ -55,7 +55,7 @@
      
  };
  
-$scope.editStatus = function (id) {
+$scope.editStatus = function (id) {    
      $rootScope.Title = "Edit Status";
      statusService.getStatusForID(id).then(function(res) {
      $scope.status = res.data;
@@ -67,14 +67,38 @@ $scope.editStatus = function (id) {
  
  $scope.saveData = function(status) {
      if ($scope.statusForm.$valid) {
-     statusService.updateStatus(status).then(function(res) {
-     if (res.data == "updated") {
-        getStatusData(statusService,$scope);
-        $scope.status = {};
-     }
-     }).catch(function(err) {
-     console.log(err);
-     });
+         statusService.getStatusForName($scope.status.statusname).then(function(res) {
+            if(res.data.length == 0){
+              statusService.updateStatus(status).then(function(res) {              
+                     if (res.data == "updated") {
+                        getStatusData(statusService,$scope);
+                        $scope.status = {};
+                        app.loading =false;
+                        app.successMsg = "Status Updated successfully";
+                        app.errorMsg = false;
+                     }
+                     }).catch(function(err) {
+                         console.log(err);
+                         app.loading =false;
+                         app.errorMsg = "Error in creation";
+                         app.successMsg = false;
+                         app.errorClass = "error";
+                     });
+            }else  if(res.data.length > 0){
+                         app.loading =false;
+                         app.errorMsg = "Status already exist";
+                         app.successMsg = false;
+                         app.errorClass = "error";
+            }
+         }).catch(function(err) {
+         console.log(err);
+        }); 
+     }else
+        {
+            app.loading =false;
+            app.successMsg = false;
+            app.errorMsg = "Please Enter Required value";
+            app.errorClass = "error"
      }
  };
  
@@ -83,21 +107,33 @@ $scope.editStatus = function (id) {
      $scope.IsSubmit = true;
      if ($scope.statusForm.$valid) {
         app.loading = true;
-         statusService.createStatus(status).then(function(res) {
-         if (res.data == "created") {            
-            getStatusData(statusService,$scope);
-            $scope.status = {};
-            app.loading =false;
-            app.successMsg = "Status created successfully";
-            app.errorMsg = false;
-         }else{
-            app.loading =false;
-            app.successMsg = "Status Updated successfully";
-            app.errorMsg = false;
-         }
+        statusService.getStatusForName($scope.status.statusname).then(function(res) {
+            if(res.data.length == 0){
+              statusService.createStatus(status).then(function(res)  {  
+            
+                     if (res.data == "created") {
+                        getStatusData(statusService,$scope);
+                        $scope.status = {};
+                        app.loading =false;
+                        app.successMsg = "Status created successfully";
+                        app.errorMsg = false;
+                     }
+                     }).catch(function(err) {
+                         console.log(err);
+                         app.loading =false;
+                         app.errorMsg = "Error in creation";
+                         app.successMsg = false;
+                         app.errorClass = "error";
+                     });
+            }else  if(res.data.length > 0){
+                         app.loading =false;
+                         app.errorMsg = "Status already exist";
+                         app.successMsg = false;
+                         app.errorClass = "error";
+            }
          }).catch(function(err) {
          console.log(err);
-         });
+        }); 
      }else
      {
             app.loading =false;

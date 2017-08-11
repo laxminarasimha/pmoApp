@@ -17,6 +17,10 @@
        url = globalConfig.apiAddress + "/status/" + id;
        return $http.get(url);
        },
+       getStatusForName: function(statusname) {
+       url = globalConfig.apiAddress + "/status/statusname/" + statusname;
+       return $http.get(url);
+       },
        createStatus: function(status) {
        url = globalConfig.apiAddress + "/status";
        return $http.post(url, status);

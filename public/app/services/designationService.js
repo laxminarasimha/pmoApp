@@ -17,6 +17,10 @@
        url = globalConfig.apiAddress + "/designation/" + id;
        return $http.get(url);
        },
+       getDesignationForName: function(designationname) {
+       url = globalConfig.apiAddress + "/designation/designationname/" + designationname;
+       return $http.get(url);
+       },
        createDesignation: function(designation) {
        url = globalConfig.apiAddress + "/designation";
        return $http.post(url, designation);

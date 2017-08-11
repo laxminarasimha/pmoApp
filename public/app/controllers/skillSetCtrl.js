@@ -57,7 +57,7 @@
      });
  };
  
-$scope.editSkill = function (id) {
+$scope.editSkill = function (id) {   
      $rootScope.Title = "Edit Skill Set";
      skillSetService.getSkillSetsForID(id).then(function(res) {
      $scope.skill = res.data;
@@ -69,22 +69,39 @@ $scope.editSkill = function (id) {
  
  $scope.saveData = function(skill) {
      if ($scope.skillForm.$valid) {
-     skillSetService.updateSkillSet(skill).then(function(res) {
-     if (res.data == "updated") {
-        getSkillData(skillSetService,$scope);        
-        $scope.skill = {};
-        app.loading =false;
-        app.successMsg = "Skillset Updated successfully";
-        app.errorMsg = false;
-     }else{
-         app.loading =false;
-         app.successMsg = "Skillset is already exist";
-         app.errorMsg = false;
-         app.errorClass = "error"
-     }
-     }).catch(function(err) {
-     console.log(err);
-     });
+        skillSetService.getSkillSetsForName($scope.skill.skillname).then(function(res) {
+            if(res.data.length == 0){
+              skillSetService.updateSkillSet(skill).then(function(res) {  
+            
+                     if (res.data == "updated") {
+                        getSkillData(skillSetService,$scope);
+                        $scope.skill = {};
+                        app.loading =false;
+                        app.successMsg = "Skillset Updated successfully";
+                        app.errorMsg = false;
+                     }
+                     }).catch(function(err) {
+                         console.log(err);
+                         app.loading =false;
+                         app.errorMsg = "Error in creation";
+                         app.successMsg = false;
+                         app.errorClass = "error";
+                     });
+            }else  if(res.data.length > 0){
+                         app.loading =false;
+                         app.errorMsg = "Skillset already exist";
+                         app.successMsg = false;
+                         app.errorClass = "error";
+            }
+         }).catch(function(err) {
+         console.log(err);
+        }); 
+     }else 
+     {
+            app.loading =false;
+            app.successMsg = false;
+            app.errorMsg = "Please Enter Required value";
+            app.errorClass = "error"
      }
  };
  
@@ -96,23 +113,34 @@ $scope.editSkill = function (id) {
      $scope.IsSubmit = true;
     
     if ($scope.skillForm.$valid) {
-         skillSetService.createSkillSet(skill).then(function(res) {   
+
+         skillSetService.getSkillSetsForName($scope.skill.skillname).then(function(res) {
+            if(res.data.length == 0){
+              skillSetService.createSkillSet(skill).then(function(res) {  
             
-         if (res.data == "created") {
-            getSkillData(skillSetService,$scope);
-            $scope.skill = {};
-            app.loading =false;
-            app.successMsg = "Skillset created successfully";
-            app.errorMsg = false;
-         }else{
-             app.loading =false;
-             app.errorMsg = "Skillset already exist";
-             app.successMsg = false;
-             app.errorClass = "error"
-         }
+                     if (res.data == "created") {
+                        getSkillData(skillSetService,$scope);
+                        $scope.skill = {};
+                        app.loading =false;
+                        app.successMsg = "Skillset created successfully";
+                        app.errorMsg = false;
+                     }
+                     }).catch(function(err) {
+                         console.log(err);
+                         app.loading =false;
+                         app.errorMsg = "Error in creation";
+                         app.successMsg = false;
+                         app.errorClass = "error";
+                     });
+            }else  if(res.data.length > 0){
+                         app.loading =false;
+                         app.errorMsg = "Skillset already exist";
+                         app.successMsg = false;
+                         app.errorClass = "error";
+            }
          }).catch(function(err) {
          console.log(err);
-         });
+        }); 
      }else 
      {
             app.loading =false;
@@ -175,6 +203,14 @@ function populateTable(page,skillSetService,$scope){
      });
 
 }*/
+
+function getSkillByName(skillSetService,$scope){
+       skillSetService.getSkillSetsForName($scope.skill.skillname).then(function(res) {
+            console.log(res.data);
+         }).catch(function(err) {
+         console.log(err);
+     });
+}
 
 
 function openDialog(){

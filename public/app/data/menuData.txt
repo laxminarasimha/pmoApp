@@ -14,8 +14,8 @@
 {
 "id" : "3",
 "name" : "Allocation",
-"submenu" : [{"id":"1", "name":"List","page":"allocationList"},{"id":"2","name":"Create","page":"createAllocation"}],
-"role" : ["SAdmin","Admin"]
+"submenu" : []
+
 },
 {
 "id" : "4",

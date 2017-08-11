@@ -15,6 +15,20 @@ app.use(bodyParser.urlencoded({extended:true}));
 app.use(express.static(__dirname + '/public')); // Giving Access
 app.use('/api',appRoutes);
 
+//===========Log4j setup============//
+const log4js = require('log4js');
+log4js.configure({
+  appenders: { demandcapacity: { 
+							  	type: 'dateFile', 
+							  	filename: 'logs/demandcapacity.log',
+							    "pattern": "-yyyy-MM-dd",
+							    alwaysIncludePattern:true 
+						      } 
+			 },
+  categories: { default: { appenders: ['demandcapacity'], level: 'trace' } }
+});
+const logger = log4js.getLogger('demandcapacity');
+//============Log4j setup===========//
 
 
 //var mongodbUri = 'mongodb://laxmi:Laxmi123@ds119810.mlab.com:19810/pmodb';
@@ -24,9 +38,10 @@ var options = {};
 
 var connection = mongoose.connect(mongodbUri,options, function(err) {	
 	if(err){
-		console.log('Not Connected to the databse:' + err);
+		logger.error('Connection Failed.'+err);
 	} else {
 		console.log('Connection Successful');
+		logger.info('Connection Successful.');
 	}
 }); 
 

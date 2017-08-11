@@ -20,6 +20,49 @@ router.get("/", function(req, res) {
  }
  res.send(data[0]);
  });
+}).get("/resourceTypename/:resourceTypename", function(req, res) {
+ var resourceType = req.params.resourceTypename;
+console.log("resourceType:"+resourceType);
+ resourceTypeDAO.aggregate([
+      {
+      $project: {
+        //Convert EndUser to UpperCase
+        "resourceTypename": {
+          "$let": {
+            //var declaration
+            "vars": {
+              "resourceTypeVar": "$resourceTypename"
+            },
+            "in": {
+              //conversion to upper case
+              "$toUpper": "$$resourceTypeVar"
+            }
+          }
+        },
+       
+      }
+    },
+ 
+    // Stage 2: match using in operator
+    {
+      $match: {
+        "resourceTypename" : {
+          "$in" : [
+            resourceType.toUpperCase()
+          ]
+        }
+      }
+    }
+ 
+  ], function(err, data) {
+	 if (err) {
+	 res.send("error");
+	 return;
+	 }
+
+	 console.log(data);
+	 res.send(data);
+	 });
 }).post("/", function(req, res) {
  var obj = req.body;
  var model = new resourceTypeDAO(obj);

@@ -66,17 +66,39 @@ $scope.editRole = function (id) {
  
  $scope.saveData = function(role) {
      if ($scope.roleForm.$valid) {
-     roleService.updateRole(role).then(function(res) {
-     if (res.data == "updated") {
-        getRoleData(roleService,$scope);
-        $scope.role = {};
-        app.loading =false;
-        app.successMsg = "Role Updated successfully";
-        app.errorMsg = false;
-     }
-     }).catch(function(err) {
-     console.log(err);
-     });
+        roleService.getRoleForName($scope.role.rolename).then(function(res) {
+            if(res.data.length == 0){
+              roleService.updateRole(role).then(function(res) { 
+            
+                     if (res.data == "updated") {
+                        getRoleData(roleService,$scope);
+                        $scope.role = {};
+                        app.loading =false;
+                        app.successMsg = "Role Updated successfully";
+                        app.errorMsg = false;
+                     }
+                     }).catch(function(err) {
+                         console.log(err);
+                         app.loading =false;
+                         app.errorMsg = "Error in creation";
+                         app.successMsg = false;
+                         app.errorClass = "error";
+                     });
+            }else  if(res.data.length > 0){
+                         app.loading =false;
+                         app.errorMsg = "Role already exist";
+                         app.successMsg = false;
+                         app.errorClass = "error";
+            }
+         }).catch(function(err) {
+         console.log(err);
+        }); 
+     }else 
+     {
+            app.loading =false;
+            app.successMsg = false;
+            app.errorMsg = "Please Enter Required value";
+            app.errorClass = "error"
      }
  };
  
@@ -84,24 +106,41 @@ $scope.editRole = function (id) {
      $rootScope.Title = "Create Role";
      $scope.IsSubmit = true;
      if ($scope.roleForm.$valid) {
-         roleService.createRole(role).then(function(res) {
-         if (res.data == "created") {
-            getRoleData(roleService,$scope);
-            $scope.role = {};
-            app.loading =false;
-            app.successMsg = "Role created successfully";
-            app.errorMsg = false;
-         }
+          roleService.getRoleForName($scope.role.rolename).then(function(res) {
+            if(res.data.length == 0){
+              roleService.createRole(role).then(function(res) { 
+            
+                     if (res.data == "created") {
+                        getRoleData(roleService,$scope);
+                        $scope.role = {};
+                        app.loading =false;
+                        app.successMsg = "Role created successfully";
+                        app.errorMsg = false;
+                     }
+                     }).catch(function(err) {
+                         console.log(err);
+                         app.loading =false;
+                         app.errorMsg = "Error in creation";
+                         app.successMsg = false;
+                         app.errorClass = "error";
+                     });
+            }else  if(res.data.length > 0){
+                         app.loading =false;
+                         app.errorMsg = "Role already exist";
+                         app.successMsg = false;
+                         app.errorClass = "error";
+            }
          }).catch(function(err) {
          console.log(err);
-         });
-     }else
+        }); 
+     }else 
      {
             app.loading =false;
             app.successMsg = false;
             app.errorMsg = "Please Enter Required value";
             app.errorClass = "error"
      }
+      
      
  }
 

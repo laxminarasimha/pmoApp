@@ -16,6 +16,10 @@
        url = globalConfig.apiAddress + "/region/" + id;
        return $http.get(url);
        },
+       getRegionForName: function(regionname) {
+       url = globalConfig.apiAddress + "/region/regionname/" + regionname;
+       return $http.get(url);
+       },
        createRegion: function(region) {
        url = globalConfig.apiAddress + "/region";
        return $http.post(url, region);

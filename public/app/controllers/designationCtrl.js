@@ -65,17 +65,39 @@ $scope.editDesignation = function (id) {
  
  $scope.saveData = function(designation) {
      if ($scope.designationForm.$valid) {
-     designationService.updateDesignation(designation).then(function(res) {
-     if (res.data == "updated") {
-        getDesignationData(designationService,$scope);
-        $scope.designation = {};
-        app.loading =false;
-        app.successMsg = "Designation Updated successfully";
-        app.errorMsg = false;
-     }
-     }).catch(function(err) {
-     console.log(err);
-     });
+        designationService.getDesignationForName($scope.designation.designationname).then(function(res) {
+            if(res.data.length == 0){
+              designationService.updateDesignation(designation).then(function(res) {  
+            
+                     if (res.data == "updated") {
+                        getDesignationData(designationService,$scope);
+                        $scope.designation = {};
+                        app.loading =false;
+                        app.successMsg = "Designation Updated successfully";
+                        app.errorMsg = false;
+                     }
+                     }).catch(function(err) {
+                         console.log(err);
+                         app.loading =false;
+                         app.errorMsg = "Error in creation";
+                         app.successMsg = false;
+                         app.errorClass = "error";
+                     });
+            }else  if(res.data.length > 0){
+                         app.loading =false;
+                         app.errorMsg = "Designation already exist";
+                         app.successMsg = false;
+                         app.errorClass = "error";
+            }
+         }).catch(function(err) {
+         console.log(err);
+        }); 
+     }else 
+     {
+            app.loading =false;
+            app.successMsg = false;
+            app.errorMsg = "Please Enter Required value";
+            app.errorClass = "error"
      }
  };
  
@@ -83,24 +105,41 @@ $scope.editDesignation = function (id) {
      $rootScope.Title = "Create Designation";
      $scope.IsSubmit = true;
      if ($scope.designationForm.$valid) {
-         designationService.createDesignation(designation).then(function(res) {
-         if (res.data == "created") {
-            getDesignationData(designationService,$scope);
-            $scope.designation = {};
-            app.loading =false;
-            app.successMsg = "Designation created successfully";
-            app.errorMsg = false;
-         }
+         designationService.getDesignationForName($scope.designation.designationname).then(function(res) {
+            if(res.data.length == 0){
+              designationService.createDesignation(designation).then(function(res) {
+            
+                     if (res.data == "created") {
+                        getDesignationData(designationService,$scope);
+                        $scope.skill = {};
+                        app.loading =false;
+                        app.successMsg = "Designation created successfully";
+                        app.errorMsg = false;
+                     }
+                     }).catch(function(err) {
+                         console.log(err);
+                         app.loading =false;
+                         app.errorMsg = "Error in creation";
+                         app.successMsg = false;
+                         app.errorClass = "error";
+                     });
+            }else  if(res.data.length > 0){
+                         app.loading =false;
+                         app.errorMsg = "Designation already exist";
+                         app.successMsg = false;
+                         app.errorClass = "error";
+            }
          }).catch(function(err) {
          console.log(err);
-         });
-     }else
+        }); 
+     }else 
      {
             app.loading =false;
             app.successMsg = false;
             app.errorMsg = "Please Enter Required value";
             app.errorClass = "error"
      }
+      
      
  }
 

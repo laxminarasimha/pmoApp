@@ -67,17 +67,39 @@ $scope.editResourceType = function (id) {
  
  $scope.saveData = function(resourceType) {
      if ($scope.resourceTypeForm.$valid) {
-     resourceTypeService.updateResourceType(resourceType).then(function(res) {
-     if (res.data == "updated") {
-        getResourceTypeData(resourceTypeService,$scope);
-        $scope.resourceType = {};
-        app.loading =false;
-        app.successMsg = "ResourceType Updated successfully";
-        app.errorMsg = false;
-     }
-     }).catch(function(err) {
-     console.log(err);
-     });
+        resourceTypeService.getResourceTypenameForName($scope.resourceType.resourceTypename).then(function(res) {
+            if(res.data.length == 0){
+             resourceTypeService.updateResourceType(resourceType).then(function(res) {
+            
+                     if (res.data == "updated") {
+                        getResourceTypeData(resourceTypeService,$scope);
+                        $scope.resourceType = {};
+                        app.loading =false;
+                        app.successMsg = "ResourceType Updated successfully";
+                        app.errorMsg = false;
+                     }
+                     }).catch(function(err) {
+                         console.log(err);
+                         app.loading =false;
+                         app.errorMsg = "Error in creation";
+                         app.successMsg = false;
+                         app.errorClass = "error";
+                     });
+            }else  if(res.data.length > 0){
+                         app.loading =false;
+                         app.errorMsg = "ResourceType already exist";
+                         app.successMsg = false;
+                         app.errorClass = "error";
+            }
+         }).catch(function(err) {
+         console.log(err);
+        }); 
+     }else 
+     {
+            app.loading =false;
+            app.successMsg = false;
+            app.errorMsg = "Please Enter Required value";
+            app.errorClass = "error"
      }
  };
  
@@ -85,25 +107,40 @@ $scope.editResourceType = function (id) {
      $rootScope.Title = "Create Resource Type";
      $scope.IsSubmit = true;
      if ($scope.resourceTypeForm.$valid) {
-         resourceTypeService.createResourceType(resourceType).then(function(res) {
-         if (res.data == "created") {
-            getResourceTypeData(resourceTypeService,$scope);
-            $scope.resourceType = {};
-            app.loading =false;
-            app.successMsg = "ResourceType created successfully";
-            app.errorMsg = false;
-         }
+        resourceTypeService.getResourceTypenameForName($scope.resourceType.resourceTypename).then(function(res) {
+            if(res.data.length == 0){
+              resourceTypeService.createResourceType(resourceType).then(function(res) { 
+            
+                     if (res.data == "created") {
+                        getResourceTypeData(resourceTypeService,$scope);
+                        $scope.resourceType = {};
+                        app.loading =false;
+                        app.successMsg = "ResourceType created successfully";
+                        app.errorMsg = false;
+                     }
+                     }).catch(function(err) {
+                         console.log(err);
+                         app.loading =false;
+                         app.errorMsg = "Error in creation";
+                         app.successMsg = false;
+                         app.errorClass = "error";
+                     });
+            }else  if(res.data.length > 0){
+                         app.loading =false;
+                         app.errorMsg = "ResourceType already exist";
+                         app.successMsg = false;
+                         app.errorClass = "error";
+            }
          }).catch(function(err) {
          console.log(err);
-         });
-     }else
+        }); 
+     }else 
      {
             app.loading =false;
             app.successMsg = false;
             app.errorMsg = "Please Enter Required value";
             app.errorClass = "error"
      }
-     
  }
  //=========================Data table==========================//
         $scope.vm = {};

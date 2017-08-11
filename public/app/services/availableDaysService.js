@@ -73,9 +73,8 @@
     }
 
 
-    var allocationObj = null;
-    var allocatonWithBufferTime = new Array();
     var allocationObj = new Array();
+    var allocatonWithBufferTime = new Array();
     var projA = new Array();
     var allocA = new Array();
     var rLoop = false;
@@ -89,7 +88,6 @@
       nResource.resource = rname.resource;
       nResource.kinid = rname.kinId;
 
-
       leavesFilter = $filter('filter')(leaves, { resourcename: rname.resource });
       allocationFilter = $filter('filter')(allocationList, { resource: rname.resource });
 
@@ -97,11 +95,11 @@
 
       angular.forEach(allocationFilter, function (allocFilter) {
 
-        var vRecord = allocFilter.resourcetype + '-' + allocFilter.year + '-' + allocFilter.resourcetype;
+        var vRecord = allocFilter.resourcetype + '-' + allocFilter.resource;
         if (duplicateCheck.indexOf(vRecord) === -1) {
           var object = new Object();
           object.type = allocFilter.resourcetype;
-          object.allocation = mapAllocation(nResource.resource, months, allocationFilter, object.type, leavesFilter, mappedResourceData, object.type, allocFilter.year);
+          object.allocation = mapAllocation(nResource.resource, months, allocationFilter, leavesFilter, mappedResourceData, object.type, allocFilter.year);
           nResource.maps.push(object);
           duplicateCheck.push(vRecord);
         }
@@ -115,7 +113,7 @@
     return allocationObj;
   }
 
-  function mapAllocation(resource, months, allocationFilter, type, leaves, mappedResourceData, resourcetype, year) {
+  function mapAllocation(resource, months, allocationFilter, leaves, mappedResourceData, resourcetype, year) {
 
     var allocation = [];
 
@@ -135,21 +133,22 @@
       var filterMappedResource;
 
       angular.forEach(allocationFilter, function (alloc) {
-        if (alloc.resourcetype === type) {
-          vAlloc.project.push(alloc.project);
+        if (alloc.resourcetype === resourcetype) {
           for (var k = 0; k < alloc.allocation.length; k++) {
             if (alloc.allocation[k].month === month) {
+              vAlloc.project.push(alloc.project);
               vAlloc.allocation.push(alloc.allocation[k].value);
               break;
             }
           }
-
         }
       });
 
       for (var user = 0; user < mappedResourceData.length; user++) {
-        if (mappedResourceData[user].mappedResource.resourcename === resource && mappedResourceData[user].resourceType === resourcetype
+        if (mappedResourceData[user].mappedResource.resourcename === resource
+          && mappedResourceData[user].resourceType === resourcetype
           && mappedResourceData[user].year == year) {
+
           filterMappedResource = mappedResourceData[user];
         }
       }
@@ -157,6 +156,7 @@
       setLeave(vAlloc, leaves, filterMappedResource);
       setBufferTime(vAlloc, resource, filterMappedResource);
       allocation.push(vAlloc);
+
     });
 
     return allocation;
@@ -177,13 +177,14 @@
       });
     });
 
+    if (mappedResourceData != null) {
 
-    for (var adj = 0; adj < mappedResourceData.taggToEuroclear.length; adj++) {
-
-      if (mappedResourceData.taggToEuroclear[adj].key === object.month) {
-        var percent = mappedResourceData.taggToEuroclear[adj].value;
-        var percentV = (object.leave * percent) / 100;
-        object.leave = round(percentV, 1);
+      for (var adj = 0; adj < mappedResourceData.taggToEuroclear.length; adj++) {
+        if (mappedResourceData.taggToEuroclear[adj].key === object.month) {
+          var percent = mappedResourceData.taggToEuroclear[adj].value;
+          var percentV = (object.leave * percent) / 100;
+          object.leave = round(percentV, 1);
+        }
       }
     }
 
@@ -194,14 +195,14 @@
     object.buffertime = 0;
     var actualMandays = [];
     var mappedDays = 0;
-
-    for (var user = 0; user < mappedResourceData.monthlyAvailableActualMandays.length; user++) {
-      if (mappedResourceData.monthlyAvailableActualMandays[user].key === object.month) {
-        mappedDays = mappedResourceData.monthlyAvailableActualMandays[user].value;
-        break;
+    if (mappedResourceData != null) {
+      for (var user = 0; user < mappedResourceData.monthlyAvailableActualMandays.length; user++) {
+        if (mappedResourceData.monthlyAvailableActualMandays[user].key === object.month) {
+          mappedDays = mappedResourceData.monthlyAvailableActualMandays[user].value;
+          break;
+        }
       }
     }
-
     var vBuffer = 0;
 
     for (var k = 0; k < object.allocation.length; k++) {

@@ -21,6 +21,10 @@
        url = globalConfig.apiAddress + "/project";
        return $http.post(url, project);
        },
+       getProjectForName: function(projectname, regionname) {
+       url = globalConfig.apiAddress + "/project/projectname/" + projectname +"/" + regionname;
+       return $http.get(url);
+       },
        updateProject: function(project) {
        url = globalConfig.apiAddress + "/project/" + project._id;
        return $http.put(url, project);
