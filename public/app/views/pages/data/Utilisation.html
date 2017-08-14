@@ -117,12 +117,14 @@
                     <thead class="bg-primary">
                       <tr>
                         <th>Resource name</th>
+                        <th>Resource type</th>
                          <th ng-repeat="column in headingList">{{column}}</th>  
                       </tr>
                     </thead>
                     <tbody>
                         <tr ng-repeat="resourceVar in utilisationData">
-                            <td>{{ resourceVar.name +'-'+resourceVar.resourcetype}}</td>
+                            <td>{{ resourceVar.name }}</td>
+                            <td>{{ resourceVar.resourcetype}}</td>
                             <td ng-repeat="column in headingList">                              
                               <div ng-repeat="utilisationTime in resourceVar.utilisationArray">
                                   <div ng-if="utilisationTime.key==column">

@@ -235,10 +235,6 @@
                 <td>{{ x.mappedResource.skill }}</td>
                 <td>{{x.year}}</td>
                 <td>{{x.region}}</td>
-                <!-- <td>
-                  <a class="btn btn-primary" ng-click="editResourceMapping()">Edit</a>
-                  <a class="btn btn-primary" data-toggle="modal" ng-click="deleteConfirmation(x._id,'Name:'+x.mappedResource.resourcename+',Kin Id:'+x.mappedResource.kinId+',Year:'+x.year)">Delete</a>
-                </td> -->
                 <td style="width:3%;text-align:center">
                   <span class="label">
                   <a class="green"  ng-click="editResourceMapping()" title="Edit Record"><i class="glyphicon glyphicon-pencil"></i></a> 
@@ -247,6 +243,7 @@
                   <a class="red"  data-toggle="modal" 
                       ng-click="deleteConfirmation(x._id,'Name:'+x.mappedResource.resourcename+',Kin Id:'+x.mappedResource.kinId+',Year:'+x.year)" title="Delete Record"><i class="glyphicon glyphicon-remove"></i></a>
                   </span>
+                  </td>
                 </td>
               </tr>
             </tbody>

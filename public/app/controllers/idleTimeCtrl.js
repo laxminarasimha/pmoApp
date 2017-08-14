@@ -119,7 +119,7 @@ angular.module('pmoApp').controller('idleTimeCtrl', Controller);
            var toDate = "01-"+$scope.headingList[$scope.headingList.length-1];
            var list =  availableDaysService.getData(fromDate,toDate);
            //console.log("List====");
-           //console.log(list);
+           console.log(list);
            var resourceIdleTimeArray = [];
            for(var i=0; i<list.length;i++){
              

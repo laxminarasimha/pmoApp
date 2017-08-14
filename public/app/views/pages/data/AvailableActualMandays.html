@@ -120,12 +120,14 @@
                     <thead class="bg-primary">
                       <tr>
                         <th>Resource name</th>
+                        <th>Resource type</th>
                          <th ng-repeat="column in headingList">{{column}}</th>  
                       </tr>
                     </thead>
                     <tbody>                           
                         <tr ng-repeat="resourceVar in mappedResourceList">
-                            <td>{{ resourceVar.mappedResource.resourcename + '-' + resourceVar.resourceType}}</td>
+                            <td>{{ resourceVar.mappedResource.resourcename +' ('+resourceVar.mappedResource.alias+')'}}</td>
+                            <td>{{ resourceVar.resourceType}}</td>
                             <td ng-repeat="column in headingList">
                               <div ng-repeat="mandays in resourceVar.monthlyAvailableActualMandays">
                                   <div ng-if="mandays.key==column">
