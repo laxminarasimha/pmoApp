@@ -87,13 +87,13 @@
 					        </span>
                   </td>
                   <td>
-                    <span  editable-select="allocRows.resourcetype" e-name="resourcetype" e-form="rowform">
+                    <span editable-select="allocRows.resourcetype" e-name="resourcetype" e-form="rowform">
                         <select class="form-control" ng-model="allocRows.resourcetype" ng-options="item.resourceTypename as item.resourceTypename for item in resourceTypeList" />
                     </span>
                   </td>
                   <td>
-                    <span  editable-select="allocRows.project" e-name="project" e-form="rowform">
-					            <select  class="form-control" ng-model="allocRows.project" ng-options="item.projectname as item.projectname for item in project | projectfilter:'Vacation'"/>
+                    <span editable-select="allocRows.project" e-name="project" e-form="rowform">
+                      <select  class="form-control" ng-model="allocRows.project" ng-options="item.projectname as item.projectname for item in project | projectfilter:'Vacation'" />
 					         	</span>
                   </td>
                   <td ng-repeat="months in allocRows.allocation">

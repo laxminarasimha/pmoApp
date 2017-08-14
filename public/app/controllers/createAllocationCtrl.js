@@ -165,8 +165,6 @@
 			$scope.detailDiv = true;
 		}
 
-
-
 		$scope.removeAllocation = function (rowId) {
 			$("#" + rowId).hide();
 			$scope.resourceWiseAllocaiton[rowId].rowSelect = false;
@@ -190,6 +188,13 @@
 			$scope.months = [];
 			$scope.resourceWiseAllocaiton = [];
 			$scope.hidden = "none";
+		}
+
+		$scope.checkPreAllocation = function (resource, resourcetype, project) {
+
+			console.log(resource + '-' + resourcetype + '-' + project);
+			console.log($scope.months);
+
 		}
 
 
@@ -294,6 +299,16 @@
 
 			// 	});
 			// }
+
+			//angular.forEach(maps,function(newalloc){
+			//	var data = allocationService.getAllocation(newalloc.resource,newalloc.resourcetype,newalloc.year,newalloc.project);
+			//	console.log(data);
+
+			//});
+
+
+
+			//console.log(maps);
 			return maps;
 		}
 

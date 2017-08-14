@@ -41,6 +41,74 @@
       return list;
 
     }
+
+    this.getAllocationStatus = function (resourceList) {
+
+      var uniqueResource = [];
+      var allocationList = this.allocation;
+      var resourceMapped = this.resourceMapped;
+      var leaves = this.leaves;
+      var allocationFilter = [];
+
+      angular.forEach(resourceList, function (mapping) {
+
+        var resource = mapping.mappedResource.resourcename;
+        var year = mapping.year;
+        var month = monthsWithYear(year);
+
+
+        for (var alloc = 0; alloc < allocationList.length; alloc++) {
+
+          if (allocationList[alloc].year === mapping.year //&& allocationList[alloc].resourcetype === mapping.resourceType
+            && allocationList[alloc].resource === mapping.mappedResource.resourcename) {
+
+            for (var vmonth = 0; vmonth < allocationList[alloc].allocation.length; vmonth++) { // allocaiton mayn't have 12 months records
+              for (var k = 0; k < 12; k++) {                  // iterate for each month in a year
+                if (month[k].key === allocationList[alloc].allocation[vmonth].month) {
+                  month[k].value += parseInt(allocationList[alloc].allocation[vmonth].value);
+                }
+              }
+            }
+          }
+        }
+
+        // Add leave to the mandays then extract from mapping allocation days
+
+        var flilterLeaves = $filter('filter')(leaves, { resourcename: resource });
+
+        angular.forEach(flilterLeaves, function (leave) {
+          angular.forEach(leave.leavedaysinmonth, function (days) {
+            angular.forEach(month, function (monthday) {
+              if (monthday.key === days.month) {
+                monthday.value += days.value;
+              }
+            });
+          });
+        });
+
+        var mappedValueInYear = monthsWithYear(year);
+        var flilterMapped = $filter('filter')(resourceMapped, { year: year });
+
+        angular.forEach(flilterMapped, function (mappedMonth) {
+          if (mappedMonth.mappedResource.resourcename === resource) {
+            angular.forEach(mappedMonth.monthlyAvailableActualMandays, function (mandays, key) {
+              mappedValueInYear[key].value += mandays.value;
+            });
+          }
+        });
+
+        for (var check = 0; check < 12; check++) {
+          var value = mappedValueInYear[check].value - month[check].value;
+          if (value < 0) {
+            mapping.isConflict = true;
+            break;
+          }
+        }
+      });
+
+      return resourceList;
+
+    }
   }
 
   function filter(allocationList, resource, mappedResourceData, leaves, months, $filter) {
@@ -247,6 +315,23 @@
   function round(value, precision) {
     var multiplier = Math.pow(10, precision || 0);
     return Math.round(value * multiplier) / multiplier;
+  }
+
+  function monthsWithYear(year) {
+    var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+      "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+    var arr = [];
+    function Object(key, value) {
+      this.key = key;
+      this.value = value;
+    };
+
+    for (var i = 0; i < monthNames.length; i++) {
+      arr.push(new Object(monthNames[i] + "-" + year.substr(-2), 0));
+    }
+
+    return arr;
   }
 
 

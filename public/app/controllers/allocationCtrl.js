@@ -72,7 +72,7 @@
 		var object = null;
 		var collection = [];
 		var oldObject = null;
-		var readonly = monthsReadonly(year);
+		var readonly = monthsReadonly(scope.monthLabel);
 
 
 		for (var k = 0; k < allocationDetails.length; k++) {
@@ -239,12 +239,12 @@
 	}
 
 
-	Controller.$inject = ['$scope', 'DTOptionsBuilder', 'DTColumnBuilder', '$compile', 'resourceService', 'projectService', 'allocationService', 'leaveService', 'resourceMappingService', '$filter', 'monthlyHeaderListService', 'availableDaysService', 'holidayListService'];
+	Controller.$inject = ['$scope', 'DTOptionsBuilder', 'DTColumnBuilder', '$compile', 'resourceService', 'projectService', 'allocationService', 'leaveService', 'resourceMappingService', '$filter', 'availableDaysService', 'holidayListService'];
 
-	function Controller($scope, DTOptionsBuilder, DTColumnBuilder, $compile, resourceService, projectService, allocationService, leaveService, resourceMappingService, $filter, monthlyHeaderListService, availableDaysService, holidayListService) {
+	function Controller($scope, DTOptionsBuilder, DTColumnBuilder, $compile, resourceService, projectService, allocationService, leaveService, resourceMappingService, $filter, availableDaysService, holidayListService) {
 
 		$scope.resource = [];
-		$scope.resourceWiseAllocaiton = [];
+		//$scope.resourceWiseAllocaiton = [];
 		$scope.startDate;
 		$scope.endDate;
 		$scope.months = [];
@@ -275,6 +275,7 @@
 		getAlloctionData(allocationService, $scope);
 		getLeaveData(leaveService, $scope);
 		getHolidayData(holidayListService, $scope, new Date().getFullYear()); // get all the date from current year
+		getGraphData($scope, allocationService, leaveService, resourceMappingService, availableDaysService);
 
 
 		$scope.updateAllocaiton = function (resource, year, loc, rowIndex, event) {
@@ -335,6 +336,7 @@
 				row.child($compile('<div tmpl class="clearfix"></div>')(scope)).show();
 
 			} else {
+
 				if (row.child.isShown()) {
 					icon.removeClass('glyphicon-minus-sign').addClass('glyphicon-plus-sign');
 					row.child.hide();
@@ -347,6 +349,11 @@
 				}
 			}
 
+		}
+
+		$scope.getAllocationStatus = function () {
+			$scope.mappingValue = availableDaysService.getAllocationStatus($scope.mappingValue);
+		//	console.log($scope.mappingValue);
 		}
 
 		///////////////////////// End  Datatable Code /////////////////////////////////
@@ -471,6 +478,29 @@
 		});
 	}
 
+	function getGraphData($scope, allocationService, leaveService, resourceMappingService, availableDaysService) {
+		var allocation = [];
+		var resoruceMapping = [];
+		var leave = [];
+		allocationService.getAllAllocation().then(function (res) {
+			allocation = res.data;
+			leaveService.getLeave().then(function (res) {
+				leave = res.data;
+				resourceMappingService.getMappedResources().then(function (res) {
+					resoruceMapping = res.data;
+					availableDaysService.intialize(allocation, resoruceMapping, leave);
+					$scope.getAllocationStatus(availableDaysService);
+				}).catch(function (err) {
+					console.log(err);
+				});
+			}).catch(function (err) {
+				console.log(err);
+			});
+		}).catch(function (err) {
+			console.log(err);
+		});
+	}
+
 
 	function daysInMonthAndYear(year, holidays) {
 		var holidayList = [];
@@ -532,14 +562,29 @@
 		return arr;
 	}
 
-	function monthsReadonly(year) {
-
+	function monthsReadonly(monthLabel) {
 		var arr = [];
-		var currentMont = new Date().getMonth();
-		for (var i = 0; i < 12; i++) {
-			arr.push(i < currentMont);
+		for (var i = 0; i < monthLabel.length; i++) {
+			var date = moment(monthLabel[i], "MMM-YYYY");
+			arr.push(date < getToday());
 		}
 		return arr;
+
+	}
+
+
+	function getMonth(month) {
+		var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+			"Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+		return monthNames[month];
+	}
+
+	function getToday() {
+
+		var date = new Date();
+		var year = String(date.getFullYear());
+		return moment(getMonth(date.getMonth()) + '-' + year.substr(-2), "MMM-YYYY");
+
 	}
 
 	function monthsWithYear(year) {

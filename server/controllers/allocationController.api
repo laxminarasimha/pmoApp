@@ -20,6 +20,20 @@ router.get("/", function(req, res) {
  	}
  		res.send(data[0]);
 	});
+}).get("/type/:resource/:type/:year/:project", function(req, res) {
+ 	 
+	 var resource = req.params.resource;
+	 var type = req.params.type;
+	 var year = req.params.year;
+	 var project = req.params.project;
+
+ 	allocationDAO.find({year:year}, function(err, data) {
+ 	if (err) {
+ 		res.send("error");
+ 		return;
+ 	}
+ 		res.send(data[0]);
+	});
 }).post("/", function(req, res) {
  	var obj = req.body;
  	var model = new allocationDAO(obj);

@@ -205,13 +205,8 @@
         };
 
         $scope.checkmonth = function (value) {
-            // if (length >= 12) {
-            //     var currentMonth = new Date().getMonth();
-            //     return index < currentMonth;
-            // }
-            // return false;
-            console.log(value);
 
+            return moment(value,"MMM-YYYY") < getToday();
         }
 
 
@@ -792,6 +787,21 @@
 
         return arr;
     }
+
+    function getMonth(month) {
+        var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+            "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        return monthNames[month];
+    }
+
+    function getToday() {
+
+        var date = new Date();
+        var year = String(date.getFullYear());
+        return moment(getMonth(date.getMonth()) + '-' + year.substr(-2),"MMM-YYYY");
+
+    }
+
 
     function openDialog() {
         $('#confirmModal').modal('show');

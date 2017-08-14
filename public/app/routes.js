@@ -209,36 +209,25 @@ var app = angular.module('appRoutes', ['ui.router'])
 				data: { pageTitle: 'Add Leave', roles: ['ADMIN'] }
 			})
 
-
-			.state('root.allocation', {
-				url: '/allocation',
+			.state('root.allocationList', {
+				url: '/allocationList',
 				views: {
 					'container@': {
-						templateUrl: 'app/views/pages/allocation/allocation.html',
-						controller: ''
+						templateUrl: 'app/views/pages/allocation/allocationList.html',
 					}
 				},
-				data: { pageTitle: 'Allocation', roles: ['ADMIN'] }
+				data: { pageTitle: 'Allocation List', roles: ['ADMIN'] }
 			})
-			// .state('root.allocationList', {
-			// 	url: '/allocation',
-			// 	views: {
-			// 		'container@': {
-			// 			templateUrl: 'app/views/pages/allocation/allocation.html',
-			// 		}
-			// 	},
-			// 	data: { pageTitle: 'Allocation List', roles: ['ADMIN'] }
-			// })
 
-			// .state('root.createAllocation', {
-			// 	url: '/createAllocation',
-			// 	views: {
-			// 		'container@': {
-			// 			templateUrl: 'app/views/pages/allocation/createAllocation.html',
-			// 		}
-			// 	},
-			// 	data: { pageTitle: 'Create Allocation', roles: ['ADMIN'] }
-			// })
+			.state('root.createAllocation', {
+				url: '/createAllocation',
+				views: {
+					'container@': {
+						templateUrl: 'app/views/pages/allocation/createAllocation.html',
+					}
+				},
+				data: { pageTitle: 'Create Allocation', roles: ['ADMIN'] }
+			})
 
 			.state('root.Resource Mapping', {
 				url: '/Resource Mapping',
