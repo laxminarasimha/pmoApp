@@ -3,12 +3,22 @@ var express = require("express"),
  holidayListDAO = require("../models/holidayListDAO.js");
  
 router.get("/", function(req, res) {
- holidayListDAO.find({},null, {sort:{ locationname: 1}}, function(err, data) {
+holidayListDAO.count({}, function(err, data) {
  if (err) {
  res.send("error");
  return;
  }
- res.send(data);
+ if(data == 0){
+    res.send("");
+ }else{
+   holidayListDAO.find({},null, {sort:{ locationname: 1}}, function(err, data) {
+	 if (err) {
+	 res.send("error");
+	 return;
+	 }
+	 res.send(data);
+	 });
+	 }
  });
 }).get("/:id", function(req, res) {
  var id = req.params.id;
@@ -20,15 +30,23 @@ router.get("/", function(req, res) {
  res.send(data[0]);
  });
 }).get("/location/:locationname", function(req, res) {
- var loc = req.params.locationname;
- holidayListDAO.find({ locationname: loc }, function(err, data) {
+var loc = req.params.locationname;
+holidayListDAO.count({}, function(err, data) {
  if (err) {
  res.send("error");
  return;
  }
-
- console.log(data);
- res.send(data);
+ if(data == 0){
+    res.send("");
+ }else{
+	   holidayListDAO.find({ locationname: loc }, function(err, data) {
+		 if (err) {
+		 res.send("error");
+		 return;
+		 }
+		 res.send(data);
+		 });
+	 }
  });
 }).get("/aggegrate/:location", function(req, res) {
  var loc = req.params.location;

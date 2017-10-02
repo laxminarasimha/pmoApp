@@ -31,7 +31,6 @@
        },
        getLeaveForResourceName: function(resourcename) {
        url = globalConfig.apiAddress + "/leave/kin/" + resourcename;
-       console.log("URL:"+url);
        return $http.get(url);
        }
 

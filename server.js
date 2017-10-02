@@ -32,7 +32,7 @@ const logger = log4js.getLogger('demandcapacity');
 
 
 //var mongodbUri = 'mongodb://laxmi:Laxmi123@ds119810.mlab.com:19810/pmodb';
-var mongodbUri = 'mongodb://10.109.7.156:27017/pmodev';
+var mongodbUri = 'mongodb://DIN66008608.corp.Capgemini.com:27017/pmodev';
 
 var options = {};
 

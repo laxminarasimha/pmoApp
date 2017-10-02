@@ -5,13 +5,25 @@ var express = require("express"),
   var theMonths = new Array("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec");
  
 router.get("/", function(req, res) {
- projectDAO.find({},null, {sort:{projectname: 1}}, function(err, data) {
+
+ projectDAO.count({}, function(err, data) {
  if (err) {
  res.send("error");
  return;
  }
- res.send(data);
- });
+ if(data == 0){
+    res.send("");
+ }else{
+   projectDAO.find({},null, {sort:{projectname: 1}}, function(err, data) {
+   if (err) {
+   res.send("error");
+   return;
+   }
+   res.send(data);
+   });
+ }
+ 
+ }); 
 }).get("/excel/", function(req, res) {
  projectDAO.find({},null, {sort:{projectname: 1}}, function(err, data) {
  if (err) {
