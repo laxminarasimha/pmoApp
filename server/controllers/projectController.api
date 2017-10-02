@@ -3,11 +3,14 @@ var express = require("express"),
  projectDAO = require("../models/projectDAO.js");
   var nodeExcel=require("excel-export");
   var theMonths = new Array("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec");
+
+  const log4js = require('log4js');
+  const logger = log4js.getLogger('demandcapacity');
  
 router.get("/", function(req, res) {
-
  projectDAO.count({}, function(err, data) {
  if (err) {
+ logger.error('Error while data count fetching from Project Dao 1='+err);
  res.send("error");
  return;
  }
@@ -16,6 +19,7 @@ router.get("/", function(req, res) {
  }else{
    projectDAO.find({},null, {sort:{projectname: 1}}, function(err, data) {
    if (err) {
+   logger.error('Error while data fetching from Project Dao ='+err);
    res.send("error");
    return;
    }
@@ -27,6 +31,7 @@ router.get("/", function(req, res) {
 }).get("/excel/", function(req, res) {
  projectDAO.find({},null, {sort:{projectname: 1}}, function(err, data) {
  if (err) {
+ logger.error('Error while data fetching from Project Dao for excel='+err);
  res.send("error");
  return;
  }
@@ -88,6 +93,7 @@ return res.status(200).send(new Buffer(result.toString(), 'binary').toString('ba
  var id = req.params.id;
  projectDAO.find({ _id: id }, function(err, data) {
  if (err) {
+ logger.error('Error while data fetching from Project Dao for id ='+err);
  res.send("error");
  return;
  }
@@ -147,6 +153,7 @@ return res.status(200).send(new Buffer(result.toString(), 'binary').toString('ba
  
   ], function(err, data) {
    if (err) {
+   logger.error('Error while data fetching from Project Dao for aggregate='+err);
    res.send("error");
    return;
    }
@@ -160,6 +167,7 @@ return res.status(200).send(new Buffer(result.toString(), 'binary').toString('ba
  model.save(function(err) {
  if (err) {
  console.log(err);
+ logger.error('Error while data creation in Project Dao ='+err);
  res.send("error");
  return;
  }
@@ -189,6 +197,7 @@ projectDAO.find({ _id: id }, function(err, data) {
  var id = req.params.id;
  projectDAO.findByIdAndRemove(id, function(err) {
  if (err) {
+ logger.error('Error while data deletion from Project Dao ='+err);
  res.send("error");
  return;
  }

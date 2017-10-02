@@ -15,6 +15,8 @@ app.use(bodyParser.urlencoded({extended:true}));
 app.use(express.static(__dirname + '/public')); // Giving Access
 app.use('/api',appRoutes);
 
+//Query logging
+mongoose.set('debug', true);
 //===========Log4j setup============//
 const log4js = require('log4js');
 log4js.configure({

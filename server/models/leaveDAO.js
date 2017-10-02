@@ -2,7 +2,7 @@ var mongoose = require("mongoose"),
  Schema = mongoose.Schema,
  objectId = mongoose.Schema.ObjectId;
  var timeZone = require('mongoose-timezone');
- mongoose.set('debug', true);
+ 
  
 var leaveSchema = new Schema(
                   {

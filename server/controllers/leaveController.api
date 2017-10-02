@@ -1,19 +1,24 @@
 var express = require("express"),
  router = express.Router(),
  leaveDAO = require("../models/leaveDAO.js");
+
+  const log4js = require('log4js');
+  const logger = log4js.getLogger('demandcapacity');
  
 router.get("/", function(req, res) {
 
  leaveDAO.count({}, function(err, data) {
  if (err) {
+ logger.error('Error while data count fetching from leaveDAO 1='+err);
  res.send("error");
  return;
  }
  if(data == 0){
     res.send("");
- }else{
+ }else{   
    leaveDAO.find({},null, {sort:{resourcename: 1}}, function(err, data) {
 	 if (err) {
+	 logger.error('Error while data fetching from leaveDAO ='+err);
 	 res.send("error");
 	 return;
 	 }
@@ -27,6 +32,7 @@ router.get("/", function(req, res) {
  var id = req.params.id;
  leaveDAO.find({ _id: id }, function(err, data) {
  if (err) {
+ logger.error('Error while data fetching from leaveDAO for ID='+err);
  res.send("error");
  return;
  }
@@ -88,6 +94,7 @@ leaveDAO.count({}, function(err, data) {
  var id = req.params.id;
  leaveDAO.findByIdAndRemove(id, function(err) {
  if (err) {
+ logger.error('Error while data deletion from leaveDAO ='+err);
  res.send("error");
  return;
  }

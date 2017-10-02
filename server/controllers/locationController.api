@@ -1,10 +1,14 @@
 var express = require("express"),
  router = express.Router(),
  locationDAO = require("../models/locationDAO.js");
+
+  const log4js = require('log4js');
+  const logger = log4js.getLogger('demandcapacity');
  
 router.get("/", function(req, res) {
  locationDAO.find({},null, {sort:{locationname: 1}}, function(err, data) {
  if (err) {
+ logger.error('Error while data fetching from locationDAO ='+err);
  res.send("error");
  return;
  }
@@ -14,6 +18,7 @@ router.get("/", function(req, res) {
  var id = req.params.id;
  locationDAO.find({ _id: id }, function(err, data) {
  if (err) {
+ logger.error('Error while data fetching from locationDAO for ID='+err);
  res.send("error");
  return;
  }
@@ -67,7 +72,7 @@ console.log("location:"+location);
  var model = new locationDAO(obj);
  model.save(function(err) {
  if (err) {
- console.log(err);
+ logger.error('Error while data creation in locationDAO ='+err);
  res.send("error");
  return;
  }
@@ -89,6 +94,7 @@ function(err) {
  var id = req.params.id;
  locationDAO.findByIdAndRemove(id, function(err) {
  if (err) {
+ logger.error('Error while data deletion from locationDAO ='+err);
  res.send("error");
  return;
  }
