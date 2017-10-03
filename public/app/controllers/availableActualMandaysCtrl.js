@@ -131,6 +131,7 @@ angular.module('pmoApp').controller('availableActualMandaysCtrl', Controller);
  function getMappedResourceData(resourceMappingService,$scope){
       resourceMappingService.getMappedResources().then(function(res) {
          $scope.mappedResourceList = res.data;
+         //console.log(res.data);
          }).catch(function(err) {
          console.log(err);
      });
