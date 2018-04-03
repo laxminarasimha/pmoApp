@@ -192,13 +192,17 @@
                             app.successMsg = "Record saved successfully";
                             app.errorMsg = false;
 
+
                         }
+
                     }).catch(function (err) {
                         console.log(err);
                     });
+
                 }
 
             });
+            getResourceData(projectSLAService, $scope);
             // angular.forEach($scope.allocationList, function (item) {
             // 	if (item.resource === resource && item.year === year) {
             // 		allocationService.updateAllocation(item).then(function (res) {
@@ -213,6 +217,7 @@
 
             //$scope.childInfo(resource, year, loc, rowIndex, event, true);
         }
+        //getResourceData(projectSLAService, $scope);
     }
 
     function getResourceData(projectSLAService, $scope) {
