@@ -1,0 +1,143 @@
+var express = require("express");
+//var xlstojson = require('xls-to-json');
+var xlsxtojson = require('xlsx-to-json');
+var XLSX = require('./util/xlsx.js');
+
+router = express.Router();
+var multer = require('multer');
+var fs = require('fs');
+ var MongoClient = require('mongodb').MongoClient
+  , format = require('util').format;
+var db;   
+
+var storage = multer.diskStorage({ //multers disk storage settings
+        destination: function (req, file, cb) {
+            cb(null, './server/uploads/');
+        },
+        filename: function (req, file, cb) {
+            var datetimestamp = Date.now();
+            cb(null, file.fieldname + '-' + datetimestamp + '.' + file.originalname.split('.')[file.originalname.split('.').length -1]);
+        }
+    });
+
+    var upload = multer({ //multer settings
+                    storage: storage
+                }).single('file');
+
+router.post("/:report", function(req, res) {
+    var reportType = req.params.report;
+var sampleFile;
+var exceltojson;
+sampleFile = req.files.file;
+console.log("reportType*************"+reportType);
+ if (!sampleFile) {
+        res.send("No files were uploaded.");
+        return;
+    }
+sampleFile.mv('./server/uploads/'+req.files.file.name, function(err) {
+    if (err) {
+     console.log("eror saving");
+    } else {
+        console.log("saved");
+        if(req.files.file.name.split('.')[req.files.file.name.split('.').length-1] === 'xlsx'){
+            exceltojson = xlsxtojson;
+            console.log("xlxs");
+        } /*else {
+            exceltojson = xlstojson;
+            console.log("xls");
+        }*/
+    try {
+            var excelpath = './server/uploads/'+req.files.file.name;
+             console.log("BEFORE READ");
+            var workbook = XLSX.readFile(excelpath);
+             console.log("after READ");
+            var sheet_name_list = workbook.SheetNames;           
+            var length = sheet_name_list.length;
+            var dataArray = [];           
+            console.log("Length=="+sheet_name_list.length);
+            MongoClient.connect('mongodb://DIN66008608.corp.Capgemini.com:27017/pmodev', function(err, database) {
+            
+            if(err) throw err;
+            db=database;
+            console.log("db=="+db);             
+                for(var i=0;i<length;i++){
+                    console.log("Sheet Names=***="+sheet_name_list[i]);
+                    console.log("**********:"+reportType+'_'+sheet_name_list[i]);                               
+                        var xlData = XLSX.utils.sheet_to_json(workbook.Sheets[sheet_name_list[i]]);
+                        //console.log(xlData);
+                        
+                        //console.log(xlData);                                              
+                        if(reportType=='hcReport'){ 
+                            
+                            if(sheet_name_list[i] !="Sheet2" && sheet_name_list[i] !="Mapping"){
+                                console.log("Welcome HC"+sheet_name_list[i]);
+                                dataArray = dataArray.concat(xlData);
+                               // console.log("====="+dataArray);
+                                 db.collection('headcount').remove({});
+                                db.collection('headcount').insert(dataArray);
+                            }
+                        }else if(reportType=='euroclearResource'){
+                            //console.log("xlData=====:"+xlData);
+                            if(sheet_name_list[i]=='EB Resource Dashboard'){
+                                  db.collection('ebresource').remove({});
+                                  db.collection('ebresource').insert(xlData);
+                            }else if(sheet_name_list[i]=='ESES Resource Dashboard'){
+                                  db.collection('esesresorce').remove({});
+                                  db.collection('esesresorce').insert(xlData);
+                            }else if(sheet_name_list[i]=='EUI Resource Dashboard'){
+                                  db.collection('euiresource').remove({});
+                                  db.collection('euiresource').insert(xlData);
+                            }
+                        }else if(reportType=='slaReport'){
+                            console.log("++++hii"+sheet_name_list[i]);
+                            if(sheet_name_list[i]=="Project SLA's"){
+                                //console.log(xlData);
+                                db.collection('projectSla').remove({});
+                                db.collection('projectSla').insert(xlData);
+                            }
+                        }                                
+                }
+                db.close();   
+            });            
+           res.json({error_code:0,err_desc:null, data: dataArray});
+        /*var fs = require('fs');
+        try {
+            fs.unlinkSync('./server/uploads/'+req.files.file.name);
+            } catch(e) {
+                    //error deleting the file
+            }*/
+
+      //  });
+    } catch (e){
+        console.log("error"+e);
+       // db.close();
+        res.json({error_code:1,err_desc:"Corupted excel file"});
+         }
+    }
+    });
+});
+
+router.get("/:report", function(req, res) {
+  var reportType = req.params.report;
+  console.log("reportType*************"+reportType);
+   MongoClient.connect('mongodb://DIN66008608.corp.Capgemini.com:27017/pmodev', function(err, db) {
+            if(err) throw err;
+
+            if(reportType=='hcReport'){
+                db.collection('headcount').find().toArray(function(err, docs){
+                if(err) throw err;
+                res.send({data: docs});
+                db.close();
+                });
+            }else if(reportType=='euroclearResource'){
+                db.collection('euroclearresource').find().toArray(function(err, docs){
+                if(err) throw err;
+                res.send({data: docs});
+                db.close();
+                });
+            }
+            
+            });
+
+});
+module.exports = router;

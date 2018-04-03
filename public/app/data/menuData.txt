@@ -39,5 +39,18 @@
 "name" : "Add Leave" ,
 "submenu" : [],
 "role" : ["SAdmin","Admin","User"]
+},
+{
+"id" : "8",
+"name" : "Resource" ,
+"submenu" : [{"id":"1", "name":"EB Resource","page":"ebresource","visible":"true"},{"id":"2", "name":"ESES Resource","page":"esesresource","visible":"true"},{"id":"3", "name":"GAD / Non - GAD","page":"hcresource","visible":"true"}],
+"visbile" : "true"
+},
+{
+    "id" : "10",
+    "name" : "SLA",
+    "submenu" : [],
+    "role" : ["SAdmin","Admin","SLA Upload"],
+    "visbile" : "true"
 }
 ]

@@ -289,12 +289,59 @@ var app = angular.module('appRoutes', ['ui.router'])
 				},
 				data: { pageTitle: 'All Graphs', roles: ['ADMIN'] }
 			})
-
+			.state('root.SLA', {
+				url: '/SLA',
+				views: {
+					'container@': {
+						templateUrl: 'app/views/pages/sla/slaUpload.html'
+					}
+				},
+				data: { pageTitle: 'SLA', roles: ['ADMIN'] }
+			})
 			.state('root.Graphs', {
 				url: '/Graphs',
 				views: {
 					'container@': {
 						templateUrl: 'app/views/pages/reporting/graphs/graph.html'
+					},
+					'filters@root.Graphs': {
+						templateUrl: 'app/views/pages/reporting/graphs/filter.html'
+					}
+
+				},
+				data: { pageTitle: 'Graphs', roles: ['ADMIN'] }
+			})
+			.state('root.ebresource', {
+				url: '/ebresource',
+				views: {
+					'container@': {
+						templateUrl: '/app/views/pages/resource/ebresource.html'
+					},
+					'filters@root.Graphs': {
+						templateUrl: 'app/views/pages/reporting/graphs/filter.html'
+					}
+
+				},
+				data: { pageTitle: 'Graphs', roles: ['ADMIN'] }
+			})
+			.state('root.esesresource', {
+				url: '/esesresource',
+				views: {
+					'container@': {
+						templateUrl: '/app/views/pages/resource/esesresource.html'
+					},
+					'filters@root.Graphs': {
+						templateUrl: 'app/views/pages/reporting/graphs/filter.html'
+					}
+
+				},
+				data: { pageTitle: 'Graphs', roles: ['ADMIN'] }
+			})
+			.state('root.hcresource', {
+				url: '/hcresource',
+				views: {
+					'container@': {
+						templateUrl: '/app/views/pages/resource/hcresource.html'
 					},
 					'filters@root.Graphs': {
 						templateUrl: 'app/views/pages/reporting/graphs/filter.html'

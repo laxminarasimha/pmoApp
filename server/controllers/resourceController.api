@@ -1,11 +1,47 @@
 var express = require("express"),
  router = express.Router(),
  resourceDAO = require("../models/resourceDAO.js");
+ resourceEBDAO = require("../models/resourceEBDAO.js");
+ resourceHCDAO = require("../models/resourceHCDAO.js");
+ resourceESESDAO=require("../models/resourceESESDAO.js")
+ projectSLADAO=require("../models/projectSLADAO.js")
  var nodeExcel=require("excel-export");
  //var nodemailer = require('nodemailer');
  
 router.get("/", function(req, res) {
  resourceDAO.find({},null, {sort:{resourcename: 1}}, function(err, data) {
+ if (err) {
+ res.send("error");
+ return;
+ }
+ res.send(data);
+ });
+}).get("/eb", function(req, res) {
+ resourceEBDAO.find({},null, {sort:{CEN: 1}}, function(err, data) {
+ if (err) {
+ res.send("error");
+ return;
+ }
+ res.send(data);
+ });
+ }).get("/hc", function(req, res) {
+ resourceHCDAO.find({},null, {sort:{KIN: 1}}, function(err, data) {
+ if (err) {
+ res.send("error");
+ return;
+ }
+ res.send(data);
+ });
+ }).get("/sla", function(req, res) {
+ projectSLADAO.find({},null, {sort:{Roadmap: 1}}, function(err, data) {
+ if (err) {
+ res.send("error");
+ return;
+ }
+ res.send(data);
+ });
+ }).get("/eses", function(req, res) {
+ resourceESESDAO.find({},null, {sort:{CEN: 1}}, function(err, data) {
  if (err) {
  res.send("error");
  return;
@@ -182,17 +218,60 @@ function(err) {
  }
  res.send("updated");
  });
-}).delete("/:id", function(req, res) {
- var id = req.params.id;
- resourceDAO.findByIdAndRemove(id, function(err) {
- if (err) {
+}).put("/sla/:id", function(req, res) {
+  var id = req.params.id;
+ var obj = req.body;
+  console.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+    projectSLADAO.findOneAndUpdate(id,{
+    ScheduleCompliance: obj.ScheduleCompliance,
+		AverageDefectResolutionTime: obj.AverageDefectResolutionTime,
+		AverageDefectDensity: obj.AverageDefectDensity  ,
+		ProductionDefects: obj.ProductionDefects,
+		SLALoss: obj.SLALoss,
+		OTACE: obj.OTACE,
+		Year: obj.Year,
+      	Platinum:	obj.Platinum,
+      	Gold:	obj.Gold,
+      	Silver:	obj.Silver,
+      	Bronze:	obj.Bronze
+
+    },
+    function(err) {
+      if (err) {
+      res.send("error");
+      return;
+      }
+      console.log("ERROR"+err);
+ res.send("updated");
+ });    
+}).delete("/hcDelete/:id", function(req, res) {
+  var id = req.params.id;
+  resourceHCDAO.findByIdAndRemove(id, function(err) {
+  if (err) {
+ res.send("error");
+ return;
+ }
+ res.send("deleted");
+ });
+}).delete("/eb/:id", function(req, res) {
+  var id = req.params.id;
+  resourceEBDAO.findByIdAndRemove(id, function(err) {
+  if (err) {
+ res.send("error");
+ return;
+ }
+ res.send("deleted");
+ });
+}).delete("/eses/:id", function(req, res) {
+  var id = req.params.id;
+  resourceESESDAO.findByIdAndRemove(id, function(err) {
+  if (err) {
  res.send("error");
  return;
  }
  res.send("deleted");
  });
 });
- 
 module.exports = router;
 
 

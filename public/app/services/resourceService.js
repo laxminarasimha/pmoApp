@@ -9,6 +9,18 @@
  function Service($http, globalConfig) {
  var url = "";
    return {
+    getEBResources: function () {
+      url = globalConfig.apiAddress + "/resource/eb";
+      return $http.get(url);
+    },
+    getEsesResources: function () {
+      url = globalConfig.apiAddress + "/resource/eses";
+      return $http.get(url);
+    },
+    getHCResources: function () {
+      url = globalConfig.apiAddress + "/resource/hc";
+      return $http.get(url);
+    },
        getResources: function() {
        url = globalConfig.apiAddress + "/resource";
        return $http.get(url);
@@ -33,6 +45,18 @@
        url = globalConfig.apiAddress + "/resource/" + id;
        return $http.delete(url);
        },
+       deleteEbResource: function (id) {
+        url = globalConfig.apiAddress + "/resource/eb/" + id;
+        return $http.delete(url);
+      },
+      deleteHcResource: function (id) {
+        url = globalConfig.apiAddress + "/resource/hcDelete/" + id;
+        return $http.delete(url);
+      },
+      deleteEsesResource: function (id) {
+        url = globalConfig.apiAddress + "/resource/eses/" + id;
+        return $http.delete(url);
+      },
        getExportToExcelData: function() {
        url = globalConfig.apiAddress + "/resource/excel";
        return $http.get(url);
