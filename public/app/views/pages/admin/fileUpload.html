@@ -1,0 +1,51 @@
+<div ng-controller="uploadDataFileCtrl">
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <div class="row">
+                <div class='col-sm-8'>
+                    <div>
+                        <label>
+                            <h3>Choose Type of File:</h3>
+                        </label>
+                        <br>
+                        <input type="radio" ng-model="report" value="hcReport" ng-click="clearData()">
+                        <b>HC Report</b>
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <input type="radio" ng-model="report" value="euroclearResource" ng-click="clearData()">
+                        <b>Euroclear Resource Headcount</b>
+                    </div>
+                </div>
+            </div>
+            <div ng-switch="report">
+                <div ng-switch-when="hcReport">
+                    <h3>HC Report</h3>
+                    <div class="panel-body">
+                        <input type="file" ngf-select="fileSelected($files);" />
+                        <br>
+                        <input class="btn btn-primary" value="Upload!" type="submit" ng-click="submit();" />
+                    </div>
+                    <div class="panel-body" ng-if="visible">
+                        <h1 style="color:darkgreen">HC Report uploaded successfully.</h1>
+                    </div>
+                </div>
+
+                <div ng-switch-when="euroclearResource">
+                    <h3>Euroclear Resource Headcount</h3>
+                    <div class="panel-body">
+                        <input type="file" ngf-select="fileSelected($files);" />
+                        <br>
+                        <input class="btn btn-primary" value="Upload!" type="submit" ng-click="submit();" />
+                    </div>
+
+                    <div class="panel-body" ng-if="visible">
+                        <h1 style="color:darkgreen">Euroclear Resource Headcount uploaded successfully.</h1>
+                    </div>
+                </div>
+
+            </div>
+
+
+
+        </div>
+    </div>
+</div>

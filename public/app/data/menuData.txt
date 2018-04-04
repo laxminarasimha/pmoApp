@@ -47,6 +47,13 @@
 "visbile" : "true"
 },
 {
+"id" : "9",
+"name" : "File Upload" ,
+"submenu" : [],
+"role" : ["SAdmin","Admin","File Upload"],
+"visbile" : "true"
+},
+{
     "id" : "10",
     "name" : "SLA",
     "submenu" : [],

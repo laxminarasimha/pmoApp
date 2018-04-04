@@ -289,6 +289,15 @@ var app = angular.module('appRoutes', ['ui.router'])
 				},
 				data: { pageTitle: 'All Graphs', roles: ['ADMIN'] }
 			})
+			.state('root.File Upload', {
+				url: '/File Upload',
+				views: {
+					'container@': {
+						templateUrl: 'app/views/pages/admin/fileUpload.html'
+					}
+				},
+				data: { pageTitle: 'File Upload', roles: ['ADMIN'] }
+			})
 			.state('root.SLA', {
 				url: '/SLA',
 				views: {
