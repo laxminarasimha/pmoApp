@@ -31,9 +31,11 @@
                         return $http.put(url, allocation);
                   },
 
-                  deleteAllocation: function (id) {
-                        url = globalConfig.apiAddress + "/allocaiton/" + id;
-                        return $http.delete(url);
+                  deleteAllocation: function (deletedID) {
+                        console.log(deletedID);
+                        url = globalConfig.apiAddress + "/allocaiton/" + deletedID;
+                        
+                        return $http.delete(url,deletedID);
                   },
 
                   getAllocation: function (resource, type, year, project) {

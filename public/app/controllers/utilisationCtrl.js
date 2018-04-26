@@ -7,12 +7,12 @@ angular.module('pmoApp').controller('utilisationCtrl', Controller);
  Controller.$inject = ['$scope', '$rootScope', 'DTOptionsBuilder', 'DTColumnBuilder', '$compile','utilisationService',
                        'resourceService','roleService','regionService','projectService','resourceTypeService',
                        'allocationService','leaveService','resourceMappingService','availableDaysService',
-                       'monthlyHeaderListService','skillSetService','locationService'];
+                       'monthlyHeaderListService','skillSetService','locationService','$filter'];
   
  function Controller($scope, $rootScope, DTOptionsBuilder, DTColumnBuilder, $compile, utilisationService,
                      resourceService,roleService,regionService,projectService,resourceTypeService,
                      allocationService,leaveService,resourceMappingService,availableDaysService,
-                     monthlyHeaderListService,skillSetService,locationService) {
+                     monthlyHeaderListService,skillSetService,locationService,$filter) {
 
  
  var app = $scope;
@@ -59,25 +59,56 @@ angular.module('pmoApp').controller('utilisationCtrl', Controller);
  
  $scope.getUtilisation = function(utilisationDTO) {
      $scope.IsSubmit = true;
-     if ($scope.utilisationForm.$valid) {
-         utilisationService.getUtilisation(utilisationDTO).then(function(res) {
-         if (res.data == "created") {
-            getuUilisationData(utilisationService,$scope);
-            $scope.utilisationDTO = {};
-            app.loading =false;
-            app.successMsg = "Data fetched successfully";
-            app.errorMsg = false;
-         }
-         }).catch(function(err) {
-         console.log(err);
-         });
-     }else
-     {
-            app.loading =false;
-            app.successMsg = false;
-            app.errorMsg = "Please Enter Required value";
-            app.errorClass = "error"
-     }
+    //  if ($scope.utilisationForm.$valid) {
+    //      utilisationService.getUtilisation(utilisationDTO).then(function(res) {
+    //      if (res.data == "created") {
+    //         getuUilisationData(utilisationService,$scope);
+    //         $scope.utilisationDTO = {};
+    //         app.loading =false;
+    //         app.successMsg = "Data fetched successfully";
+    //         app.errorMsg = false;
+    //      }
+    //      }).catch(function(err) {
+    //      console.log(err);
+    //      });
+    //  }else
+    //  {
+    //         app.loading =false;
+    //         app.successMsg = false;
+    //         app.errorMsg = "Please Enter Required value";
+    //         app.errorClass = "error"
+    //  }
+
+    console.log(utilisationDTO);
+     //if (false) {
+            var emptyObject =  angular.equals({}, utilisationDTO);
+            if (typeof utilisationDTO == "undefined" || emptyObject) {
+                getGraphData($scope,allocationService,leaveService,resourceMappingService,availableDaysService,monthlyHeaderListService);
+            }else{
+                var utilisationTimeFilteredDataList = [];
+                utilisationTimeFilteredDataList = $scope.utilisationData;
+                if(utilisationDTO.resource){ 
+                    utilisationTimeFilteredDataList =$filter('filter')(utilisationTimeFilteredDataList, {'name': utilisationDTO.resource});
+                  console.log(utilisationTimeFilteredDataList);
+                }
+                if(utilisationDTO.resourceType){
+                    utilisationTimeFilteredDataList =$filter('filter')(utilisationTimeFilteredDataList, {'resourcetype': utilisationDTO.resourceType});
+                  console.log(utilisationTimeFilteredDataList);
+                }
+                if(utilisationDTO.region){
+                    utilisationTimeFilteredDataList =$filter('filter')(utilisationTimeFilteredDataList, {'region': utilisationDTO.region});
+                  console.log(utilisationTimeFilteredDataList);
+                }
+                if(utilisationDTO.skillname){
+                    utilisationTimeFilteredDataList =$filter('filter')(utilisationTimeFilteredDataList, {'skill': utilisationDTO.skillname});
+                  console.log(idleTimeFilteredDataList);
+                }
+                if(utilisationDTO.region){
+                    utilisationTimeFilteredDataList =$filter('filter')(utilisationTimeFilteredDataList, {'location': utilisationDTO.locationname});
+                  console.log(utilisationTimeFilteredDataList);
+                }
+                $scope.utilisationData = utilisationTimeFilteredDataList;
+            }
      
  };
 

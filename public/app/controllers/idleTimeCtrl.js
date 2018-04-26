@@ -62,7 +62,7 @@ angular.module('pmoApp').controller('idleTimeCtrl', Controller);
  $scope.getIdleTimes = function(idleTimeDTO) {
      $scope.IsSubmit = true;
      console.log(idleTimeDTO);
-     if (false) {
+     //if (false) {
             var emptyObject =  angular.equals({}, idleTimeDTO);
             if (typeof idleTimeDTO == "undefined" || emptyObject) {
                 getGraphData($scope,allocationService,leaveService,resourceMappingService,availableDaysService,monthlyHeaderListService);
@@ -74,7 +74,7 @@ angular.module('pmoApp').controller('idleTimeCtrl', Controller);
                   console.log(idleTimeFilteredDataList);
                 }
                 if(idleTimeDTO.resourceType){
-                  idleTimeFilteredDataList =$filter('filter')(idleTimeFilteredDataList, {'resourceType': idleTimeDTO.resourceType});
+                  idleTimeFilteredDataList =$filter('filter')(idleTimeFilteredDataList, {'resourcetype': idleTimeDTO.resourceType});
                   console.log(idleTimeFilteredDataList);
                 }
                 if(idleTimeDTO.region){
@@ -93,13 +93,13 @@ angular.module('pmoApp').controller('idleTimeCtrl', Controller);
             }
             
           
-     }else
-     {
-            app.loading =false;
-            app.successMsg = false;
-            app.errorMsg = "Please Enter Required value";
-            app.errorClass = "error"
-     }
+    //  }else
+    //  {
+    //         app.loading =false;
+    //         app.successMsg = false;
+    //         app.errorMsg = "Please Enter Required value";
+    //         app.errorClass = "error"
+    //  }
      
  }
 

@@ -239,6 +239,7 @@
 	}
 
 
+
 	Controller.$inject = ['$scope', 'DTOptionsBuilder', 'DTColumnBuilder', '$compile', 'resourceService', 'projectService', 'allocationService', 'leaveService', 'resourceMappingService', '$filter', 'availableDaysService', 'holidayListService'];
 
 	function Controller($scope, DTOptionsBuilder, DTColumnBuilder, $compile, resourceService, projectService, allocationService, leaveService, resourceMappingService, $filter, availableDaysService, holidayListService) {
@@ -294,7 +295,45 @@
 			$scope.childInfo(resource, year, loc, rowIndex, event, true);
 		}
 
+		$scope.deleteConfirmation = function (allocation, name) {
 
+			var selectedId = $("action").selectedId;
+			console.log(selectedId);
+			if (selectedId != null) {
+				alert('Please select records to delete.')
+			} else {
+				$scope.msg = name;
+				$scope.deletedID = allocation._id;
+				console.log(allocation._id);
+				openDialog();
+			}
+
+		}
+		//$scope.deletedID="";
+		$scope.deleteAllocation = function () {
+			//console.log(allocation);
+			console.log($scope.deletedID);
+
+			//if (confirm('Are you sure to delete?')) {
+			for (var record = 0; record < selectedId.length; record++) {
+				if (selectedId[record].checked) {
+					//console.log(selectedId[record].value);
+					allocationService.deleteAllocation($scope.deletedID).then(function (res) {
+						if (res.data == "deleted") {
+							getAlloctionData(allocationService, $scope);
+							app.loading = false;
+							app.successMsg = "Resource mapping deleted successfully";
+							app.errorMsg = false;
+							$scope.msg = "";
+							$scope.deletedID = "";
+						}
+					}).catch(function (err) {
+						console.log(err);
+					});
+				}
+
+			}
+		};
 		///////////////////////// start Datatable Code /////////////////////////////////
 
 		$scope.vm = {};
@@ -353,7 +392,7 @@
 
 		$scope.getAllocationStatus = function () {
 			$scope.mappingValue = availableDaysService.getAllocationStatus($scope.mappingValue);
-		//	console.log($scope.mappingValue);
+			//	console.log($scope.mappingValue);
 		}
 
 		///////////////////////// End  Datatable Code /////////////////////////////////
@@ -649,5 +688,9 @@
 	// 	$scope.headingList = monthlyHeaderListService.getHeaderList();
 	// }
 
+
+	function openDialog() {
+		$('#confirmModal').modal('show');
+	}
 
 })();

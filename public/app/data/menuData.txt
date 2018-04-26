@@ -3,47 +3,54 @@
 "id" : "1",
 "name" : "Home",
 "submenu" : [],
-"role" : ["SAdmin","Admin"]
+"role" : ["SAdmin","Admin"],
+"visbile" : "true"
 },
 {
 "id" : "2",
 "name" : "Resource Mapping" ,
 "submenu" : [],
-"role" : ["SAdmin","Admin"]
+"role" : ["SAdmin","Admin"],
+"visbile" : "true"
 },
 {
 "name" : "Allocation",
-"submenu" : [{"id":"1", "name":"All Allocaiton","page":"allocationList"},{"id":"2","name":"Create Allocation","page":"createAllocation"}],
-"role" : ["SAdmin","Admin"]
+"submenu" : [{"id":"1", "name":"All Allocaiton","page":"allocationList","visible":"true"},{"id":"2","name":"Create Allocation","page":"createAllocation","visible":"true"}],
+"role" : ["SAdmin","Admin"],
+"visbile" : "true"
 },
 {
 "id" : "4",
 "name" : "Data" ,
-"submenu" : [{"id":"1", "name":"IdleTime"},{"id":"2", "name":"Utilisation"},{"id":"3", "name":"AvailableActualMandays"}],
-"role" : ["SAdmin","Admin"]
+"submenu" : [{"id":"1", "name":"IdleTime","visible":"true"},{"id":"2", "name":"Utilisation","visible":"true"},{"id":"3", "name":"AvailableActualMandays","visible":"true"}],
+"role" : ["SAdmin","Admin"],
+"visbile" : "true"
 },
 {
 "id" : "5",
-"name" : "Reports",
-"submenu" : [{"id":"1", "name":"All Graphs"},{"id":"1", "name":"FinlandGraph"}],
-"role" : ["SAdmin","Admin"]
+"name" : "Resource" ,
+"submenu" : [{"id":"1", "name":"EB Resource","page":"ebresource","visible":"true"},{"id":"2", "name":"ESES Resource","page":"esesresource","visible":"true"},{"id":"3", "name":"GAD / Non - GAD","page":"hcresource","visible":"true"}],
+"visbile" : "false"
 },
 {
 "id" : "6",
-"name" : "Admin",
-"submenu" : [{"id":"1", "name":"SkillSet"},{"id":"2", "name":"Resource"},{"id":"3", "name":"Status"},{"id":"4", "name":"Designation"},{"id":"5", "name":"Role"},{"id":"6", "name":"Region"},{"id":"7", "name":"Location"},{"id":"8", "name":"Holiday List"},{"id":"9", "name":"Project"},{"id":"10", "name":"Resource Type"}],
-"role" : ["SAdmin","Admin"]
+"name" : "Reports",
+"submenu" : [{"id":"1", "name":"All Graphs","visible":"true"},{"id":"1", "name":"FinlandGraph","visible":"true"}],
+"role" : ["SAdmin","Admin"],
+"visbile" : "true"
 },
 {
 "id" : "7",
-"name" : "Add Leave" ,
-"submenu" : [],
-"role" : ["SAdmin","Admin","User"]
+"name" : "Admin",
+"submenu" : [{"id":"1", "name":"SkillSet","visible":"true"},{"id":"2", "name":"Resource","visible":"true"},{"id":"3", "name":"Status","visible":"true"},{"id":"4", "name":"Designation","visible":"true"},{"id":"5", "name":"Role", "visible":"true"},{"id":"6", "name":"Region","visible":"true"},{"id":"7", "name":"Location","visible":"true"},{"id":"8", "name":"Holiday List","visible":"true"},{"id":"9", "name":"Project","visible":"true"},{"id":"10", "name":"Resource Type","visible":"true"}],
+"role" : ["SAdmin","Admin"],
+"visbile" : "true"
 },
 {
 "id" : "8",
-"name" : "Resource" ,
-"submenu" : [{"id":"1", "name":"EB Resource","page":"ebresource","visible":"true"},{"id":"2", "name":"ESES Resource","page":"esesresource","visible":"true"},{"id":"3", "name":"GAD / Non - GAD","page":"hcresource","visible":"true"}],
+"name" : "Add Leave" ,
+"submenu" : [],
+"role" : ["SAdmin","Admin","User"],
 "visbile" : "true"
 },
 {
@@ -51,13 +58,15 @@
 "name" : "File Upload" ,
 "submenu" : [],
 "role" : ["SAdmin","Admin","File Upload"],
-"visbile" : "true"
+"visbile" : "false"
 },
 {
     "id" : "10",
     "name" : "SLA",
     "submenu" : [],
     "role" : ["SAdmin","Admin","SLA Upload"],
-    "visbile" : "true"
+    "visbile" : "false"
 }
+
+
 ]

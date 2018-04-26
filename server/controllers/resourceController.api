@@ -271,6 +271,16 @@ function(err) {
  }
  res.send("deleted");
  });
+ }).delete("/:id", function(req, res) {
+  var id = req.params.id;
+  console.log(id);
+  resourceDAO.findByIdAndRemove(id, function(err) {
+  if (err) {
+ res.send("error");
+ return;
+ }
+ res.send("deleted");
+ });
 });
 module.exports = router;
 
