@@ -81,6 +81,14 @@
 				return;
 			}
 
+
+			if ($scope.startDate == null || $scope.endDate == null) {
+				$scope.errorMsg = "Please select a valid date range."
+				return;
+			}
+
+			$scope.clearMessages();
+
 			var strDt = $scope.startDate.split("/");
 			var endDt = $scope.endDate.split("/");
 
@@ -91,14 +99,10 @@
 				if (date_2 >= date_1) {
 					monthCol = months($scope.startDate, $scope.endDate);
 				} else {
-					$scope.errorMsg = "Please select a date range."
+					$scope.errorMsg = "Please select a valid date range."
+					return;
 				}
 			}
-
-
-			// Date.prototype.monthName = function () {
-			// 	return this.toUTCString().split(' ')[2]
-			// };
 
 			var monthCol = months($scope.startDate, $scope.endDate);
 			angular.forEach(monthCol, function (label) {
@@ -130,22 +134,25 @@
 			$scope.resource = [];
 			$scope.detailDiv = false;
 			$scope.hidden = "";
+			$('#projectBtn').attr('disabled', true);
 
 		}
 
 		$scope.saveAllocation = function () {
+			console.log($scope.resourceWiseAllocaiton);
 			if ($scope.resourceWiseAllocaiton.length > 0) {
 				var allocationYearWise = splitAllocationByYear($scope.resourceWiseAllocaiton, $scope.startDate, $scope.endDate);
 				angular.forEach(allocationYearWise, function (item) {
 					if (item.rowSelect) {// if row delete in screen,then it should not save
 						if (item.project === undefined && typeof item.project === "undefined") {
-							$scope.errorMsg = "Please select a project.";
-							error = true;
+							$scope.errorMsg = "Please enter valid data for all the input field.";
+							//error = true;
 							return;
 						}
 
 						allocationService.createAllocation(item).then(function (res) {
 							if (res.data == "created") {
+								$scope.clearMessages();
 								$scope.successMsg = "Allocaiton created successfully";
 								$('#resource-select').multiselect('rebuild');
 								$scope.startDate = "";
@@ -157,7 +164,14 @@
 					}
 				});
 			} else {
-				$scope.errorMsg = "Please select a project.";
+				$scope.errorMsg = "Please enter valid data for all the input field.";
+				return;
+			}
+
+
+			if ($scope.errorMsg == null) {
+				$scope.clearFields();
+				$('#projectBtn').attr('disabled', false);
 			}
 		}
 
@@ -179,22 +193,28 @@
 			angular.forEach($scope.resourceWiseAllocaiton[rowId].allocation, function (item) {
 				item.value = 0;
 			});
+
 		}
 
 		$scope.clearFields = function () {
 			$('#resource-select').multiselect('rebuild');
-			$scope.startDate = "";
-			$scope.endDate = "";
+			$scope.startDate = null;
+			$scope.endDate = null;
 			$scope.months = [];
 			$scope.resourceWiseAllocaiton = [];
+			app.loading = false;
+			app.successMsg = false;
+			app.errorMsg = false;
 			$scope.hidden = "none";
+
+			$('#projectBtn').attr('disabled', false);
 		}
 
-		$scope.checkPreAllocation = function (resource, resourcetype, project) {
 
-			console.log(resource + '-' + resourcetype + '-' + project);
-			console.log($scope.months);
-
+		$scope.clearMessages = function () {
+			$scope.successMsg = "";
+			$scope.errorMsg = "";
+			//$scope.hidden = "none";
 		}
 
 
