@@ -30,6 +30,7 @@
        return $http.put(url, resourcemap);
        },
        deleteResourceMapping: function(id) {
+         console.log("delete in resource mapping");
        url = globalConfig.apiAddress + "/mappedresource/" + id;
        return $http.delete(url);
        }

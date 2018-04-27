@@ -72,6 +72,7 @@ angular.module('mainController',['authServices'])
 				app.isLoggedIn = true;
 				Auth.getUser().then(function(data){	
 					app.userData.username = data.data.username;
+					app.userData.alias = data.data.alias;
 					Auth.resetPassword(app.userData).then(function(ndata){
 						app.loading = false;				
 						app.errorMsg  = false;				

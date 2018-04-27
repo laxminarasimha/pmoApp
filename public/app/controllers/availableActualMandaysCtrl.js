@@ -53,7 +53,7 @@ angular.module('pmoApp').controller('availableActualMandaysCtrl', Controller);
      app.successMsg = false;
      app.errorMsg = false;
      app.errorClass = "";
-    
+     getMappedResourceData(resourceMappingService,$scope);
 
  };
 

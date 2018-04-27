@@ -55,12 +55,8 @@
 					</thead>
 					<tbody>
 						<tr ng-repeat="allocation in mappingValue" ng-value="{{$index}}">
-							<td style="text-align: center;">
-								<a class="green shortinfo" ng-click="childInfo(allocation.mappedResource.resourcename,allocation.year,allocation.mappedResource.baseentity,$index, $event)"
-								 title="Click to view more">
-									<i class="glyphicon glyphicon-plus-sign">
-								</a>
-							</td>
+							<td style="text-align: center;"><a class="green shortinfo" ng-click="childInfo(allocation.mappedResource.resourcename,allocation.year,allocation.mappedResource.baseentity,$index, $event)"
+								 title="Click to view more"><i class="glyphicon glyphicon-plus-sign"></a></td>
 							<td style="text-align: center;">{{allocation.mappedResource.resourcename}}</td>
 							<td style="text-align: center;">{{allocation.year}}</td>
 							<td style="text-align: center;">{{allocation.skill}}</td>
