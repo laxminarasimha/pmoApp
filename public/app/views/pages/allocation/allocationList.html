@@ -1,22 +1,5 @@
 <div class="tab-content" ng-controller="allocationCtrl">
-	<div class="tab-pane active" id="tab1">
-		<div class="panel-body" ng-show="loading || successMsg || errorMsg">
-			<div class="row">
-				<div class='col-sm-12'>
-					<div class="jumbotron text-center" ng-show="loading">
-						<span class="glyphicon glyphicon-repeat spinner"></span>
-						<p>Loading...</p>
-					</div>
-					<div class="row show-hide-message" ng-show="successMsg">
-						<div class="alert alert-success">{{successMsg}}</div>
-					</div>
-					<div class="row show-hide-message" ng-show="errorMsg">
-						<div class="alert alert-danger">{{errorMsg}}</div>
-					</div>
-				</div>
-			</div>
-		</div>
-
+	
 		<!-- Modal -->
 		<div class="modal fade" id="confirmModal" role="dialog" data-keyboard="false" data-backdrop="static">
 			<div class="modal-dialog">
@@ -56,7 +39,7 @@
 					<tbody>
 						<tr ng-repeat="allocation in mappingValue" ng-value="{{$index}}">
 							<td style="text-align: center;"><a class="green shortinfo" ng-click="childInfo(allocation.mappedResource.resourcename,allocation.year,allocation.mappedResource.baseentity,$index, $event)"
-								 title="Click to view more"><i class="glyphicon glyphicon-plus-sign"></a></td>
+								title="Click to view more"><i class="glyphicon glyphicon-plus-sign"></a></td>
 							<td style="text-align: center;">{{allocation.mappedResource.resourcename}}</td>
 							<td style="text-align: center;">{{allocation.year}}</td>
 							<td style="text-align: center;">{{allocation.skill}}</td>

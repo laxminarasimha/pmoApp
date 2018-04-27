@@ -297,42 +297,50 @@
 
 		$scope.deleteConfirmation = function (allocation, name) {
 
-			var selectedId = $("action").selectedId;
-			console.log(selectedId);
-			if (selectedId != null) {
-				alert('Please select records to delete.')
+			var myRadio = $('input[name="action"]');
+			var checkedValue = myRadio.filter(':checked').val();
+
+			if (checkedValue == null) {
+				alert('Please select a record to delete.')
+				return;
 			} else {
-				$scope.msg = name;
-				$scope.deletedID = allocation._id;
-				console.log(allocation._id);
+				$scope.msg = checkedValue;
+				$scope.deletedID = checkedValue;
 				openDialog();
 			}
 
 		}
-		//$scope.deletedID="";
-		$scope.deleteAllocation = function () {
-			//console.log(allocation);
-			console.log($scope.deletedID);
 
-			//if (confirm('Are you sure to delete?')) {
-			for (var record = 0; record < selectedId.length; record++) {
-				if (selectedId[record].checked) {
-					//console.log(selectedId[record].value);
-					allocationService.deleteAllocation($scope.deletedID).then(function (res) {
-						if (res.data == "deleted") {
-							getAlloctionData(allocationService, $scope);
-							app.loading = false;
-							app.successMsg = "Resource mapping deleted successfully";
-							app.errorMsg = false;
-							$scope.msg = "";
-							$scope.deletedID = "";
-						}
-					}).catch(function (err) {
-						console.log(err);
-					});
+		$scope.deleteAllocation = function () {
+
+			if ($scope.deletedID != null) {
+				var data = $scope.deletedID.split("-");
+				for (var count = 0; count < $scope.allocationList.length; count++) {
+					var item = $scope.allocationList[count];
+					if (item.resource == data[0] && item.resourcetype == data[1] && item.year == data[2]) {
+						allocationService.deleteAllocation(item._id).then(function (res) {
+							if (res.data == "deleted") {
+								app.loading = false;
+								app.successMsg = "Resource allocation deleted successfully";
+								app.errorMsg = false;
+								$scope.msg = "";
+							}
+						}).catch(function (err) {
+							console.log(err);
+						});
+					}
+				};
+				
+				getAlloctionData(allocationService, $scope);
+				var div = document.getElementById($scope.deletedID);
+				if (div.style.display !== "none") {
+					div.style.display = "none";
+
 				}
 
+
 			}
+
 		};
 		///////////////////////// start Datatable Code /////////////////////////////////
 

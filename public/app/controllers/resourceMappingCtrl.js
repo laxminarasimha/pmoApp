@@ -103,7 +103,6 @@
         $scope.deleteConfirmation = function (id, name) {
             $scope.msg = name;
             $scope.deletedID = id;
-            console.log(id);
             openDialog();
 
         }
@@ -122,7 +121,6 @@
                 for (var record = 0; record < selectedId.length; record++) {
                     if (selectedId[record].checked) {
                         resourceMappingService.deleteResourceMapping(selectedId[record].value).then(function (res) {
-                            console.log(selectedId[record].value);
                             if (res.data == "deleted") {
                                 getMappedResourceData(resourceMappingService, $scope);
                                 app.loading = false;

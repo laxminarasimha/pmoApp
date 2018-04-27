@@ -61,7 +61,7 @@ router.get("/", function(req, res) {
  		}
  		res.send("updated");
  	});
-}).delete("/:id", function(req, res) {
+}).delete("/delete/:id", function(req, res) {
  	var id = req.params.id;
  	allocationDAO.findByIdAndRemove(id, function(err) {
  	if (err) {
