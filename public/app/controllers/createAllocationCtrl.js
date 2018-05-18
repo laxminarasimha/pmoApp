@@ -48,6 +48,8 @@
 
 	function Controller($scope, projectService, resourceMappingService, allocationService, resourceTypeService, $filter) {
 
+		
+		$scope.names=[{'drname':'Dr.Test1'},{'drname':'Dr.Test2'},{'drname':'Dr.Test3'}];
 		$scope.detailDiv = true;
 		$scope.resource = [];
 		$scope.resourceWiseAllocaiton = [];
@@ -76,7 +78,7 @@
 
 		$scope.createAllocation = function () {
 
-			if ($scope.resource.length <= 0) {
+			if ($scope.resource == null || $scope.resource.length <= 0) {
 				$scope.errorMsg = "Please select a resource."
 				return;
 			}
@@ -113,9 +115,9 @@
 				$scope.months.push($scope.monthWiseAllocation);
 			});
 
-			for (var res = 0; res < $scope.resource.length; res++) {
+			//for (var res = 0; res < $scope.resource.length; res++) {
 				$scope.rowWiseAllocation = {
-					resource: $scope.resource[res],
+					resource: $scope.resource,
 					project: $scope.projselect,
 					resourcetype: $scope.resourcetype,
 					//startdate: $scope.startDate,
@@ -131,7 +133,7 @@
 				});
 
 				$scope.resourceWiseAllocaiton.push($scope.rowWiseAllocation);
-			}
+			//}
 			$scope.resource = [];
 			$scope.detailDiv = false;
 			$scope.hidden = "";
@@ -140,8 +142,6 @@
 		}
 	
 		$scope.saveAllocation = function () {
-			getAllocations(allocationService,$scope);
-			console.log($scope.resourceWiseAllocaiton);
 			if ($scope.resourceWiseAllocaiton.length > 0) {
 				var allocationYearWise = splitAllocationByYear($scope.resourceWiseAllocaiton, $scope.startDate, $scope.endDate);
 				angular.forEach(allocationYearWise, function (item) {
@@ -243,14 +243,14 @@
 		function getMappedResourceData(resourceMappingService, $scope) {
 			resourceMappingService.getMappedResources().then(function (res) {
 				$scope.mappedResourceData = filterUniqueResource(res.data);
-				var htm = '';
+				// var htm = '';
 
-				angular.forEach($scope.mappedResourceData, function (item) {
-					htm += '<option>' + item.mappedResource.resourcename + '</option>';
-				});
+				// angular.forEach($scope.mappedResourceData, function (item) {
+				// 	htm += '<option>' + item.mappedResource.resourcename + '</option>';
+				// });
 
-				$('#resource-select').append(htm);
-				$('#resource-select').multiselect('rebuild');
+				// $('#resource-select').append(htm);
+				// $('#resource-select').multiselect('rebuild');
 			}).catch(function (err) {
 				console.log(err);
 			});
@@ -306,33 +306,7 @@
 				}
 
 			}
-
-			// for (var i = 0; i < maps.length; i++) {
-			// 	var obj = maps[i];
-			// 	angular.forEach(mongoMappedResourceData, function (oldData) {
-
-			// 		if ( //obj.mappedResource.kinId === oldData.mappedResource.kindId &&
-			// 			obj.mappedResource.resourcename === oldData.mappedResource.resourcename &&
-			// 			obj.resourceType === oldData.resourceType &&
-			// 			obj.year === oldData.year) {
-			// 			obj._id = oldData._id;
-			// 			obj.existing = true;
-			// 			obj.taggToEuroclear = mergeNewWithOldMappAndSort(obj.taggToEuroclear, oldData.taggToEuroclear);
-			// 			obj.monthlyAvailableActualMandays = mergeNewWithOldMappAndSort(obj.monthlyAvailableActualMandays, oldData.monthlyAvailableActualMandays);
-			// 		}
-
-			// 	});
-			// }
-
-			//angular.forEach(maps,function(newalloc){
-			//	var data = allocationService.getAllocation(newalloc.resource,newalloc.resourcetype,newalloc.year,newalloc.project);
-			//	console.log(data);
-
-			//});
-
-
-
-			//console.log(maps);
+		
 			return maps;
 		}
 

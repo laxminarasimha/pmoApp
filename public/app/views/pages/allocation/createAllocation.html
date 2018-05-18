@@ -8,7 +8,9 @@
             <label for startDate>Allocation Start Month:</label>
             <div class="input-group date form_date " data-date-format="dd MM yyyy" data-link-format="yyyy-mm-dd">
               <input class="form-control" type="text" ng-model="startDate" class="form-control" readonly>
-              <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+              <span class="input-group-addon">
+                <span class="glyphicon glyphicon-calendar"></span>
+              </span>
             </div>
           </div>
 
@@ -20,7 +22,9 @@
             <label for startDate>Allocation End Month:</label>
             <div class="input-group date form_date " data-date-format="dd MM yyyy" data-link-format="yyyy-mm-dd">
               <input class="form-control" type="text" ng-model="endDate" class="form-control" readonly>
-              <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+              <span class="input-group-addon">
+                <span class="glyphicon glyphicon-calendar"></span>
+              </span>
             </div>
           </div>
 
@@ -29,7 +33,12 @@
         <div class='col-sm-6' style="padding-top:.5cm;">
           <div class=form-group>
             <label for resource>Resources:</label>
-            <select id="resource-select" id="resource" ng-model="resource" required multiple="multiple" multi-select class="form-control"></select>
+            <!-- <select id="resource-select" id="resource" ng-model="resource" required multiple="multiple" multi-select class="form-control"></select> -->
+            
+            <input list="resource" type="text" ng-model="resource"  required>
+            <datalist  id="resource">
+              <option ng-repeat="resource in mappedResourceData" value="{{resource.mappedResource.resourcename}}">
+            </datalist>
           </div>
         </div>
       </div>
@@ -83,28 +92,30 @@
                 <tr ng-repeat="allocRows in resourceWiseAllocaiton" id="{{$index}}">
                   <td>
                     <span class="form-control" editable-text="allocRows.resource" e-name="resource" e-form="rowform">
-					          {{ allocRows.resource }}
-					        </span>
+                      {{ allocRows.resource }}
+                    </span>
                   </td>
                   <td>
                     <span editable-select="allocRows.resourcetype" e-name="resourcetype" e-form="rowform">
-                        <select class="form-control" ng-model="allocRows.resourcetype" ng-options="item.resourceTypename as item.resourceTypename for item in resourceTypeList" />
+                      <select class="form-control" ng-model="allocRows.resourcetype" ng-options="item.resourceTypename as item.resourceTypename for item in resourceTypeList"
+                      />
                     </span>
                   </td>
                   <td>
                     <span editable-select="allocRows.project" e-name="project" e-form="rowform">
-                      <select  class="form-control" ng-model="allocRows.project" ng-options="item.projectname as item.projectname for item in project | projectfilter:'Vacation'" />
-					         	</span>
+                      <select class="form-control" ng-model="allocRows.project" ng-options="item.projectname as item.projectname for item in project | projectfilter:'Vacation'"
+                      />
+                    </span>
                   </td>
                   <td ng-repeat="months in allocRows.allocation">
                     <span editable-select="alloc.tag" e-name="tag" e-form="rowform">
-					           <input class="form-control" type="text"  name="tagged" ng-model="months.value"  maxlength="4" size="4"/>
-					        </span>
+                      <input class="form-control" type="text" name="tagged" ng-model="months.value" maxlength="4" size="4" />
+                    </span>
                   </td>
                   <td style="white-space: nowrap">
                     <div class="buttons">
                       <button type="button" class="btn btn-primary" ng-click="clearAllocation($index)">
-						          	Clear</button>
+                        Clear</button>
                       <button type="button" class="btn btn-danger" ng-click="removeAllocation($index)">Delete</button>
                     </div>
                   </td>
