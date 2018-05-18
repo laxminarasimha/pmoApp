@@ -61,10 +61,10 @@ module.exports = function(router){
 	});
 
 	router.put('/resetpassword', function(req,res){
-		User.findOne({alias: req.body.username}).select('alias password').exec(function(err,user){
+		User.findOne({alias: req.body.alias}).select('alias password').exec(function(err,user){
 		if(err) throw err;
 		if(!user){
-			res.json({success :false, message : "User Not Found 1" + req.body.username});
+			res.json({success :false, message : "User Not Found 1" + req.body.alias});
 		}else {
 			if(req.body.password){
 				user.password = req.body.password;

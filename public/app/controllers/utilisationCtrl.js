@@ -59,59 +59,61 @@ angular.module('pmoApp').controller('utilisationCtrl', Controller);
  
  $scope.getUtilisation = function(utilisationDTO) {
      $scope.IsSubmit = true;
-    //  if ($scope.utilisationForm.$valid) {
-    //      utilisationService.getUtilisation(utilisationDTO).then(function(res) {
-    //      if (res.data == "created") {
-    //         getuUilisationData(utilisationService,$scope);
-    //         $scope.utilisationDTO = {};
+    // //if ($scope.utilisationForm.$valid) {
+    //       utilisationService.getuUtilisation(utilisationDTO).then(function(res) {
+    //     // if (res.data == "created") {
+    //         $scope.utilisationData = res.data;
+    //        //getUilisationData(utilisationService,$scope);
+    //       // $scope.utilisationDTO = {};
     //         app.loading =false;
     //         app.successMsg = "Data fetched successfully";
     //         app.errorMsg = false;
-    //      }
-    //      }).catch(function(err) {
+        
+    //     }).catch(function(err) {
     //      console.log(err);
     //      });
-    //  }else
-    //  {
-    //         app.loading =false;
+    // 
+    //   }else
+    //   {
+    //          app.loading =false;
     //         app.successMsg = false;
-    //         app.errorMsg = "Please Enter Required value";
-    //         app.errorClass = "error"
-    //  }
+    //          app.errorMsg = "Please Enter Required value";
+    //           app.errorClass = "error"
+    //   }
 
-    console.log(utilisationDTO);
-     //if (false) {
+     console.log(utilisationDTO);
+    //  //if (false) {
             var emptyObject =  angular.equals({}, utilisationDTO);
             if (typeof utilisationDTO == "undefined" || emptyObject) {
                 getGraphData($scope,allocationService,leaveService,resourceMappingService,availableDaysService,monthlyHeaderListService);
             }else{
                 var utilisationTimeFilteredDataList = [];
-                utilisationTimeFilteredDataList = $scope.utilisationData;
-                if(utilisationDTO.resource){ 
-                    utilisationTimeFilteredDataList =$filter('filter')(utilisationTimeFilteredDataList, {'name': utilisationDTO.resource});
-                  console.log(utilisationTimeFilteredDataList);
-                }
-                if(utilisationDTO.resourceType){
-                    utilisationTimeFilteredDataList =$filter('filter')(utilisationTimeFilteredDataList, {'resourcetype': utilisationDTO.resourceType});
-                  console.log(utilisationTimeFilteredDataList);
-                }
-                if(utilisationDTO.region){
-                    utilisationTimeFilteredDataList =$filter('filter')(utilisationTimeFilteredDataList, {'region': utilisationDTO.region});
-                  console.log(utilisationTimeFilteredDataList);
-                }
-                if(utilisationDTO.skillname){
-                    utilisationTimeFilteredDataList =$filter('filter')(utilisationTimeFilteredDataList, {'skill': utilisationDTO.skillname});
+                 utilisationTimeFilteredDataList = $scope.utilisationData;
+                 if(utilisationDTO.resource){ 
+                     utilisationTimeFilteredDataList =$filter('filter')(utilisationTimeFilteredDataList, {'name': utilisationDTO.resource});
+                   console.log(utilisationTimeFilteredDataList);
+             }
+                 if(utilisationDTO.resourceType){
+                     utilisationTimeFilteredDataList =$filter('filter')(utilisationTimeFilteredDataList, {'resourcetype': utilisationDTO.resourceType});
+                   console.log(utilisationTimeFilteredDataList);
+                 }
+                 if(utilisationDTO.region){
+                     utilisationTimeFilteredDataList =$filter('filter')(utilisationTimeFilteredDataList, {'region': utilisationDTO.region});
+                   console.log(utilisationTimeFilteredDataList);
+                 }
+                 if(utilisationDTO.skillname){
+                     utilisationTimeFilteredDataList =$filter('filter')(utilisationTimeFilteredDataList, {'skill': utilisationDTO.skillname});
                   console.log(idleTimeFilteredDataList);
-                }
-                if(utilisationDTO.region){
-                    utilisationTimeFilteredDataList =$filter('filter')(utilisationTimeFilteredDataList, {'location': utilisationDTO.locationname});
-                  console.log(utilisationTimeFilteredDataList);
-                }
-                $scope.utilisationData = utilisationTimeFilteredDataList;
-            }
+                 }
+                 if(utilisationDTO.region){
+               utilisationTimeFilteredDataList =$filter('filter')(utilisationTimeFilteredDataList, {'location': utilisationDTO.locationname});
+                   console.log(utilisationTimeFilteredDataList);
+                 }
+                 $scope.utilisationData = utilisationTimeFilteredDataList;
+             }
      
- };
-
+ 
+            };
 
 //=========================Data table==========================//
         $scope.vm = {};

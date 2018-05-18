@@ -29,6 +29,7 @@
        url = globalConfig.apiAddress + "/utilisation/" + id;
        return $http.delete(url);
        }
+      
    };
  }
 

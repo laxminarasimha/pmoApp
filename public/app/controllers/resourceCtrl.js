@@ -3,9 +3,9 @@
  
 angular.module('pmoApp').controller('resourceCtrl', Controller);
  
- Controller.$inject = ['$scope', '$rootScope', 'resourceService','designationService','DTOptionsBuilder', 'DTColumnBuilder','skillSetService','locationService','roleService','$window'];
+ Controller.$inject = ['$scope', '$rootScope', 'resourceService','designationService','resourceMappingService','allocationService','DTOptionsBuilder', 'DTColumnBuilder','skillSetService','locationService','roleService','$window'];
   
- function Controller($scope, $rootScope, resourceService, designationService, DTOptionsBuilder, DTColumnBuilder,skillSetService,locationService,roleService,$window) {
+ function Controller($scope, $rootScope, resourceService, designationService, resourceMappingService, allocationService, DTOptionsBuilder, DTColumnBuilder,skillSetService,locationService,roleService,$window) {
  $scope.mongoResourceData = [];
  
  var app = $scope;
@@ -27,6 +27,13 @@ angular.module('pmoApp').controller('resourceCtrl', Controller);
 
  $scope.roleList = [];
  getRoleData(roleService,$scope);
+
+ // $scope.resourcemapList = [];
+  //deleteResourcemapData(resourceMappingService,$scope);
+
+//  $scope.allocationList = [];
+//  deleteAllocationData(allocationService,$scope);
+ 
 
  //sendEmail(resourceService,null);
   
@@ -65,7 +72,11 @@ angular.module('pmoApp').controller('resourceCtrl', Controller);
          }).catch(function(err) {
          console.log(err);
          });
+
+
      //}
+
+     resourceMappingService.deleteResourceMapping($scope.deletedID);
  };
  
 $scope.editResource = function (id) {
@@ -99,7 +110,8 @@ $scope.editResource = function (id) {
      if ($scope.resourceForm.$valid) {
          app.loading =true;
         //Password = "default";
-        $scope.resource.password = '$2a$10$z14k1dcNp7nPmB1s.ApNNe4NLYu.UbKd1lKcgARc3fDTeoPW9GlAC';
+        //$scope.resource.password = '$2a$10$z14k1dcNp7nPmB1s.ApNNe4NLYu.UbKd1lKcgARc3fDTeoPW9GlAC';
+        $scope.resource.password = "default";
       resourceService.getResourceForKinId($scope.resource.kinId).then(function(res) {
             if(res.data.length == 0){
               resourceService.createResource(resource).then(function(res) {  
@@ -269,6 +281,16 @@ function getLocationData(locationService,$scope){
      });
  }
  
+
+//  function deleteAllocationData(allocationService,$scope){
+//     allocationService.deleteAllocation().then(function(res){
+//         $scope.allocationList = res.data;
+//         console.log(res.data);
+//     }).catch(function(err){
+//         console.log(err);
+//     });
+//  }
+
 
 function openDialog(){
     $('#confirmModal').modal('show');
