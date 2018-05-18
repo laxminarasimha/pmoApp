@@ -41,7 +41,7 @@
 	})
 
 
-	function filter(scope, collection, resource, year, mappedResourceData, leaveList, holidayList, showdetail) {
+	function filter(scope, collection, resource, year, mappedResourceData, leaveList, holidayList, showdetail, isUpdate) {
 		if (showdetail) return; // if details is going to close then return
 
 		var allocationDetails = [];
@@ -60,13 +60,35 @@
 
 		});
 
-		var mappedToResource = [];
+		// create the hoilidays with month-year fromat and store in a map
+		var monthyearLabel = new Map();
+		for (var i = 0; i < holidayList.length; i++) {
+			monthyearLabel.set(getMonth(holidayList[i]._id.month - 1) + '-' + (holidayList[i]._id.year.toString()).substring(2, 4), holidayList[i].number);
+		}
 
+
+		var mappedToResource = [];
 		for (var user = 0; user < mappedResourceData.length; user++) {
 			if (mappedResourceData[user].mappedResource.resourcename === resource && mappedResourceData[user].year === year) {
+
+				if (!isUpdate) {  // During update any value from screen, this holidays should not delte from the actually availablemanday.It is already dedcuted during load time
+					for (var k = 0; k < mappedResourceData[user].monthlyAvailableActualMandays.length; k++) {
+						var key = mappedResourceData[user].monthlyAvailableActualMandays[k].key;
+
+						if (monthyearLabel.has(key)) {
+							var holidays = monthyearLabel.get(key);
+							var percent = mappedResourceData[user].taggToEuroclear[k].value;
+							var actualHDays = (holidays * percent) / 100;
+							actualHDays = getRoundNumber(actualHDays, 1);
+
+							mappedResourceData[user].monthlyAvailableActualMandays[k].value = mappedResourceData[user].monthlyAvailableActualMandays[k].value - actualHDays;
+						}
+					}
+				}
 				mappedToResource.push(mappedResourceData[user]);
 			}
 		}
+
 
 		var resoruceType = null;
 		var object = null;
@@ -202,8 +224,7 @@
 					isConflict = true;
 				}
 			}
-
-
+			1111
 			item.buffertime = buffertime;
 			item.isConflict = isConflict;
 
@@ -255,6 +276,7 @@
 		$scope.mappingValue = [];
 		$scope.conflict = false;
 		$scope.holidayList = [];
+		$scope.isUpdate = false;
 
 
 		function allocObject(object) {
@@ -275,7 +297,7 @@
 		getMappedResourceData($scope, resourceMappingService, holidayListService);
 		getAlloctionData(allocationService, $scope);
 		getLeaveData(leaveService, $scope);
-		getHolidayData(holidayListService, $scope, new Date().getFullYear()); // get all the date from current year
+		//getHolidayData(holidayListService, $scope, new Date().getFullYear()); // get all the date from current year
 		getGraphData($scope, allocationService, leaveService, resourceMappingService, availableDaysService);
 
 
@@ -284,6 +306,7 @@
 				if (item.resource === resource && item.year === year) {
 					allocationService.updateAllocation(item).then(function (res) {
 						if (res.data == "updated") {
+							$scope.isUpdate = true;
 							console.log('updated');
 						}
 					}).catch(function (err) {
@@ -330,14 +353,13 @@
 						});
 					}
 				};
-				
+
 				getAlloctionData(allocationService, $scope);
 				var div = document.getElementById($scope.deletedID);
 				if (div.style.display !== "none") {
 					div.style.display = "none";
 
 				}
-
 
 			}
 
@@ -350,6 +372,7 @@
 			.withOption('order', [0, 'asc']);
 
 		$scope.childInfo = function (resource, year, location, listIndex, event, updateTable) {
+
 
 			var scope = $scope.$new(true);
 			var link = angular.element(event.currentTarget),
@@ -365,7 +388,13 @@
 			if (updateTable == null)
 				childShown = row.child.isShown();
 
-			scope.allocCollection = filter(scope, $scope.allocationList, resource, year, $scope.mappedResourceData, leaves, holidays, childShown);
+
+
+			holidayListService.getAggegrateLocationHolidays(location).then(function (res) {
+				scope.allocCollection = filter(scope, $scope.allocationList, resource, year, $scope.mappedResourceData, leaves, res.data, childShown, $scope.isUpdate);
+			}).catch(function (err) {
+				console.log(err);
+			});
 
 
 			if (typeof scope.allocCollection !== "undefined") {
@@ -400,70 +429,8 @@
 
 		$scope.getAllocationStatus = function () {
 			$scope.mappingValue = availableDaysService.getAllocationStatus($scope.mappingValue);
-			//	console.log($scope.mappingValue);
 		}
 
-		///////////////////////// End  Datatable Code /////////////////////////////////
-
-		// 	$scope.prepareFinalData = function ($scope, availableDaysService, monthlyHeaderListService, mappedData) {
-
-		// 		console.log(mappedData);
-
-		// 		var fromDate = "01-" + $scope.headingList[0];
-		// 		var toDate = "01-" + $scope.headingList[$scope.headingList.length - 1];
-		// 		var list = availableDaysService.getData(fromDate, toDate);
-		// 		for (var i = 0; i < list.length; i++) {
-		// 			var name = list[i].resource;
-		// 			var isConflict = false;
-		// 			for (var j = 0; j < list[i].maps[0].length; j++) {
-		// 				var allocationOBJ = list[i].maps[0][j];
-
-		// 				if (isNaN(allocationOBJ.buffertime)) {
-		// 					allocationOBJ.buffertime = 0.0;
-		// 				}
-
-		// 				if (allocationOBJ.buffertime >= 0) {
-		// 					continue;
-		// 				} else {
-		// 					isConflict = true;
-		// 					break;
-		// 				}
-		// 			}
-		// 			list[i]['isConflict'] = isConflict;
-
-		// 		}
-
-		// 		for (var i = 0; i < mappedData.length; i++) {
-		// 			for (var j = 0; j < list.length; j++) {
-		// 				if (mappedData[i].mappedResource.resourcename === list[j].resource) {
-		// 					mappedData[i]['isConflict'] = list[j]['isConflict'];
-		// 					break;
-		// 				}
-		// 			}
-		// 		}
-
-		// 		$scope.mappedResourceData = mappedData;
-		// 		var htm = '';
-
-		// 		angular.forEach($scope.mappedResourceData, function (item) {
-		// 			htm += '<option>' + item.mappedResource.resourcename + '</option>';
-		// 		});
-
-		// 		$('#resource-select').append(htm);
-		// 		$('#resource-select').multiselect('rebuild');
-
-		// 	}
-		// }
-
-
-		// function getProjectData(projectService, $scope) {
-		// 	projectService.getProject().then(function (res) {
-		// 		$scope.project = res.data;
-		// 	}).catch(function (err) {
-		// 		console.log(err);
-		// 	});
-
-		// }
 	}
 
 
@@ -471,7 +438,6 @@
 		console.log(index);
 		var currentMonth = new Date().getMonth();
 		return index < currentMonth;
-
 	}
 
 	function getAlloctionData(allocationService, $scope) {
@@ -517,13 +483,15 @@
 	}
 
 
-	function getHolidayData(holidayListService, $scope, year) {
+	/*function getHolidayData(holidayListService, $scope, year) {
 		holidayListService.getLocationHolidaysWithYear(year).then(function (res) {
 			$scope.holidayList = res.data;
 		}).catch(function (err) {
 			console.log(err);
 		});
-	}
+	}*/
+
+
 
 	function getGraphData($scope, allocationService, leaveService, resourceMappingService, availableDaysService) {
 		var allocation = [];
@@ -586,7 +554,6 @@
 		return monthWiseDays;
 	}
 
-
 	function date_sort_asc(date1, date2) {
 		if (date1 > date2) return 1;
 		if (date1 < date2) return -1;
@@ -616,7 +583,6 @@
 			arr.push(date < getToday());
 		}
 		return arr;
-
 	}
 
 
@@ -668,33 +634,10 @@
 		return ("0" + num).slice(-2);
 	}
 
-
-	// function getGraphData($scope, allocationService, leaveService, resourceMappingService, availableDaysService, monthlyHeaderListService, mappedData) {
-	// 	var allocation = [];
-	// 	var resoruceM = [];
-	// 	var leave = [];
-	// 	allocationService.getAllAllocation().then(function (res) {
-	// 		allocation = res.data;
-	// 		leaveService.getLeave().then(function (res) {
-	// 			leave = res.data;
-	// 			resourceMappingService.getMappedResources().then(function (res) {
-	// 				resoruceM = res.data;
-	// 				availableDaysService.intialize(allocation, resoruceM, leave);
-	// 				$scope.prepareFinalData($scope, availableDaysService, monthlyHeaderListService, mappedData);
-	// 			}).catch(function (err) {
-	// 				console.log(err);
-	// 			});
-	// 		}).catch(function (err) {
-	// 			console.log(err);
-	// 		});
-	// 	}).catch(function (err) {
-	// 		console.log(err);
-	// 	});
-	// }
-
-	// function prepareTableHeading($scope, monthlyHeaderListService) {
-	// 	$scope.headingList = monthlyHeaderListService.getHeaderList();
-	// }
+	function getRoundNumber(value, precision) {
+		var multiplier = Math.pow(10, precision || 0);
+		return Math.round(value * multiplier) / multiplier;
+	}
 
 
 	function openDialog() {

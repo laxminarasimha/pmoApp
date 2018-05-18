@@ -53,6 +53,8 @@
 
         $scope.filterResourceWithYear = [];
 
+        $scope.aggegrateHolidayList = [];
+
 
         $scope.startDate = "";
         $scope.endDate = "";
@@ -69,7 +71,6 @@
             if (date_1 != "Invalid Date" && date_2 != "Invalid Date") {
                 if (date_2 >= date_1) {
                     $scope.taggedToEuroclearList = months($scope.startDate, $scope.endDate);
-                    console.log($scope.taggedToEuroclearList);
                     checkPreTagged($scope.resourcemap, $scope.mongoMappedResourceData, $scope.taggedToEuroclearList); // to check if already existed allocaiton 
                     $scope.hidden = "";
                 } else {
@@ -207,7 +208,7 @@
 
         $scope.checkmonth = function (value) {
 
-            return moment(value,"MMM-YYYY") < getToday();
+            return moment(value, "MMM-YYYY") < getToday();
         }
 
 
@@ -218,7 +219,7 @@
 
         $scope.childInfo = function (resource, yearSelect, event) {
             var scope = $scope.$new(true);
-            scope.resourcemap = createDetails(resource, yearSelect, $scope.mongoMappedResourceData);
+            scope.resourcemap = createDetails(resource, yearSelect, $scope.mongoMappedResourceData, $scope.aggegrateHolidayList, holidayListService);
 
             var link = angular.element(event.currentTarget),
                 icon = link.find('.glyphicon'),
@@ -239,14 +240,47 @@
         }
     }
 
-    function createDetails(resource, yearSelect, resourceData) {
+    function createDetails(resource, yearSelect, resourceData, aggegrateHolidayList, holidayListService) {
+        
+        var region = '';
         var filterRecord = [];
+
         angular.forEach(resourceData, function (row) {
             if (row.mappedResource.resourcename === resource &&
                 row.year === yearSelect) {
+                region = row.mappedResource.baseentity;
                 filterRecord.push(row);
             }
         });
+
+        holidayListService.getAggegrateLocationHolidays(region).then(function (res) {
+            var aggegrateHolidayList = res.data;
+            var monthyearLabel = new Map();
+
+            for (var i = 0; i < aggegrateHolidayList.length; i++) {
+                monthyearLabel.set(getMonth(aggegrateHolidayList[i]._id.month - 1) + '-' + (aggegrateHolidayList[i]._id.year.toString()).substring(2, 4), aggegrateHolidayList[i].number);
+            }
+
+            // Extract holidays from the actually available mandays
+            for (var i = 0; i < filterRecord.length; i++) {
+                for (var k = 0; k < filterRecord[i].monthlyAvailableActualMandays.length; k++) {
+                    var key = filterRecord[i].monthlyAvailableActualMandays[k].key;
+
+                    if (monthyearLabel.has(key)) {
+                        var holidays = monthyearLabel.get(key);
+                        var percent = filterRecord[i].taggToEuroclear[k].value;
+                        var actualHDays = (holidays * percent) / 100;
+                        actualHDays = getRoundNumber(actualHDays, 1);
+
+                        filterRecord[i].monthlyAvailableActualMandays[k].value = filterRecord[i].monthlyAvailableActualMandays[k].value - actualHDays;
+                    }
+                }
+            }
+
+        }).catch(function (err) {
+            console.log(err);
+        });
+
         return filterRecord;
     }
 
@@ -534,11 +568,13 @@
 
     function prepareHolidayListForLocation(resourceMappingService, app, holidayListService, $scope, resourcemap, isCreate, monthlyHeaderListService) {
         holidayListService.getAggegrateLocationHolidays(resourcemap.mappedResource.baseentity).then(function (res) {
-            prepareWorkingDaysForGivenRange(resourceMappingService, app, $scope, res.data, resourcemap, isCreate, monthlyHeaderListService);
+            $scope.aggegrateHolidayList = res.data;
+            prepareWorkingDaysForGivenRange(resourceMappingService, app, $scope, $scope.aggegrateHolidayList, resourcemap, isCreate, monthlyHeaderListService);
         }).catch(function (err) {
             console.log(err);
         });
     }
+
 
     function prepareWorkingDaysForGivenRange(resourceMappingService, app, $scope, aggegrateHolidayList, resourcemap, isCreate, monthlyHeaderListService) {
         var theMonths = monthlyHeaderListService.getMonthList();
@@ -550,27 +586,27 @@
 
 
         for (var j = 0; j < taggedToEuroclearList.length; j++) {
-            holiday = false;
-            for (var i = 0; i < aggegrateHolidayList.length; i++) {
-                monthyearLabel = theMonths[aggegrateHolidayList[i]._id.month - 1] + '-' + (aggegrateHolidayList[i]._id.year.toString()).substring(2, 4);
-                if (monthyearLabel == taggedToEuroclearList[j]) {
-                    var workdays = getWorkDays(aggegrateHolidayList[i]._id.month - 1, aggegrateHolidayList[i]._id.year);
-                    var realWorkDays = workdays - aggegrateHolidayList[i].number;
-                    var monthWorkDaysObject = { "location": location, "monthyear": monthyearLabel, "value": realWorkDays };
-                    monthWorkDays.push(monthWorkDaysObject);
-                    holiday = true;
-                    break;
-                }
-            }
+            // holiday = false;
+            // for (var i = 0; i < aggegrateHolidayList.length; i++) {
+            //     monthyearLabel = theMonths[aggegrateHolidayList[i]._id.month - 1] + '-' + (aggegrateHolidayList[i]._id.year.toString()).substring(2, 4);
+            //     if (monthyearLabel == taggedToEuroclearList[j]) {
+            //         var workdays = getWorkDays(aggegrateHolidayList[i]._id.month - 1, aggegrateHolidayList[i]._id.year);
+            //       //  var realWorkDays = workdays - aggegrateHolidayList[i].number;
+            //         var monthWorkDaysObject = { "location": location, "monthyear": monthyearLabel, "value": workdays };
+            //         monthWorkDays.push(monthWorkDaysObject);
+            //         holiday = true;
+            //         break;
+            //     }
+            // }
 
-            if (!holiday) {
-                var headeingLabelArray = taggedToEuroclearList[j].split('-');
-                var month = theMonths.indexOf(headeingLabelArray[0]);
-                var year = headeingLabelArray[1];
-                var workdays = getWorkDays(month, year);
-                var monthWorkDaysObject = { "location": location, "monthyear": taggedToEuroclearList[j], "value": workdays };
-                monthWorkDays.push(monthWorkDaysObject);
-            }
+            // if (!holiday) {
+            var headeingLabelArray = taggedToEuroclearList[j].split('-');
+            var month = theMonths.indexOf(headeingLabelArray[0]);
+            var year = headeingLabelArray[1];
+            var workdays = getWorkDays(month, year);
+            var monthWorkDaysObject = { "location": location, "monthyear": taggedToEuroclearList[j], "value": workdays };
+            monthWorkDays.push(monthWorkDaysObject);
+            // }
 
         }
         prepareActualAvailableMandaysData(resourceMappingService, app, $scope, resourcemap, monthWorkDays, isCreate, monthlyHeaderListService);
@@ -799,8 +835,13 @@
 
         var date = new Date();
         var year = String(date.getFullYear());
-        return moment(getMonth(date.getMonth()) + '-' + year.substr(-2),"MMM-YYYY");
+        return moment(getMonth(date.getMonth()) + '-' + year.substr(-2), "MMM-YYYY");
 
+    }
+
+    function getRoundNumber(value, precision) {
+        var multiplier = Math.pow(10, precision || 0);
+        return Math.round(value * multiplier) / multiplier;
     }
 
 
