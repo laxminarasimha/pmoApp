@@ -59,7 +59,7 @@
 		$scope.successMsg = "";
 		$scope.errorMsg = "";
 		$scope.hidden = "none";
-
+		
 		function allocObject(object) {
 			var month;
 			var allocation;
@@ -126,6 +126,7 @@
 
 				angular.forEach($scope.months, function (item) {
 					var obj = new allocObject(item);
+					console.log(obj);
 					$scope.rowWiseAllocation.allocation.push(obj);
 				});
 
@@ -137,8 +138,9 @@
 			$('#projectBtn').attr('disabled', true);
 
 		}
-
+	
 		$scope.saveAllocation = function () {
+			getAllocations(allocationService,$scope);
 			console.log($scope.resourceWiseAllocaiton);
 			if ($scope.resourceWiseAllocaiton.length > 0) {
 				var allocationYearWise = splitAllocationByYear($scope.resourceWiseAllocaiton, $scope.startDate, $scope.endDate);
@@ -157,6 +159,7 @@
 								$('#resource-select').multiselect('rebuild');
 								$scope.startDate = "";
 								$scope.endDate = "";
+								
 							}
 						}).catch(function (err) {
 							console.log(err);
@@ -167,12 +170,12 @@
 				$scope.errorMsg = "Please enter valid data for all the input field.";
 				return;
 			}
-
-
 			if ($scope.errorMsg == null) {
 				$scope.clearFields();
 				$('#projectBtn').attr('disabled', false);
 			}
+
+			
 		}
 
 		$scope.cancel = function () {
@@ -234,7 +237,8 @@
 				console.log(err);
 			});
 		}
-
+		
+		
 
 		function getMappedResourceData(resourceMappingService, $scope) {
 			resourceMappingService.getMappedResources().then(function (res) {
@@ -332,8 +336,7 @@
 			return maps;
 		}
 
-
-
+	
 		function months(from, to) {
 			var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
 				"Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];

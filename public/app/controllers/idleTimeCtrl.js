@@ -54,6 +54,7 @@ angular.module('pmoApp').controller('idleTimeCtrl', Controller);
      app.successMsg = false;
      app.errorMsg = false;
      app.errorClass = "";
+     //getIdleTimeData(idleTimeService,$scope);
  }
  
 
