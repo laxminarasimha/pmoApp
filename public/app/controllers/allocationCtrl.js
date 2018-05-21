@@ -41,7 +41,7 @@
 	})
 
 
-	function filter(scope, collection, resource, year, mappedResourceData, leaveList, holidayList, showdetail, isUpdate) {
+	function filter(scope, collection, resource, year, mappedResourceData, leaveList, holidayList, showdetail, firstClick) {
 		if (showdetail) return; // if details is going to close then return
 
 		var allocationDetails = [];
@@ -71,7 +71,7 @@
 		for (var user = 0; user < mappedResourceData.length; user++) {
 			if (mappedResourceData[user].mappedResource.resourcename === resource && mappedResourceData[user].year === year) {
 
-				if (!isUpdate) {  // During update any value from screen, this holidays should not delte from the actually availablemanday.It is already dedcuted during load time
+				if (firstClick) {  // if it is first time open, then holidays should not delte from the actually availablemanday.It is already dedcuted during load time
 					for (var k = 0; k < mappedResourceData[user].monthlyAvailableActualMandays.length; k++) {
 						var key = mappedResourceData[user].monthlyAvailableActualMandays[k].key;
 
@@ -224,7 +224,6 @@
 					isConflict = true;
 				}
 			}
-			1111
 			item.buffertime = buffertime;
 			item.isConflict = isConflict;
 
@@ -276,8 +275,7 @@
 		$scope.mappingValue = [];
 		$scope.conflict = false;
 		$scope.holidayList = [];
-		$scope.isUpdate = false;
-
+		$scope.firstTimeclick = true;
 
 		function allocObject(object) {
 			var month;
@@ -306,7 +304,6 @@
 				if (item.resource === resource && item.year === year) {
 					allocationService.updateAllocation(item).then(function (res) {
 						if (res.data == "updated") {
-							$scope.isUpdate = true;
 							console.log('updated');
 						}
 					}).catch(function (err) {
@@ -318,7 +315,9 @@
 			$scope.childInfo(resource, year, loc, rowIndex, event, true);
 		}
 
-		$scope.deleteConfirmation = function (allocation, name) {
+		
+
+		$scope.deleteConfirmation = function (rowIndex, event) {
 
 			var myRadio = $('input[name="action"]');
 			var checkedValue = myRadio.filter(':checked').val();
@@ -331,16 +330,17 @@
 				$scope.deletedID = checkedValue;
 				openDialog();
 			}
-
+			$scope.delRowIndex = event;
 		}
 
-		$scope.deleteAllocation = function () {
+		$scope.deleteAllocation = function (event) {
 
 			if ($scope.deletedID != null) {
-				var data = $scope.deletedID.split("-");
+				var data = $scope.deletedID.split("~");
 				for (var count = 0; count < $scope.allocationList.length; count++) {
+
 					var item = $scope.allocationList[count];
-					if (item.resource == data[0] && item.resourcetype == data[1] && item.year == data[2]) {
+					if (item._id == data[4]) {
 						allocationService.deleteAllocation(item._id).then(function (res) {
 							if (res.data == "deleted") {
 								app.loading = false;
@@ -354,14 +354,19 @@
 					}
 				};
 
-				getAlloctionData(allocationService, $scope);
-				var div = document.getElementById($scope.deletedID);
-				if (div.style.display !== "none") {
-					div.style.display = "none";
+				var div_header = document.getElementById(data[4]);
+				var div_detail = document.getElementById(data[4] + '_detail');
+
+				if (div_header.style.display != "none") {
+					div_header.style.display = "none";
+					div_detail.style.display = "none";
 
 				}
 
 			}
+			getAlloctionData(allocationService, $scope);
+			$scope.childInfo(data[0], data[2], $scope.delLoc, $scope.delRowIndex, event, true);
+			//$scope.childInfo(resource, year, loc, rowIndex, event, true);
 
 		};
 		///////////////////////// start Datatable Code /////////////////////////////////
@@ -372,7 +377,6 @@
 			.withOption('order', [0, 'asc']);
 
 		$scope.childInfo = function (resource, year, location, listIndex, event, updateTable) {
-
 
 			var scope = $scope.$new(true);
 			var link = angular.element(event.currentTarget),
@@ -388,14 +392,13 @@
 			if (updateTable == null)
 				childShown = row.child.isShown();
 
-
-
 			holidayListService.getAggegrateLocationHolidays(location).then(function (res) {
-				scope.allocCollection = filter(scope, $scope.allocationList, resource, year, $scope.mappedResourceData, leaves, res.data, childShown, $scope.isUpdate);
+				scope.allocCollection = filter(scope, $scope.allocationList, resource, year, $scope.mappedResourceData, leaves, res.data, childShown, $scope.firstTimeclick);
 			}).catch(function (err) {
 				console.log(err);
 			});
 
+			$scope.firstTimeclick = false;
 
 			if (typeof scope.allocCollection !== "undefined") {
 				var isConflict = false;
@@ -407,12 +410,10 @@
 				$scope.mappingValue[listIndex].isConflict = isConflict;
 			}
 
-
 			if (updateTable) {
 				row.child($compile('<div tmpl class="clearfix"></div>')(scope)).show();
 
 			} else {
-
 				if (row.child.isShown()) {
 					icon.removeClass('glyphicon-minus-sign').addClass('glyphicon-plus-sign');
 					row.child.hide();
@@ -481,15 +482,6 @@
 			console.log(err);
 		});
 	}
-
-
-	/*function getHolidayData(holidayListService, $scope, year) {
-		holidayListService.getLocationHolidaysWithYear(year).then(function (res) {
-			$scope.holidayList = res.data;
-		}).catch(function (err) {
-			console.log(err);
-		});
-	}*/
 
 
 

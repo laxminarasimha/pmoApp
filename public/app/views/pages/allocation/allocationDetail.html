@@ -7,7 +7,8 @@
       </span>
     </div>
 
-    <div id="{{allocRecords.allocation[0].resource+'-'+allocRecords.allocation[0].resourcetype+'-'+allocRecords.allocation[0].year}}" style="display:inline;" ng-repeat="allocRecords in allocCollection"> 
+    <div id="{{allocRecords.allocation[0].resource+'-'+allocRecords.allocation[0].resourcetype+'-'+allocRecords.allocation[0].year}}"
+      style="display:inline;" ng-repeat="allocRecords in allocCollection">
       <table class="table table-striped table-curved" cellspacing="0" width="100%">
         <thead>
           <td colspan="12%">
@@ -17,15 +18,16 @@
               </span>
             </h4>
           </td>
-          <td style="border-left:none;">
+          <!-- <td style="border-left:none;">
             <span style="margin:auto; display:table;">
               <input name="action" type="radio" value="{{allocRecords.allocation[0].resource+'-'+allocRecords.allocation[0].resourcetype+'-'+allocRecords.allocation[0].year}}"
               />Save/Delete</span>
-          </td>
+          </td> -->
           </tr>
           <tr>
             <th style="text-align: center;background-color:cyan;color:blue;">Months</th>
             <th align="center" style="text-align: center; background-color:cyan;color:blue;" ng-repeat="month in monthLabel">{{month}}</th>
+            <th align="center" style="text-align: center; background-color:cyan;color:blue;">Action</th>
           </tr>
           <tr class="danger">
             <th style="text-align: center;background-color:gray;color:yellow;">Available Days</th>
@@ -38,13 +40,13 @@
         </thead>
 
         <tbody ng-repeat="records in allocRecords.allocation">
-          <tr>
+          <tr id="{{records._id}}">
             <td align="center" colspan="100%" style="font-weight: bold;">
               <span style="text-align: center;color:yellow;background-color:gray;">{{records.project}}
               </span>
             </td>
           </tr>
-          <tr>
+          <tr id="{{records._id}}_detail">
             <td style="font-weight: bold;text-align: center;color:green; padding-top: .2cm;">Allocation In Day's</td>
 
             <td ng-repeat="monthlyAlloc in records.allocation" ng-value="{{$index}}">
@@ -52,6 +54,11 @@
                 <input type="text" style="text-align: center;background-color:{{allocRecords.buffertime[$index] < 0 ? 'pink':''}}; color:{{allocRecords.buffertime[$index] < 0 ? 'red':'green'}};"
                   class="form-control" ng-model="monthlyAlloc.value" maxlength="2" size="2" required="true" ng-readonly="{{allocRecords.readonly[$index]}}"
                 />
+              </span>
+            </td>
+            <td>
+              <span style="margin:auto; display:table;">
+                <input name="action" type="radio" value="{{allocRecords.allocation[0].resource+'~'+allocRecords.allocation[0].resourcetype+'~'+allocRecords.allocation[0].year+'~'+records.project+'~'+records._id}}"/>
               </span>
             </td>
           </tr>
