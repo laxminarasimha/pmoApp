@@ -315,7 +315,7 @@
 		}
 
 
-		$scope.deleteConfirmation = function (rowIndex, event) {
+	/*	$scope.deleteConfirmation = function (rowIndex, event) {
 
 			var myRadio = $('input[name="action"]');
 			var checkedValue = myRadio.filter(':checked').val();
@@ -329,7 +329,7 @@
 				openDialog();
 			}
 			$scope.delRowIndex = event;
-		}
+		}*/
 
 		$scope.deleteAllocation = function (resource, year, loc, rowIndex, event) {
 
