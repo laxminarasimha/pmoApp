@@ -173,10 +173,10 @@
 
 	function checkOverAllocaiton(scope, alloCollection, year, leaveList, mappedResourceData, resource) {
 
+
 		var buffertime = null;
 		var count = 0;
 		var totalAllocDays = monthsWithYear(year);
-
 
 		// map indivial leaves to map a 12 months map
 		var leaves = monthsWithYear(year);
@@ -368,8 +368,8 @@
 
 				//$scope.updateAllocaiton(data[0], data[2], $scope.delLoc, $scope.delRowIndex, event, true);
 				getAlloctionData(allocationService, $scope);
-				$scope.childInfo(data[0], data[2], $scope.delLoc, $scope.delRowIndex, event, true);
-				//$scope.childInfo(resource, year, loc, rowIndex, event, true);
+				//$scope.childInfo(data[0], data[2], $scope.delLoc, rowIndex, event, true);
+				$scope.childInfo(resource, year, loc, rowIndex, event, true);
 			}
 
 
