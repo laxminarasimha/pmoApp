@@ -41,7 +41,7 @@
 	})
 
 
-	function filter(scope, collection, resource, year, mappedResourceData, leaveList, holidayList, showdetail, firstClick) {
+	function filter(scope, collection, resource, year, mappedResourceData, leaveList, holidayList, showdetail) {
 		if (showdetail) return; // if details is going to close then return
 
 		var allocationDetails = [];
@@ -69,9 +69,10 @@
 
 		var mappedToResource = [];
 		for (var user = 0; user < mappedResourceData.length; user++) {
+
 			if (mappedResourceData[user].mappedResource.resourcename === resource && mappedResourceData[user].year === year) {
 
-				if (firstClick) {  // if it is first time open, then holidays should not delte from the actually availablemanday.It is already dedcuted during load time
+				if (typeof mappedResourceData[user].holidaydeduct === 'undefined') {  // if it is first time open, then holidays should not delte from the actually availablemanday.It is already dedcuted during load time
 					for (var k = 0; k < mappedResourceData[user].monthlyAvailableActualMandays.length; k++) {
 						var key = mappedResourceData[user].monthlyAvailableActualMandays[k].key;
 
@@ -82,6 +83,7 @@
 							actualHDays = getRoundNumber(actualHDays, 1);
 
 							mappedResourceData[user].monthlyAvailableActualMandays[k].value = mappedResourceData[user].monthlyAvailableActualMandays[k].value - actualHDays;
+							mappedResourceData[user].holidaydeduct = true;
 						}
 					}
 				}
@@ -259,7 +261,6 @@
 	}
 
 
-
 	Controller.$inject = ['$scope', 'DTOptionsBuilder', 'DTColumnBuilder', '$compile', 'resourceService', 'projectService', 'allocationService', 'leaveService', 'resourceMappingService', '$filter', 'availableDaysService', 'holidayListService'];
 
 	function Controller($scope, DTOptionsBuilder, DTColumnBuilder, $compile, resourceService, projectService, allocationService, leaveService, resourceMappingService, $filter, availableDaysService, holidayListService) {
@@ -275,7 +276,6 @@
 		$scope.mappingValue = [];
 		$scope.conflict = false;
 		$scope.holidayList = [];
-		$scope.firstTimeclick = true;
 
 		function allocObject(object) {
 			var month;
@@ -311,11 +311,9 @@
 					});
 				}
 			});
-
 			$scope.childInfo(resource, year, loc, rowIndex, event, true);
 		}
 
-		
 
 		$scope.deleteConfirmation = function (rowIndex, event) {
 
@@ -333,26 +331,32 @@
 			$scope.delRowIndex = event;
 		}
 
-		$scope.deleteAllocation = function (event) {
+		$scope.deleteAllocation = function (resource, year, loc, rowIndex, event) {
 
-			if ($scope.deletedID != null) {
-				var data = $scope.deletedID.split("~");
-				for (var count = 0; count < $scope.allocationList.length; count++) {
+			var myRadio = $('input[name="action"]');
+			$scope.deletedID = myRadio.filter(':checked').val();
 
-					var item = $scope.allocationList[count];
-					if (item._id == data[4]) {
-						allocationService.deleteAllocation(item._id).then(function (res) {
-							if (res.data == "deleted") {
-								app.loading = false;
-								app.successMsg = "Resource allocation deleted successfully";
-								app.errorMsg = false;
-								$scope.msg = "";
-							}
-						}).catch(function (err) {
-							console.log(err);
-						});
+			if (confirm("Are you sure want to delete the record?")) {
+				txt = "You pressed OK!";
+
+				if ($scope.deletedID != null) {
+					var data = $scope.deletedID.split("~");
+					for (var count = 0; count < $scope.allocationList.length; count++) {
+						var item = $scope.allocationList[count];
+						if (item._id == data[4]) {
+							allocationService.deleteAllocation(item._id).then(function (res) {
+								if (res.data == "deleted") {
+									app.loading = false;
+									app.successMsg = "Resource allocation deleted successfully";
+									app.errorMsg = false;
+									$scope.msg = "";
+								}
+							}).catch(function (err) {
+								console.log(err);
+							});
+						}
 					}
-				};
+				}
 
 				var div_header = document.getElementById(data[4]);
 				var div_detail = document.getElementById(data[4] + '_detail');
@@ -360,16 +364,13 @@
 				if (div_header.style.display != "none") {
 					div_header.style.display = "none";
 					div_detail.style.display = "none";
-
 				}
 
+				//$scope.updateAllocaiton(data[0], data[2], $scope.delLoc, $scope.delRowIndex, event, true);
+				getAlloctionData(allocationService, $scope);
+				$scope.childInfo(data[0], data[2], $scope.delLoc, $scope.delRowIndex, event, true);
+				//$scope.childInfo(resource, year, loc, rowIndex, event, true);
 			}
-			
-			
-			//$scope.updateAllocaiton(data[0], data[2], $scope.delLoc, $scope.delRowIndex, event, true);
-			getAlloctionData(allocationService, $scope);
-			$scope.childInfo(data[0], data[2], $scope.delLoc, $scope.delRowIndex, event, true);
-			//$scope.childInfo(resource, year, loc, rowIndex, event, true);
 
 
 		};
@@ -380,7 +381,7 @@
 		$scope.vm.dtOptions = DTOptionsBuilder.newOptions()
 			.withOption('order', [0, 'asc']);
 
-		$scope.childInfo = function (resource, year, location, listIndex, event, updateTable) {
+		$scope.childInfo = function (resource, year, region, listIndex, event, updateTable) {
 
 			var scope = $scope.$new(true);
 			var link = angular.element(event.currentTarget),
@@ -389,20 +390,21 @@
 				table = $scope.vm.dtInstance.DataTable,
 				row = table.row(tr);
 
-			var leaves = $filter('filter')($scope.leaveList, { resourcename: resource });
-			var holidays = $filter('filter')($scope.holidayList, { year: year, locationname: location });
+			//var leaves = $filter('filter')($scope.leaveList, { resourcename: resource });
+			//var holidays = $filter('filter')($scope.holidayList, { year: year, locationname: location });
 
 			var childShown = false;
 			if (updateTable == null)
 				childShown = row.child.isShown();
 
-			holidayListService.getAggegrateLocationHolidays(location).then(function (res) {
-				scope.allocCollection = filter(scope, $scope.allocationList, resource, year, $scope.mappedResourceData, leaves, res.data, childShown, $scope.firstTimeclick);
+
+			var leaves = $filter('filter')($scope.leaveList, { resourcename: resource });
+			holidayListService.getAggegrateLocationHolidays(region).then(function (res) {
+				scope.allocCollection = filter(scope, $scope.allocationList, resource, year, $scope.mappedResourceData, leaves, res.data, childShown);
 			}).catch(function (err) {
 				console.log(err);
 			});
 
-			$scope.firstTimeclick = false;
 
 			if (typeof scope.allocCollection !== "undefined") {
 				var isConflict = false;
