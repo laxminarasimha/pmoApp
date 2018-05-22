@@ -364,9 +364,13 @@
 				}
 
 			}
+			
+			
+			//$scope.updateAllocaiton(data[0], data[2], $scope.delLoc, $scope.delRowIndex, event, true);
 			getAlloctionData(allocationService, $scope);
 			$scope.childInfo(data[0], data[2], $scope.delLoc, $scope.delRowIndex, event, true);
 			//$scope.childInfo(resource, year, loc, rowIndex, event, true);
+
 
 		};
 		///////////////////////// start Datatable Code /////////////////////////////////
