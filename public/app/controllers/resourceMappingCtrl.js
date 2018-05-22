@@ -53,6 +53,7 @@
         $scope.filterResourceWithYear = [];
 
         $scope.aggegrateHolidayList = [];
+        $scope.ShowSpinnerStatus = true;
 
 
         $scope.startDate = "";
@@ -757,6 +758,13 @@
         resourceMappingService.getMappedResources().then(function (res) {
             $scope.mongoMappedResourceData = res.data;
             $scope.filterResourceWithYear = filterUniqueResourceWithYear(res.data);
+
+            $scope.ShowSpinnerStatus = false;
+			var spinner = document.getElementById("spinner");
+			if (spinner.style.display != "none") {
+				spinner.style.display = "none";
+
+			}
 
         }).catch(function (err) {
             console.log(err);
