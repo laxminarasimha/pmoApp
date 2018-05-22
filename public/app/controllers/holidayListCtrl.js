@@ -3,15 +3,15 @@
 
     angular.module('pmoApp').controller('holidayListCtrl', Controller);
 
-    Controller.$inject = ['$scope', '$rootScope', 'holidayListService', 'locationService', 'DTOptionsBuilder', 'DTColumnBuilder', '$filter'];
+    Controller.$inject = ['$scope', '$rootScope', 'holidayListService', 'regionService', 'DTOptionsBuilder', 'DTColumnBuilder', '$filter'];
 
-    function Controller($scope, $rootScope, holidayListService, locationService, DTOptionsBuilder, DTColumnBuilder, $filter) {
+    function Controller($scope, $rootScope, holidayListService, regionService, DTOptionsBuilder, DTColumnBuilder, $filter) {
         $scope.mongoHolidayData = [];
-        $scope.locationList = [];
+        $scope.regionList = [];
         var app = $scope;
 
         $rootScope.Title = "Holiday Listing";
-        getLocationData(locationService, $scope);
+        getRegionData(regionService, $scope);
         getHolidayData(holidayListService, $scope);
 
 
@@ -127,9 +127,9 @@
         });
     }
 
-    function getLocationData(locationService, $scope) {
-        locationService.getLocation().then(function (res) {
-            $scope.locationList = res.data;
+    function getRegionData(regionService, $scope) {
+        regionService.getRegion().then(function (res) {
+            $scope.regionList = res.data;
         }).catch(function (err) {
             console.log(err);
         });

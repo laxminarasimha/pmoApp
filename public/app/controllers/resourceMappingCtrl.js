@@ -1,4 +1,3 @@
-
 (function () {
     'use strict';
 
@@ -135,7 +134,6 @@
                         });
                     }
                 }
-                //}
             }
         };
 
@@ -219,7 +217,7 @@
 
         $scope.childInfo = function (resource, yearSelect, event) {
             var scope = $scope.$new(true);
-            scope.resourcemap = createDetails(resource, yearSelect, $scope.mongoMappedResourceData, $scope.aggegrateHolidayList, holidayListService);
+           
 
             var link = angular.element(event.currentTarget),
                 icon = link.find('.glyphicon'),
@@ -233,6 +231,7 @@
                 tr.removeClass('shown');
             }
             else {
+                scope.resourcemap = createDetails(resource, yearSelect, $scope.mongoMappedResourceData, holidayListService);
                 icon.removeClass('glyphicon-plus-sign').addClass('glyphicon-minus-sign');
                 row.child($compile('<div resourcemap-child-directive class="clearfix"></div>')(scope)).show();
                 tr.addClass('shown');
@@ -240,46 +239,81 @@
         }
     }
 
-    function createDetails(resource, yearSelect, resourceData, aggegrateHolidayList, holidayListService) {
-        
-        var region = '';
+    function createDetails(resource, yearSelect, resourceData, holidayListService) {
+
         var filterRecord = [];
 
         angular.forEach(resourceData, function (row) {
             if (row.mappedResource.resourcename === resource &&
                 row.year === yearSelect) {
-                region = row.mappedResource.baseentity;
                 filterRecord.push(row);
-            }
-        });
 
-        holidayListService.getAggegrateLocationHolidays(region).then(function (res) {
-            var aggegrateHolidayList = res.data;
-            var monthyearLabel = new Map();
+                if (typeof row.holidaydeducted === 'undefined') {
 
-            for (var i = 0; i < aggegrateHolidayList.length; i++) {
-                monthyearLabel.set(getMonth(aggegrateHolidayList[i]._id.month - 1) + '-' + (aggegrateHolidayList[i]._id.year.toString()).substring(2, 4), aggegrateHolidayList[i].number);
-            }
+                    holidayListService.getAggegrateLocationHolidays(row.region).then(function (res) {
+                        var aggegrateHolidayList = res.data;
+                        var monthyearLabel = new Map();
 
-            // Extract holidays from the actually available mandays
-            for (var i = 0; i < filterRecord.length; i++) {
-                for (var k = 0; k < filterRecord[i].monthlyAvailableActualMandays.length; k++) {
-                    var key = filterRecord[i].monthlyAvailableActualMandays[k].key;
+                        for (var i = 0; i < aggegrateHolidayList.length; i++) {
+                            monthyearLabel.set(getMonth(aggegrateHolidayList[i]._id.month - 1) + '-' + (aggegrateHolidayList[i]._id.year.toString()).substring(2, 4), aggegrateHolidayList[i].number);
+                        }
 
-                    if (monthyearLabel.has(key)) {
-                        var holidays = monthyearLabel.get(key);
-                        var percent = filterRecord[i].taggToEuroclear[k].value;
-                        var actualHDays = (holidays * percent) / 100;
-                        actualHDays = getRoundNumber(actualHDays, 1);
+                        // Extract holidays from the actually available mandays
+                        // for (var i = 0; i < filterRecord.length; i++) {
+                        for (var k = 0; k < row.monthlyAvailableActualMandays.length; k++) {
+                            var key = row.monthlyAvailableActualMandays[k].key;
 
-                        filterRecord[i].monthlyAvailableActualMandays[k].value = filterRecord[i].monthlyAvailableActualMandays[k].value - actualHDays;
-                    }
+                            if (monthyearLabel.has(key)) {
+                                var holidays = monthyearLabel.get(key);
+                                var percent = row.taggToEuroclear[k].value;
+                                var actualHDays = (holidays * percent) / 100;
+                                actualHDays = getRoundNumber(actualHDays, 1);
+                                row.monthlyAvailableActualMandays[k].value = getRoundNumber((row.monthlyAvailableActualMandays[k].value - actualHDays), 1);
+                                row.holidaydeducted = true;
+
+                            }
+                        }
+                        // }
+
+                    }).catch(function (err) {
+                        console.log(err);
+                    });
                 }
             }
-
-        }).catch(function (err) {
-            console.log(err);
         });
+
+        // if (firstTimeClickDetails) {
+
+        /*  holidayListService.getAggegrateLocationHolidays(region).then(function (res) {
+              var aggegrateHolidayList = res.data;
+              var monthyearLabel = new Map();
+  
+              for (var i = 0; i < aggegrateHolidayList.length; i++) {
+                  monthyearLabel.set(getMonth(aggegrateHolidayList[i]._id.month - 1) + '-' + (aggegrateHolidayList[i]._id.year.toString()).substring(2, 4), aggegrateHolidayList[i].number);
+              }
+  
+              console.log(monthyearLabel);
+  
+              // Extract holidays from the actually available mandays
+              for (var i = 0; i < filterRecord.length; i++) {
+                  for (var k = 0; k < filterRecord[i].monthlyAvailableActualMandays.length; k++) {
+                      var key = filterRecord[i].monthlyAvailableActualMandays[k].key;
+  
+                      if (monthyearLabel.has(key)) {
+                          var holidays = monthyearLabel.get(key);
+                          var percent = filterRecord[i].taggToEuroclear[k].value;
+                          var actualHDays = (holidays * percent) / 100;
+                          actualHDays = getRoundNumber(actualHDays, 1);
+                          filterRecord[i].monthlyAvailableActualMandays[k].value =getRoundNumber((filterRecord[i].monthlyAvailableActualMandays[k].value - actualHDays), 1);
+               
+                      }
+                  }
+              }
+  
+          }).catch(function (err) {
+              console.log(err);
+          });*/
+        // }
 
         return filterRecord;
     }
@@ -626,7 +660,7 @@
                     && (taggedToEuroclearList[j] == monthWorkDaysListForLocation[k].monthyear)) {
                     var taggToEuroclearPercentage = getTaggToEuroclearPercentageForMonth(resourcemap, taggedToEuroclearList[j]);
                     var actualWorkingDays = (monthWorkDaysListForLocation[k].value) * (taggToEuroclearPercentage / 100);
-                    var actualWorkingDaysWithRound = monthlyHeaderListService.getRoundNumber(actualWorkingDays, 1);
+                    var actualWorkingDaysWithRound = getRoundNumber(actualWorkingDays, 1);
                     var monthlyAvailableActualMandaysObject = {
                         "key": taggedToEuroclearList[j],
                         "value": actualWorkingDaysWithRound

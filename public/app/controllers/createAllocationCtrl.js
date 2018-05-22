@@ -128,7 +128,6 @@
 
 				angular.forEach($scope.months, function (item) {
 					var obj = new allocObject(item);
-					console.log(obj);
 					$scope.rowWiseAllocation.allocation.push(obj);
 				});
 
