@@ -9,8 +9,13 @@
         <div class='row'>
           <div class='col-sm-3'>
             <div class=form-group>
-              <label for="resourcename">Resource Name</label>
-
+              <label for="resourcename">Resource Name</label><br/>
+              
+              <!--<input type="text" list="resourcemap" ng-show="resourcemap._id==null" ng-model="resourcemap.mappedResource" style="width: 290px; padding: 2px" required>
+              <datalist id="resourcemap">
+                <option ng-repeat="x in resourceList" value="{{x.resourcename}}"></option>
+              </datalist>-->
+              
               <select ng-show="resourcemap._id==null" ng-model="resourcemap.mappedResource" ng-options="x.resourcename for x in resourceList"
                 class="form-control input-sm {{errorClass}}">
                   </select>
