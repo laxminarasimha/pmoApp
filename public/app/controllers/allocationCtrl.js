@@ -173,10 +173,10 @@
 
 	function checkOverAllocaiton(scope, alloCollection, year, leaveList, mappedResourceData, resource) {
 
+
 		var buffertime = null;
 		var count = 0;
 		var totalAllocDays = monthsWithYear(year);
-
 
 		// map indivial leaves to map a 12 months map
 		var leaves = monthsWithYear(year);
@@ -276,6 +276,7 @@
 		$scope.mappingValue = [];
 		$scope.conflict = false;
 		$scope.holidayList = [];
+		$scope.ShowSpinnerStatus = true;
 
 		function allocObject(object) {
 			var month;
@@ -315,21 +316,21 @@
 		}
 
 
-		$scope.deleteConfirmation = function (rowIndex, event) {
-
-			var myRadio = $('input[name="action"]');
-			var checkedValue = myRadio.filter(':checked').val();
-
-			if (checkedValue == null) {
-				alert('Please select a record to delete.')
-				return;
-			} else {
-				$scope.msg = checkedValue;
-				$scope.deletedID = checkedValue;
-				openDialog();
-			}
-			$scope.delRowIndex = event;
-		}
+		/*	$scope.deleteConfirmation = function (rowIndex, event) {
+	
+				var myRadio = $('input[name="action"]');
+				var checkedValue = myRadio.filter(':checked').val();
+	
+				if (checkedValue == null) {
+					alert('Please select a record to delete.')
+					return;
+				} else {
+					$scope.msg = checkedValue;
+					$scope.deletedID = checkedValue;
+					openDialog();
+				}
+				$scope.delRowIndex = event;
+			}*/
 
 		$scope.deleteAllocation = function (resource, year, loc, rowIndex, event) {
 
@@ -368,8 +369,8 @@
 
 				//$scope.updateAllocaiton(data[0], data[2], $scope.delLoc, $scope.delRowIndex, event, true);
 				getAlloctionData(allocationService, $scope);
-				$scope.childInfo(data[0], data[2], $scope.delLoc, $scope.delRowIndex, event, true);
-				//$scope.childInfo(resource, year, loc, rowIndex, event, true);
+				//$scope.childInfo(data[0], data[2], $scope.delLoc, rowIndex, event, true);
+				$scope.childInfo(resource, year, loc, rowIndex, event, true);
 			}
 
 
@@ -465,11 +466,17 @@
 
 
 	function getMappedResourceData($scope, resourceMappingService, holidayListService) {
+		//$scope.ShowSpinnerStatus = false;
 		resourceMappingService.getMappedResources().then(function (res) {
+			$scope.ShowSpinnerStatus = false;
+			var spinner = document.getElementById("spinner");
+			if (spinner.style.display != "none") {
+				spinner.style.display = "none";
+
+			}
 
 			var collection = res.data;
 			var key = "";
-
 			var resource = [], keys = [], item;
 			for (var col = 0; col < collection.length; col++) {
 				item = collection[col];
@@ -479,10 +486,11 @@
 					keys.push(key);
 				}
 			}
-
+			
 			//getGraphData($scope, allocationService, leaveService, resourceMappingService, availableDaysService, monthlyHeaderListService, resource);
 			$scope.mappedResourceData = res.data;
 			$scope.mappingValue = resource;
+			
 
 		}).catch(function (err) {
 			console.log(err);
@@ -643,3 +651,4 @@
 	}
 
 })();
+
