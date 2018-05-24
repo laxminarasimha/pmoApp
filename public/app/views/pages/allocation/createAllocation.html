@@ -35,7 +35,7 @@
             <label for resource>Resources:</label>
             <!-- <select id="resource-select" id="resource" ng-model="resource" required multiple="multiple" multi-select class="form-control"></select> -->
             
-            <input list="resource" type="text" ng-model="resource"  required>
+            <input  list="resource" type="text" ng-model="resource" style="width: 290px; padding: 2px" required>
             <datalist  id="resource">
               <option ng-repeat="resource in mappedResourceData" value="{{resource.mappedResource.resourcename}}">
             </datalist>
