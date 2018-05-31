@@ -400,22 +400,27 @@
 
 
 			var leaves = $filter('filter')($scope.leaveList, { resourcename: resource });
+
 			holidayListService.getAggegrateLocationHolidays(region).then(function (res) {
 				scope.allocCollection = filter(scope, $scope.allocationList, resource, year, $scope.mappedResourceData, leaves, res.data, childShown);
+				if (typeof scope.allocCollection !== "undefined") {
+
+					var isConflict = false;
+					angular.forEach(scope.allocCollection, function (item) {
+						if (item.isConflict)
+							isConflict = true;
+					});
+
+					$scope.mappingValue[listIndex].isConflict = isConflict;
+
+				}
 			}).catch(function (err) {
 				console.log(err);
 			});
 
+			console.log(scope.allocCollection);
 
-			if (typeof scope.allocCollection !== "undefined") {
-				var isConflict = false;
-				angular.forEach(scope.allocCollection, function (item) {
-					if (item.isConflict)
-						isConflict = true;
-				});
 
-				$scope.mappingValue[listIndex].isConflict = isConflict;
-			}
 
 			if (updateTable) {
 				row.child($compile('<div tmpl class="clearfix"></div>')(scope)).show();
@@ -432,6 +437,14 @@
 					tr.addClass('shown');
 				}
 			}
+
+			/*	var div_header = document.getElementById(data[4]);
+					var div_detail = document.getElementById(data[4] + '_detail');
+	
+					if (div_header.style.display != "none") {
+						div_header.style.display = "none";
+						div_detail.style.display = "none";
+					}*/
 
 		}
 
@@ -486,11 +499,11 @@
 					keys.push(key);
 				}
 			}
-			
+
 			//getGraphData($scope, allocationService, leaveService, resourceMappingService, availableDaysService, monthlyHeaderListService, resource);
 			$scope.mappedResourceData = res.data;
 			$scope.mappingValue = resource;
-			
+
 
 		}).catch(function (err) {
 			console.log(err);
