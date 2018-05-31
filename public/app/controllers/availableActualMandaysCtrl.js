@@ -156,8 +156,6 @@ angular.module('pmoApp').controller('availableActualMandaysCtrl', Controller);
 
 
     function prepareTableHeading($scope,monthlyHeaderListService){
-       
-
         $scope.headingList = monthlyHeaderListService.getHeaderList();
 
     }

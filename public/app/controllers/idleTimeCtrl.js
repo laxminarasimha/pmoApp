@@ -63,6 +63,7 @@ angular.module('pmoApp').controller('idleTimeCtrl', Controller);
  $scope.getIdleTimes = function(idleTimeDTO) {
      $scope.IsSubmit = true;
      console.log(idleTimeDTO);
+    
      //if (false) {
             var emptyObject =  angular.equals({}, idleTimeDTO);
             if (typeof idleTimeDTO == "undefined" || emptyObject) {
@@ -117,6 +118,7 @@ angular.module('pmoApp').controller('idleTimeCtrl', Controller);
     getGraphData($scope,allocationService,leaveService,resourceMappingService,availableDaysService,monthlyHeaderListService);
 
     $scope.prepareIdleTimeData = function($scope,availableDaysService,monthlyHeaderListService){
+        
            var fromDate = "01-"+$scope.headingList[0];
            var toDate = "01-"+$scope.headingList[$scope.headingList.length-1];
            var list =  availableDaysService.getData(fromDate,toDate);
@@ -242,7 +244,7 @@ function getGraphData($scope,allocationService,leaveService,resourceMappingServi
 
  function getIdleTimeData(idleTimeService,$scope){
       idleTimeService.getMappedResources().then(function(res) {
-         $scope.idleTimeData = res.data;
+        $scope.idleTimeData = res.data;
          }).catch(function(err) {
          console.log(err);
      });
