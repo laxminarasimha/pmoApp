@@ -71,7 +71,8 @@
             if (date_1 != "Invalid Date" && date_2 != "Invalid Date") {
                 if (date_2 >= date_1) {
                     $scope.taggedToEuroclearList = months($scope.startDate, $scope.endDate);
-                    checkPreTagged($scope.resourcemap, $scope.mongoMappedResourceData, $scope.taggedToEuroclearList); // to check if already existed allocaiton 
+                    $scope.yearSelect =
+                        checkPreTagged($scope.resourcemap, $scope.mongoMappedResourceData, $scope.taggedToEuroclearList); // to check if already existed allocaiton 
                     $scope.hidden = "";
                 } else {
                     app.loading = false;
@@ -174,7 +175,7 @@
             $rootScope.Title = "Update Resourcemap";
             if ($scope.resourceMappingForm.$valid) {
                 prepareTaggedToEuroclearData($scope, resourcemap);
-                prepareData(resourceMappingService, app, holidayListService, $scope, resourcemap, false, monthlyHeaderListService);
+                prepareData(resourceMappingService, app, holidayListService, $scope, resourcemap, false);
             } else {
                 app.loading = false;
                 app.successMsg = false;
@@ -188,7 +189,7 @@
             $scope.IsSubmit = true;
             if ($scope.resourceMappingForm.$valid) {
                 prepareTaggedToEuroclearData($scope, resourcemap);
-                prepareData(resourceMappingService, app, holidayListService, $scope, resourcemap, true, monthlyHeaderListService);
+                prepareData(resourceMappingService, app, holidayListService, $scope, resourcemap, true);
             } else {
                 app.loading = false;
                 app.successMsg = false;
@@ -218,7 +219,7 @@
 
         $scope.childInfo = function (resource, yearSelect, event) {
             var scope = $scope.$new(true);
-           
+
 
             var link = angular.element(event.currentTarget),
                 icon = link.find('.glyphicon'),
@@ -249,9 +250,11 @@
                 row.year === yearSelect) {
                 filterRecord.push(row);
 
-                if (typeof row.holidaydeducted === 'undefined') {
 
+                if (typeof row.holidaydeducted === 'undefined') {
+                    console.log(row.region);
                     holidayListService.getAggegrateLocationHolidays(row.region).then(function (res) {
+                        console.log(res.data);
                         var aggegrateHolidayList = res.data;
                         var monthyearLabel = new Map();
 
@@ -565,6 +568,7 @@
     }
 
     function mergeNewWithOldMappAndSort(newCollection, oldCollection) {
+
         var collection = newCollection;
         angular.forEach(oldCollection, function (oldItem) {
             var found = false;
@@ -597,28 +601,28 @@
     }
 
 
-    function prepareData(resourceMappingService, app, holidayListService, $scope, resourcemap, isCreate, monthlyHeaderListService) {
-        prepareHolidayListForLocation(resourceMappingService, app, holidayListService, $scope, resourcemap, isCreate, monthlyHeaderListService);
+    function prepareData(resourceMappingService, app, holidayListService, $scope, resourcemap, isCreate) {
+        // prepareHolidayListForLocation(resourceMappingService, app, holidayListService, $scope, resourcemap, isCreate, monthlyHeaderListService);
+        prepareWorkingDaysForGivenRange(resourceMappingService, app, $scope, $scope.aggegrateHolidayList, resourcemap, isCreate);
     }
 
-    function prepareHolidayListForLocation(resourceMappingService, app, holidayListService, $scope, resourcemap, isCreate, monthlyHeaderListService) {
-        holidayListService.getAggegrateLocationHolidays(resourcemap.mappedResource.baseentity).then(function (res) {
-            $scope.aggegrateHolidayList = res.data;
-            prepareWorkingDaysForGivenRange(resourceMappingService, app, $scope, $scope.aggegrateHolidayList, resourcemap, isCreate, monthlyHeaderListService);
-        }).catch(function (err) {
-            console.log(err);
-        });
-    }
+    /*  function prepareHolidayListForLocation(resourceMappingService, app, holidayListService, $scope, resourcemap, isCreate, monthlyHeaderListService) {
+          holidayListService.getAggegrateLocationHolidays(resourcemap.mappedResource.baseentity).then(function (res) {
+              $scope.aggegrateHolidayList = res.data;
+              prepareWorkingDaysForGivenRange(resourceMappingService, app, $scope, $scope.aggegrateHolidayList, resourcemap, isCreate, monthlyHeaderListService);
+          }).catch(function (err) {
+              console.log(err);
+          });
+      }*/
 
 
-    function prepareWorkingDaysForGivenRange(resourceMappingService, app, $scope, aggegrateHolidayList, resourcemap, isCreate, monthlyHeaderListService) {
-        var theMonths = monthlyHeaderListService.getMonthList();
+    function prepareWorkingDaysForGivenRange(resourceMappingService, app, $scope, aggegrateHolidayList, resourcemap, isCreate) {
+        // var theMonths = monthlyHeaderListService.getMonthList();
         var monthWorkDays = [];
         var taggedToEuroclearList = $scope.taggedToEuroclearList;
         var location = resourcemap.location;
         var holiday = false;
         var monthyearLabel = "";
-
 
         for (var j = 0; j < taggedToEuroclearList.length; j++) {
             // holiday = false;
@@ -635,22 +639,23 @@
             // }
 
             // if (!holiday) {
-            var headeingLabelArray = taggedToEuroclearList[j].split('-');
-            var month = theMonths.indexOf(headeingLabelArray[0]);
-            var year = headeingLabelArray[1];
+            var yearAndMonth = taggedToEuroclearList[j].split('-');
+            var month = getIndex(yearAndMonth[0]);
+            var year = yearAndMonth[1];
             var workdays = getWorkDays(month, year);
+
             var monthWorkDaysObject = { "location": location, "monthyear": taggedToEuroclearList[j], "value": workdays };
             monthWorkDays.push(monthWorkDaysObject);
             // }
 
         }
-        prepareActualAvailableMandaysData(resourceMappingService, app, $scope, resourcemap, monthWorkDays, isCreate, monthlyHeaderListService);
+        prepareActualAvailableMandaysData(resourceMappingService, app, $scope, resourcemap, monthWorkDays, isCreate);
     }
 
 
-    function prepareActualAvailableMandaysData(resourceMappingService, app, $scope, resourcemap, monthWorkDaysListForLocation, isCreate, monthlyHeaderListService) {
+    function prepareActualAvailableMandaysData(resourceMappingService, app, $scope, resourcemap, monthWorkDaysListForLocation, isCreate) {
 
-        var theMonths = monthlyHeaderListService.getMonthList();
+        //var theMonths = monthlyHeaderListService.getMonthList();
         var taggedToEuroclearList = $scope.taggedToEuroclearList;
         var monthlyAvailableActualMandaysArray = [];
         var mappedResourceLocation = resourcemap.location;
@@ -666,6 +671,7 @@
                         "key": taggedToEuroclearList[j],
                         "value": actualWorkingDaysWithRound
                     };
+
                     monthlyAvailableActualMandaysArray.push(monthlyAvailableActualMandaysObject);
                     break;
 
@@ -733,25 +739,23 @@
     }
 
 
-    function getDaysInMonth(month, year) {
-        return new Date(year, month + 1, 0).getDate();
+    function daysInMonth(month, year) {
+        return 32 - new Date(year, month, 32).getDate();
     }
 
     function getWorkDays(month, year) {
-        var days = getDaysInMonth(month, year);
-        var workdays = 0;
+        var yr = "20" + year;
+        var days = daysInMonth(month, yr);
+        var weekdays = 0;
         for (var i = 0; i < days; i++) {
-            if (isWorkDay(year, month, i + 1)) {
-                workdays++;
-            }
+            if (isWeekday(yr, month, i + 1)) weekdays++;
         }
-        return workdays;
+        return weekdays;
     }
 
-    function isWorkDay(year, month, day) {
-        var date = new Date(year, month, day);
-        var dayOfWeek = date.getDay();
-        return (dayOfWeek >= 1 && dayOfWeek <= 5); // Sun = 0, Mon = 1, and so forth
+    function isWeekday(year, month, day) {
+        var day = new Date(year, month, day).getDay();
+        return day != 0 && day != 6;
     }
 
     function getMappedResourceData(resourceMappingService, $scope) {
@@ -760,11 +764,11 @@
             $scope.filterResourceWithYear = filterUniqueResourceWithYear(res.data);
 
             $scope.ShowSpinnerStatus = false;
-			var spinner = document.getElementById("spinner");
-			if (spinner.style.display != "none") {
-				spinner.style.display = "none";
+            var spinner = document.getElementById("spinner");
+            if (spinner.style.display != "none") {
+                spinner.style.display = "none";
 
-			}
+            }
 
         }).catch(function (err) {
             console.log(err);
@@ -845,7 +849,6 @@
         for (var i = monthFrom; i <= diffYear; i++) {
             arr.push(monthNames[i % 12] + "-" + Math.floor(fromYear + (i / 12)).toString().substr(-2));
         }
-
         return arr;
     }
 
@@ -871,6 +874,12 @@
         var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
             "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
         return monthNames[month];
+    }
+
+    function getIndex(month) {
+        var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+            "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        return monthNames.indexOf(month);
     }
 
     function getToday() {
