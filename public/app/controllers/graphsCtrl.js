@@ -216,6 +216,8 @@ function createGraph($scope,resourceMappingService,availableDaysService,monthlyH
             case "Remaining Resource Capacity":
                    getActualResourceCapacity(availableDaysService,monthlyHeaderListService,$scope);
                 break; 
+            case "Test Graph":
+                  getTestData();
             default:
                 break;
     }
@@ -232,6 +234,7 @@ function getMappedResourceData(resourceMappingService,$scope){
         };
          var data = [];         
          $scope.MappedResourceData = res.data;
+         //console.log(res.data);
          var i = 0;
          var fillLabels = true;
          angular.forEach(res.data,function(value, key){
@@ -335,6 +338,42 @@ function getMappedResourceData(resourceMappingService,$scope){
          }).catch(function(err) {
          console.log(err);
      });
+ }
+
+ function getTestData(){
+    var ctx = CreateCanvas("Testgraph");
+        var chart =
+    new Chart(ctx,{
+        type: 'bar',
+        data: {
+          labels: ["1900", "1950", "1999", "2050"],
+          datasets: [
+            {
+              label: "Africa",
+              backgroundColor: "#3e95cd",
+              data: [133,221,783,2478]
+            }, {
+              label: "Europe",
+              backgroundColor: "#8e5ea2",
+              data: [408,547,675,734]
+            }, {
+                label: "Sweden",
+                backgroundColor:"brown",
+                data:[100,500,400,1000]
+            },{
+                label: "Finland",
+                backgroundColor:"red",
+                data:[200,300,400,0]
+            }
+          ]
+        },
+        options: {
+          title: {
+            display: true,
+            text: 'Population growth (millions)'
+          }
+        }
+    });
  }
 
 

@@ -289,6 +289,17 @@ var app = angular.module('appRoutes', ['ui.router'])
 				},
 				data: { pageTitle: 'All Graphs', roles: ['ADMIN'] }
 			})
+
+			.state('root.TestGraph', {
+				url: '/TestGraph',
+				views: {
+					'container@': {
+						templateUrl: 'app/views/pages/reporting/testgraph.html'
+					}
+				},
+				data: { pageTitle: 'TestGraph', roles: ['ADMIN'] }
+			})
+
 			.state('root.File Upload', {
 				url: '/File Upload',
 				views: {
