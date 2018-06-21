@@ -280,14 +280,14 @@ var app = angular.module('appRoutes', ['ui.router'])
 				data: { pageTitle: 'Utilisation', roles: ['ADMIN'] }
 			})
 
-			.state('root.All Graphs', {
-				url: '/All Graphs',
+			.state('root.Graph', {
+				url: '/Graph',
 				views: {
 					'container@': {
 						templateUrl: 'app/views/pages/reporting/graphs.html'
 					}
 				},
-				data: { pageTitle: 'All Graphs', roles: ['ADMIN'] }
+				data: { pageTitle: 'Graph', roles: ['ADMIN'] }
 			})
 
 			.state('root.TestGraph', {

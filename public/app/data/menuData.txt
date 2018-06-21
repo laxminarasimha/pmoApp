@@ -34,8 +34,8 @@
 },
 {
 "id" : "6",
-"name" : "Reports",
-"submenu" : [{"id":"1", "name":"All Graphs","visible":"true"},{"id":"2", "name":"FinlandGraph","visible":"true"},{"id":"3", "name":"TestGraph","visible":"true"}],
+"name" : "Graph",
+"submenu" : [],
 "role" : ["SAdmin","Admin"],
 "visbile" : "true"
 },

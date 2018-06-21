@@ -486,8 +486,20 @@
         chartSubContainer.appendChild(canvas);
         var ctx = canvas.getContext('2d');
 
+
+        document.getElementById('download').addEventListener('click', function() {
+            downloadCanvas(this, 'Testgraph', 'test.pptx');
+        }, false);
+
         return ctx;
 
+        
+
+    }
+
+    function downloadCanvas(link, canvasId, filename) {
+        link.href = document.getElementById(canvasId).toDataURL();
+        link.download = filename;
     }
 
     function getRandomColor() {

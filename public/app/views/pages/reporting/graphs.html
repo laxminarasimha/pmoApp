@@ -7,21 +7,51 @@
        	  <div class='col-sm-1'>Graph :</div>
           <div class='col-sm-3'>
             <select id="graphid" class="form-control input-sm" ng-model="graphid" ng-init="inputVal='All'" ng-change="graphidchange()">
-              <option value="Resource Capacity" selected>Total Resource Capacity</option>
+              <!-- <option value="Resource Capacity" selected>Total Resource Capacity</option>
               <option value="Skillset Capacity">Total Skillset Capacity</option>
-              <option value="Remaining Resource Capacity">Monthly Resource Utilization</option>
+              <option value="Remaining Resource Capacity">Monthly Resource Utilization</option> -->
               <option value="Test Graph">Test Graph</option>
            </select>
            </div>
-           <div class='col-sm-1'>Country :</div>
+           <!-- <div class='col-sm-1'>Country :</div>
           <div class='col-sm-3'>
             <select id="locationId" class="form-control input-sm" ng-model="locationId" ng-init="inputVal='All'" ng-change="countrychange()">
               <option ng-repeat="x in LocationData" value="{{x.locationname}}">{{x.locationname}}
               </option>
               <option value="All">All Locations</option>
            </select>
-           </div>
-       	</div>
+           </div> -->
+           <div class="col-sm-1">
+             <label>Start Date:</label>
+            </div>
+             <div class="col-sm-3">
+                <div class="input-group date form_date " data-date-format="dd MM yyyy" data-link-format="yyyy-mm-dd">
+                    <input class="form-control" type="text" ng-model="startDate"  readonly>
+                    <span class="input-group-addon">
+                      <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                  </div>
+            </div>
+            <div class="col-sm-1">
+                <label>End Date:</label>
+            </div>
+            <div class="col-sm-3">
+                <div class="input-group date form_date " data-date="" data-date-format="dd MM yyyy" data-link-format="yyyy-mm-dd">
+                   <input class="form-control" type="text" ng-model="endDate" ng-change="createMapping();" readonly>
+                 <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                </div>
+            </div>
+            <div class="col-sm-1">
+              <label>Project:</label>
+            </div>
+            <div class="col-sm-3">
+              <select id="projectId" class="form-control input-sm" ng-model="projectId" ng-init="inputVal='All'" ng-change="projectchange()">
+                  <option ng-repeat="x in ProjectData" value="{{x.projectname}}">{{x.projectname}}
+                  </option>
+                  <option value="All">All Projects</option>
+               </select>
+            </div>
+      </div>
     </div>
     <div class="panel-body">
         <div class="row" >
@@ -30,7 +60,27 @@
              <div id="chartSubContainer"></div>
             
           </div>
-          	<!--<canvas id="SkillsetChart">Chart Content Area</canvas>-->
+          <table id="myTable" class="table table-striped table-curved" cellspacing="0">
+            <thead class="bg-primary">
+              <tr>
+                <th>#</th>
+                <th>Feb-18</th>
+                <th>Mar-18</th>
+                <th>Apr-18</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>CSDR Settlement</td>
+                <td>481.0</td>
+                <td>468.5</td>
+              </tr>
+            </tbody>
+          </table>
+            <!--<canvas id="SkillsetChart">Chart Content Area</canvas>-->
+            <!-- <button id="saveBtn" ng-click="saveImage(this.id)">Save chart Image</button> -->
+            <a id="download">Download as image</a>
+
           </div>
         </div>
     </div>
@@ -40,3 +90,14 @@
 
 </div>
 </form>
+
+<script>
+  $('.form_date').datetimepicker({
+    format: "mm/yyyy",
+    startView: "year",
+    minView: "year",
+    autoclose: 1,
+    startDate: '-0m'
+  });
+
+</script>
