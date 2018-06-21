@@ -15,6 +15,12 @@
                         return $http.get(url);
                   },
 
+                  getAllAllocationByYear: function (startYr,EndYr,project) {
+                        url = globalConfig.apiAddress + "/allocation/"+startYr+"/"+EndYr+"/"+project;
+                        console.log(url);
+                        return $http.get(url);
+                  },
+
                   getAlloctionForResource: function (id) {
                         url = globalConfig.apiAddress + "/allocation/" + id;
                         return $http.get(url);
