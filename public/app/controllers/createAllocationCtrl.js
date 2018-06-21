@@ -223,6 +223,7 @@
 		function getProjectData(projectService, $scope) {
 			projectService.getProject().then(function (res) {
 				$scope.project = res.data;
+				
 			}).catch(function (err) {
 				console.log(err);
 			});

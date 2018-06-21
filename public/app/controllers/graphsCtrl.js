@@ -4,15 +4,16 @@
  
 angular.module('pmoApp').controller('graphsController', Controller);
  
-Controller.$inject = ['$scope', '$rootScope','$filter', 'locationService', 'resourceMappingService','allocationService','leaveService','availableDaysService','monthlyHeaderListService'];
+Controller.$inject = ['$scope', '$rootScope','$filter', 'locationService', 'projectService' ,'dashboardService','resourceMappingService','allocationService','leaveService','availableDaysService','monthlyHeaderListService'];
  var barChartData ;
  var colors = ['#7394CB','#E1974D','#84BB5C','#D35D60','#6B4C9A','#9066A7','#AD6A58','#CCC374','#3869B1','#DA7E30','#3F9852','#6B4C9A','#922427','rgba(253, 102, 255, 0.2)','rgba(153, 202, 255, 0.2)'];
   var chartColors = ['rgb(255, 99, 132)','rgb(255, 159, 64)','rgb(255, 205, 86)','rgb(75, 192, 192)','rgb(54, 162, 235)','rgb(153, 102, 255)','rgb(201, 203, 207)','rgba(253, 102, 255)','rgba(153, 202, 255)','rgb(255, 99, 132)','rgb(255, 159, 64)','rgb(255, 205, 86)','rgb(75, 192, 192)','rgb(54, 162, 235)','rgb(153, 102, 255)','rgb(201, 203, 207)','rgba(253, 102, 255)','rgba(153, 202, 255)'];
  var color = Chart.helpers.color;
- function Controller($scope, $rootScope, $filter, locationService,resourceMappingService,allocationService,leaveService,availableDaysService,monthlyHeaderListService) {
+ function Controller($scope, $rootScope, $filter, locationService,projectService,dashboardService,resourceMappingService,allocationService,leaveService,availableDaysService,monthlyHeaderListService) {
     var app = $scope;	 
     $rootScope.Title = "Reporting";         
     $scope.LocationData = [];
+    $scope.ProjectData = [];
     $scope.locationId = "All"
     $scope.MappedResourceData = [];
     $scope.barChartData = [];
@@ -26,7 +27,7 @@ Controller.$inject = ['$scope', '$rootScope','$filter', 'locationService', 'reso
     $scope.chartylabel ='';
     getLocationData(locationService,$scope); 
     getMappedResourceData(resourceMappingService,$scope);
-
+    getProjectData(projectService, $scope);
     $scope.headingList = [];
     prepareTableHeading($scope,monthlyHeaderListService);
 
@@ -37,7 +38,11 @@ Controller.$inject = ['$scope', '$rootScope','$filter', 'locationService', 'reso
     $scope.graphidchange = function(){     
         createGraph($scope,resourceMappingService,availableDaysService,monthlyHeaderListService);
     }
-     
+    // $scope.saveImage=function(id){
+    //     var id= document.getElementById("Testgraph").toDataURL();
+    //     id.download = "project.png";
+    // }
+    
     
 
     getGraphData($scope,allocationService,leaveService,resourceMappingService,availableDaysService,monthlyHeaderListService);
@@ -203,6 +208,16 @@ function getLocationData(locationService,$scope){
              }).catch(function(err) {
              console.log(err);
          });
+}
+
+function getProjectData(projectService, $scope) {
+    projectService.getProject().then(function (res) {
+        $scope.ProjectData = res.data;
+        console.log("this is a project data"+res.data);
+    }).catch(function (err) {
+        console.log(err);
+    });
+
 }
 
 function createGraph($scope,resourceMappingService,availableDaysService,monthlyHeaderListService){
@@ -376,7 +391,11 @@ function getMappedResourceData(resourceMappingService,$scope){
     });
  }
 
-
+// function saveImage(){
+//     canvas.get(0).toBlob(function(blob){
+//         saveAs(blob,'test.png')
+//     });
+// }
  function createStackedBarGraph($scope){
         var ctx = CreateCanvas("SkillsetChart");
         var chart = new Chart(ctx, {
@@ -471,8 +490,20 @@ function getMappedResourceData(resourceMappingService,$scope){
             chartSubContainer.appendChild(canvas);
         var ctx = canvas.getContext('2d');
 
+
+        document.getElementById('download').addEventListener('click', function() {
+            downloadCanvas(this, 'Testgraph', 'test.pptx');
+        }, false);
+
         return ctx;
 
+        
+
+    }
+
+    function downloadCanvas(link, canvasId, filename) {
+        link.href = document.getElementById(canvasId).toDataURL();
+        link.download = filename;
     }
 
  })();
