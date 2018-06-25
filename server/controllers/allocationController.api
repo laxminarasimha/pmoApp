@@ -39,6 +39,7 @@ router.get("/", function(req, res) {
 	 var startYr = req.params.startYr;
 	 var endYr = req.params.endYr;
 	 var project = req.params.project;
+	 
 
 	 if(project === 'ALL'){
 		allocationDAO.find({year:{ $gte: startYr, $lte: endYr}}, function(err, data) {
