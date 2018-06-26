@@ -401,8 +401,8 @@
                         var indx = monthCol.indexOf(data.month);
                         var value = monthWise[indx];
                         if (!isNaN(data.value))
-                            //monthWise[indx] = round((parseInt(value) + parseInt(data.value)), 1);
-                            monthWise[indx] = parseInt(value) + parseInt(data.value);
+                            monthWise[indx] = round((parseInt(value) + parseInt(data.value)), 1);
+                            //monthWise[indx] = parseInt(value) + parseInt(data.value);
                     }
                 });
 
@@ -426,7 +426,7 @@
                         text: 'Project Demand & Pipeline (MDs)'
                     },
                     legend: {
-                        display: false,
+                        display: true,
                         position: 'bottom',
                         labels: {
                             fontColor: "#000080",
