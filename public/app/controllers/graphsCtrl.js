@@ -364,7 +364,7 @@
                 return;
             }
         }
-        console.log('$scope.projectSelect ' + $scope.projectSelect);
+        //console.log('$scope.projectSelect ' + $scope.projectSelect);
 
         projectService.getProject().then(function (project) {
 
@@ -426,7 +426,7 @@
                         text: 'Project Demand & Pipeline (MDs)'
                     },
                     legend: {
-                        display: true,
+                        display: false,
                         position: 'bottom',
                         labels: {
                             fontColor: "#000080",
@@ -447,7 +447,7 @@
                 }
             });
 
-        console.log($scope.GraphData);
+        //console.log($scope.GraphData);
 
         // $("#Testgraph").html(chart.generateLegend());
         $("#graphDiv").show();
