@@ -223,6 +223,8 @@
                 break;
             case "ProjectMDS":
                 projectManDaysGraph($scope, $filter, allocationService, projectService);
+            case "stackTest":
+                stackedTestGraph();
             default:
                 break;
         }
@@ -402,7 +404,7 @@
                         var value = monthWise[indx];
                         if (!isNaN(data.value))
                             monthWise[indx] = round((parseInt(value) + parseInt(data.value)), 1);
-                            //monthWise[indx] = parseInt(value) + parseInt(data.value);
+                        //monthWise[indx] = parseInt(value) + parseInt(data.value);
                     }
                 });
 
@@ -533,7 +535,41 @@
         });
     }//Endf OF createStackedBarGraph($scope)
 
+    function stackedTestGraph() {
+        console.log("HIIIIIIIIIIIIIIIIIIIIIIIIII@@@@@@@@");
+        var ctx = CreateCanvas("stackedTestGraph");
 
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Risk Level','Management'],
+                datasets: [
+                    {
+                        label: 'Low',
+                        data: [67.8,25.7],
+                        backgroundColor: '#D6E9C6',
+                    },
+                    {
+                        label: 'Moderate',
+                        data: [20.7,56.9],
+                        backgroundColor: '#FAEBCC',
+                    },
+                    {
+                        label: 'High',
+                        data: [11.4,12.9],
+                        backgroundColor: '#EBCCD1',
+                    }
+                ]
+            },
+            options: {
+                scales: {
+                    xAxes: [{ stacked: true }],
+                    yAxes: [{ stacked: true }]
+                }
+            }
+        });
+        $("#graphDiv").show();
+    }
     function CreateCanvas(canvasId) {
 
         if (document.contains(document.getElementById("chartSubContainer"))) {

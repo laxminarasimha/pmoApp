@@ -156,8 +156,8 @@
 								$scope.clearMessages();
 								$scope.successMsg = "Allocaiton created successfully";
 								$('#resource-select').multiselect('rebuild');
-								$scope.startDate = "";
-								$scope.endDate = "";
+								// $scope.startDate = "";
+								// $scope.endDate = "";
 								
 							}
 						}).catch(function (err) {
