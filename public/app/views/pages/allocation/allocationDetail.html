@@ -52,7 +52,7 @@
             <td ng-repeat="monthlyAlloc in records.allocation" ng-value="{{$index}}">
               <span>
                 <input type="text" style="text-align: center;background-color:{{allocRecords.buffertime[$index] < 0 ? 'pink':''}}; color:{{allocRecords.buffertime[$index] < 0 ? 'red':'green'}};"
-                  class="form-control" ng-model="monthlyAlloc.value" maxlength="2" size="2" required="true" ng-readonly="{{allocRecords.readonly[$index]}}"
+                  class="form-control" ng-model="monthlyAlloc.value" maxlength="5" size="5" required="true" ng-readonly="{{allocRecords.readonly[$index]}}"
                 />
               </span>
             </td>
