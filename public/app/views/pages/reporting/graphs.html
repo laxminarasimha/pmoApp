@@ -66,6 +66,15 @@
               <option ng-repeat="x in project" value="{{x.projectname}}">{{x.projectname}}</option>
             </select>
           </div>
+          <div class="col-sm-1">
+            <label>Technology:</label>
+          </div>
+          <div class="col-sm-3">
+            <select id="techId" class="form-control input-sm" ng-model="techSelect" ng-init="inputVal='All'" ng-change="techidchange()">
+              <option value="ALL">All Skills</option>
+              <option ng-repeat="x in skillSetList" value="{{x.skillname}}">{{x.skillname}}</option>
+            </select>
+          </div>
         </div>
       </div>
       <div class="panel-footer">
