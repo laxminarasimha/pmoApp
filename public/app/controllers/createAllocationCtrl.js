@@ -136,7 +136,7 @@
 			$scope.resource = [];
 			$scope.detailDiv = false;
 			$scope.hidden = "";
-			$('#projectBtn').attr('disabled', true);
+			// $('#projectBtn').attr('disabled', true);
 
 		}
 	
@@ -172,9 +172,10 @@
 			if ($scope.errorMsg == null) {
 				$scope.clearFields();
 				$('#projectBtn').attr('disabled', false);
+			
 			}
 
-			
+			// $('#saveBtn').attr('disabled', true);
 		}
 
 		$scope.cancel = function () {
@@ -200,8 +201,8 @@
 
 		$scope.clearFields = function () {
 			$('#resource-select').multiselect('rebuild');
-			$scope.startDate = null;
-			$scope.endDate = null;
+			//$scope.startDate = null;
+			//$scope.endDate = null;
 			$scope.months = [];
 			$scope.resourceWiseAllocaiton = [];
 			app.loading = false;
