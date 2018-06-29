@@ -4,12 +4,12 @@
 
     angular.module('pmoApp').controller('graphsController', Controller);
 
-    Controller.$inject = ['$scope', '$rootScope', '$filter', 'locationService','skillSetService' ,'resourceMappingService', 'allocationService', 'leaveService', 'availableDaysService', 'monthlyHeaderListService', 'projectService'];
+    Controller.$inject = ['$scope', '$rootScope', '$filter', 'locationService', 'skillSetService', 'resourceMappingService', 'allocationService', 'leaveService', 'availableDaysService', 'monthlyHeaderListService', 'projectService'];
     var barChartData;
     var colors = ['#7394CB', '#E1974D', '#84BB5C', '#D35D60', '#6B4C9A', '#9066A7', '#AD6A58', '#CCC374', '#3869B1', '#DA7E30', '#3F9852', '#6B4C9A', '#922427', 'rgba(253, 102, 255, 0.2)', 'rgba(153, 202, 255, 0.2)'];
     var chartColors = ['rgb(255, 99, 132)', 'rgb(255, 159, 64)', 'rgb(255, 205, 86)', 'rgb(75, 192, 192)', 'rgb(54, 162, 235)', 'rgb(153, 102, 255)', 'rgb(201, 203, 207)', 'rgba(253, 102, 255)', 'rgba(153, 202, 255)', 'rgb(255, 99, 132)', 'rgb(255, 159, 64)', 'rgb(255, 205, 86)', 'rgb(75, 192, 192)', 'rgb(54, 162, 235)', 'rgb(153, 102, 255)', 'rgb(201, 203, 207)', 'rgba(253, 102, 255)', 'rgba(153, 202, 255)'];
     var color = Chart.helpers.color;
-    function Controller($scope, $rootScope, $filter, locationService,skillSetService,resourceMappingService, allocationService, leaveService, availableDaysService, monthlyHeaderListService, projectService) {
+    function Controller($scope, $rootScope, $filter, locationService, skillSetService, resourceMappingService, allocationService, leaveService, availableDaysService, monthlyHeaderListService, projectService) {
         var app = $scope;
         $rootScope.Title = "Reporting";
         $scope.LocationData = [];
@@ -32,7 +32,7 @@
 
         //getLocationData(locationService, $scope);
         // getMappedResourceData(resourceMappingService, $scope);
-        
+
         $scope.skillSetList = [];
         getSkillSetData(skillSetService, $scope);
 
@@ -212,8 +212,8 @@
              console.log(err);
          });
      }*/
-     
-     function getSkillSetData(skillSetService, $scope) {
+
+    function getSkillSetData(skillSetService, $scope) {
         skillSetService.getSkillSets().then(function (res) {
             $scope.skillSetList = res.data;
             var htm = '';
@@ -228,7 +228,7 @@
             console.log(err);
         });
     }
-    
+
     function createGraph($scope, $filter, resourceMappingService, availableDaysService, monthlyHeaderListService, allocationService, projectService) {
         switch ($scope.graphid) {
             case "Resource Capacity":
@@ -242,8 +242,10 @@
                 break;
             case "ProjectMDS":
                 projectManDaysGraph($scope, $filter, allocationService, projectService);
-            case "stackTest":
-                stackedTestGraph();
+                break;
+            case "AvlCapcitySkill":
+                AvlCapcitySkillGraph();
+                break;
             default:
                 break;
         }
@@ -564,28 +566,27 @@
         });
     }//Endf OF createStackedBarGraph($scope)
 
-    function stackedTestGraph() {
-        console.log("HIIIIIIIIIIIIIIIIIIIIIIIIII@@@@@@@@");
+    function AvlCapcitySkillGraph() {
         var ctx = CreateCanvas("stackedTestGraph");
 
         var myChart = new Chart(ctx, {
             type: 'bar',
             data: {
-                labels: ['Risk Level','Management'],
+                labels: ['Risk Level', 'Management'],
                 datasets: [
                     {
                         label: 'Low',
-                        data: [67.8,25.7],
+                        data: [67.8, 25.7],
                         backgroundColor: '#D6E9C6',
                     },
                     {
                         label: 'Moderate',
-                        data: [20.7,56.9],
+                        data: [20.7, 56.9],
                         backgroundColor: '#FAEBCC',
                     },
                     {
                         label: 'High',
-                        data: [11.4,12.9],
+                        data: [11.4, 12.9],
                         backgroundColor: '#EBCCD1',
                     }
                 ]

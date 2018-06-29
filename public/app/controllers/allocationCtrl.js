@@ -81,8 +81,7 @@
 							var percent = mappedResourceData[user].taggToEuroclear[k].value;
 							var actualHDays = (holidays * percent) / 100;
 							actualHDays = getRoundNumber(actualHDays, 1);
-
-							mappedResourceData[user].monthlyAvailableActualMandays[k].value = mappedResourceData[user].monthlyAvailableActualMandays[k].value - actualHDays;
+							mappedResourceData[user].monthlyAvailableActualMandays[k].value =getRoundNumber((mappedResourceData[user].monthlyAvailableActualMandays[k].value - actualHDays),1);
 							mappedResourceData[user].holidaydeduct = true;
 						}
 					}
@@ -144,6 +143,7 @@
 		}
 
 		checkOverAllocaiton(scope, collection, year, leaveList, mappedToResource, resource);
+		console.log(collection);
 		return collection;
 	}
 
@@ -167,7 +167,6 @@
 			});
 			newAlloc.push(new Object(month, tempAlloc));
 		});
-
 		return newAlloc;
 	};
 
@@ -417,10 +416,6 @@
 			}).catch(function (err) {
 				console.log(err);
 			});
-
-			console.log(scope.allocCollection);
-
-
 
 			if (updateTable) {
 				row.child($compile('<div tmpl class="clearfix"></div>')(scope)).show();
