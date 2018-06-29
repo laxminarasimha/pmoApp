@@ -31,6 +31,7 @@
         $scope.endDate = '';
         $scope.GraphData = [];
         $scope.skillSetList = [];
+        $scope.projectHTML = '';
 
         //getLocationData(locationService, $scope);
         // getMappedResourceData(resourceMappingService, $scope);
@@ -105,6 +106,18 @@
 
         projectService.getProject().then(function (project) {
             $scope.project = project.data;
+
+            if ($scope.projectHTML === '') {
+
+                angular.forEach($scope.project, function (item) {
+                    $scope.projectHTML += '<option>' + item.projectname + '</option>';
+                });
+
+                $('#project-select').append($scope.projectHTML);
+                $('#project-select').multiselect('rebuild');
+            }
+
+
             allocationService.getAllAllocationByYear(strDt[1], endDt[1], $scope.projectSelect).then(function (allocation) {
                 var monthCol = months($scope.startDate, $scope.endDate);
                 drawTotalManDaysGraph($scope, $filter, project.data, allocation.data, monthCol);
@@ -120,16 +133,26 @@
 
     function drawTotalManDaysGraph($scope, $filter, projectList, allocationList, monthCol) {
         $scope.GraphData = [];
+        $scope.projectFilter = [];
 
-        if ($scope.projectSelect != 'ALL')
-            projectList = $filter('filter')(projectList, { projectname: $scope.projectSelect });
+        if ($scope.projectSelect === undefined || $scope.projectSelect === 'ALL') {
+            angular.forEach(projectList, function (project, index) {
+                $scope.projectFilter.push(project.projectname);
+            });
+
+        } else {
+            console.log($scope.projectSelect);
+            for (var k = 0; k < $scope.projectSelect.length; k++) {
+                $scope.projectFilter.push($scope.projectSelect[k]);
+            }
+        }
 
 
-        angular.forEach(projectList, function (project, index) {
+        angular.forEach($scope.projectFilter, function (projectname, index) {
 
             var monthWise = new Array(monthCol.length);
             monthWise.fill(0, 0, monthWise.length);
-            var filterAllocation = $filter('filter')(allocationList, { project: project.projectname });
+            var filterAllocation = $filter('filter')(allocationList, { project: projectname });
 
             angular.forEach(filterAllocation, function (alloc) {
                 angular.forEach(alloc.allocation, function (data) {
@@ -144,7 +167,7 @@
 
             });
 
-            $scope.GraphData.push({ label: project.projectname, backgroundColor: getRandomColor(index), data: monthWise });
+            $scope.GraphData.push({ label: projectname, backgroundColor: getRandomColor(index), data: monthWise });
         });
         $scope.GraphData.months = monthCol;
 
@@ -204,11 +227,9 @@
 
     function drawAvailCapacityGraph($scope, $filter, mappingList, skillSetList, allocationList, monthCol) {
 
-
         $scope.GraphData = [];
         if ($scope.skillSelect != 'ALL')
             skillSetList = $filter('filter')(skillSetList, { skillname: $scope.skillSelect });
-
 
         angular.forEach(skillSetList, function (skill, index) {
             var monthWise = new Array(monthCol.length);
@@ -216,6 +237,7 @@
             var resourceMappBySkill = [];
 
             for (var k = 0; k < mappingList.length; k++) {
+
                 if (mappingList[k].mappedResource.skill === skill.skillname) {
                     resourceMappBySkill.push(mappingList[k]);
                 }
@@ -229,23 +251,30 @@
                         if (!isNaN(data.value))
                             monthWise[indx] = round((parseInt(value) + parseInt(data.value)), 1);
                     }
-
-                    // check for alloction ,and if it is there for that resource and skill then minus that value
-
-                    
-
-
-
-
                 });
 
+                // check for alloction ,and if it is there for that resource and skill then minus that value
+                var allocationFilter = $filter('filter')(allocationList, { resource: mappedRes.mappedResource.resourcename });
+
+                angular.forEach(allocationFilter, function (alloc) {
+                    angular.forEach(alloc.allocation, function (data) {
+                        if (monthCol.indexOf(data.month) >= 0) { // check if months equal to the predefined month array(user selected)
+                            var indx = monthCol.indexOf(data.month);
+                            var value = monthWise[indx];
+                            if (!isNaN(data.value)) {
+                                var value = parseInt(value) - parseInt(data.value);
+                                monthWise[indx] = value;
+                            }
+
+                        }
+                    });
+                });
             });
 
             $scope.GraphData.push({ label: skill.skillname, backgroundColor: getRandomColor(index), data: monthWise });
         });
 
         $scope.GraphData.months = monthCol;
-
 
         var ctx = CreateCanvas("avlCapcitySkillGraph");
         var myChart = new Chart(ctx, {
@@ -263,9 +292,11 @@
                     display: false
                 },
                 scales: {
-                    xAxes: [{ stacked: true }],
-                    yAxes: [{ stacked: true }]
-                }
+                    xAxes: [{ stacked: true, min: 0 }],
+                    yAxes: [{ stacked: true, min: 0 }]
+
+                },
+                scaleBeginAtZero: true
             }
         });
         $("#graphDiv").show();
