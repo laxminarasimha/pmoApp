@@ -45,7 +45,7 @@
       <div class='row'>
         <div class='col-sm-12'>
           <div align="right">
-            <button id="projectBtn" class="btn btn-primary" type="button" ng-click="createAllocation()">Projection</button>
+            <button id="projectBtn" class="btn btn-primary" type="button" ng-click="clearFields();createAllocation()">Projection</button>
             <button id="clrBtn" class="btn btn-warning" ng-click="clearFields()" type="button" style="display:none">Clear</button>
           </div>
         </div>
@@ -117,7 +117,7 @@
                     <div class="buttons">
                       <button type="button" class="btn btn-primary" ng-click="clearAllocation($index)">
                         Clear</button>
-                        <button class="btn btn-primary" type="button" ng-click="saveAllocation()">Save</button>
+                        <button  class="btn btn-primary" type="button" ng-click="saveAllocation()">Save</button>
                       <!--<button type="button" class="btn btn-danger" ng-click="removeAllocation($index)">Delete</button>-->
                     </div>
                   </td>
