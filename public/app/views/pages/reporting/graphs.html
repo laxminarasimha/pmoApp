@@ -56,7 +56,7 @@
             <label>Technology:</label>
           </div>
           <div class="col-sm-3">
-            <select id="techId" class="form-control input-sm" ng-model="techSelect" ng-init="inputVal='All'" ng-change="techidchange()">
+            <select id="techId" class="form-control input-sm" ng-model="skillSelect" ng-init="inputVal='ALL'" ng-change="graphidchange()">
               <option value="ALL">All Skills</option>
               <option ng-repeat="x in skillSetList" value="{{x.skillname}}">{{x.skillname}}</option>
             </select>
@@ -65,13 +65,15 @@
       </div>
       <div class="panel-footer">
         <div id="graphDiv" class="panel-body" style="display:none">
-          <div align="right"><a href="#" id="download">Download as image</a></div>
+          <div align="right">
+            <a href="#" id="download">Download as image</a>
+          </div>
           <div class="row">
             <div id="ChartContainer">
               <div id="chartSubContainer"></div>
             </div>
           </div>
-          
+
           <table class="table  table-curved" cellspacing="0" width="100%">
             <thead class="bg-primary">
               <tr>
@@ -81,10 +83,11 @@
             </thead>
             <tbody>
               <tr ng-repeat="record in GraphData">
-                <td style="text-align: center;"><span  style="background-color:{{record.backgroundColor}}; width: 50px; height: 10px;display: inline-block;"></span>
+                <td style="text-align: center;">
+                  <span style="background-color:{{record.backgroundColor}}; width: 50px; height: 10px;display: inline-block;"></span>
                   {{record.label}}
                 </td>
-                <td style="text-align: center"; ng-repeat="total in record.data track by $index">{{total}}</td>
+                <td style="text-align: center" ; ng-repeat="total in record.data track by $index">{{total}}</td>
               </tr>
             </tbody>
           </table>
@@ -92,7 +95,6 @@
       </div>
     </div>
 </div>
-
 </form>
 
 <script>
@@ -102,7 +104,7 @@
     minView: "year",
     autoclose: 1,
     startDate: '1m'
-    
+
   });
 
 </script>

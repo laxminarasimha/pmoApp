@@ -17,7 +17,6 @@
 
                   getAllAllocationByYear: function (startYr,EndYr,project) {
                         url = globalConfig.apiAddress + "/allocation/"+startYr+"/"+EndYr+"/"+project;
-                        console.log(url);
                         return $http.get(url);
                   },
 
@@ -33,7 +32,6 @@
 
                   updateAllocation: function (allocation) {
                         url = globalConfig.apiAddress + "/allocation/" + allocation._id;
-                        console.log(url);
                         return $http.put(url, allocation);
                   },
 

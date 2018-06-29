@@ -19,6 +19,19 @@ router.get("/", function(req, res) {
  }
  res.send(data[0]);
  });
+}).get("/:startYr/:endYr", function(req, res) {
+ 
+	var startYr = req.params.startYr;
+	var endYr = req.params.endYr;
+ 
+	resourceMappingDAO.find({year:{ $gte: startYr, $lte: endYr}}, function(err, data) {
+	if (err) {
+		res.send("error");
+	return;
+	}
+	res.send(data);
+	});
+
 }).get("/kinId/:kin", function(req, res) {
  var kinID = req.params.kin;
  resourceMappingDAO.aggregate([
