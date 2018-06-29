@@ -216,6 +216,14 @@
      function getSkillSetData(skillSetService, $scope) {
         skillSetService.getSkillSets().then(function (res) {
             $scope.skillSetList = res.data;
+            var htm = '';
+
+            angular.forEach($scope.skillSetList, function (item) {
+                htm += '<option>' + item.skillname + '</option>';
+            });
+
+            $('#skill-select').append(htm);
+            $('#skill-select').multiselect('rebuild');
         }).catch(function (err) {
             console.log(err);
         });
@@ -382,6 +390,16 @@
         projectService.getProject().then(function (project) {
 
             $scope.project = project.data;
+
+            var htm = '';
+
+            angular.forEach($scope.project, function (item) {
+                htm += '<option>' + item.projectname + '</option>';
+            });
+
+            $('#project-select').append(htm);
+            $('#project-select').multiselect('rebuild');
+
             allocationService.getAllAllocationByYear(strDt[1], endDt[1], $scope.projectSelect).then(function (allocation) {
                 var monthCol = months($scope.startDate, $scope.endDate);
                 drawTotalManDaysGraph($scope, $filter, project.data, allocation.data, monthCol);

@@ -61,16 +61,17 @@
             <label>Project:</label>
           </div>
           <div class="col-sm-3">
-            <select id="projectId" class="form-control input-sm" ng-model="projectSelect" ng-init="inputVal='All'" ng-change="graphidchange()">
+              <!-- <select id="resource-select" id="resource" class="form-control input-sm" ng-model="resource" ng-change="graphidchange()" required multiple="multiple" multi-select class="form-control"></select> -->
+            <select id="project-select"  id="projectId"  ng-model="projectSelect"  required multiple="multiple" multi-select class="form-control" >
               <option value="ALL">All Projects</option>
-              <option ng-repeat="x in project" value="{{x.projectname}}">{{x.projectname}}</option>
+              <!-- <option ng-repeat="x in project" value="{{x.projectname}}">{{x.projectname}}</option> -->
             </select>
           </div>
           <div class="col-sm-1">
             <label>Technology:</label>
           </div>
           <div class="col-sm-3">
-            <select id="techId" class="form-control input-sm" ng-model="techSelect" ng-init="inputVal='All'" ng-change="techidchange()">
+            <select id="skill-select" id="techId"  ng-model="techSelect"  required multiple="multiple" multi-select class="form-control" >
               <option value="ALL">All Skills</option>
               <option ng-repeat="x in skillSetList" value="{{x.skillname}}">{{x.skillname}}</option>
             </select>
