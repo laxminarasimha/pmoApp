@@ -81,7 +81,7 @@
 							var percent = mappedResourceData[user].taggToEuroclear[k].value;
 							var actualHDays = (holidays * percent) / 100;
 							actualHDays = getRoundNumber(actualHDays, 1);
-							mappedResourceData[user].monthlyAvailableActualMandays[k].value =getRoundNumber((mappedResourceData[user].monthlyAvailableActualMandays[k].value - actualHDays),1);
+							mappedResourceData[user].monthlyAvailableActualMandays[k].value = getRoundNumber((mappedResourceData[user].monthlyAvailableActualMandays[k].value - actualHDays), 1);
 							mappedResourceData[user].holidaydeduct = true;
 						}
 					}
@@ -143,7 +143,6 @@
 		}
 
 		checkOverAllocaiton(scope, collection, year, leaveList, mappedToResource, resource);
-		console.log(collection);
 		return collection;
 	}
 
@@ -337,8 +336,6 @@
 			$scope.deletedID = myRadio.filter(':checked').val();
 
 			if (confirm("Are you sure want to delete the record?")) {
-				txt = "You pressed OK!";
-
 				if ($scope.deletedID != null) {
 					var data = $scope.deletedID.split("~");
 					for (var count = 0; count < $scope.allocationList.length; count++) {
@@ -350,6 +347,13 @@
 									app.successMsg = "Resource allocation deleted successfully";
 									app.errorMsg = false;
 									$scope.msg = "";
+
+									allocationService.getAllAllocation().then(function (res) {
+										$scope.allocationList = res.data;
+										$scope.childInfo(data[0], data[2], $scope.delLoc, rowIndex, event, true);
+									}).catch(function (err) {
+										console.log(err);
+									});
 								}
 							}).catch(function (err) {
 								console.log(err);
@@ -358,18 +362,19 @@
 					}
 				}
 
-				var div_header = document.getElementById(data[4]);
-				var div_detail = document.getElementById(data[4] + '_detail');
+				//$scope.childInfo(resource, year, loc, rowIndex, event, true);
+				//	var div_header = document.getElementById(data[4]);
+				//	var div_detail = document.getElementById(data[4] + '_detail');
 
-				if (div_header.style.display != "none") {
-					div_header.style.display = "none";
-					div_detail.style.display = "none";
-				}
+				/*	if (div_header.style.visibility === "visible") {
+						div_header.style.visibility = "hidden";
+						div_detail.style.visibility = "hidden";
+					}*/
 
 				//$scope.updateAllocaiton(data[0], data[2], $scope.delLoc, $scope.delRowIndex, event, true);
-				getAlloctionData(allocationService, $scope);
+				//getAlloctionData(allocationService, $scope);
 				//$scope.childInfo(data[0], data[2], $scope.delLoc, rowIndex, event, true);
-				$scope.childInfo(resource, year, loc, rowIndex, event, true);
+				//$scope.childInfo(resource, year, loc, rowIndex, event, true);
 			}
 
 
@@ -451,7 +456,6 @@
 
 
 	function checkmonth(index) {
-		console.log(index);
 		var currentMonth = new Date().getMonth();
 		return index < currentMonth;
 	}

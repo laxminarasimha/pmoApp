@@ -48,8 +48,8 @@
 
 	function Controller($scope, projectService, resourceMappingService, allocationService, resourceTypeService, $filter) {
 
-		
-		$scope.names=[{'drname':'Dr.Test1'},{'drname':'Dr.Test2'},{'drname':'Dr.Test3'}];
+
+		$scope.names = [{ 'drname': 'Dr.Test1' }, { 'drname': 'Dr.Test2' }, { 'drname': 'Dr.Test3' }];
 		$scope.detailDiv = true;
 		$scope.resource = [];
 		$scope.resourceWiseAllocaiton = [];
@@ -61,7 +61,10 @@
 		$scope.successMsg = "";
 		$scope.errorMsg = "";
 		$scope.hidden = "none";
-		
+		$scope.newData = false;
+
+
+
 		function allocObject(object) {
 			var month;
 			var allocation;
@@ -116,22 +119,22 @@
 			});
 
 			//for (var res = 0; res < $scope.resource.length; res++) {
-				$scope.rowWiseAllocation = {
-					resource: $scope.resource,
-					project: $scope.projselect,
-					resourcetype: $scope.resourcetype,
-					//startdate: $scope.startDate,
-					//enddate: $scope.endDate,
-					allocation: [],
-					rowSelect: true
-				};
+			$scope.rowWiseAllocation = {
+				resource: $scope.resource,
+				project: $scope.projselect,
+				resourcetype: $scope.resourcetype,
+				//startdate: $scope.startDate,
+				//enddate: $scope.endDate,
+				allocation: [],
+				rowSelect: true
+			};
 
-				angular.forEach($scope.months, function (item) {
-					var obj = new allocObject(item);
-					$scope.rowWiseAllocation.allocation.push(obj);
-				});
+			angular.forEach($scope.months, function (item) {
+				var obj = new allocObject(item);
+				$scope.rowWiseAllocation.allocation.push(obj);
+			});
 
-				$scope.resourceWiseAllocaiton.push($scope.rowWiseAllocation);
+			$scope.resourceWiseAllocaiton.push($scope.rowWiseAllocation);
 			//}
 			$scope.resource = [];
 			$scope.detailDiv = false;
@@ -139,8 +142,9 @@
 			// $('#projectBtn').attr('disabled', true);
 
 		}
-	
+
 		$scope.saveAllocation = function () {
+
 			if ($scope.resourceWiseAllocaiton.length > 0) {
 				var allocationYearWise = splitAllocationByYear($scope.resourceWiseAllocaiton, $scope.startDate, $scope.endDate);
 				angular.forEach(allocationYearWise, function (item) {
@@ -151,6 +155,14 @@
 							return;
 						}
 
+						if (!$scope.newData) {
+							$scope.clearMessages();
+							var r = confirm("There is duplicate records,Are sure want to continue?");
+							if (r === false) {
+								return;
+							}
+						}
+
 						allocationService.createAllocation(item).then(function (res) {
 							if (res.data == "created") {
 								$scope.clearMessages();
@@ -158,7 +170,7 @@
 								$('#resource-select').multiselect('rebuild');
 								// $scope.startDate = "";
 								// $scope.endDate = "";
-								
+
 							}
 						}).catch(function (err) {
 							console.log(err);
@@ -172,10 +184,11 @@
 			if ($scope.errorMsg == null) {
 				$scope.clearFields();
 				$('#projectBtn').attr('disabled', false);
-			
+
 			}
 
 			// $('#saveBtn').attr('disabled', true);
+			$scope.newData = false;
 		}
 
 		$scope.cancel = function () {
@@ -220,11 +233,15 @@
 			//$scope.hidden = "none";
 		}
 
+		$scope.dataChanged = function () {
+			$scope.newData = true;
+			$scope.clearMessages();
+		}
 
 		function getProjectData(projectService, $scope) {
 			projectService.getProject().then(function (res) {
 				$scope.project = res.data;
-				
+
 			}).catch(function (err) {
 				console.log(err);
 			});
@@ -238,8 +255,8 @@
 				console.log(err);
 			});
 		}
-		
-		
+
+
 
 		function getMappedResourceData(resourceMappingService, $scope) {
 			resourceMappingService.getMappedResources().then(function (res) {
@@ -307,11 +324,11 @@
 				}
 
 			}
-		
+
 			return maps;
 		}
 
-	
+
 		function months(from, to) {
 			var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
 				"Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
