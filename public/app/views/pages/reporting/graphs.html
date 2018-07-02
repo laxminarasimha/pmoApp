@@ -53,10 +53,10 @@
               <!-- <option ng-repeat="x in project" value="{{x.projectname}}">{{x.projectname}}</option> -->
             </select>
           </div>
-          <div class="col-sm-1">
+          <div class="col-sm-1 col-md-offset-4">
             <label>Technology:</label>
           </div>
-          <div class="col-sm-3">
+          <div class="col-sm-3 span">
             <select id="skill-select" class="form-control input-sm" ng-model="skillSelect" ng-init="inputVal='ALL'" ng-change="graphidchange()">
               <option value="ALL">All Skills</option>
               <option ng-repeat="x in skillSetList" value="{{x.skillname}}">{{x.skillname}}</option>
