@@ -48,7 +48,7 @@
 
         $scope.graphidchange = function () {
 
-            if ($scope.startDate === '' || $scope.endDate === '' || $scope.startDate === 'undefined' || $scope.endDate === 'undefined') {
+            if ($scope.startDate === '' || $scope.endDate === '' || $scope.startDate === undefined || $scope.endDate === undefined) {
                 return;
             }
 

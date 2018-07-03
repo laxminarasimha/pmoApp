@@ -229,6 +229,16 @@ var app = angular.module('appRoutes', ['ui.router'])
 				data: { pageTitle: 'Create Allocation', roles: ['ADMIN'] }
 			})
 
+			.state('root.filterAllocation', {
+				url: '/filterAllocation',
+				views: {
+					'container@': {
+						templateUrl: 'app/views/pages/allocation/filterAllocation.html',
+					}
+				},
+				data: { pageTitle: 'Filter Allocation', roles: ['ADMIN'] }
+			})
+
 			.state('root.Resource Mapping', {
 				url: '/Resource Mapping',
 				views: {
