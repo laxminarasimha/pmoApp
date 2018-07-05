@@ -32,6 +32,7 @@
         $scope.GraphData = [];
         $scope.skillSetList = [];
         $scope.projectHTML = '';
+        $scope.ShowSpinnerStatus = false;
 
         //getLocationData(locationService, $scope);
         // getMappedResourceData(resourceMappingService, $scope);
@@ -68,14 +69,15 @@
                 }
             }
 
-            createGraph($scope, $filter, resourceMappingService, availableDaysService, monthlyHeaderListService, allocationService, projectService, skillSetService);
+            createGraph($scope, $filter, resourceMappingService, availableDaysService, monthlyHeaderListService, allocationService, projectService, skillSetService, leaveService);
         }
 
     }
 
 
 
-    function createGraph($scope, $filter, resourceMappingService, availableDaysService, monthlyHeaderListService, allocationService, projectService, skillSetService) {
+    function createGraph($scope, $filter, resourceMappingService, availableDaysService, monthlyHeaderListService, allocationService, projectService, skillSetService, leaveService) {
+        $scope.ShowSpinnerStatus = true;
         switch ($scope.graphid) {
             case "Resource Capacity":
                 //  getMappedResourceData(resourceMappingService, $scope);
@@ -90,7 +92,7 @@
                 projectManDaysGraph($scope, $filter, allocationService, projectService);
                 break;
             case "AvlCapcitySkill":
-                avlCapcitySkillGraph($scope, $filter, allocationService, resourceMappingService, skillSetService);
+                avlCapcitySkillGraph($scope, $filter, allocationService, resourceMappingService, skillSetService, leaveService);
                 break;
             default:
                 break;
@@ -198,10 +200,16 @@
             });
 
         $("#graphDiv").show();
+        $scope.ShowSpinnerStatus = false;
+        var spinner = document.getElementById("spinner");
+        if (spinner.style.display != "none") {
+            spinner.style.display = "none";
+
+        }
     }
 
 
-    function avlCapcitySkillGraph($scope, $filter, allocationService, resourceMappingService, skillSetService) {
+    function avlCapcitySkillGraph($scope, $filter, allocationService, resourceMappingService, skillSetService, leaveService) {
 
         var strDt = $scope.startDate.split("/");
         var endDt = $scope.endDate.split("/");
@@ -211,7 +219,14 @@
             resourceMappingService.getMappedResourcesByYear(strDt[1], endDt[1]).then(function (mapping) {
                 allocationService.getAllAllocationByYear(strDt[1], endDt[1], 'ALL').then(function (allocation) {
                     var monthCol = months($scope.startDate, $scope.endDate);
-                    drawAvailCapacityGraph($scope, $filter, mapping.data, $scope.skillSetList, allocation.data, monthCol);
+
+                    leaveService.getLeave().then(function (res) {
+                        $scope.leaveList = res.data;
+                        drawAvailCapacityGraph($scope, $filter, mapping.data, $scope.skillSetList, allocation.data, monthCol, $scope.leaveList);
+                    }).catch(function (err) {
+                        console.log(err);
+                    });
+
                 }).catch(function (err) {
                     console.log(err);
                 });
@@ -225,7 +240,7 @@
         });
     }
 
-    function drawAvailCapacityGraph($scope, $filter, mappingList, skillSetList, allocationList, monthCol) {
+    function drawAvailCapacityGraph($scope, $filter, mappingList, skillSetList, allocationList, monthCol, leaveList) {
 
         $scope.GraphData = [];
         if ($scope.skillSelect != 'ALL')
@@ -237,7 +252,6 @@
             var resourceMappBySkill = [];
 
             for (var k = 0; k < mappingList.length; k++) {
-
                 if (mappingList[k].mappedResource.skill === skill.skillname) {
                     resourceMappBySkill.push(mappingList[k]);
                 }
@@ -269,6 +283,26 @@
                         }
                     });
                 });
+
+                //deduct the leave aswell for that resource
+
+                var leaveFilter = $filter('filter')(leaveList, { resourcename: mappedRes.mappedResource.resourcename });
+                angular.forEach(leaveFilter, function (leaves) {
+                    angular.forEach(leaves.leavedaysinmonth, function (leave) {
+                        if (monthCol.indexOf(leave.month) >= 0) { // check if months equal to the predefined month array(user selected)
+                            var indx = monthCol.indexOf(leave.month);
+                            var value = monthWise[indx];
+                            if (!isNaN(leave.value)) {
+                                var value = parseInt(value) - parseInt(leave.value);
+                                monthWise[indx] = value;
+                            }
+
+                        }
+                    });
+                });
+
+
+
             });
 
             $scope.GraphData.push({ label: skill.skillname, backgroundColor: getRandomColor(index), data: monthWise });
@@ -300,6 +334,13 @@
             }
         });
         $("#graphDiv").show();
+
+        $scope.ShowSpinnerStatus = false;
+        var spinner = document.getElementById("spinner");
+        if (spinner.style.display != "none") {
+            spinner.style.display = "none";
+
+        }
     }
 
 
@@ -392,8 +433,8 @@
         var chartSubContainer = document.createElement('div');
         chartSubContainer.id = "chartSubContainer";
         canvas.id = canvasId;
-        chartSubContainer.style.width = '1200px';
-        chartSubContainer.style.height = '600px';
+        //chartSubContainer.style.width = '1200px';
+        //chartSubContainer.style.height = '600px';
 
         var container = document.getElementById('ChartContainer');
         container.appendChild(chartSubContainer);
