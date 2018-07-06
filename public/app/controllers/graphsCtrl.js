@@ -117,7 +117,7 @@
                     50, 30, 60, 70, 80, 90, 95, 70, 90, 20, 60, 95
                 ],
                 type: 'line',
-                label: 'This Year',
+                label: 'Total Capacity (ST+FT)',
                 fill: false,
                 backgroundColor: "#fff",
                 borderColor: "#70cbf4",
@@ -140,7 +140,7 @@
                     25, 40, 30, 70, 60, 50, 40, 70, 40, 80, 30, 90
                 ],
                 type: 'line',
-                label: 'Last Year',
+                label: 'Total ST Capacity',
                 fill: false,
                 backgroundColor: "#fff",
                 borderColor: "#737373",
@@ -159,21 +159,21 @@
                 pointRadius: 4,
                 pointHitRadius: 10
             }, {
-                label: 'Promoters',
+                label: 'Production Support Demand',
                 backgroundColor: "#aad700",
                 yAxisID: "bar-y-axis",
                 data: [
                     50, 44, 52, 62, 48, 58, 59, 50, 51, 52, 53, 54
                 ]
             }, {
-                label: 'Passives',
+                label: 'Maintaince Demand',
                 backgroundColor: "#ffe100",
                 yAxisID: "bar-y-axis",
                 data: [
                     20, 21, 24, 25, 26, 17, 28, 19, 20, 11, 22, 33
                 ]
             }, {
-                label: 'Detractors',
+                label: 'Project Demand',
                 backgroundColor: "#ef0000",
                 yAxisID: "bar-y-axis",
                 data: [
@@ -189,6 +189,9 @@
                 title: {
                     display: true,
                     text: "Demand & Capacity View (MDs)"
+                },
+                legend: {
+                    display: false
                 },
                 tooltips: {
                     mode: 'label'
