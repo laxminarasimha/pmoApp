@@ -94,6 +94,9 @@
             </tbody>
           </table>
         </div>
+        <div class="container" id="spinner">
+					<div ng-if="ShowSpinnerStatus" class="loader"></div>
+				</div>
       </div>
     </div>
 </div>
@@ -111,5 +114,29 @@
   });
 
 </script>
+<<<<<<< HEAD
 
 <script type="text/javascript" src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+=======
+<style>
+  .loader {
+				border: 16px solid #f3f3f3; /* Light grey */
+				border-top: 16px solid #3498db; /* Blue */
+				border-radius: 50%;
+				width: 120px;
+				height: 120px;
+				animation: spin 2s linear infinite;
+				margin: 0 auto;
+			}
+
+			@keyframes spin {
+				0% { transform: rotate(0deg); }
+				100% { transform: rotate(360deg); }
+			}
+			html, body, container {
+				height: 100%;
+				width: 100%;
+				margin: 0;
+			}
+</style>
+>>>>>>> 1ee542eeed75d2352a591d5bf2b5967a644bd2a8
