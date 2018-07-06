@@ -42,7 +42,7 @@
 {
 "id" : "7",
 "name" : "Reports",
-"submenu" : [{"id":"1","name":"Graph","page":"Graph","visible":"true"},{"id":"2","name":"Allocation Report","page":"filterAllocation","visible":"true"}],
+"submenu" : [{"id":"1","name":"Graph","page":"Graph","visible":"true"},{"id":"2","name":"Allocation","page":"filterAllocation","visible":"true"}],
 "role" : ["SAdmin","Admin"],
 "visbile" : "true"
 },
