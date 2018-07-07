@@ -883,7 +883,6 @@
     }
 
     function getToday() {
-
         var date = new Date();
         var year = String(date.getFullYear());
         return moment(getMonth(date.getMonth()) + '-' + year.substr(-2), "MMM-YYYY");

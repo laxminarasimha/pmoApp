@@ -55,7 +55,7 @@
 },
 {
 "id" : "9",
-"name" : "Add Leave" ,
+"name" : "Leave" ,
 "submenu" : [],
 "role" : ["SAdmin","Admin","User"],
 "visbile" : "true"
