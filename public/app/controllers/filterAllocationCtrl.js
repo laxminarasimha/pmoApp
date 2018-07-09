@@ -123,6 +123,10 @@
             $scope.successMsg = "";
             $scope.errorMsg = "";
             //$scope.hidden = "none";
+
+            $scope.listData = [];
+            $scope.totalMonthWise = [];
+            $scope.totalMonthWise =[];
         }
 
     }
@@ -131,6 +135,10 @@
 
         var allocFilter = [];
         $scope.listData = [];
+        var len = monthCol.length + 1;
+
+        $scope.totalMonthWise = new Array(len);
+        $scope.totalMonthWise.fill(0, 0,len);
 
         if (selectProject !== 'ALL')
             projectList = $filter('filter')(projectList, { projectname: selectProject });
@@ -141,6 +149,7 @@
             allocFilter = $filter('filter')(allocationList, { project: project.projectname });
 
             angular.forEach(allocFilter, function (allocation) {
+                var totalResourceWise = 0;
                 var filterResourceWiseAllocation = $filter('filter')(allocFilter, { resource: allocation.resource });
 
                 var monthWise = new Array(monthCol.length);
@@ -154,15 +163,23 @@
                             if (!isNaN(alloc.value)) {
                                 var value = parseInt(value) + parseInt(alloc.value);
                                 monthWise[indx] = value;
+                                $scope.totalMonthWise[indx] += value;
+                                totalResourceWise += value;
                             }
 
                         }
                     });
-                });
-                $scope.listData.push({ project: project.projectname, resource: allocation.resource, allocation: monthWise });
 
+                });
+                $scope.listData.push({ project: project.projectname, resource: allocation.resource, allocation: monthWise, total: totalResourceWise });
             });
         });
+
+        var total = 0;   
+        for(var i=0;i<$scope.totalMonthWise.length;i++){
+            total += $scope.totalMonthWise[i];
+        }
+        $scope.totalMonthWise[len-1] = total;
 
         $scope.ShowSpinnerStatus = false;
         var spinner = document.getElementById("spinner");
@@ -170,7 +187,6 @@
             spinner.style.display = "none";
 
         }
-
     }
 
 
