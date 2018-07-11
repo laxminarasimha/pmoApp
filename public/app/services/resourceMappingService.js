@@ -23,8 +23,8 @@
         return $http.get(url);
       },
       getMappedResourceForKinID: function (Id) {
-        url = globalConfig.apiAddress + "/mappedresource/kinId/" + Id;
-        return $http.get(url);
+         url = globalConfig.apiAddress + "/mappedresource/kinId/" + Id;
+         return $http.get(url);
       },
       createResourceMapping: function (resourcemap) {
         url = globalConfig.apiAddress + "/mappedresource";
@@ -36,9 +36,20 @@
       },
       deleteResourceMapping: function (id) {
         console.log("delete in resource mapping");
+        console.log(id);
         url = globalConfig.apiAddress + "/mappedresource/" + id;
         return $http.delete(url);
+      },
+      getMappedResourceForKinIDtoDelete: function (Id) {
+        console.log(Id);
+        url = globalConfig.apiAddress + "/mappedresource/kinId/ForDelete/" + Id;
+        console.log(url);
+        return $http.get(url);
       }
+
+
+
+
     };
   }
 })();

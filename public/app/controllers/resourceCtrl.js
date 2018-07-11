@@ -26,6 +26,7 @@ angular.module('pmoApp').controller('resourceCtrl', Controller);
 
 
  $scope.roleList = [];
+ $scope.kinID =0;
  getRoleData(roleService,$scope);
 
  // $scope.resourcemapList = [];
@@ -46,9 +47,10 @@ angular.module('pmoApp').controller('resourceCtrl', Controller);
      app.errorClass = ""
  }
  
- $scope.deleteConfirmation = function(id,name){
+ $scope.deleteConfirmation = function(id,name,kinId){
     $scope.msg = name;
     $scope.deletedID = id;
+    $scope.kinID = kinId;
     openDialog();
 
  }
@@ -60,23 +62,44 @@ angular.module('pmoApp').controller('resourceCtrl', Controller);
 
  $scope.delete = function(event) {
      //if (confirm('Are you sure to delete?')) {
-         resourceService.deleteResource($scope.deletedID).then(function(res) {
-         if (res.data == "deleted") {
+          resourceService.deleteResource($scope.deletedID).then(function(res) {
+          if (res.data == "deleted") {
+
+            resourceMappingService.getMappedResourceForKinIDtoDelete($scope.kinID).then(function (res) {
+                console.log("*********HIIIIIIIIII******");
+                
+                console.log(res.data);
+                angular.forEach(res.data, function (item) {
+                    $scope.deleteId = item._id;
+                    console.log($scope.deleteId);
+                    resourceMappingService.deleteResourceMapping($scope.deleteId).then(function (res){
+                        if(res.data=="deleted"){
+                            console.log("Record deleted Sucessfully");
+                        }
+                    })
+                })
+            });
+
+
+
+
+
+
            getResourceData(resourceService,$scope);
-           app.loading = false;
-           app.successMsg = "Resource Deleted successfully";
-           app.errorMsg = false;
-            $scope.msg = "";
-            $scope.deletedID = "";
-         }
-         }).catch(function(err) {
-         console.log(err);
-         });
+            app.loading = false;
+            app.successMsg = "Resource Deleted successfully";
+            app.errorMsg = false;
+             $scope.msg = "";
+             $scope.deletedID = "";
+          }
+          }).catch(function(err) {
+          console.log(err);
+          });
 
 
-     //}
+     }
 
-     resourceMappingService.deleteResourceMapping($scope.deletedID);
+   //  resourceMappingService.deleteResourceMapping($scope.deletedID);
  };
  
 $scope.editResource = function (id) {
@@ -229,7 +252,7 @@ $scope.editResource = function (id) {
 
        }
 
-}
+
 
 function sendEmail(resourceService,resource){
     resourceService.sendEmailToResource(resource).then(function(res) {
@@ -266,7 +289,6 @@ function sendEmail(resourceService,resource){
 function getLocationData(locationService,$scope){
       locationService.getLocation().then(function(res) {
          $scope.regionList = res.data;
-         console.log(res.data);
          }).catch(function(err) {
          console.log(err);
      });
@@ -275,7 +297,6 @@ function getLocationData(locationService,$scope){
  function getRoleData(roleService,$scope){
       roleService.getRole().then(function(res) {
          $scope.roleList = res.data;
-         console.log(res.data);
          }).catch(function(err) {
          console.log(err);
      });
