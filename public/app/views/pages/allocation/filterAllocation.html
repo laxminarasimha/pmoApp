@@ -5,21 +5,18 @@
             <div class="panel-heading">
                 <div class="row">
                     <div class='col-sm-3'>
-                        <div class=form-group>
+                        <div class="form-inline">
                             <label for project>Project:</label>
-                            <span id="project">
-
-                                <select id="project" class="form-control" ng-model="selectProject" ng-init="inputVal='ALL'">
-                                    <option value='ALL'>All Project</option>
-                                    <option ng-repeat="item in project" value="{{item.projectname}}">{{item.projectname}}</option>
-                                </select>
-
-                            </span>
+                            <select id="project" class="form-control" ng-model="selectProject" ng-init="inputVal='ALL'">
+                                <option value='ALL'>All Project</option>
+                                <option ng-repeat="item in project" value="{{item.projectname}}">{{item.projectname}}</option>
+                            </select>
                         </div>
                     </div>
+
                     <div class='col-sm-3'>
-                        <div class=form-group>
-                            <label for startDate>From:</label>
+                        <div class="form-inline">
+                            <label for="startDate">From:</label>
                             <div class="input-group date _date " data-date-format="dd MM yyyy" data-link-format="yyyy-mm-dd">
                                 <input class="form-control" type="text" id="startDate" ng-model="startDate" class="form-control" readonly>
                                 <span class="input-group-addon">
@@ -29,8 +26,8 @@
                         </div>
                     </div>
                     <div class='col-sm-3'>
-                        <div class=form-group>
-                            <label for endDate>To:</label>
+                        <div class="form-inline">
+                            <label for="endDate">To:</label>
                             <div class="input-group date _date " data-date-format="dd MM yyyy" data-link-format="yyyy-mm-dd">
                                 <input class="form-control" id="endDate" type="text" ng-model="endDate" class="form-control" readonly>
                                 <span class="input-group-addon">
@@ -39,16 +36,24 @@
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class='row'>
-                    <div class='col-sm-12'>
-                        <div align="right">
-                            <input type="submit" value="Search" class="btn btn-primary" ng-click="filterSeach();" />
+                    <div class='col-sm-3'>
+                        <div class="form-inline">
+                            <label for="resource">Resources:</label>
+                            <!-- <select id="resource-select" id="resource" ng-model="resource" required multiple="multiple" multi-select class="form-control"></select> -->
+
+                            <input list="resource" type="text" ng-model="resource" style="width: 200px;" required>
+                            <datalist id="resource">
+                                <option ng-repeat="resource in mappedResourceData" value="{{resource.resourcename}}">
+                            </datalist>
                         </div>
                     </div>
                 </div>
+                <div class='row'>
+                    <div align="right">
+                        <input type="submit" value="Search" class="btn btn-primary" ng-click="filterSeach();" />
+                    </div>
+                </div>
             </div>
-
             <div class="panel-body" ng-show="loading || successMsg || errorMsg">
                 <div class="row">
                     <div class='col-sm-12'>
@@ -65,12 +70,10 @@
                     </div>
                 </div>
             </div>
-
-
             <div class="panel-footer">
                 <div class="panel-body">
                     <table id="datatable" class="table table-striped table-curved table-scroll" cellspacing="0" width="100%" cellspacing="0"
-                        width="100%" datatable="ng" dt-options="vm.dtOptions" dt-instance="vm.dtInstance">
+                        width="100%" datatable="ng" dt-options="vm.dtOptions" dt-instance="vm.dtInstance" data-page-length='50'>
                         <thead class="bg-primary">
                             <tr>
                                 <th style="text-align:center">Project</th>
@@ -100,8 +103,7 @@
                                 <td style="text-align: center;background-color:yello;color:red;" ng-repeat="value in totalMonthWise track by $index">
                                     {{value}}
                                 </td>
-                             </tr>
-
+                            </tr>
                         </tfoot>
                     </table>
                     <div class="container" id="spinner">
@@ -123,27 +125,7 @@
         startDate: '1m'
     });
 
-
-    $(document).ready(function () {
-        $('#datatable').DataTable({
-            dom: 'Bfrtip',
-            // Configure the drop down options.
-            lengthMenu: [
-                [10, 25, 50, -1],
-                ['10 rows', '25 rows', '50 rows', 'Show all']
-            ],
-            // Add to buttons the pageLength option.
-            buttons: [
-                'pageLength', 'excel', 'print'
-            ]
-        });
-    });
-
-
-    // $('#datatable').DataTable( {
-    //     "scrollX": true,
-    //     "scrollY": true
-    // } );
+    $('#resource-select').multiselect();
 
 
 

@@ -58,6 +58,11 @@
         $scope.project = [];
         $scope.listData = [];
         $scope.selectProject = 'ALL';
+        $scope.resource = '';
+        $scope.mappedResourceData = [];
+
+        // getMappedResourceData(resourceMappingService, $scope);
+        intialize(projectService, resourceService, $scope);
 
 
         function allocObject(object) {
@@ -73,7 +78,6 @@
                 label: object.label,
             }
         };
-        getProjectData(projectService, $scope);
 
 
         $scope.vm = {};
@@ -81,6 +85,7 @@
         $scope.vm.dtOptions = DTOptionsBuilder.newOptions().withOption('order', [0, 'asc']);
         $scope.vm.dtOptions.withDOM('Bfrtip');
         $scope.vm.dtOptions.withOption('buttons', ['print', 'pdf', 'excel']);
+        $scope.vm.dtOptions.withOption('lengthMenu', [10, 25, 50, "All"]);
 
 
 
@@ -126,7 +131,7 @@
 
             $scope.listData = [];
             $scope.totalMonthWise = [];
-            $scope.totalMonthWise =[];
+            $scope.totalMonthWise = [];
         }
 
     }
@@ -136,21 +141,34 @@
         var allocFilter = [];
         $scope.listData = [];
         var len = monthCol.length + 1;
+        var allocFilter = [];
 
         $scope.totalMonthWise = new Array(len);
-        $scope.totalMonthWise.fill(0, 0,len);
+        $scope.totalMonthWise.fill(0, 0, len);
+
 
         if (selectProject !== 'ALL')
             projectList = $filter('filter')(projectList, { projectname: selectProject });
 
-
         angular.forEach(projectList, function (project) {
 
             allocFilter = $filter('filter')(allocationList, { project: project.projectname });
+            if ($scope.resource != '' && $scope.resource != undefined) {
+                console.log($scope.resource);
+                allocFilter = $filter('filter')(allocFilter, { resource: $scope.resource });
+            }
 
             angular.forEach(allocFilter, function (allocation) {
                 var totalResourceWise = 0;
-                var filterResourceWiseAllocation = $filter('filter')(allocFilter, { resource: allocation.resource });
+                var filterResourceWiseAllocation = [];
+
+                if ($scope.resource === '' || $scope.resource === undefined) {
+                    filterResourceWiseAllocation = $filter('filter')(allocFilter, { resource: allocation.resource });
+                } else {
+                    filterResourceWiseAllocation = $filter('filter')(allocFilter, { resource: $scope.resource });
+                }
+
+                //console.log(filterResourceWiseAllocation);
 
                 var monthWise = new Array(monthCol.length);
                 monthWise.fill(0, 0, monthWise.length);
@@ -175,11 +193,11 @@
             });
         });
 
-        var total = 0;   
-        for(var i=0;i<$scope.totalMonthWise.length;i++){
+        var total = 0;
+        for (var i = 0; i < $scope.totalMonthWise.length; i++) {
             total += $scope.totalMonthWise[i];
         }
-        $scope.totalMonthWise[len-1] = total;
+        $scope.totalMonthWise[len - 1] = total;
 
         $scope.ShowSpinnerStatus = false;
         var spinner = document.getElementById("spinner");
@@ -196,13 +214,36 @@
     }
 
 
-    function getProjectData(projectService, $scope) {
+    function intialize(projectService, resourceService, $scope) {
         projectService.getProject().then(function (res) {
             $scope.project = res.data;
+            resourceService.getResources().then(function (res) {
+                $scope.mappedResourceData = res.data;
+            }).catch(function (err) {
+                console.log(err);
+            });
 
         }).catch(function (err) {
             console.log(err);
         });
+    }
+
+
+
+
+    function filterUniqueResource(collection) {
+
+        console.log(collection);
+
+        var output = [], item;
+        for (var col = 0; col < collection.length; col++) {
+            item = collection[col];
+            if (output.indexOf(item.mappedResource.resourcename) <= -1) {
+                output.push(item.mappedResource.resourcename);
+            }
+        }
+        console.log(output);
+        return output;
 
     }
 
