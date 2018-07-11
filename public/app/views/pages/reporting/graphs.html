@@ -11,7 +11,7 @@
               <option value="Remaining Resource Capacity">Monthly Resource Utilization</option> -->
               <option value="ProjectMDS">Project Demand & Pipeline (MDs)</option>
               <option value="AvlCapcitySkill">Available Capacity Per Skillset (MDs)</option>
-              <option value="DemandCapacity">D&C</option>
+              <option value="DemandCapacity">Demand & Capacity View (MDs)</option>
             </select>
           </div>
           <!-- <div class='col-sm-1'>Country :</div>
@@ -68,8 +68,10 @@
       <div class="panel-footer">
         <div id="graphDiv" class="panel-body" style="display:none">
           <div align="right">
-            <a href="#" id="download">Download as image</a>
+            <input type="button" id="save_image" value="Download as image" class="btn btn-primary input-sm" onclick="Capture()">
+            <a href="#" style="display :none"  id="download">Download as image</a>
           </div>
+          <div id="capture">
           <div class="row">
             <div id="ChartContainer">
               <div id="chartSubContainer"></div>
@@ -93,17 +95,36 @@
               </tr>
             </tbody>
           </table>
+          </div>
         </div>
         <div class="container" id="spinner">
 					<div ng-if="ShowSpinnerStatus" class="loader"></div>
 				</div>
       </div>
     </div>
-</div>
+</div>  
 </form>
 
 <script>
-   $('#project-select').multiselect();
+
+function downloadURI(uri, name) {
+    var link = document.createElement("a");
+    link.download = name;
+    link.href = uri;
+    document.body.appendChild(link);
+    link.click();
+    clearDynamicLink(link); 
+}
+
+function Capture() {
+    var element = $("#capture")[0];
+    html2canvas(element).then(function (canvas) {
+        var myImage = canvas.toDataURL();
+        downloadURI(myImage, "Mygraph.png");
+    });
+}
+
+  $('#project-select').multiselect();
   $('.form_date').datetimepicker({
     format: "mm/yyyy",
     startView: "year",
@@ -114,10 +135,6 @@
   });
 
 </script>
-<<<<<<< HEAD
-
-<script type="text/javascript" src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
-=======
 <style>
   .loader {
 				border: 16px solid #f3f3f3; /* Light grey */
@@ -139,4 +156,7 @@
 				margin: 0;
 			}
 </style>
->>>>>>> 1ee542eeed75d2352a591d5bf2b5967a644bd2a8
+
+
+
+<script type="text/javascript" src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>

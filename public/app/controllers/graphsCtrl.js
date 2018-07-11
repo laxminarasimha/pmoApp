@@ -8,7 +8,7 @@
     var barChartData;
     var colors = ['#7394CB', '#E1974D', '#84BB5C', '#D35D60', '#6B4C9A', '#9066A7', '#AD6A58', '#CCC374', '#3869B1', '#DA7E30', '#3F9852', '#6B4C9A', '#922427', 'rgba(253, 102, 255, 0.2)', 'rgba(153, 202, 255, 0.2)'];
     var chartColors = ['rgb(255, 99, 132)', 'rgb(255, 159, 64)', 'rgb(255, 205, 86)', 'rgb(75, 192, 192)', 'rgb(54, 162, 235)', 'rgb(153, 102, 255)', 'rgb(201, 203, 207)', 'rgba(253, 102, 255)', 'rgba(153, 202, 255)', 'rgb(255, 99, 132)', 'rgb(255, 159, 64)', 'rgb(255, 205, 86)', 'rgb(75, 192, 192)', 'rgb(54, 162, 235)', 'rgb(153, 102, 255)', 'rgb(201, 203, 207)', 'rgba(253, 102, 255)', 'rgba(153, 202, 255)'];
-    var color = Chart.helpers.color;
+    var color = Chart.helpers.color;    
     function Controller($scope, $rootScope, $filter, locationService, skillSetService, resourceMappingService, allocationService, leaveService, availableDaysService, monthlyHeaderListService, projectService) {
         var app = $scope;
         $rootScope.Title = "Reporting";
@@ -95,7 +95,7 @@
                 avlCapcitySkillGraph($scope, $filter, allocationService, resourceMappingService, skillSetService, leaveService);
                 break;
             case "DemandCapacity":
-                demandGraph();
+                demandGraph($scope);
                 break;
             default:
                 break;
@@ -103,120 +103,130 @@
 
     }//End OF CreateGraph()
 
-    function demandGraph(){
+    function demandGraph($scope) {
+
+        var strDt = $scope.startDate.split("/");
+        var endDt = $scope.endDate.split("/");
+
+        var monthCol = months($scope.startDate, $scope.endDate);
+
         var barChartData = {
-            labels: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+            labels: monthCol,
             datasets: [{
-              data: [
-                50, 30, 60, 70, 80, 90, 95, 70, 90, 20, 60, 95
-              ],
-              type: 'line',
-              label: 'This Year',
-              fill: false,
-              backgroundColor: "#fff",
-              borderColor: "#70cbf4",
-              borderCapStyle: 'butt',
-              borderDash: [],
-              borderDashOffset: 0.0,
-              borderJoinStyle: 'miter',
-              lineTension: 0.3,
-              pointBackgroundColor: "#fff",
-              pointBorderColor: "#70cbf4",
-              pointBorderWidth: 1,
-              pointHoverRadius: 5,
-              pointHoverBackgroundColor: "#70cbf4",
-              pointHoverBorderColor: "#70cbf4",
-              pointHoverBorderWidth: 2,
-              pointRadius: 4,
-              pointHitRadius: 10
+                data: [
+                    50, 30, 60, 70, 80, 90, 95, 70, 90, 20, 60, 95
+                ],
+                type: 'line',
+                label: 'Total Capacity (ST+FT)',
+                fill: false,
+                backgroundColor: "#fff",
+                borderColor: "#70cbf4",
+                borderCapStyle: 'butt',
+                borderDash: [],
+                borderDashOffset: 0.0,
+                borderJoinStyle: 'miter',
+                lineTension: 0.3,
+                pointBackgroundColor: "#fff",
+                pointBorderColor: "#70cbf4",
+                pointBorderWidth: 1,
+                pointHoverRadius: 5,
+                pointHoverBackgroundColor: "#70cbf4",
+                pointHoverBorderColor: "#70cbf4",
+                pointHoverBorderWidth: 2,
+                pointRadius: 4,
+                pointHitRadius: 10
             }, {
-              data: [
-                25, 40, 30, 70, 60, 50, 40, 70, 40, 80, 30, 90
-              ],
-              type: 'line',
-              label: 'Last Year',
-              fill: false,
-              backgroundColor: "#fff",
-              borderColor: "#737373",
-              borderCapStyle: 'butt',
-              borderDash: [10, 10],
-              borderDashOffset: 0.0,
-              borderJoinStyle: 'miter',
-              lineTension: .3,
-              pointBackgroundColor: "#fff",
-              pointBorderColor: "#737373",
-              pointBorderWidth: 1,
-              pointHoverRadius: 5,
-              pointHoverBackgroundColor: "#737373",
-              pointHoverBorderColor: "#737373",
-              pointHoverBorderWidth: 2,
-              pointRadius: 4,
-              pointHitRadius: 10
+                data: [
+                    25, 40, 30, 70, 60, 50, 40, 70, 40, 80, 30, 90
+                ],
+                type: 'line',
+                label: 'Total ST Capacity',
+                fill: false,
+                backgroundColor: "#fff",
+                borderColor: "#737373",
+                borderCapStyle: 'butt',
+                borderDash: [10, 10],
+                borderDashOffset: 0.0,
+                borderJoinStyle: 'miter',
+                lineTension: .3,
+                pointBackgroundColor: "#fff",
+                pointBorderColor: "#737373",
+                pointBorderWidth: 1,
+                pointHoverRadius: 5,
+                pointHoverBackgroundColor: "#737373",
+                pointHoverBorderColor: "#737373",
+                pointHoverBorderWidth: 2,
+                pointRadius: 4,
+                pointHitRadius: 10
             }, {
-              label: 'Promoters',
-              backgroundColor: "#aad700",
-              yAxisID: "bar-y-axis",
-              data: [
-                50, 44, 52, 62, 48, 58, 59, 50, 51, 52, 53, 54
-              ]
+                label: 'Production Support Demand',
+                backgroundColor: "#aad700",
+                yAxisID: "bar-y-axis",
+                data: [
+                    50, 44, 52, 62, 48, 58, 59, 50, 51, 52, 53, 54
+                ]
             }, {
-              label: 'Passives',
-              backgroundColor: "#ffe100",
-              yAxisID: "bar-y-axis",
-              data: [
-                20, 21, 24, 25, 26, 17, 28, 19, 20, 11, 22, 33
-              ]
+                label: 'Maintaince Demand',
+                backgroundColor: "#ffe100",
+                yAxisID: "bar-y-axis",
+                data: [
+                    20, 21, 24, 25, 26, 17, 28, 19, 20, 11, 22, 33
+                ]
             }, {
-              label: 'Detractors',
-              backgroundColor: "#ef0000",
-              yAxisID: "bar-y-axis",
-              data: [
-                30, 35, 24, 13, 26, 25, 13, 31, 29, 37, 25, 13
-              ]
+                label: 'Project Demand',
+                backgroundColor: "#ef0000",
+                yAxisID: "bar-y-axis",
+                data: [
+                    30, 35, 24, 13, 26, 25, 13, 31, 29, 37, 25, 13
+                ]
             }]
-          };
+        };
         var ctx = CreateCanvas("DemandCapacity");
         var mixedChart = new Chart(ctx, {
             type: 'bar',
-        data: barChartData,
-        options: {
-          title: {
-            display: true,
-            text: "Chart.js Bar Chart - Stacked"
-          },
-          tooltips: {
-            mode: 'label'
-          },
-          responsive: true,
-          scales: {
-            xAxes: [{
-              stacked: true,
-            }],
-            yAxes: [{
-              stacked: false,
-              ticks: {
-                beginAtZero: true,
-                min: 0,
-                max: 100
-              }
-            }, {
-              id: "bar-y-axis",
-              stacked: true,
-              display: false, //optional
-              ticks: {
-                beginAtZero: true,
-                min: 0,
-                max: 100
-              },
-              type: 'linear'
-            }]
-          }
-        }
-            
-          });
+            data: barChartData,
+            options: {
+                title: {
+                    display: true,
+                    text: "Demand & Capacity View (MDs)"
+                },
+                legend: {
+                    display: false
+                },
+                tooltips: {
+                    mode: 'label'
+                },
+                responsive: true,
+                scales: {
+                    xAxes: [{
+                        stacked: true,
+                        maxBarThickness: 40,
+                    }],
+                    yAxes: [{
+                        stacked: false,
+                        ticks: {
+                            beginAtZero: true,
+                            min: 0,
+                            max: 100
+                        }
+                    }, {
+                        id: "bar-y-axis",
+                        stacked: true,
+                        display: false, //optional
+                        ticks: {
+                            beginAtZero: true,
+                            min: 0,
+                            max: 100
+                        },
+                        type: 'linear'
+                    }]
+                }
+            }
 
-    //chart.render();
-    $("#graphDiv").show();
+        });
+
+        //chart.render();
+        $("#graphDiv").show();
     }
 
     function projectManDaysGraph($scope, $filter, allocationService, projectService) {
@@ -308,6 +318,9 @@
                         display: false
                     },
                     scales: {
+                        xAxes: [{
+                             maxBarThickness: 30
+                        }],
                         yAxes: [{
                             ticks: {
                                 beginAtZero: false
@@ -444,7 +457,7 @@
                     display: false
                 },
                 scales: {
-                    xAxes: [{ stacked: true, min: 0 }],
+                    xAxes: [{ stacked: true, min: 0, maxBarThickness: 40 }],
                     yAxes: [{ stacked: true, min: 0 }]
 
                 },
