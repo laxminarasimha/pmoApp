@@ -84,8 +84,17 @@ router.get("/", function(req, res) {
  	}
  		res.send("deleted");
  	});
+
+}).delete("/delete/name/:deletedName", function(req, res) {
+ 	var deletedName = req.params.deletedName;
+ 	allocationDAO.remove({resource:deletedName}, function(err) {
+ 	if (err) {
+ 		res.send("error");
+ 		return;
+ 	}
+ 		res.send("deleted");
+ 	});
 });
- 
 module.exports = router;
 
 

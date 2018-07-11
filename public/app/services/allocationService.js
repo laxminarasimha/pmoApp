@@ -15,8 +15,8 @@
                         return $http.get(url);
                   },
 
-                  getAllAllocationByYear: function (startYr,EndYr) {
-                        url = globalConfig.apiAddress + "/allocation/"+startYr+"/"+EndYr;
+                  getAllAllocationByYear: function (startYr, EndYr) {
+                        url = globalConfig.apiAddress + "/allocation/" + startYr + "/" + EndYr;
                         return $http.get(url);
                   },
 
@@ -38,13 +38,19 @@
                   deleteAllocation: function (deletedID) {
                         url = globalConfig.apiAddress + "/allocation/delete/" + deletedID;
                         return $http.delete(url);
-                       
+
+                  },
+
+                  deleteAllocationByName: function (deletedName) {
+                        url = globalConfig.apiAddress + "/allocation/delete/name/" + deletedName;
+                        return $http.delete(url);
+
                   },
 
                   getAllocation: function (resource, type, year, project) {
                         url = globalConfig.apiAddress + "/allocation/type/" + resource + "/" + type + "/" + year + "/" + project;
                         return $http.get(url);
-                        
+
                   },
 
             };
