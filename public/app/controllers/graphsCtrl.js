@@ -95,7 +95,7 @@
                 avlCapcitySkillGraph($scope, $filter, allocationService, resourceMappingService, skillSetService, leaveService);
                 break;
             case "DemandCapacity":
-                demandGraph($scope);
+                demandGraph($scope, $filter, resourceMappingService, leaveService);
                 break;
             default:
                 break;
@@ -103,19 +103,111 @@
 
     }//End OF CreateGraph()
 
-    function demandGraph($scope) {
+    function demandGraph($scope, $filter, resourceMappingService, leaveService) {
+
 
         var strDt = $scope.startDate.split("/");
         var endDt = $scope.endDate.split("/");
 
-        var monthCol = months($scope.startDate, $scope.endDate);
+        resourceMappingService.getMappedResourcesByYear(strDt[1], endDt[1]).then(function (mapping) {
+
+            leaveService.getLeave().then(function (res) {
+                $scope.leaveList = res.data;
+                var monthCol = months($scope.startDate, $scope.endDate);
+                drawDeamndAndCapcityGraph($scope, $filter, mapping.data, monthCol, $scope.leaveList);
+            }).catch(function (err) {
+                console.log(err);
+            });
+
+        }).catch(function (err) {
+            console.log(err);
+        });
+    }
+
+    function drawDeamndAndCapcityGraph($scope, $filter, mappingData, monthCol, leaveList) {
+
+        var stCapacity = new Array(monthCol.length);
+        stCapacity.fill(0, 0, monthCol.length);
+
+        var ftCapacity = new Array(monthCol.length);
+        ftCapacity.fill(0, 0, monthCol.length);
+
+        angular.forEach(mappingData, function (mapping) {
+            if (mapping.resourceType === 'Sufficient') {
+                angular.forEach(mapping.monthlyAvailableActualMandays, function (mapData) {
+
+                    if (monthCol.indexOf(mapData.key) >= 0) { // check if months equal to the predefined month array(user selected)
+                        var indx = monthCol.indexOf(mapData.key);
+                        var value = stCapacity[indx];
+                        if (!isNaN(mapData.value)) {
+                            stCapacity[indx] = round((parseInt(value) + parseInt(mapData.value)), 1);
+                        }
+                    }
+
+                });
+
+                var leaveFilter = $filter('filter')(leaveList, { resourcename: mapping.mappedResource.resourcename });
+                angular.forEach(leaveFilter, function (leaves) {
+                    angular.forEach(leaves.leavedaysinmonth, function (leave) {
+                        if (monthCol.indexOf(leave.month) >= 0) { // check if months equal to the predefined month array(user selected)
+                            var indx = monthCol.indexOf(leave.month);
+                            var value = stCapacity[indx];
+                            if (!isNaN(leave.value)) {
+                                stCapacity[indx] = round((parseInt(value) - parseInt(leave.value)), 1);
+
+                            }
+                        }
+
+                    });
+                });
+            }
+
+            if (mapping.resourceType === 'FlexTeam') {
+                angular.forEach(mapping.monthlyAvailableActualMandays, function (mapData) {
+                    if (monthCol.indexOf(mapData.key) >= 0) { // check if months equal to the predefined month array(user selected)
+                        var indx = monthCol.indexOf(mapData.key);
+                        var value = ftCapacity[indx];
+                        if (!isNaN(mapData.value)) {
+                            ftCapacity[indx] = round((parseInt(value) + parseInt(mapData.value)), 1);
+                            // stFtCapacity[indx] = round((parseInt(stFtCapacity[indx])) + ,1);  
+                        }
+                    }
+                });
+            }
+
+        });
+
+        var stFtCapacity = new Array(monthCol.length);
+        for (var i = 0; i < stFtCapacity.length; i++) {
+            stFtCapacity[i] = stCapacity[i] + ftCapacity[i];
+
+        }
 
         var barChartData = {
             labels: monthCol,
             datasets: [{
+                label: 'Production Support Demand',
+                backgroundColor: "#0040ff",
+                yAxisID: "bar-y-axis",
                 data: [
-                    50, 30, 60, 70, 80, 90, 95, 70, 90, 20, 60, 95
-                ],
+                    50, 44, 52, 62, 48, 58, 59, 50, 51, 52, 53, 54
+                ]
+            }, {
+                label: 'Maintaince Demand',
+                backgroundColor: "#b30000",
+                yAxisID: "bar-y-axis",
+                data: [
+                    20, 21, 24, 25, 26, 17, 28, 19, 20, 11, 22, 33
+                ]
+            }, {
+                label: 'Project Demand',
+                backgroundColor: "#739900",
+                yAxisID: "bar-y-axis",
+                data: [
+                    30, 35, 24, 13, 26, 25, 13, 31, 29, 37, 25, 13
+                ]
+            }, {
+                data: stFtCapacity,
                 type: 'line',
                 label: 'Total Capacity (ST+FT)',
                 fill: false,
@@ -136,49 +228,26 @@
                 pointRadius: 4,
                 pointHitRadius: 10
             }, {
-                data: [
-                    25, 40, 30, 70, 60, 50, 40, 70, 40, 80, 30, 90
-                ],
+                data: stCapacity,
                 type: 'line',
                 label: 'Total ST Capacity',
-                fill: false,
-                backgroundColor: "#fff",
-                borderColor: "#737373",
-                borderCapStyle: 'butt',
-                borderDash: [10, 10],
+                fill: true,
+                backgroundColor: "#00bfff",
+                borderColor: "#00bfff",
+                borderCapStyle: '',
+                borderDash: [],
                 borderDashOffset: 0.0,
                 borderJoinStyle: 'miter',
                 lineTension: .3,
-                pointBackgroundColor: "#fff",
+                pointBackgroundColor: "#737373",
                 pointBorderColor: "#737373",
-                pointBorderWidth: 1,
+                pointBorderWidth: 0,
                 pointHoverRadius: 5,
                 pointHoverBackgroundColor: "#737373",
                 pointHoverBorderColor: "#737373",
                 pointHoverBorderWidth: 2,
                 pointRadius: 4,
                 pointHitRadius: 10
-            }, {
-                label: 'Production Support Demand',
-                backgroundColor: "#aad700",
-                yAxisID: "bar-y-axis",
-                data: [
-                    50, 44, 52, 62, 48, 58, 59, 50, 51, 52, 53, 54
-                ]
-            }, {
-                label: 'Maintaince Demand',
-                backgroundColor: "#ffe100",
-                yAxisID: "bar-y-axis",
-                data: [
-                    20, 21, 24, 25, 26, 17, 28, 19, 20, 11, 22, 33
-                ]
-            }, {
-                label: 'Project Demand',
-                backgroundColor: "#ef0000",
-                yAxisID: "bar-y-axis",
-                data: [
-                    30, 35, 24, 13, 26, 25, 13, 31, 29, 37, 25, 13
-                ]
             }]
         };
         var ctx = CreateCanvas("DemandCapacity");
@@ -207,7 +276,7 @@
                         ticks: {
                             beginAtZero: true,
                             min: 0,
-                            max: 100
+                            max: 1000
                         }
                     }, {
                         id: "bar-y-axis",
@@ -262,6 +331,7 @@
 
 
     function drawTotalManDaysGraph($scope, $filter, projectList, allocationList, monthCol) {
+
         $scope.GraphData = [];
         $scope.projectFilter = [];
 
