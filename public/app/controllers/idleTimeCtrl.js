@@ -47,6 +47,8 @@ angular.module('pmoApp').controller('idleTimeCtrl', Controller);
 
  $scope.headingList = [];
  prepareTableHeading($scope,monthlyHeaderListService);
+
+ $scope.ShowSpinnerStatus = true;
   
  $scope.clearFields = function (){
      $scope.idleTimeDTO = {};
@@ -193,8 +195,15 @@ angular.module('pmoApp').controller('idleTimeCtrl', Controller);
            }
               //console.log(resourceIdleTimeArray);
               $scope.idleTimeData = resourceIdleTimeArray;
+              $scope.ShowSpinnerStatus = false;
+            var spinner = document.getElementById("spinner");
+            if (spinner.style.display != "none") {
+                spinner.style.display = "none";
+
+            }
 
         }
+        
 
  }
 
@@ -245,6 +254,7 @@ function getGraphData($scope,allocationService,leaveService,resourceMappingServi
  function getIdleTimeData(idleTimeService,$scope){
       idleTimeService.getMappedResources().then(function(res) {
         $scope.idleTimeData = res.data;
+        
          }).catch(function(err) {
          console.log(err);
      });
