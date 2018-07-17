@@ -199,8 +199,8 @@ var app = angular.module('appRoutes', ['ui.router'])
 			})
 
 
-			.state('root.Add Leave', {
-				url: '/Add Leave',
+			.state('root.Leave', {
+				url: '/Leave',
 				views: {
 					'container@': {
 						templateUrl: 'app/views/pages/admin/leave.html'
