@@ -21,11 +21,11 @@
 	   $rootScope.regionName = []; 
 		if(Auth.isLoggedIn()){		
 		   Auth.getUser().then(function(data){	
-			   console.log("name:"+data.data.resourcename);												
+			  // console.log("name:"+data.data.resourcename);												
 		   if(data.data.resourcename !== ""){			
 			   var userType = data.data.etype;			    
 			   $rootScope.region = data.data.region;
-			   console.log("Region name:"+$rootScope.region);
+			   //console.log("Region name:"+$rootScope.region);
 			   for(var i=0;i<menu.length;i++){
 				   //for(var j=0;j<menu[i].role.length;j++){
 					 // if(userType == menu[i].role[j]){

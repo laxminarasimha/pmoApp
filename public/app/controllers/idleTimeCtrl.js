@@ -33,7 +33,7 @@ angular.module('pmoApp').controller('idleTimeCtrl', Controller);
  $scope.roleList = [];
  getRoleData(roleService,$scope);
 
-
+ $scope.ShowSpinnerStatus = true;
 
  $scope.regionList = [];
  getRegionData(regionService,$scope);
@@ -42,13 +42,15 @@ angular.module('pmoApp').controller('idleTimeCtrl', Controller);
  $scope.resourceTypeList = [];
  getResourceTypeData(resourceTypeService,$scope);
 
-
+                    
  $scope.projectList = [];
  getProjectData(projectService,$scope);
 
  $scope.headingList = [];
  prepareTableHeading($scope,monthlyHeaderListService);
-  
+
+ $scope.ShowSpinnerStatus = true;
+
  $scope.clearFields = function (){
      $scope.idleTimeDTO = {};
      app.loading =false;
@@ -60,12 +62,12 @@ angular.module('pmoApp').controller('idleTimeCtrl', Controller);
  
   $scope.getIdleTimes = function(idleTimeDTO) {
      $scope.IsSubmit = true;
-     console.log(idleTimeDTO);
+     //console.log(idleTimeDTO);
     
      //if (false) {
             var emptyObject =  angular.equals({}, idleTimeDTO);
             if (typeof idleTimeDTO == "undefined" || emptyObject) {
-                getGraphData($scope,allocationService,leaveService,resourceMappingService,availableDaysService,monthlyHeaderListService);
+                getGraphData($scope,$rootScope,allocationService,leaveService,resourceMappingService,availableDaysService,monthlyHeaderListService);
             }else{
                 var idleTimeFilteredDataList = [];               
                 idleTimeFilteredDataList = $scope.originalData;
@@ -115,7 +117,7 @@ angular.module('pmoApp').controller('idleTimeCtrl', Controller);
         $scope.vm.dtOptions.withOption('buttons',['copy', 'print', 'pdf','excel']);
 //=============================================================//
 
-    getGraphData($scope,allocationService,leaveService,resourceMappingService,availableDaysService,monthlyHeaderListService);
+    getGraphData($scope,$rootScope,allocationService,leaveService,resourceMappingService,availableDaysService,monthlyHeaderListService);
 
     $scope.prepareIdleTimeData = function($scope,availableDaysService,monthlyHeaderListService){
         
@@ -194,6 +196,12 @@ angular.module('pmoApp').controller('idleTimeCtrl', Controller);
               //console.log(resourceIdleTimeArray);
               $scope.idleTimeData = resourceIdleTimeArray;
               $scope.originalData = resourceIdleTimeArray;
+              $scope.ShowSpinnerStatus = false;
+              var spinner = document.getElementById("spinner");
+              if (spinner.style.display != "none") {
+                  spinner.style.display = "none";
+  
+              }
         }
 
  }
@@ -214,7 +222,7 @@ function Resource(name,kinid,location,region,resourcetype,skill,status,idleTimeA
 
 
 
-function getGraphData($scope,allocationService,leaveService,resourceMappingService,availableDaysService,monthlyHeaderListService){
+function getGraphData($scope,$rootScope,allocationService,leaveService,resourceMappingService,availableDaysService,monthlyHeaderListService){
         var allocation =[];
         var resoruceM =[];
         var leave =[];
@@ -222,7 +230,7 @@ function getGraphData($scope,allocationService,leaveService,resourceMappingServi
                 allocation=res.data;
                 leaveService.getLeave().then(function(res) {
                     leave=res.data;
-                    resourceMappingService.getMappedResources().then(function(res) {
+                    resourceMappingService.getMappedResources($rootScope.region).then(function(res) {
                         resoruceM = res.data;
                         availableDaysService.intialize(allocation,resoruceM,leave);
                         $scope.prepareIdleTimeData($scope,availableDaysService,monthlyHeaderListService);

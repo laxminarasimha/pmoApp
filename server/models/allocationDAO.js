@@ -7,6 +7,7 @@ var allocationSchema = new Schema(
     _id: { type: objectId, auto: true },
     resource: { type: String, required: true },
     resourcetype: { type: String, required: true },
+    region: { type: String, required: true },
     project: { type: String, required: true },
     year: { type: String, required: true },
     allocation: []

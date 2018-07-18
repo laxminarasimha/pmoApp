@@ -277,7 +277,7 @@
 		$scope.holidayList = [];
 		$scope.ShowSpinnerStatus = true;
 
-		console.log("*************"+$rootScope.region);
+		//console.log("*************"+$rootScope.region);
 
 		function allocObject(object) {
 			var month;

@@ -9,8 +9,7 @@
   function Service($http, globalConfig) {
     var url = "";
     return {
-      getMappedResources: function (region) {
-        console.log("Server side region"+ region);
+      getMappedResources: function (region) {       
         url = globalConfig.apiAddress + "/mappedresource/region/" + region;
         return $http.get(url);
       },
@@ -35,8 +34,7 @@
         url = globalConfig.apiAddress + "/mappedresource/" + resourcemap._id;
         return $http.put(url, resourcemap);
       },
-      deleteResourceMapping: function (id) {
-        console.log(id);
+      deleteResourceMapping: function (id) {      
         url = globalConfig.apiAddress + "/mappedresource/" + id;
         return $http.delete(url);
       },
