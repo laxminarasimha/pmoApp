@@ -9,8 +9,9 @@
   function Service($http, globalConfig) {
     var url = "";
     return {
-      getMappedResources: function () {
-        url = globalConfig.apiAddress + "/mappedresource";
+      getMappedResources: function (region) {
+        console.log("Server side region"+ region);
+        url = globalConfig.apiAddress + "/mappedresource/region/" + region;
         return $http.get(url);
       },
 

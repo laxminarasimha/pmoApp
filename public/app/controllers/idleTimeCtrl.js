@@ -18,6 +18,7 @@ angular.module('pmoApp').controller('idleTimeCtrl', Controller);
  var app = $scope;
 
  $scope.idleTimeData = [];
+ $scope.originalData = [];
  //getIdleTimeData(idleTimeService,$scope);
 
  $scope.locationList = [];
@@ -57,10 +58,7 @@ angular.module('pmoApp').controller('idleTimeCtrl', Controller);
      //getIdleTimeData(idleTimeService,$scope);
  }
  
-
- 
- 
- $scope.getIdleTimes = function(idleTimeDTO) {
+  $scope.getIdleTimes = function(idleTimeDTO) {
      $scope.IsSubmit = true;
      console.log(idleTimeDTO);
     
@@ -69,9 +67,10 @@ angular.module('pmoApp').controller('idleTimeCtrl', Controller);
             if (typeof idleTimeDTO == "undefined" || emptyObject) {
                 getGraphData($scope,allocationService,leaveService,resourceMappingService,availableDaysService,monthlyHeaderListService);
             }else{
-                var idleTimeFilteredDataList = [];
-                idleTimeFilteredDataList = $scope.idleTimeData;
+                var idleTimeFilteredDataList = [];               
+                idleTimeFilteredDataList = $scope.originalData;
                 if(idleTimeDTO.resource){ 
+                    console.log("WELCOME"+idleTimeDTO.resource);
                   idleTimeFilteredDataList =$filter('filter')(idleTimeFilteredDataList, {'name': idleTimeDTO.resource});
                   console.log(idleTimeFilteredDataList);
                 }
@@ -95,15 +94,17 @@ angular.module('pmoApp').controller('idleTimeCtrl', Controller);
             }
             
           
-    //  }else
-    //  {
-    //         app.loading =false;
-    //         app.successMsg = false;
-    //         app.errorMsg = "Please Enter Required value";
-    //         app.errorClass = "error"
-    //  }
+      //}else
+     // {
+       //      app.loading =false;
+         //    app.successMsg = false;
+           //  app.errorMsg = "Please Enter Required value";
+             //app.errorClass = "error"
+   //   }
      
  }
+
+
 
 
 
@@ -193,7 +194,7 @@ angular.module('pmoApp').controller('idleTimeCtrl', Controller);
            }
               //console.log(resourceIdleTimeArray);
               $scope.idleTimeData = resourceIdleTimeArray;
-
+              $scope.originalData = resourceIdleTimeArray;
         }
 
  }

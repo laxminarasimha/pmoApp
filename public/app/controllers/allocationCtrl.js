@@ -259,9 +259,10 @@
 	}
 
 
-	Controller.$inject = ['$scope', 'DTOptionsBuilder', 'DTColumnBuilder', '$compile', 'resourceService', 'projectService', 'allocationService', 'leaveService', 'resourceMappingService', '$filter', 'availableDaysService', 'holidayListService'];
+	Controller.$inject = ['$rootScope', '$scope', 'DTOptionsBuilder', 'DTColumnBuilder', '$compile', 'resourceService', 'projectService', 'allocationService', 'leaveService', 'resourceMappingService', '$filter', 'availableDaysService', 'holidayListService'];
 
-	function Controller($scope, DTOptionsBuilder, DTColumnBuilder, $compile, resourceService, projectService, allocationService, leaveService, resourceMappingService, $filter, availableDaysService, holidayListService) {
+
+	function Controller($rootScope, $scope, DTOptionsBuilder, DTColumnBuilder, $compile, resourceService, projectService, allocationService, leaveService, resourceMappingService, $filter, availableDaysService, holidayListService) {
 
 		$scope.resource = [];
 		//$scope.resourceWiseAllocaiton = [];
@@ -275,6 +276,8 @@
 		$scope.conflict = false;
 		$scope.holidayList = [];
 		$scope.ShowSpinnerStatus = true;
+
+		console.log("*************"+$rootScope.region);
 
 		function allocObject(object) {
 			var month;
@@ -291,7 +294,7 @@
 		};
 
 
-		getMappedResourceData($scope, resourceMappingService, holidayListService);
+		getMappedResourceData($rootScope, $scope, resourceMappingService, holidayListService);
 		getAlloctionData(allocationService, $scope);
 		getLeaveData(leaveService, $scope);
 		//getHolidayData(holidayListService, $scope, new Date().getFullYear()); // get all the date from current year
@@ -477,9 +480,9 @@
 	}
 
 
-	function getMappedResourceData($scope, resourceMappingService, holidayListService) {
+	function getMappedResourceData($rootScope, $scope, resourceMappingService, holidayListService) {
 		//$scope.ShowSpinnerStatus = false;
-		resourceMappingService.getMappedResources().then(function (res) {
+		resourceMappingService.getMappedResources($rootScope.region).then(function (res) {
 			$scope.ShowSpinnerStatus = false;
 			var spinner = document.getElementById("spinner");
 			if (spinner.style.display != "none") {

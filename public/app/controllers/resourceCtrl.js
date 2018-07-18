@@ -3,9 +3,9 @@
 
     angular.module('pmoApp').controller('resourceCtrl', Controller);
 
-    Controller.$inject = ['$scope', '$rootScope', 'resourceService', 'designationService', 'resourceMappingService', 'allocationService', 'DTOptionsBuilder', 'DTColumnBuilder', 'skillSetService', 'locationService', 'roleService', '$window'];
+    Controller.$inject = ['$scope', '$rootScope', 'resourceService', 'designationService', 'resourceMappingService', 'allocationService', 'DTOptionsBuilder', 'DTColumnBuilder', 'skillSetService', 'locationService', 'roleService','regionService', '$window'];
 
-    function Controller($scope, $rootScope, resourceService, designationService, resourceMappingService, allocationService, DTOptionsBuilder, DTColumnBuilder, skillSetService, locationService, roleService, $window) {
+    function Controller($scope, $rootScope, resourceService, designationService, resourceMappingService, allocationService, DTOptionsBuilder, DTColumnBuilder, skillSetService, locationService, roleService, regionService, $window) {
         $scope.mongoResourceData = [];
 
         var app = $scope;
@@ -21,13 +21,16 @@
         getSkillSetData(skillSetService, $scope);
 
 
-        $scope.regionList = [];
+        $scope.locationList = [];
         getLocationData(locationService, $scope);
 
 
         $scope.roleList = [];
         $scope.kinID = 0;
         getRoleData(roleService, $scope);
+
+        $scope.regionList = [];
+        getRegionData(regionService, $scope);
 
         // $scope.resourcemapList = [];
         //deleteResourcemapData(resourceMappingService,$scope);
@@ -281,7 +284,7 @@
 
     function getLocationData(locationService, $scope) {
         locationService.getLocation().then(function (res) {
-            $scope.regionList = res.data;
+            $scope.locationList = res.data;
         }).catch(function (err) {
             console.log(err);
         });
@@ -290,6 +293,14 @@
     function getRoleData(roleService, $scope) {
         roleService.getRole().then(function (res) {
             $scope.roleList = res.data;
+        }).catch(function (err) {
+            console.log(err);
+        });
+    }
+
+    function getRegionData(regionService, $scope) {
+        regionService.getRegion().then(function (res) {
+            $scope.regionList = res.data;
         }).catch(function (err) {
             console.log(err);
         });

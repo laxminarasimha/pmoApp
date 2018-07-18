@@ -2,14 +2,28 @@ var express = require("express"),
  router = express.Router(),
  resourceMappingDAO = require("../models/resourceMappingDAO.js");
  
-router.get("/", function(req, res) {
- resourceMappingDAO.find({},function(err, data) {
- if (err) {
- res.send("error");
- return;
- }
- res.send(data);
- });
+router.get("/region/:region", function(req, res) {
+	var region = req.params.region;
+	console.log("***Region:"+ region);
+	if(region == 'All'){
+		resourceMappingDAO.find({},function(err, data) {
+ 		if (err) {
+ 		res.send("error");
+ 		return;
+ 	}
+ 		res.send(data);
+ 	});
+	}else{
+		resourceMappingDAO.find({region:region},function(err, data) {
+ 		if (err) {
+ 			res.send("error");
+ 			return;
+ 		}
+ 		res.send(data);
+ 		});
+
+	}
+ 
 }).get("/:id", function(req, res) {
  var id = req.params.id;
  resourceMappingDAO.find({ _id: id }, function(err, data) {

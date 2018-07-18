@@ -3,23 +3,29 @@
 	
 	angular.module('pmoApp').controller('menuCtrl', Controller);
 	
-	Controller.$inject = ['$scope', '$http', 'Auth'];
+	Controller.$inject = ['$rootScope','$scope', '$http', 'Auth'];
+
 	
-	function Controller($scope, $http,Auth) {
+	
+	function Controller($rootScope, $scope, $http,Auth) {
 	
 	
 	$http.get("app/data/menuData.txt").then(function(response) {
 				 $scope.menuData = response.data;
-				 getCustomizedmenu($scope,Auth,response.data);
+				 getCustomizedmenu($rootScope,$scope,Auth,response.data);
 			 });
 	}
    
-	function getCustomizedmenu($scope,Auth,menu){
+	function getCustomizedmenu($rootScope,$scope,Auth,menu){
 	   var menuDataArray = [];
+	   $rootScope.regionName = []; 
 		if(Auth.isLoggedIn()){		
-		   Auth.getUser().then(function(data){										
+		   Auth.getUser().then(function(data){	
+			   console.log("name:"+data.data.resourcename);												
 		   if(data.data.resourcename !== ""){			
-			   var userType = data.data.etype;
+			   var userType = data.data.etype;			    
+			   $rootScope.region = data.data.region;
+			   console.log("Region name:"+$rootScope.region);
 			   for(var i=0;i<menu.length;i++){
 				   //for(var j=0;j<menu[i].role.length;j++){
 					 // if(userType == menu[i].role[j]){

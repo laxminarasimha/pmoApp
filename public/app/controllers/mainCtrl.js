@@ -13,6 +13,8 @@ angular.module('mainController',['authServices'])
 				app.kinId = data.data.kinId;
 				app.designation = data.data.designation;
 				app.alias = data.data.alias;
+				app.etype = data.data.etype;
+				app.region = data.data.region;
 				app.loadMe = true;
 		});
 		}else{			
@@ -35,6 +37,8 @@ angular.module('mainController',['authServices'])
 					app.kinId = data.data.kinId;
 					app.designation = data.data.designation;
 					app.alias = data.data.alias;
+					app.etype = data.data.etype;
+					app.region = data.data.region;
 					app.loadMe = true;
 				});
 		

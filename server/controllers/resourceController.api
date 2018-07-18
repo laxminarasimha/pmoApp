@@ -209,7 +209,8 @@ resourceDAO.findByIdAndUpdate(id, {
       	skill:	obj.skill,
       	status:	obj.status,
       	isManager:	obj.isManager,
-      	role:	obj.role
+      	role:	obj.role,
+        region: obj.region
    }, 
 function(err) {
  if (err) {

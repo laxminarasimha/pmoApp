@@ -21,7 +21,7 @@
         };
 
         $scope.mongoMappedResourceData = [];
-        getMappedResourceData(resourceMappingService, $scope);
+        getMappedResourceData(resourceMappingService,$rootScope, $scope);
 
         $scope.resourceList = [];
         getResourceData(resourceService, $scope);
@@ -738,7 +738,6 @@
         return output;
     }
 
-
     function daysInMonth(month, year) {
         return 32 - new Date(year, month, 32).getDate();
     }
@@ -758,8 +757,9 @@
         return day != 0 && day != 6;
     }
 
-    function getMappedResourceData(resourceMappingService, $scope) {
-        resourceMappingService.getMappedResources().then(function (res) {
+    function getMappedResourceData(resourceMappingService, $rootScope, $scope) {
+        console.log("$rootScope.region:"+ $rootScope.region);
+        resourceMappingService.getMappedResources($rootScope.region).then(function (res) {
             $scope.mongoMappedResourceData = res.data;
             $scope.filterResourceWithYear = filterUniqueResourceWithYear(res.data);
 
