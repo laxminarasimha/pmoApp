@@ -15,7 +15,7 @@ angular.module('pmoApp').controller('availableActualMandaysCtrl', Controller);
  
  var app = $scope;
  $scope.mappedResourceList = [];
- getMappedResourceData(resourceMappingService,$scope);
+ getMappedResourceData(resourceMappingService,$rootScope,$scope);
 
  $scope.locationList = [];
  getLocationData(locationService,$scope);
@@ -133,8 +133,8 @@ angular.module('pmoApp').controller('availableActualMandaysCtrl', Controller);
  }
 
  
- function getMappedResourceData(resourceMappingService,$scope){
-      resourceMappingService.getMappedResources().then(function(res) {
+ function getMappedResourceData(resourceMappingService,$rootScope,$scope){
+      resourceMappingService.getMappedResources($rootScope.region).then(function(res) {
          $scope.mappedResourceList = res.data;
          $scope.ShowSpinnerStatus = false;
             var spinner = document.getElementById("spinner");

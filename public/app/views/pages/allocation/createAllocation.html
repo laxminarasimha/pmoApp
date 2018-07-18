@@ -1,11 +1,11 @@
 <form name="createAllocationForm" ng-submit="" novalidate ng-controller="createAllocationCtrl">
   <legend class="text-info"><h2>Create Allocation</h2></legend>
-  <div class="container-fluid panel panel-info">
+  <div class="panel panel-info">
     <div class="panel-heading" align="center">
       <div class='row'>
         <div class='col-sm-3'>
           <div class="form-group">
-            <label for startDate>Allocation Start Month:</label>
+            <label for="startDate">Allocation Start Month:</label>
             <div class="input-group date form_date " data-date-format="dd MM yyyy" data-link-format="yyyy-mm-dd">
               <input class="form-control" type="text" ng-model="startDate" class="form-control" readonly>
               <span class="input-group-addon">
@@ -16,7 +16,7 @@
         </div>
         <div class='col-sm-3'>
           <div class="form-group">
-            <label for startDate>Allocation End Month:</label>
+            <label for="startDate"  >Allocation End Month:</label>
             <div class="input-group date form_date " data-date-format="dd MM yyyy" data-link-format="yyyy-mm-dd">
               <input class="form-control" type="text" ng-model="endDate" class="form-control" readonly>
               <span class="input-group-addon">
@@ -25,9 +25,9 @@
             </div>
           </div>
         </div>
-        <div class='col-sm-6' style="padding-top:.5cm;">
+        <div class='col-sm-3' style="padding-top:.1cm;">
           <div class=form-group>
-            <label for="resource">Resources:</label>
+            <label for="resource" >Resources:</label>
             <!-- <select id="resource-select" id="resource" ng-model="resource" required multiple="multiple" multi-select class="form-control"></select> -->
 
             <input list="resource" type="text" ng-model="resource" style="width: 290px; padding: 2px" required>
@@ -36,15 +36,14 @@
             </datalist>
           </div>
         </div>
-      </div>
-      <div class='row'>
-        <div class='col-sm-10'>
-          <div align="right">
+         <div class='col-sm-3' style="padding-top:.5cm;">
+          <div class=form-group>
             <button id="projectBtn" class="btn btn-primary" type="button" ng-click="clearFields();createAllocation()">Projection</button>
             <button id="clrBtn" class="btn btn-warning" ng-click="clearFields()" type="button" style="display:none">Clear</button>
           </div>
         </div>
-      </div>
+
+      </div>     
     </div>
 
     <div class="panel-body" ng-show="loading || successMsg || errorMsg">
