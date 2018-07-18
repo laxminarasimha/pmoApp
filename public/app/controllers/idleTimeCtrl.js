@@ -69,8 +69,7 @@ angular.module('pmoApp').controller('idleTimeCtrl', Controller);
             }else{
                 var idleTimeFilteredDataList = [];               
                 idleTimeFilteredDataList = $scope.originalData;
-                if(idleTimeDTO.resource){ 
-                    console.log("WELCOME"+idleTimeDTO.resource);
+                if(idleTimeDTO.resource){                    
                   idleTimeFilteredDataList =$filter('filter')(idleTimeFilteredDataList, {'name': idleTimeDTO.resource});
                   console.log(idleTimeFilteredDataList);
                 }

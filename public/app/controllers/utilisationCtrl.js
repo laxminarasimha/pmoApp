@@ -86,6 +86,93 @@
             console.log(utilisationDTO);
             //  //if (false) {
             var emptyObject = angular.equals({}, utilisationDTO);
+ (function() {
+ 'use strict';
+ 
+angular.module('pmoApp').controller('utilisationCtrl', Controller);
+ 
+ Controller.$inject = ['$scope', '$rootScope', 'DTOptionsBuilder', 'DTColumnBuilder', '$compile','utilisationService',
+                       'resourceService','roleService','regionService','projectService','resourceTypeService',
+                       'allocationService','leaveService','resourceMappingService','availableDaysService',
+                       'monthlyHeaderListService','skillSetService','locationService','$filter'];
+  
+ function Controller($scope, $rootScope, DTOptionsBuilder, DTColumnBuilder, $compile, utilisationService,
+                     resourceService,roleService,regionService,projectService,resourceTypeService,
+                     allocationService,leaveService,resourceMappingService,availableDaysService,
+                     monthlyHeaderListService,skillSetService,locationService,$filter) {
+
+ 
+ var app = $scope;
+
+ $scope.utilisationData = [];
+ //getuUilisationData(utilisationService,$scope);
+
+ $scope.resourceList = [];
+ getResourceData(resourceService,$scope);
+
+ $scope.roleList = [];
+ getRoleData(roleService,$scope);
+
+ $scope.locationList = [];
+ getLocationData(locationService,$scope);
+
+ $scope.skillDataList = [];
+ getSkillData(skillSetService,$scope);
+
+ $scope.regionList = [];
+ getRegionData(regionService,$scope);
+ 
+   
+ $scope.resourceTypeList = [];
+ getResourceTypeData(resourceTypeService,$scope);
+
+
+ $scope.projectList = [];
+ getProjectData(projectService,$scope);
+
+ $scope.ShowSpinnerStatus = true;
+
+ $scope.headingList = [];
+ prepareTableHeading($scope,monthlyHeaderListService);
+  
+ $scope.clearFields = function (){
+     $scope.utilisationDTO = {};
+     app.loading =false;
+     app.successMsg = false;
+     app.errorMsg = false;
+     app.errorClass = "";
+ };
+ 
+
+ 
+ 
+ $scope.getUtilisation = function(utilisationDTO) {
+     $scope.IsSubmit = true;
+    // //if ($scope.utilisationForm.$valid) {
+    //       utilisationService.getuUtilisation(utilisationDTO).then(function(res) {
+    //     // if (res.data == "created") {
+    //         $scope.utilisationData = res.data;
+    //        //getUilisationData(utilisationService,$scope);
+    //       // $scope.utilisationDTO = {};
+    //         app.loading =false;
+    //         app.successMsg = "Data fetched successfully";
+    //         app.errorMsg = false;
+        
+    //     }).catch(function(err) {
+    //      console.log(err);
+    //      });
+    // 
+    //   }else
+    //   {
+    //          app.loading =false;
+    //         app.successMsg = false;
+    //          app.errorMsg = "Please Enter Required value";
+    //           app.errorClass = "error"
+    //   }
+
+     console.log(utilisationDTO);
+    //  //if (false) {
+            var emptyObject =  angular.equals({}, utilisationDTO);
             if (typeof utilisationDTO == "undefined" || emptyObject) {
                 getGraphData($scope, allocationService, leaveService, resourceMappingService, availableDaysService, monthlyHeaderListService);
             } else {
@@ -208,10 +295,28 @@
                     resourceUtilisationArray.push(resourceObj);
                 }
 
+<<<<<<< HEAD
             }
             //console.log(resourceUtilisationArray);
             $scope.utilisationData = resourceUtilisationArray;
             $scope.originalData = resourceUtilisationArray;
+=======
+                 resourceObj.utilisationArray = monthlyUtilisationArray;
+                 resourceUtilisationArray.push(resourceObj);
+             }
+                 
+                 
+                 
+           }
+              //console.log(resourceUtilisationArray);
+              $scope.utilisationData = resourceUtilisationArray;
+              $scope.ShowSpinnerStatus = false;
+            var spinner = document.getElementById("spinner");
+            if (spinner.style.display != "none") {
+                spinner.style.display = "none";
+
+            }
+>>>>>>> 1115dc651b405c67f1b891f59289087177f6c5f8
 
         }
 

@@ -95,7 +95,7 @@
                 avlCapcitySkillGraph($scope, $filter, allocationService, resourceMappingService, skillSetService, leaveService);
                 break;
             case "DemandCapacity":
-                demandGraph($scope, $filter, resourceMappingService, leaveService);
+                demandGraph($scope, $filter, resourceMappingService, allocationService, leaveService);
                 break;
             default:
                 break;
@@ -103,18 +103,20 @@
 
     }//End OF CreateGraph()
 
-    function demandGraph($scope, $filter, resourceMappingService, leaveService) {
+    function demandGraph($scope, $filter, resourceMappingService, allocationService, leaveService) {
 
 
         var strDt = $scope.startDate.split("/");
         var endDt = $scope.endDate.split("/");
 
         resourceMappingService.getMappedResourcesByYear(strDt[1], endDt[1]).then(function (mapping) {
-
             leaveService.getLeave().then(function (res) {
                 $scope.leaveList = res.data;
                 var monthCol = months($scope.startDate, $scope.endDate);
-                drawDeamndAndCapcityGraph($scope, $filter, mapping.data, monthCol, $scope.leaveList);
+                allocationService.getAllAllocationByYear(strDt[1], endDt[1], 'ALL').then(function (allocation) {
+                    drawDeamndAndCapcityGraph($scope, $filter, mapping.data, monthCol, $scope.leaveList, allocation.data);
+                });
+
             }).catch(function (err) {
                 console.log(err);
             });
@@ -124,7 +126,9 @@
         });
     }
 
-    function drawDeamndAndCapcityGraph($scope, $filter, mappingData, monthCol, leaveList) {
+    function drawDeamndAndCapcityGraph($scope, $filter, mappingData, monthCol, leaveList, allocationData) {
+
+        $scope.GraphData = [];
 
         var stCapacity = new Array(monthCol.length);
         stCapacity.fill(0, 0, monthCol.length);
@@ -132,10 +136,13 @@
         var ftCapacity = new Array(monthCol.length);
         ftCapacity.fill(0, 0, monthCol.length);
 
+        // Total ST Capacity (ST + Buffer - Vaction) , ST+Buffer = Total mapping value
         angular.forEach(mappingData, function (mapping) {
-            if (mapping.resourceType === 'Sufficient') {
-                angular.forEach(mapping.monthlyAvailableActualMandays, function (mapData) {
+            var leaveFilter = $filter('filter')(leaveList, { resourcename: mapping.mappedResource.resourcename });
 
+            if (mapping.resourceType === 'Sufficient') {
+
+                angular.forEach(mapping.monthlyAvailableActualMandays, function (mapData, index) {
                     if (monthCol.indexOf(mapData.key) >= 0) { // check if months equal to the predefined month array(user selected)
                         var indx = monthCol.indexOf(mapData.key);
                         var value = stCapacity[indx];
@@ -143,21 +150,28 @@
                             stCapacity[indx] = round((parseInt(value) + parseInt(mapData.value)), 1);
                         }
                     }
-
                 });
 
-                var leaveFilter = $filter('filter')(leaveList, { resourcename: mapping.mappedResource.resourcename });
+                // it excludes the vacation based on the percentage of mapping
+
                 angular.forEach(leaveFilter, function (leaves) {
                     angular.forEach(leaves.leavedaysinmonth, function (leave) {
                         if (monthCol.indexOf(leave.month) >= 0) { // check if months equal to the predefined month array(user selected)
+
                             var indx = monthCol.indexOf(leave.month);
                             var value = stCapacity[indx];
-                            if (!isNaN(leave.value)) {
-                                stCapacity[indx] = round((parseInt(value) - parseInt(leave.value)), 1);
+                            var percent = 0;
 
+                            angular.forEach(mapping.taggToEuroclear, function (tagged) {
+                                if (tagged.key === leave.month) percent = tagged.value;
+                            });
+
+                            if (!isNaN(leave.value)) {
+                                var percentV = (leave.value * percent) / 100;
+                                stCapacity[indx] = round((parseInt(value) - parseInt(percentV)), 1);
+                                //console.log('ST' + leave.month + '--' + leaves.resourcename + '--' + mapping.mappedResource.resourcename + '--' + percentV);
                             }
                         }
-
                     });
                 });
             }
@@ -173,6 +187,29 @@
                         }
                     }
                 });
+
+                // it excludes the vacation based on the percentage of mapping
+
+                angular.forEach(leaveFilter, function (leaves) {
+                    angular.forEach(leaves.leavedaysinmonth, function (leave) {
+                        if (monthCol.indexOf(leave.month) >= 0) { // check if months equal to the predefined month array(user selected)
+
+                            var indx = monthCol.indexOf(leave.month);
+                            var value = ftCapacity[indx];
+                            var percent = 0;
+
+                            angular.forEach(mapping.taggToEuroclear, function (tagged) {
+                                if (tagged.key === leave.month) percent = tagged.value;
+                            });
+
+                            if (!isNaN(leave.value)) {
+                                var percentV = (leave.value * percent) / 100;
+                                ftCapacity[indx] = round((parseInt(value) - parseInt(percentV)), 1);
+                                // console.log('FT ' + leave.month + '--' + leaves.resourcename + '--' + mapping.mappedResource.resourcename + '--' + percentV);
+                            }
+                        }
+                    });
+                });
             }
 
         });
@@ -183,36 +220,80 @@
 
         }
 
+        //console.log(stFtCapacity);
+
+        var projectDemand = new Array(monthCol.length);
+        projectDemand.fill(0, 0, monthCol.length);
+
+        var maintainceDemand = new Array(monthCol.length);
+        maintainceDemand.fill(0, 0, monthCol.length);
+
+        var productionDemand = new Array(monthCol.length);
+        productionDemand.fill(0, 0, monthCol.length);
+
+        angular.forEach(allocationData, function (allocaitons) {
+
+            angular.forEach(allocaitons.allocation, function (allocData) {
+
+                if (allocaitons.project.startsWith("Production Support")) {
+                    if (monthCol.indexOf(allocData.month) >= 0) {
+                        console.log(allocaitons.project);
+                        var indx = monthCol.indexOf(allocData.month);
+                        var value = productionDemand[indx];
+                        if (!isNaN(allocData.value)) {
+                            productionDemand[indx] = round((parseInt(value) + parseInt(allocData.value)), 1);
+                        }
+                    }
+                } else if (allocaitons.project.startsWith("Maintainance")) {
+                    if (monthCol.indexOf(allocData.month) >= 0) {
+                        var indx = monthCol.indexOf(allocData.month);
+                        var value = maintainceDemand[indx];
+                        if (!isNaN(allocData.value)) {
+                            maintainceDemand[indx] = round((parseInt(value) + parseInt(allocData.value)), 1);
+                        }
+                    }
+                } else {
+                    if (monthCol.indexOf(allocData.month) >= 0) {
+                        var indx = monthCol.indexOf(allocData.month);
+                        var value = projectDemand[indx];
+                        if (!isNaN(allocData.value)) {
+                            projectDemand[indx] = round((parseInt(value) + parseInt(allocData.value)), 1);
+                        }
+                    }
+
+                }
+            });
+        });
+
+        // console.log('projectDemand' + projectDemand);
+        // console.log('maintainceDemand' + maintainceDemand);
+        // console.log('productionDemand' + productionDemand);
+
+
         var barChartData = {
             labels: monthCol,
             datasets: [{
                 label: 'Production Support Demand',
                 backgroundColor: "#0040ff",
                 yAxisID: "bar-y-axis",
-                data: [
-                    50, 44, 52, 62, 48, 58, 59, 50, 51, 52, 53, 54
-                ]
+                data: productionDemand
             }, {
                 label: 'Maintaince Demand',
                 backgroundColor: "#b30000",
                 yAxisID: "bar-y-axis",
-                data: [
-                    20, 21, 24, 25, 26, 17, 28, 19, 20, 11, 22, 33
-                ]
+                data: maintainceDemand
             }, {
                 label: 'Project Demand',
                 backgroundColor: "#739900",
                 yAxisID: "bar-y-axis",
-                data: [
-                    30, 35, 24, 13, 26, 25, 13, 31, 29, 37, 25, 13
-                ]
+                data: projectDemand
             }, {
                 data: stFtCapacity,
                 type: 'line',
                 label: 'Total Capacity (ST+FT)',
                 fill: false,
-                backgroundColor: "#fff",
-                borderColor: "#70cbf4",
+                backgroundColor: "#660066",
+                borderColor: "#660066",
                 borderCapStyle: 'butt',
                 borderDash: [],
                 borderDashOffset: 0.0,
@@ -250,6 +331,16 @@
                 pointHitRadius: 10
             }]
         };
+
+        $scope.GraphData.push({ label: "Total ST Capacity", backgroundColor: "#00bfff", data: stFtCapacity });
+        $scope.GraphData.push({ label: "Project Demand", backgroundColor: "#739900", data: projectDemand });
+        $scope.GraphData.push({ label: "Maintaince Demand", backgroundColor: "#b30000", data: maintainceDemand });
+        $scope.GraphData.push({ label: "Production Support Demand", backgroundColor: "#0040ff", data: productionDemand });
+        $scope.GraphData.push({ label: "Total Capacity (ST + FT)", backgroundColor: "#660066", data: stFtCapacity });
+        $scope.GraphData.months = monthCol;
+
+
+
         var ctx = CreateCanvas("DemandCapacity");
         var mixedChart = new Chart(ctx, {
             type: 'bar',
@@ -276,7 +367,7 @@
                         ticks: {
                             beginAtZero: true,
                             min: 0,
-                            max: 1000
+                            max: 2000
                         }
                     }, {
                         id: "bar-y-axis",
@@ -296,6 +387,12 @@
 
         //chart.render();
         $("#graphDiv").show();
+        $scope.ShowSpinnerStatus = false;
+        var spinner = document.getElementById("spinner");
+        if (spinner.style.display != "none") {
+            spinner.style.display = "none";
+
+        }
     }
 
     function projectManDaysGraph($scope, $filter, allocationService, projectService) {

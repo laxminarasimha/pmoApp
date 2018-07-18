@@ -46,6 +46,8 @@ angular.module('pmoApp').controller('availableActualMandaysCtrl', Controller);
 
  $scope.skillDataList = [];
  getSkillData(skillSetService,$scope);
+
+ $scope.ShowSpinnerStatus = true;
   
  $scope.clearFields = function (){
      $scope.availableActualMandaysDTO = {};
@@ -65,10 +67,12 @@ angular.module('pmoApp').controller('availableActualMandaysCtrl', Controller);
          app.loading = false;
          app.successMsg = "Data feteched successfully";
          app.errorMsg = false;
+         
+         
          }).catch(function(err) {
          console.log(err);
          });
-     
+        
  };
  
 
@@ -132,10 +136,17 @@ angular.module('pmoApp').controller('availableActualMandaysCtrl', Controller);
  function getMappedResourceData(resourceMappingService,$scope){
       resourceMappingService.getMappedResources().then(function(res) {
          $scope.mappedResourceList = res.data;
+         $scope.ShowSpinnerStatus = false;
+            var spinner = document.getElementById("spinner");
+            if (spinner.style.display != "none") {
+                spinner.style.display = "none";
+
+            }
          //console.log(res.data);
          }).catch(function(err) {
          console.log(err);
      });
+    
  }
 
  function getLocationData(locationService,$scope){
