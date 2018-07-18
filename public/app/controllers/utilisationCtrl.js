@@ -43,6 +43,8 @@ angular.module('pmoApp').controller('utilisationCtrl', Controller);
  $scope.projectList = [];
  getProjectData(projectService,$scope);
 
+ $scope.ShowSpinnerStatus = true;
+
  $scope.headingList = [];
  prepareTableHeading($scope,monthlyHeaderListService);
   
@@ -211,6 +213,12 @@ $scope.vm.dtOptions.withOption('buttons',['copy', 'print', 'pdf','excel']);
            }
               //console.log(resourceUtilisationArray);
               $scope.utilisationData = resourceUtilisationArray;
+              $scope.ShowSpinnerStatus = false;
+            var spinner = document.getElementById("spinner");
+            if (spinner.style.display != "none") {
+                spinner.style.display = "none";
+
+            }
 
         }
 

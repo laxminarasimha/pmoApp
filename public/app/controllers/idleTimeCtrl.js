@@ -85,15 +85,16 @@ angular.module('pmoApp').controller('idleTimeCtrl', Controller);
                   idleTimeFilteredDataList =$filter('filter')(idleTimeFilteredDataList, {'region': idleTimeDTO.region});
                   console.log(idleTimeFilteredDataList);
                 }
-                if(idleTimeDTO.skillname){
-                  idleTimeFilteredDataList =$filter('filter')(idleTimeFilteredDataList, {'skill': idleTimeDTO.skillname});
-                  console.log(idleTimeFilteredDataList);
-                }
-                if(idleTimeDTO.region){
-                  idleTimeFilteredDataList =$filter('filter')(idleTimeFilteredDataList, {'location': idleTimeDTO.locationname});
-                  console.log(idleTimeFilteredDataList);
-                }
+                // if(idleTimeDTO.skillname){
+                //   idleTimeFilteredDataList =$filter('filter')(idleTimeFilteredDataList, {'skill': idleTimeDTO.skillname});
+                //   console.log(idleTimeFilteredDataList);
+                // }
+                // if(idleTimeDTO.region){
+                //   idleTimeFilteredDataList =$filter('filter')(idleTimeFilteredDataList, {'location': idleTimeDTO.locationname});
+                //   console.log(idleTimeFilteredDataList);
+                // }
                 $scope.idleTimeData = idleTimeFilteredDataList;
+                console.log($scope.idleTimeData);
             }
             
           
