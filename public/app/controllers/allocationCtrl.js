@@ -386,10 +386,11 @@
 
 		$scope.vm = {};
 		$scope.vm.dtInstance = null;
-		$scope.vm.dtOptions = DTOptionsBuilder.newOptions()
-			.withOption('order', [0, 'asc']);
+		$scope.vm.dtOptions = DTOptionsBuilder.newOptions().withOption('order', [0, 'asc']);
 
 		$scope.childInfo = function (resource, year, region, listIndex, event, updateTable) {
+
+			console.log("search clicked");
 
 			var scope = $scope.$new(true);
 			var link = angular.element(event.currentTarget),

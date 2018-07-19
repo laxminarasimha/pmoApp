@@ -4,13 +4,18 @@
 
     angular.module('pmoApp').controller('graphsController', Controller);
 
-    Controller.$inject = ['$scope', '$rootScope', '$filter', 'locationService', 'skillSetService', 'resourceMappingService', 'allocationService', 'leaveService', 'availableDaysService', 'monthlyHeaderListService', 'projectService'];
+    Controller.$inject = ['$scope', '$rootScope', '$window','$filter', 'locationService', 'skillSetService', 'resourceMappingService', 'allocationService', 'leaveService', 'availableDaysService', 'monthlyHeaderListService', 'projectService'];
     // var barChartData;
     //var colors = ['#7394CB', '#E1974D', '#84BB5C', '#D35D60', '#6B4C9A', '#9066A7', '#AD6A58', '#CCC374', '#3869B1', '#DA7E30', '#3F9852', '#6B4C9A', '#922427', 'rgba(253, 102, 255, 0.2)', 'rgba(153, 202, 255, 0.2)'];
     //var chartColors = ['rgb(255, 99, 132)', 'rgb(255, 159, 64)', 'rgb(255, 205, 86)', 'rgb(75, 192, 192)', 'rgb(54, 162, 235)', 'rgb(153, 102, 255)', 'rgb(201, 203, 207)', 'rgba(253, 102, 255)', 'rgba(153, 202, 255)', 'rgb(255, 99, 132)', 'rgb(255, 159, 64)', 'rgb(255, 205, 86)', 'rgb(75, 192, 192)', 'rgb(54, 162, 235)', 'rgb(153, 102, 255)', 'rgb(201, 203, 207)', 'rgba(253, 102, 255)', 'rgba(153, 202, 255)'];
     //var color = Chart.helpers.color;
-    function Controller($scope, $rootScope, $filter, locationService, skillSetService, resourceMappingService, allocationService, leaveService, availableDaysService, monthlyHeaderListService, projectService) {
+    function Controller($scope, $rootScope,$window, $filter, locationService, skillSetService, resourceMappingService, allocationService, leaveService, availableDaysService, monthlyHeaderListService, projectService) {
+
         var app = $scope;
+        if($rootScope.region !== undefined )
+            $window.localStorage.setItem("region",$rootScope.region);
+        $scope.region = $window.localStorage.getItem("region");
+
         $rootScope.Title = "Reporting";
         $scope.LocationData = [];
         $scope.locationId = "All"
@@ -48,6 +53,15 @@
         //getActualResourceCapacity(availableDaysService,monthlyHeaderListService);
 
         $scope.graphidchange = function () {
+
+            $scope.AO = $rootScope.region;
+            if ($scope.AO.startsWith("Sweden")) {
+                $scope.region = "Sweden ";
+            } else if ($scope.AO.startsWith("Finland")) {
+                $scope.region = "Finland ";
+            } else {
+                $scope.region = "";
+            }
 
             if ($scope.startDate === '' || $scope.endDate === '' || $scope.startDate === undefined || $scope.endDate === undefined) {
                 return;
@@ -113,11 +127,11 @@
         var strDt = $scope.startDate.split("/");
         var endDt = $scope.endDate.split("/");
 
-        resourceMappingService.getMappedResourcesByYear(strDt[1], endDt[1]).then(function (mapping) {
+        resourceMappingService.getMappedResourcesByYear(strDt[1], endDt[1],$scope.AO).then(function (mapping) {
             leaveService.getLeave().then(function (res) {
                 $scope.leaveList = res.data;
                 var monthCol = months($scope.startDate, $scope.endDate);
-                allocationService.getAllAllocationByYear(strDt[1], endDt[1], 'ALL').then(function (allocation) {
+                allocationService.getAllAllocationByYear(strDt[1], endDt[1],$scope.AO,$scope.AO).then(function (allocation) {
                     drawDeamndAndCapcityGraphFYF($scope, $filter, mapping.data, monthCol, $scope.leaveList, allocation.data);
                 });
 
@@ -375,7 +389,7 @@
                     responsive: true,
                     title: {
                         display: true,
-                        text: 'Capacity Demand FYF'
+                        text: $scope.region + 'Capacity Demand FYF'
                     },
                     tooltips: {
                         mode: 'index',
@@ -403,7 +417,7 @@
             leaveService.getLeave().then(function (res) {
                 $scope.leaveList = res.data;
                 var monthCol = months($scope.startDate, $scope.endDate);
-                allocationService.getAllAllocationByYear(strDt[1], endDt[1], 'ALL').then(function (allocation) {
+                allocationService.getAllAllocationByYear(strDt[1], endDt[1],$scope.AO).then(function (allocation) {
                     drawDeamndAndCapcityGraph($scope, $filter, mapping.data, monthCol, $scope.leaveList, allocation.data);
                 });
 
@@ -645,7 +659,7 @@
             options: {
                 title: {
                     display: true,
-                    text: "Demand & Capacity (MDs)"
+                    text: $scope.region + " Demand & Capacity (MDs)"
                 },
                 legend: {
                     display: false
@@ -711,7 +725,7 @@
             }
 
 
-            allocationService.getAllAllocationByYear(strDt[1], endDt[1], $scope.projectSelect).then(function (allocation) {
+            allocationService.getAllAllocationByYear(strDt[1], endDt[1],$scope.AO).then(function (allocation) {
                 var monthCol = months($scope.startDate, $scope.endDate);
                 drawTotalManDaysGraph($scope, $filter, project.data, allocation.data, monthCol);
             }).catch(function (err) {
@@ -735,7 +749,6 @@
             });
 
         } else {
-            console.log($scope.projectSelect);
             for (var k = 0; k < $scope.projectSelect.length; k++) {
                 $scope.projectFilter.push($scope.projectSelect[k]);
             }
@@ -775,7 +788,7 @@
                 options: {
                     title: {
                         display: true,
-                        text: 'Project Demand & Pipeline (MDs)'
+                        text: $scope.region + ' Project Demand & Pipeline (MDs)'
                     },
                     legend: {
                         display: false
@@ -810,8 +823,8 @@
 
         skillSetService.getSkillSets().then(function (skill) {
             $scope.skillSetList = skill.data;
-            resourceMappingService.getMappedResourcesByYear(strDt[1], endDt[1]).then(function (mapping) {
-                allocationService.getAllAllocationByYear(strDt[1], endDt[1], 'ALL').then(function (allocation) {
+            resourceMappingService.getMappedResourcesByYear(strDt[1], endDt[1],$scope.AO).then(function (mapping) {
+                allocationService.getAllAllocationByYear(strDt[1], endDt[1], $scope.AO).then(function (allocation) {
                     var monthCol = months($scope.startDate, $scope.endDate);
 
                     leaveService.getLeave().then(function (res) {
@@ -894,9 +907,6 @@
                         }
                     });
                 });
-
-
-
             });
 
             $scope.GraphData.push({ label: skill.skillname, backgroundColor: getRandomColor(index), data: monthWise });
@@ -914,7 +924,7 @@
             options: {
                 title: {
                     display: true,
-                    text: 'Skillset Available Capacity (MDs)',
+                    text: $scope.region + ' Skillset Available Capacity (MDs)',
                 },
                 legend: {
                     display: false
@@ -933,10 +943,8 @@
         var spinner = document.getElementById("spinner");
         if (spinner.style.display != "none") {
             spinner.style.display = "none";
-
         }
     }
-
 
     function createStackedBarGraph($scope) {
         var ctx = CreateCanvas("SkillsetChart");
@@ -971,7 +979,6 @@
             }
         });
     }//Endf OF createStackedBarGraph($scope)
-
 
 
     function createBarGraph($scope) {

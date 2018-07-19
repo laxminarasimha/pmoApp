@@ -4,16 +4,20 @@
     angular.module('pmoApp').controller('resourceMappingCtrl', Controller);
 
 
-    Controller.$inject = ['$scope', '$rootScope', 'DTOptionsBuilder', 'DTColumnBuilder', '$compile', 'resourceMappingService', 'resourceService', 'roleService', 'locationService',
+    Controller.$inject = ['$scope', '$rootScope','$window', 'DTOptionsBuilder', 'DTColumnBuilder', '$compile', 'resourceMappingService', 'resourceService', 'roleService', 'locationService',
         'regionService', 'skillSetService', 'statusService', 'resourceTypeService', 'holidayListService',
         'monthlyHeaderListService'];
 
-    function Controller($scope, $rootScope, DTOptionsBuilder, DTColumnBuilder, $compile, resourceMappingService, resourceService, roleService, locationService,
+    function Controller($scope, $rootScope,$window, DTOptionsBuilder, DTColumnBuilder, $compile, resourceMappingService, resourceService, roleService, locationService,
         regionService, skillSetService, statusService, resourceTypeService, holidayListService, monthlyHeaderListService) {
 
         //$scope.resourcemap = {};
         $rootScope.Title = "Resource Map Listing";
         var app = $scope;
+
+        if($rootScope.region !== undefined )
+            $window.localStorage.setItem("region",$rootScope.region);
+        $scope.region = $window.localStorage.getItem("region");
 
         $scope.resourcemap = {
             'taggToEuroclear': [],
@@ -21,7 +25,7 @@
         };
 
         $scope.mongoMappedResourceData = [];
-        getMappedResourceData(resourceMappingService,$rootScope, $scope);
+        getMappedResourceData(resourceMappingService, $rootScope, $scope);
 
         $scope.resourceList = [];
         getResourceData(resourceService, $scope);
@@ -274,10 +278,8 @@
                                 actualHDays = getRoundNumber(actualHDays, 1);
                                 row.monthlyAvailableActualMandays[k].value = getRoundNumber((row.monthlyAvailableActualMandays[k].value - actualHDays), 1);
                                 row.holidaydeducted = true;
-
                             }
                         }
-                        // }
 
                     }).catch(function (err) {
                         console.log(err);
@@ -759,8 +761,10 @@
     }
 
     function getMappedResourceData(resourceMappingService, $rootScope, $scope) {
-       // console.log("$rootScope.region:"+ $rootScope.region);
-        resourceMappingService.getMappedResources($rootScope.region).then(function (res) {
+
+        console.log('Region '+$scope.region);
+
+        resourceMappingService.getMappedResources($scope.region).then(function (res) {
             $scope.mongoMappedResourceData = res.data;
             $scope.filterResourceWithYear = filterUniqueResourceWithYear(res.data);
 
