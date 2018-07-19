@@ -7,7 +7,7 @@ var express = require("express"),
   const log4js = require('log4js');
   const logger = log4js.getLogger('demandcapacity');
  
-router.get("/", function(req, res) {
+router.get("/region/:region", function(req, res) {  
  projectDAO.count({}, function(err, data) {
  if (err) {
  logger.error('Error while data count fetching from Project Dao 1='+err);
@@ -16,15 +16,30 @@ router.get("/", function(req, res) {
  }
  if(data == 0){
     res.send("");
- }else{
-   projectDAO.find({},null, {sort:{projectname: 1}}, function(err, data) {
-   if (err) {
-   logger.error('Error while data fetching from Project Dao ='+err);
-   res.send("error");
-   return;
-   }
-   res.send(data);
-   });
+ }else{   
+   var region = req.params.region;
+
+		if(region == 'All'){
+       projectDAO.find({},null, {sort:{projectname: 1}}, function(err, data) {
+        if (err) {
+        logger.error('Error while data fetching from Project Dao ='+err);
+        res.send("error");
+        return;
+      }
+      res.send(data);
+      });
+    }else{
+        projectDAO.find({regionname:region},null, {sort:{projectname: 1}}, function(err, data) {
+        if (err) {
+        logger.error('Error while data fetching from Project Dao ='+err);
+        res.send("error");
+        return;
+        }
+        res.send(data);
+        });
+
+    }
+  
  }
  
  }); 

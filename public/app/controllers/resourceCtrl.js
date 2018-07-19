@@ -10,6 +10,8 @@
 
         var app = $scope;
 
+        $scope.region = $rootScope.region;
+
         $rootScope.Title = "Resource Listing";
         getResourceData(resourceService, $scope);
 
@@ -259,7 +261,7 @@
     }
 
     function getResourceData(resourceService, $scope) {
-        resourceService.getResources().then(function (res) {
+        resourceService.getResources($scope.region).then(function (res) {
             $scope.mongoResourceData = res.data;
         }).catch(function (err) {
             console.log(err);

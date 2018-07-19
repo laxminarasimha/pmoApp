@@ -21,8 +21,8 @@
       url = globalConfig.apiAddress + "/resource/hc";
       return $http.get(url);
     },
-       getResources: function() {
-       url = globalConfig.apiAddress + "/resource";
+       getResources: function(region) {
+       url = globalConfig.apiAddress + "/resource/region/"+ region;
        return $http.get(url);
        },
        getResourceForID: function(id) {
