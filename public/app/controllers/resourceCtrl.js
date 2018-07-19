@@ -3,14 +3,14 @@
 
     angular.module('pmoApp').controller('resourceCtrl', Controller);
 
-    Controller.$inject = ['$scope', '$rootScope', 'resourceService', 'designationService', 'resourceMappingService', 'allocationService', 'DTOptionsBuilder', 'DTColumnBuilder', 'skillSetService', 'locationService', 'roleService','regionService', '$window'];
+    Controller.$inject = ['$scope', '$rootScope','$window', 'resourceService', 'designationService', 'resourceMappingService', 'allocationService', 'DTOptionsBuilder', 'DTColumnBuilder', 'skillSetService', 'locationService', 'roleService','regionService'];
 
-    function Controller($scope, $rootScope, resourceService, designationService, resourceMappingService, allocationService, DTOptionsBuilder, DTColumnBuilder, skillSetService, locationService, roleService, regionService, $window) {
+    function Controller($scope, $rootScope,$window, resourceService, designationService, resourceMappingService, allocationService, DTOptionsBuilder, DTColumnBuilder, skillSetService, locationService, roleService, regionService ) {
         $scope.mongoResourceData = [];
 
         var app = $scope;
 
-        $scope.region = $rootScope.region;
+        $scope.region = $window.localStorage.getItem("region");
 
         $rootScope.Title = "Resource Listing";
         getResourceData(resourceService, $scope);

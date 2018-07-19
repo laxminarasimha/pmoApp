@@ -240,7 +240,7 @@
 		}
 
 		function getProjectData(projectService, $scope) {
-			projectService.getProject().then(function (res) {
+			projectService.getProject($scope.region).then(function (res) {
 				$scope.project = res.data;
 
 			}).catch(function (err) {
