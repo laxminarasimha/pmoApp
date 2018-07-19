@@ -191,12 +191,13 @@
                     <a class="green" ng-click="editResource(x._id)" title="Edit Record">
                       <i class="glyphicon glyphicon-pencil"></i>
                     </a>
+                    <a class="red" data-toggle="modal" ng-click="deleteConfirmation(x._id,'Name:'+x.resourcename+',Kin ID:'+x.kinId+',Designation:'+x.designation,x.kinId,x.resourcename)"
+                    title="Delete Record">
+                    <i class="glyphicon glyphicon-remove"></i>
+                  </a>
                   </span>
                   <span class="label">
-                    <a class="red" data-toggle="modal" ng-click="deleteConfirmation(x._id,'Name:'+x.resourcename+',Kin ID:'+x.kinId+',Designation:'+x.designation,x.kinId,x.resourcename)"
-                      title="Delete Record">
-                      <i class="glyphicon glyphicon-remove"></i>
-                    </a>
+                   
                   </span>
                 </td>
               </tr>

@@ -243,11 +243,8 @@
                 <td style="width:3%;text-align:center">
                   <span class="label">
                   <a class="green"  ng-click="editResourceMapping()" title="Edit Record"><i class="glyphicon glyphicon-pencil"></i></a> 
-                  </span>
-                  <span class="label">
-                  <a class="red"  data-toggle="modal" 
-                      ng-click="deleteConfirmation(x._id,'Name:'+x.mappedResource.resourcename+',Kin Id:'+x.mappedResource.kinId+',Year:'+x.year)" title="Delete Record"><i class="glyphicon glyphicon-remove"></i></a>
-                  </span>
+                  <a class="red"  data-toggle="modal" ng-click="deleteConfirmation(x._id,'Name:'+x.mappedResource.resourcename+',Kin Id:'+x.mappedResource.kinId+',Year:'+x.year)" title="Delete Record"><i class="glyphicon glyphicon-remove"></i></a>
+                </span>
                   </td>
                 </td>
               </tr>

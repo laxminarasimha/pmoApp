@@ -386,8 +386,7 @@
 
 		$scope.vm = {};
 		$scope.vm.dtInstance = null;
-		$scope.vm.dtOptions = DTOptionsBuilder.newOptions()
-			.withOption('order', [0, 'asc']);
+		$scope.vm.dtOptions = DTOptionsBuilder.newOptions().withOption('order', [0, 'asc']);
 
 		$scope.childInfo = function (resource, year, region, listIndex, event, updateTable) {
 

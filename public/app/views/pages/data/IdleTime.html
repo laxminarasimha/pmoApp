@@ -130,12 +130,11 @@
                             <td ng-repeat="column in headingList">                              
                               <div ng-repeat="idleTime in resourceVar.idleTimeArray">
                                   <div ng-if="idleTime.key==column">
-                                    <span ng-if="idleTime.value==100" class="label label-success">
-                                    {{idleTime.value}}%
+                                    <span  class="label label-success" ng-if="idleTime.value==100">{{idleTime.value}}%
                                     </span>
-                                    <span ng-if="idleTime.value==0 && idleTime.value!=100" class="label label-info">{{idleTime.value}}%
+                                    <span  class="label label-info" ng-if="idleTime.value==0 && idleTime.value!=100" >{{idleTime.value}}%
                                     </span>
-                                    <span ng-if="idleTime.value < 100 && idleTime.value!=0" class="label label-danger">{{idleTime.value}}%
+                                    <span class="label label-danger" ng-if="idleTime.value < 100 && idleTime.value!=0" >{{idleTime.value}}%
                                     </span>
                                   </div>
                               </div>
