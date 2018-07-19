@@ -14,9 +14,6 @@
         //$scope.resourcemap = {};
         $rootScope.Title = "Resource Map Listing";
         var app = $scope;
-
-        if($rootScope.region !== undefined )
-            $window.localStorage.setItem("region",$rootScope.region);
         $scope.region = $window.localStorage.getItem("region");
 
         $scope.resourcemap = {

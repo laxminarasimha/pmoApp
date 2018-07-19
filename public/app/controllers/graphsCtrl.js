@@ -12,8 +12,6 @@
     function Controller($scope, $rootScope,$window, $filter, locationService, skillSetService, resourceMappingService, allocationService, leaveService, availableDaysService, monthlyHeaderListService, projectService) {
 
         var app = $scope;
-        if($rootScope.region !== undefined )
-            $window.localStorage.setItem("region",$rootScope.region);
         $scope.region = $window.localStorage.getItem("region");
 
         $rootScope.Title = "Reporting";
