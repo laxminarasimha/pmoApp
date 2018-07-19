@@ -9,8 +9,9 @@
  function Service($http, globalConfig) {
  var url = "";
    return {
-       getProject: function() {
-       url = globalConfig.apiAddress + "/project";
+       getProject: function(region) {
+       console.log("Region :"+region);
+       url = globalConfig.apiAddress + "/project/region/"+ region;
        return $http.get(url);
        },
        getProjectForID: function(id) {

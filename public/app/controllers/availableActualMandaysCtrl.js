@@ -4,18 +4,21 @@
  
 angular.module('pmoApp').controller('availableActualMandaysCtrl', Controller);
  
- Controller.$inject = ['$filter','$scope', '$rootScope', 'DTOptionsBuilder', 'DTColumnBuilder', '$compile','availableActualMandaysService',
+ Controller.$inject = ['$filter','$scope', '$rootScope', '$window', 'DTOptionsBuilder', 'DTColumnBuilder', '$compile','availableActualMandaysService',
                        'resourceService','roleService','regionService','projectService','resourceTypeService','holidayListService',
                        'resourceMappingService','locationService','monthlyHeaderListService','skillSetService'];
   
- function Controller($filter,$scope, $rootScope, DTOptionsBuilder, DTColumnBuilder, $compile, availableActualMandaysService,
+ function Controller($filter,$scope, $rootScope, $window, DTOptionsBuilder, DTColumnBuilder, $compile, availableActualMandaysService,
                      resourceService,roleService,regionService,projectService,resourceTypeService,holidayListService,
                      resourceMappingService,locationService,monthlyHeaderListService,skillSetService) {
 
  
  var app = $scope;
+
+ $scope.region = $window.localStorage.getItem("region");
+
  $scope.mappedResourceList = [];
- getMappedResourceData(resourceMappingService,$rootScope,$scope);
+ getMappedResourceData(resourceMappingService,$scope);
 
  $scope.locationList = [];
  getLocationData(locationService,$scope);
@@ -90,7 +93,7 @@ angular.module('pmoApp').controller('availableActualMandaysCtrl', Controller);
 
  
  function getResourceData(resourceService,$scope){
-      resourceService.getResources().then(function(res) {
+      resourceService.getResources($scope.region).then(function(res) {
          $scope.resourceList = res.data;
          }).catch(function(err) {
          console.log(err);
@@ -125,7 +128,7 @@ angular.module('pmoApp').controller('availableActualMandaysCtrl', Controller);
  }
 
  function getProjectData(projectService,$scope){
-      projectService.getProject().then(function(res) {
+      projectService.getProject($scope.region).then(function(res) {
          $scope.projectList = res.data;
          }).catch(function(err) {
          console.log(err);
@@ -133,8 +136,8 @@ angular.module('pmoApp').controller('availableActualMandaysCtrl', Controller);
  }
 
  
- function getMappedResourceData(resourceMappingService,$rootScope,$scope){
-      resourceMappingService.getMappedResources($rootScope.region).then(function(res) {
+ function getMappedResourceData(resourceMappingService,$scope){
+      resourceMappingService.getMappedResources($scope.region).then(function(res) {
          $scope.mappedResourceList = res.data;
          $scope.ShowSpinnerStatus = false;
             var spinner = document.getElementById("spinner");

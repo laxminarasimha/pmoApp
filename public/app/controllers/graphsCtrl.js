@@ -4,13 +4,16 @@
 
     angular.module('pmoApp').controller('graphsController', Controller);
 
-    Controller.$inject = ['$scope', '$rootScope', '$filter', 'locationService', 'skillSetService', 'resourceMappingService', 'allocationService', 'leaveService', 'availableDaysService', 'monthlyHeaderListService', 'projectService'];
-    var barChartData;
-    var colors = ['#7394CB', '#E1974D', '#84BB5C', '#D35D60', '#6B4C9A', '#9066A7', '#AD6A58', '#CCC374', '#3869B1', '#DA7E30', '#3F9852', '#6B4C9A', '#922427', 'rgba(253, 102, 255, 0.2)', 'rgba(153, 202, 255, 0.2)'];
-    var chartColors = ['rgb(255, 99, 132)', 'rgb(255, 159, 64)', 'rgb(255, 205, 86)', 'rgb(75, 192, 192)', 'rgb(54, 162, 235)', 'rgb(153, 102, 255)', 'rgb(201, 203, 207)', 'rgba(253, 102, 255)', 'rgba(153, 202, 255)', 'rgb(255, 99, 132)', 'rgb(255, 159, 64)', 'rgb(255, 205, 86)', 'rgb(75, 192, 192)', 'rgb(54, 162, 235)', 'rgb(153, 102, 255)', 'rgb(201, 203, 207)', 'rgba(253, 102, 255)', 'rgba(153, 202, 255)'];
-    var color = Chart.helpers.color;
-    function Controller($scope, $rootScope, $filter, locationService, skillSetService, resourceMappingService, allocationService, leaveService, availableDaysService, monthlyHeaderListService, projectService) {
+    Controller.$inject = ['$scope', '$rootScope', '$window','$filter', 'locationService', 'skillSetService', 'resourceMappingService', 'allocationService', 'leaveService', 'availableDaysService', 'monthlyHeaderListService', 'projectService'];
+    // var barChartData;
+    //var colors = ['#7394CB', '#E1974D', '#84BB5C', '#D35D60', '#6B4C9A', '#9066A7', '#AD6A58', '#CCC374', '#3869B1', '#DA7E30', '#3F9852', '#6B4C9A', '#922427', 'rgba(253, 102, 255, 0.2)', 'rgba(153, 202, 255, 0.2)'];
+    //var chartColors = ['rgb(255, 99, 132)', 'rgb(255, 159, 64)', 'rgb(255, 205, 86)', 'rgb(75, 192, 192)', 'rgb(54, 162, 235)', 'rgb(153, 102, 255)', 'rgb(201, 203, 207)', 'rgba(253, 102, 255)', 'rgba(153, 202, 255)', 'rgb(255, 99, 132)', 'rgb(255, 159, 64)', 'rgb(255, 205, 86)', 'rgb(75, 192, 192)', 'rgb(54, 162, 235)', 'rgb(153, 102, 255)', 'rgb(201, 203, 207)', 'rgba(253, 102, 255)', 'rgba(153, 202, 255)'];
+    //var color = Chart.helpers.color;
+    function Controller($scope, $rootScope,$window, $filter, locationService, skillSetService, resourceMappingService, allocationService, leaveService, availableDaysService, monthlyHeaderListService, projectService) {
+
         var app = $scope;
+        $scope.region = $window.localStorage.getItem("region");
+
         $rootScope.Title = "Reporting";
         $scope.LocationData = [];
         $scope.locationId = "All"
@@ -68,12 +71,10 @@
                     return;
                 }
             }
-
             createGraph($scope, $filter, resourceMappingService, availableDaysService, monthlyHeaderListService, allocationService, projectService, skillSetService, leaveService);
         }
 
     }
-
 
 
     function createGraph($scope, $filter, resourceMappingService, availableDaysService, monthlyHeaderListService, allocationService, projectService, skillSetService, leaveService) {
@@ -97,24 +98,28 @@
             case "DemandCapacity":
                 demandGraph($scope, $filter, resourceMappingService, allocationService, leaveService);
                 break;
+            case "CapacityFYF":
+                demandGraphFYF($scope, $filter, resourceMappingService, allocationService, leaveService);
+                break;
             default:
                 break;
         }
 
     }//End OF CreateGraph()
 
-    function demandGraph($scope, $filter, resourceMappingService, allocationService, leaveService) {
+
+    function demandGraphFYF($scope, $filter, resourceMappingService, allocationService, leaveService) {
 
 
         var strDt = $scope.startDate.split("/");
         var endDt = $scope.endDate.split("/");
 
-        resourceMappingService.getMappedResourcesByYear(strDt[1], endDt[1]).then(function (mapping) {
+        resourceMappingService.getMappedResourcesByYear(strDt[1], endDt[1],$scope.region).then(function (mapping) {
             leaveService.getLeave().then(function (res) {
                 $scope.leaveList = res.data;
                 var monthCol = months($scope.startDate, $scope.endDate);
-                allocationService.getAllAllocationByYear(strDt[1], endDt[1], 'ALL').then(function (allocation) {
-                    drawDeamndAndCapcityGraph($scope, $filter, mapping.data, monthCol, $scope.leaveList, allocation.data);
+                allocationService.getAllAllocationByYear(strDt[1], endDt[1],$scope.region).then(function (allocation) {
+                    drawDeamndAndCapcityGraphFYF($scope, $filter, mapping.data, monthCol, $scope.leaveList, allocation.data);
                 });
 
             }).catch(function (err) {
@@ -126,10 +131,11 @@
         });
     }
 
-    function drawDeamndAndCapcityGraph($scope, $filter, mappingData, monthCol, leaveList, allocationData) {
+
+    function drawDeamndAndCapcityGraphFYF($scope, $filter, mappingData, monthCol, leaveList, allocationData) {
+
 
         $scope.GraphData = [];
-
         var stCapacity = new Array(monthCol.length);
         stCapacity.fill(0, 0, monthCol.length);
 
@@ -189,7 +195,6 @@
                 });
 
                 // it excludes the vacation based on the percentage of mapping
-
                 angular.forEach(leaveFilter, function (leaves) {
                     angular.forEach(leaves.leavedaysinmonth, function (leave) {
                         if (monthCol.indexOf(leave.month) >= 0) { // check if months equal to the predefined month array(user selected)
@@ -215,10 +220,13 @@
         });
 
         var stFtCapacity = new Array(monthCol.length);
+        var yAxisValue = 1000;
+
         for (var i = 0; i < stFtCapacity.length; i++) {
             stFtCapacity[i] = stCapacity[i] + ftCapacity[i];
-
+            yAxisValue = yAxisValue > stFtCapacity[i] ? yAxisValue : stFtCapacity[i];
         }
+        yAxisValue += 500;
 
         //console.log(stFtCapacity);
 
@@ -237,7 +245,6 @@
 
                 if (allocaitons.project.startsWith("Production Support")) {
                     if (monthCol.indexOf(allocData.month) >= 0) {
-                        console.log(allocaitons.project);
                         var indx = monthCol.indexOf(allocData.month);
                         var value = productionDemand[indx];
                         if (!isNaN(allocData.value)) {
@@ -265,10 +272,301 @@
             });
         });
 
-        // console.log('projectDemand' + projectDemand);
-        // console.log('maintainceDemand' + maintainceDemand);
-        // console.log('productionDemand' + productionDemand);
+        console.log(stFtCapacity);
 
+
+        var chartData = {
+            labels: monthCol,
+            datasets: [{
+                type: 'line',
+                label: 'Total Capacity (ST + FT)',
+                borderColor: "#660066",
+                borderWidth: 2,
+                fill: false,
+                data: stFtCapacity
+
+            }, {
+                type: 'line',
+                label: 'Dataset 2',
+                borderColor: 'blue',
+                borderWidth: 2,
+                fill: false,
+                data: [
+                    200,
+                    400,
+                    500,
+                    800,
+                    850,
+                    300,
+                    1200
+                ],
+
+            }, {
+                type: 'line',
+                label: 'Dataset 3',
+                borderColor: 'blue',
+                borderWidth: 2,
+                fill: false,
+                data: [
+                    100,
+                    300,
+                    600,
+                    700,
+                    300,
+                    300,
+                    100
+                ],
+
+            }, {
+                type: 'line',
+                label: 'Dataset 3',
+                borderColor: 'blue',
+                borderWidth: 2,
+                borderDash: [10, 10],
+                fill: false,
+                data: [
+                    300,
+                    300,
+                    300,
+                    300,
+                    300,
+                    300,
+                    300
+                ],
+
+            }, {
+                type: 'bar',
+                label: 'Total ST Capacity',
+                backgroundColor: "#00bfff",
+                data: stCapacity,
+
+            }, {
+                type: 'bar',
+                label: 'Production Support Demand',
+                backgroundColor: "#0040ff",
+                data: productionDemand
+            }, {
+                type: 'bar',
+                label: 'Maintaince Demand',
+                backgroundColor: "#b30000",
+                data: maintainceDemand,
+
+            }, {
+                type: 'bar',
+                label: 'Project Demand',
+                backgroundColor: "#739900",
+                data: projectDemand
+            }]
+
+        };
+
+        $scope.GraphData.push({ label: "Total ST Capacity", backgroundColor: "#00bfff", data: stCapacity });
+        $scope.GraphData.push({ label: "Project Demand", backgroundColor: "#739900", data: projectDemand });
+        $scope.GraphData.push({ label: "Maintaince Demand", backgroundColor: "#b30000", data: maintainceDemand });
+        $scope.GraphData.push({ label: "Production Support Demand", backgroundColor: "#0040ff", data: productionDemand });
+        $scope.GraphData.push({ label: "Total Capacity (ST + FT)", backgroundColor: "#660066", data: stFtCapacity });
+        $scope.GraphData.months = monthCol;
+
+        var ctx = CreateCanvas("drawDeamndAndCapcityGraphFYF");
+        var chart =
+            new Chart(ctx, {
+                type: 'bar',
+                data: chartData,
+                options: {
+                    responsive: true,
+                    title: {
+                        display: true,
+                        text: $scope.region + ' Capacity Demand FYF'
+                    },
+                    tooltips: {
+                        mode: 'index',
+                        intersect: true
+                    }, legend: {
+                        display: false
+                    }
+                }
+            });
+
+        $("#graphDiv").show();
+        $scope.ShowSpinnerStatus = false;
+        var spinner = document.getElementById("spinner");
+        if (spinner.style.display != "none") {
+            spinner.style.display = "none";
+
+        }
+    }
+
+    function demandGraph($scope, $filter, resourceMappingService, allocationService, leaveService) {
+        var strDt = $scope.startDate.split("/");
+        var endDt = $scope.endDate.split("/");
+
+        resourceMappingService.getMappedResourcesByYear(strDt[1], endDt[1]).then(function (mapping) {
+            leaveService.getLeave().then(function (res) {
+                $scope.leaveList = res.data;
+                var monthCol = months($scope.startDate, $scope.endDate);
+                allocationService.getAllAllocationByYear(strDt[1], endDt[1],$scope.region).then(function (allocation) {
+                    drawDeamndAndCapcityGraph($scope, $filter, mapping.data, monthCol, $scope.leaveList, allocation.data);
+                });
+
+            }).catch(function (err) {
+                console.log(err);
+            });
+
+        }).catch(function (err) {
+            console.log(err);
+        });
+    }
+
+    function drawDeamndAndCapcityGraph($scope, $filter, mappingData, monthCol, leaveList, allocationData) {
+        $scope.GraphData = [];
+        var stCapacity = new Array(monthCol.length);
+        stCapacity.fill(0, 0, monthCol.length);
+
+        var ftCapacity = new Array(monthCol.length);
+        ftCapacity.fill(0, 0, monthCol.length);
+
+        // Total ST Capacity (ST + Buffer - Vaction) , ST+Buffer = Total mapping value
+        angular.forEach(mappingData, function (mapping) {
+            var leaveFilter = $filter('filter')(leaveList, { resourcename: mapping.mappedResource.resourcename });
+
+            if (mapping.resourceType === 'Sufficient') {
+
+                angular.forEach(mapping.monthlyAvailableActualMandays, function (mapData, index) {
+                    if (monthCol.indexOf(mapData.key) >= 0) { // check if months equal to the predefined month array(user selected)
+                        var indx = monthCol.indexOf(mapData.key);
+                        var value = stCapacity[indx];
+                        if (!isNaN(mapData.value)) {
+                            stCapacity[indx] = round((parseInt(value) + parseInt(mapData.value)), 1);
+                        }
+                    }
+                });
+
+                // it excludes the vacation based on the percentage of mapping
+
+                angular.forEach(leaveFilter, function (leaves) {
+                    angular.forEach(leaves.leavedaysinmonth, function (leave) {
+                        if (monthCol.indexOf(leave.month) >= 0) { // check if months equal to the predefined month array(user selected)
+
+                            var indx = monthCol.indexOf(leave.month);
+                            var value = stCapacity[indx];
+                            var percent = 0;
+
+                            angular.forEach(mapping.taggToEuroclear, function (tagged) {
+                                if (tagged.key === leave.month) percent = tagged.value;
+                            });
+
+                            if (!isNaN(leave.value)) {
+                                var percentV = (leave.value * percent) / 100;
+                                stCapacity[indx] = round((parseInt(value) - parseInt(percentV)), 1);
+                                //console.log('ST' + leave.month + '--' + leaves.resourcename + '--' + mapping.mappedResource.resourcename + '--' + percentV);
+                            }
+                        }
+                    });
+                });
+            }
+
+            if (mapping.resourceType === 'FlexTeam') {
+                angular.forEach(mapping.monthlyAvailableActualMandays, function (mapData) {
+                    if (monthCol.indexOf(mapData.key) >= 0) { // check if months equal to the predefined month array(user selected)
+                        var indx = monthCol.indexOf(mapData.key);
+                        var value = ftCapacity[indx];
+                        if (!isNaN(mapData.value)) {
+                            ftCapacity[indx] = round((parseInt(value) + parseInt(mapData.value)), 1);
+                            // stFtCapacity[indx] = round((parseInt(stFtCapacity[indx])) + ,1);  
+                        }
+                    }
+                });
+
+                // it excludes the vacation based on the percentage of mapping
+                angular.forEach(leaveFilter, function (leaves) {
+                    angular.forEach(leaves.leavedaysinmonth, function (leave) {
+                        if (monthCol.indexOf(leave.month) >= 0) { // check if months equal to the predefined month array(user selected)
+
+                            var indx = monthCol.indexOf(leave.month);
+                            var value = ftCapacity[indx];
+                            var percent = 0;
+
+                            angular.forEach(mapping.taggToEuroclear, function (tagged) {
+                                if (tagged.key === leave.month) percent = tagged.value;
+                            });
+
+                            if (!isNaN(leave.value)) {
+                                var percentV = (leave.value * percent) / 100;
+                                ftCapacity[indx] = round((parseInt(value) - parseInt(percentV)), 1);
+                                // console.log('FT ' + leave.month + '--' + leaves.resourcename + '--' + mapping.mappedResource.resourcename + '--' + percentV);
+                            }
+                        }
+                    });
+                });
+            }
+
+        });
+
+        var stFtCapacity = new Array(monthCol.length);
+
+        for (var i = 0; i < stFtCapacity.length; i++) {
+            stFtCapacity[i] = stCapacity[i] + ftCapacity[i];
+        }
+
+        var projectDemand = new Array(monthCol.length);
+        projectDemand.fill(0, 0, monthCol.length);
+
+        var maintainceDemand = new Array(monthCol.length);
+        maintainceDemand.fill(0, 0, monthCol.length);
+
+        var productionDemand = new Array(monthCol.length);
+        productionDemand.fill(0, 0, monthCol.length);
+
+        angular.forEach(allocationData, function (allocaitons) {
+
+            angular.forEach(allocaitons.allocation, function (allocData) {
+                var total = 0;
+                if (allocaitons.project.startsWith("Production Support")) {
+                    if (monthCol.indexOf(allocData.month) >= 0) {
+                        var indx = monthCol.indexOf(allocData.month);
+                        var value = productionDemand[indx];
+                        if (!isNaN(allocData.value)) {
+                            productionDemand[indx] = round((parseInt(value) + parseInt(allocData.value)), 1);
+                        }
+                    }
+                } else if (allocaitons.project.startsWith("Maintenance")) {
+                    if (monthCol.indexOf(allocData.month) >= 0) {
+                        var indx = monthCol.indexOf(allocData.month);
+                        var value = maintainceDemand[indx];
+                        if (!isNaN(allocData.value)) {
+                            maintainceDemand[indx] = round((parseInt(value) + parseInt(allocData.value)), 1);
+                        }
+                    }
+                } else {
+                    if (monthCol.indexOf(allocData.month) >= 0) {
+                        var indx = monthCol.indexOf(allocData.month);
+                        var value = projectDemand[indx];
+                        if (!isNaN(allocData.value)) {
+                            projectDemand[indx] = round((parseInt(value) + parseInt(allocData.value)), 1);
+                        }
+                    }
+
+                }
+
+            });
+        });
+
+
+        //console.log('projectDemand' + projectDemand);
+        //console.log('maintainceDemand' + maintainceDemand);
+        //console.log('productionDemand' + productionDemand);
+
+
+        var yAxisValue = 1000;
+        var total = 0;
+
+        for (var count = 0; count < monthCol.length; count++) {
+            yAxisValue = yAxisValue > projectDemand[count] ? yAxisValue : projectDemand[count];
+            yAxisValue = yAxisValue > maintainceDemand[count] ? yAxisValue : maintainceDemand[count];
+            yAxisValue = yAxisValue > productionDemand[count] ? yAxisValue : productionDemand[count];
+            yAxisValue = yAxisValue > stFtCapacity[count] ? yAxisValue : stFtCapacity[count];
+
+        }
 
         var barChartData = {
             labels: monthCol,
@@ -332,7 +630,7 @@
             }]
         };
 
-        $scope.GraphData.push({ label: "Total ST Capacity", backgroundColor: "#00bfff", data: stFtCapacity });
+        $scope.GraphData.push({ label: "Total ST Capacity", backgroundColor: "#00bfff", data: stCapacity });
         $scope.GraphData.push({ label: "Project Demand", backgroundColor: "#739900", data: projectDemand });
         $scope.GraphData.push({ label: "Maintaince Demand", backgroundColor: "#b30000", data: maintainceDemand });
         $scope.GraphData.push({ label: "Production Support Demand", backgroundColor: "#0040ff", data: productionDemand });
@@ -348,7 +646,7 @@
             options: {
                 title: {
                     display: true,
-                    text: "Demand & Capacity View (MDs)"
+                    text: $scope.region + " Demand & Capacity (MDs)"
                 },
                 legend: {
                     display: false
@@ -367,11 +665,11 @@
                         ticks: {
                             beginAtZero: true,
                             min: 0,
-                            max: 2000
+                            max: 1500
                         }
                     }, {
                         id: "bar-y-axis",
-                        stacked: true,
+                        stacked: false,
                         display: false, //optional
                         ticks: {
                             beginAtZero: true,
@@ -400,8 +698,9 @@
         var strDt = $scope.startDate.split("/");
         var endDt = $scope.endDate.split("/");
 
-        projectService.getProject().then(function (project) {
+        projectService.getProject($scope.region).then(function (project) {
             $scope.project = project.data;
+            console.log(project.data);
 
             if ($scope.projectHTML === '') {
 
@@ -414,7 +713,7 @@
             }
 
 
-            allocationService.getAllAllocationByYear(strDt[1], endDt[1], $scope.projectSelect).then(function (allocation) {
+            allocationService.getAllAllocationByYear(strDt[1], endDt[1],$scope.region).then(function (allocation) {
                 var monthCol = months($scope.startDate, $scope.endDate);
                 drawTotalManDaysGraph($scope, $filter, project.data, allocation.data, monthCol);
             }).catch(function (err) {
@@ -438,7 +737,6 @@
             });
 
         } else {
-            console.log($scope.projectSelect);
             for (var k = 0; k < $scope.projectSelect.length; k++) {
                 $scope.projectFilter.push($scope.projectSelect[k]);
             }
@@ -461,7 +759,6 @@
                         //monthWise[indx] = parseInt(value) + parseInt(data.value);
                     }
                 });
-
             });
 
             $scope.GraphData.push({ label: projectname, backgroundColor: getRandomColor(index), data: monthWise });
@@ -479,7 +776,7 @@
                 options: {
                     title: {
                         display: true,
-                        text: 'Project Demand & Pipeline (MDs)'
+                        text: $scope.region + ' Project Demand & Pipeline (MDs)'
                     },
                     legend: {
                         display: false
@@ -514,8 +811,8 @@
 
         skillSetService.getSkillSets().then(function (skill) {
             $scope.skillSetList = skill.data;
-            resourceMappingService.getMappedResourcesByYear(strDt[1], endDt[1]).then(function (mapping) {
-                allocationService.getAllAllocationByYear(strDt[1], endDt[1], 'ALL').then(function (allocation) {
+            resourceMappingService.getMappedResourcesByYear(strDt[1], endDt[1],$scope.region).then(function (mapping) {
+                allocationService.getAllAllocationByYear(strDt[1], endDt[1], $scope.region).then(function (allocation) {
                     var monthCol = months($scope.startDate, $scope.endDate);
 
                     leaveService.getLeave().then(function (res) {
@@ -598,9 +895,6 @@
                         }
                     });
                 });
-
-
-
             });
 
             $scope.GraphData.push({ label: skill.skillname, backgroundColor: getRandomColor(index), data: monthWise });
@@ -618,7 +912,7 @@
             options: {
                 title: {
                     display: true,
-                    text: 'Available Capacity per Skillset (MDs)',
+                    text: $scope.region + ' Skillset Available Capacity (MDs)',
                 },
                 legend: {
                     display: false
@@ -637,10 +931,8 @@
         var spinner = document.getElementById("spinner");
         if (spinner.style.display != "none") {
             spinner.style.display = "none";
-
         }
     }
-
 
     function createStackedBarGraph($scope) {
         var ctx = CreateCanvas("SkillsetChart");
@@ -675,7 +967,6 @@
             }
         });
     }//Endf OF createStackedBarGraph($scope)
-
 
 
     function createBarGraph($scope) {

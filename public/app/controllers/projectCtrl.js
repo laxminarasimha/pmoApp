@@ -9,6 +9,8 @@ angular.module('pmoApp').controller('projectCtrl', Controller);
  $scope.mongoProjectData = [];
  $scope.regionList = [];
  var app = $scope;
+
+ $scope.region = $window.localStorage.getItem("region");
  
  $rootScope.Title = "Project Listing";
  getProjectData(projectService,$scope); 
@@ -166,7 +168,7 @@ $scope.editProject = function (id) {
  }
 
  function getProjectData(projectService,$scope){
-      projectService.getProject().then(function(res) {
+      projectService.getProject($scope.region).then(function(res) {
          $scope.mongoProjectData = res.data;
          }).catch(function(err) {
          console.log(err);
@@ -183,7 +185,7 @@ $scope.editProject = function (id) {
 
 
 function getResourceData(resourceService,$scope){
-      resourceService.getResources().then(function(res) {
+      resourceService.getResources($scope.region).then(function(res) {
          $scope.resourceList = res.data;
          }).catch(function(err) {
          console.log(err);

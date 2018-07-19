@@ -34,18 +34,30 @@ router.get("/", function(req, res) {
  	}
  		res.send(data[0]);
 	});
-}).get("/:startYr/:endYr", function(req, res) {
+}).get("/:startYr/:endYr/:region", function(req, res) {
  	 
 	 var startYr = req.params.startYr;
 	 var endYr = req.params.endYr;
+	 var region = req.params.region;
+	 console.log("Region----------------- "+region);
+	 if(region === 'All'){
+		allocationDAO.find({year:{ $gte: startYr, $lte: endYr}}, function(err, data) {
+			if (err) {
+				res.send("error");
+				return;
+			}
+			res.send(data);
+		});
 
-	allocationDAO.find({year:{ $gte: startYr, $lte: endYr}}, function(err, data) {
+	 }else{
+		allocationDAO.find({year:{ $gte: startYr, $lte: endYr},region :region}, function(err, data) {
 		if (err) {
 			res.send("error");
 			return;
 		}
 			res.send(data);
 		});
+	 }
 	 
  	
 }).post("/", function(req, res) {

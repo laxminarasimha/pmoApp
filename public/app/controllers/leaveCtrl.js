@@ -3,9 +3,9 @@
 
     angular.module('pmoApp').controller('leaveCtrl', Controller);
 
-    Controller.$inject = ['$scope', '$filter', '$rootScope', 'leaveService', 'locationService', 'resourceService', 'holidayListService', 'DTOptionsBuilder', 'DTColumnBuilder', 'availableDaysService'];
+    Controller.$inject = ['$scope', '$filter', '$rootScope','$window', 'leaveService', 'locationService', 'resourceService', 'holidayListService', 'DTOptionsBuilder', 'DTColumnBuilder', 'availableDaysService'];
 
-    function Controller($scope, $filter, $rootScope, leaveService, locationService, resourceService, holidayListService, DTOptionsBuilder, DTColumnBuilder, availableDaysService) {
+    function Controller($scope, $filter, $rootScope,$window, leaveService, locationService, resourceService, holidayListService, DTOptionsBuilder, DTColumnBuilder, availableDaysService) {
         $scope.mongoLeaveData = [];
         $scope.locationList = [];
         $scope.resourceList = [];
@@ -17,6 +17,8 @@
 
 
         var app = $scope;
+
+        $scope.region = $window.localStorage.getItem("region");
 
         $rootScope.Title = "Leave Listing";
         getLeaveData(leaveService, $scope);
@@ -283,7 +285,7 @@
     }
 
     function getResourceData(resourceService, $scope) {
-        resourceService.getResources().then(function (res) {
+        resourceService.getResources($scope.region).then(function (res) {
             $scope.resourceList = res.data;
         }).catch(function (err) {
             console.log(err);

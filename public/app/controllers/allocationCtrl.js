@@ -259,10 +259,10 @@
 	}
 
 
-	Controller.$inject = ['$rootScope', '$scope', 'DTOptionsBuilder', 'DTColumnBuilder', '$compile', 'resourceService', 'projectService', 'allocationService', 'leaveService', 'resourceMappingService', '$filter', 'availableDaysService', 'holidayListService'];
+	Controller.$inject = ['$rootScope', '$scope','$window', 'DTOptionsBuilder', 'DTColumnBuilder', '$compile', 'resourceService', 'projectService', 'allocationService', 'leaveService', 'resourceMappingService', '$filter', 'availableDaysService', 'holidayListService'];
 
 
-	function Controller($rootScope, $scope, DTOptionsBuilder, DTColumnBuilder, $compile, resourceService, projectService, allocationService, leaveService, resourceMappingService, $filter, availableDaysService, holidayListService) {
+	function Controller($rootScope, $scope, $window, DTOptionsBuilder, DTColumnBuilder, $compile, resourceService, projectService, allocationService, leaveService, resourceMappingService, $filter, availableDaysService, holidayListService) {
 
 		$scope.resource = [];
 		//$scope.resourceWiseAllocaiton = [];
@@ -278,6 +278,7 @@
 		$scope.ShowSpinnerStatus = true;
 
 		//console.log("*************"+$rootScope.region);
+		$scope.region = $window.localStorage.getItem("region");
 
 		function allocObject(object) {
 			var month;
@@ -294,7 +295,7 @@
 		};
 
 
-		getMappedResourceData($rootScope, $scope, resourceMappingService, holidayListService);
+		getMappedResourceData($scope, resourceMappingService, holidayListService);
 		getAlloctionData(allocationService, $scope);
 		getLeaveData(leaveService, $scope);
 		//getHolidayData(holidayListService, $scope, new Date().getFullYear()); // get all the date from current year
@@ -390,6 +391,8 @@
 
 		$scope.childInfo = function (resource, year, region, listIndex, event, updateTable) {
 
+			console.log("search clicked");
+
 			var scope = $scope.$new(true);
 			var link = angular.element(event.currentTarget),
 				icon = link.find('.glyphicon'),
@@ -440,14 +443,6 @@
 				}
 			}
 
-			/*	var div_header = document.getElementById(data[4]);
-					var div_detail = document.getElementById(data[4] + '_detail');
-	
-					if (div_header.style.display != "none") {
-						div_header.style.display = "none";
-						div_detail.style.display = "none";
-					}*/
-
 		}
 
 		$scope.getAllocationStatus = function () {
@@ -479,9 +474,9 @@
 	}
 
 
-	function getMappedResourceData($rootScope, $scope, resourceMappingService, holidayListService) {
+	function getMappedResourceData($scope, resourceMappingService, holidayListService) {
 		//$scope.ShowSpinnerStatus = false;
-		resourceMappingService.getMappedResources($rootScope.region).then(function (res) {
+		resourceMappingService.getMappedResources($scope.region).then(function (res) {
 			$scope.ShowSpinnerStatus = false;
 			var spinner = document.getElementById("spinner");
 			if (spinner.style.display != "none") {

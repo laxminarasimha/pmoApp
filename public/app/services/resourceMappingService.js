@@ -14,8 +14,8 @@
         return $http.get(url);
       },
 
-      getMappedResourcesByYear: function (startYr, EndYr) {
-        url = globalConfig.apiAddress + "/mappedresource/" + startYr + "/" + EndYr;
+      getMappedResourcesByYear: function (startYr, EndYr,region) {
+        url = globalConfig.apiAddress + "/mappedresource/" + startYr + "/" + EndYr +"/" + region;
         return $http.get(url);
       },
       getMappedResourceForID: function (id) {
