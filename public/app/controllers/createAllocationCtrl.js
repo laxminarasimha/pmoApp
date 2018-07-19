@@ -44,9 +44,9 @@
 	};
 
 
-	Controller.$inject = ['$scope', 'projectService', 'resourceMappingService', 'allocationService', 'resourceTypeService', '$filter'];
+	Controller.$inject = ['$scope', '$rootScope','projectService', 'resourceMappingService', 'allocationService', 'resourceTypeService', '$filter'];
 
-	function Controller($scope, projectService, resourceMappingService, allocationService, resourceTypeService, $filter) {
+	function Controller($scope, $rootScope, projectService, resourceMappingService, allocationService, resourceTypeService, $filter) {
 
 
 		$scope.names = [{ 'drname': 'Dr.Test1' }, { 'drname': 'Dr.Test2' }, { 'drname': 'Dr.Test3' }];
@@ -75,7 +75,7 @@
 			}
 		};
 
-		getMappedResourceData(resourceMappingService, $scope);
+		getMappedResourceData(resourceMappingService, $rootScope, $scope);
 		getProjectData(projectService, $scope);
 		getResourceTypeData(resourceTypeService, $scope);
 
@@ -123,6 +123,7 @@
 				resource: $scope.resource,
 				project: $scope.projselect,
 				resourcetype: $scope.resourcetype,
+				region: $rootScope.region,
 				//startdate: $scope.startDate,
 				//enddate: $scope.endDate,
 				allocation: [],
@@ -258,8 +259,8 @@
 
 
 
-		function getMappedResourceData(resourceMappingService, $scope) {
-			resourceMappingService.getMappedResources().then(function (res) {
+		function getMappedResourceData(resourceMappingService,$rootScope, $scope) {
+			resourceMappingService.getMappedResources($rootScope.region).then(function (res) {
 				$scope.mappedResourceData = filterUniqueResource(res.data);
 				// var htm = '';
 

@@ -17,7 +17,8 @@ var resourceSchema = new Schema({
       skill:{ type: String, required: false },
       status:{ type: String, required: false },
       isManager:{ type: Boolean, required: false},
-      role:{ type: String, required: false }
+      role:{ type: String, required: false },
+      region:{ type: String, required: false }
     },  
     {
       collection: 'resource'

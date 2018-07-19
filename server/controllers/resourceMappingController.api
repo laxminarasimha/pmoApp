@@ -2,14 +2,27 @@ var express = require("express"),
  router = express.Router(),
  resourceMappingDAO = require("../models/resourceMappingDAO.js");
  
-router.get("/", function(req, res) {
- resourceMappingDAO.find({},function(err, data) {
- if (err) {
- res.send("error");
- return;
- }
- res.send(data);
- });
+router.get("/region/:region", function(req, res) {
+	var region = req.params.region;	
+		if(region == 'All'){
+			resourceMappingDAO.find({},function(err, data) {
+			if (err) {
+			res.send("error");
+			return;
+		}
+			res.send(data);
+		});
+	}else{
+		resourceMappingDAO.find({region:region},function(err, data) {
+ 		if (err) {
+ 			res.send("error");
+ 			return;
+ 		}
+ 		res.send(data);
+ 		});
+
+	}
+ 
 }).get("/:id", function(req, res) {
  var id = req.params.id;
  resourceMappingDAO.find({ _id: id }, function(err, data) {
@@ -56,8 +69,6 @@ router.get("/", function(req, res) {
 								 });
 }).get("/kinId/ForDelete/:kin", function(req, res) {
  var kinID = req.params.kin;
- console.log("*******Hiiii********"+kinID);
- console.log("***************inside kinid delete");
  resourceMappingDAO.aggregate([
                            {$match : {"mappedResource.kinId": kinID}}
                                                      

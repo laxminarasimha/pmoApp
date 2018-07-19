@@ -28,7 +28,7 @@
        deleteDesignation: function(id) {
        url = globalConfig.apiAddress + "/idletime/" + id;
        return $http.delete(url);
-       }
+       }       
    };
  }
 

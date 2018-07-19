@@ -24,7 +24,7 @@ module.exports = function(router){
 
 	//User Login Route
 	router.post('/authenticate', function(req,res){
-		User.findOne({alias: req.body.username}).select('alias email _id password resourcename designation kinId etype').exec(function(err,user){
+		User.findOne({alias: req.body.username}).select('alias email _id password resourcename designation kinId etype region').exec(function(err,user){
 			if(err) throw err;
 			if(!user){
 				res.json({success:false,message:'could not authenticate user'});			
@@ -37,7 +37,7 @@ module.exports = function(router){
 				if(!validPassword){
 					res.json({success:false,message:'could not authenticate user'});			
 				}else{
-					var token = jwt.sign({alias:user.alias, email:user.email,_id:user._id,designation:user.designation,resourcename:user.resourcename,kinId:user.kinId,etype:user.etype},secret,{expiresIn: '10h'});
+					var token = jwt.sign({alias:user.alias, email:user.email,_id:user._id,designation:user.designation,resourcename:user.resourcename,kinId:user.kinId,etype:user.etype,region:user.region},secret,{expiresIn: '10h'});
 					res.json({success:true,message:'User Authenticates',token: token});			
 				}
 			}
