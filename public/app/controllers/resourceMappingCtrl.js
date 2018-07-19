@@ -758,13 +758,11 @@
     }
 
     function getMappedResourceData(resourceMappingService, $scope) {
-
-        console.log('Region '+$scope.region);
-
+        
         resourceMappingService.getMappedResources($scope.region).then(function (res) {
             $scope.mongoMappedResourceData = res.data;
             $scope.filterResourceWithYear = filterUniqueResourceWithYear(res.data);
-
+            
             $scope.ShowSpinnerStatus = false;
             var spinner = document.getElementById("spinner");
             if (spinner.style.display != "none") {
@@ -778,7 +776,7 @@
     }
 
     function getResourceData(resourceService, $scope) {
-        resourceService.getResources().then(function (res) {
+        resourceService.getResources($scope.region).then(function (res) {
             $scope.resourceList = res.data;
         }).catch(function (err) {
             console.log(err);

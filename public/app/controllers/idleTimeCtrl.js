@@ -4,18 +4,20 @@
  
 angular.module('pmoApp').controller('idleTimeCtrl', Controller);
  
- Controller.$inject = ['$scope', '$rootScope', 'DTOptionsBuilder', 'DTColumnBuilder', '$compile','idleTimeService',
+ Controller.$inject = ['$scope', '$rootScope','$window', 'DTOptionsBuilder', 'DTColumnBuilder', '$compile','idleTimeService',
                        'resourceService','roleService','regionService','projectService','resourceTypeService',
                        'allocationService','leaveService','resourceMappingService','availableDaysService',
                        'monthlyHeaderListService','locationService','skillSetService','$filter'];
   
- function Controller($scope, $rootScope, DTOptionsBuilder, DTColumnBuilder, $compile, idleTimeService,
+ function Controller($scope, $rootScope, $window, DTOptionsBuilder, DTColumnBuilder, $compile, idleTimeService,
                      resourceService,roleService,regionService,projectService,resourceTypeService,
                      allocationService,leaveService,resourceMappingService,availableDaysService,
                      monthlyHeaderListService,locationService,skillSetService,$filter) {
 
  
  var app = $scope;
+
+ $scope.region = $window.localStorage.getItem("region");
 
  $scope.idleTimeData = [];
  $scope.originalData = [];
@@ -67,7 +69,7 @@ angular.module('pmoApp').controller('idleTimeCtrl', Controller);
      //if (false) {
             var emptyObject =  angular.equals({}, idleTimeDTO);
             if (typeof idleTimeDTO == "undefined" || emptyObject) {
-                getGraphData($scope,$rootScope,allocationService,leaveService,resourceMappingService,availableDaysService,monthlyHeaderListService);
+                getGraphData($scope,allocationService,leaveService,resourceMappingService,availableDaysService,monthlyHeaderListService);
             }else{
                 var idleTimeFilteredDataList = [];               
                 idleTimeFilteredDataList = $scope.originalData;
@@ -117,7 +119,7 @@ angular.module('pmoApp').controller('idleTimeCtrl', Controller);
         $scope.vm.dtOptions.withOption('buttons',['copy', 'print', 'pdf','excel']);
 //=============================================================//
 
-    getGraphData($scope,$rootScope,allocationService,leaveService,resourceMappingService,availableDaysService,monthlyHeaderListService);
+    getGraphData($scope,allocationService,leaveService,resourceMappingService,availableDaysService,monthlyHeaderListService);
 
     $scope.prepareIdleTimeData = function($scope,availableDaysService,monthlyHeaderListService){
         
@@ -222,7 +224,7 @@ function Resource(name,kinid,location,region,resourcetype,skill,status,idleTimeA
 
 
 
-function getGraphData($scope,$rootScope,allocationService,leaveService,resourceMappingService,availableDaysService,monthlyHeaderListService){
+function getGraphData($scope,allocationService,leaveService,resourceMappingService,availableDaysService,monthlyHeaderListService){
         var allocation =[];
         var resoruceM =[];
         var leave =[];
@@ -230,7 +232,7 @@ function getGraphData($scope,$rootScope,allocationService,leaveService,resourceM
                 allocation=res.data;
                 leaveService.getLeave().then(function(res) {
                     leave=res.data;
-                    resourceMappingService.getMappedResources($rootScope.region).then(function(res) {
+                    resourceMappingService.getMappedResources($scope.region).then(function(res) {
                         resoruceM = res.data;
                         availableDaysService.intialize(allocation,resoruceM,leave);
                         $scope.prepareIdleTimeData($scope,availableDaysService,monthlyHeaderListService);
@@ -259,7 +261,7 @@ function getGraphData($scope,$rootScope,allocationService,leaveService,resourceM
  }
 
  function getResourceData(resourceService,$scope){
-      resourceService.getResources().then(function(res) {
+      resourceService.getResources($scope.region).then(function(res) {
          $scope.resourceList = res.data;
          }).catch(function(err) {
          console.log(err);

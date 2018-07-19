@@ -10,7 +10,7 @@ angular.module('pmoApp').controller('projectCtrl', Controller);
  $scope.regionList = [];
  var app = $scope;
 
- $scope.region = $rootScope.region;
+ $scope.region = $window.localStorage.getItem("region");
  
  $rootScope.Title = "Project Listing";
  getProjectData(projectService,$scope); 
@@ -185,7 +185,7 @@ $scope.editProject = function (id) {
 
 
 function getResourceData(resourceService,$scope){
-      resourceService.getResources().then(function(res) {
+      resourceService.getResources($scope.region).then(function(res) {
          $scope.resourceList = res.data;
          }).catch(function(err) {
          console.log(err);
