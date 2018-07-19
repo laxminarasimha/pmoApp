@@ -4,11 +4,11 @@
     angular.module('pmoApp').controller('resourceMappingCtrl', Controller);
 
 
-    Controller.$inject = ['$scope', '$rootScope','$window', 'DTOptionsBuilder', 'DTColumnBuilder', '$compile', 'resourceMappingService', 'resourceService', 'roleService', 'locationService',
+    Controller.$inject = ['$scope', '$rootScope', '$window', 'DTOptionsBuilder', 'DTColumnBuilder', '$compile', 'resourceMappingService', 'resourceService', 'roleService', 'locationService',
         'regionService', 'skillSetService', 'statusService', 'resourceTypeService', 'holidayListService',
         'monthlyHeaderListService'];
 
-    function Controller($scope, $rootScope,$window, DTOptionsBuilder, DTColumnBuilder, $compile, resourceMappingService, resourceService, roleService, locationService,
+    function Controller($scope, $rootScope, $window, DTOptionsBuilder, DTColumnBuilder, $compile, resourceMappingService, resourceService, roleService, locationService,
         regionService, skillSetService, statusService, resourceTypeService, holidayListService, monthlyHeaderListService) {
 
         //$scope.resourcemap = {};
@@ -49,8 +49,6 @@
         getResourceTypeData(resourceTypeService, $scope);
 
         $scope.taggedToEuroclearList = [];
-
-
         $scope.filterResourceWithYear = [];
 
         $scope.aggegrateHolidayList = [];
@@ -221,7 +219,6 @@
         $scope.childInfo = function (resource, yearSelect, event) {
             var scope = $scope.$new(true);
 
-
             var link = angular.element(event.currentTarget),
                 icon = link.find('.glyphicon'),
                 tr = link.parent().parent(),
@@ -253,8 +250,10 @@
 
 
                 if (typeof row.holidaydeducted === 'undefined') {
-                    console.log(row.region);
-                    holidayListService.getAggegrateLocationHolidays(row.region).then(function (res) {
+
+                    var location = row.mappedResource.baseentity;
+                  
+                    holidayListService.getAggegrateLocationHolidays(location).then(function (res) {
                         console.log(res.data);
                         var aggegrateHolidayList = res.data;
                         var monthyearLabel = new Map();
@@ -758,9 +757,6 @@
     }
 
     function getMappedResourceData(resourceMappingService, $scope) {
-
-        console.log('Region '+$scope.region);
-
         resourceMappingService.getMappedResources($scope.region).then(function (res) {
             $scope.mongoMappedResourceData = res.data;
             $scope.filterResourceWithYear = filterUniqueResourceWithYear(res.data);

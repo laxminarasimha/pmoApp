@@ -52,15 +52,6 @@
 
         $scope.graphidchange = function () {
 
-            $scope.AO = $rootScope.region;
-            if ($scope.AO.startsWith("Sweden")) {
-                $scope.region = "Sweden ";
-            } else if ($scope.AO.startsWith("Finland")) {
-                $scope.region = "Finland ";
-            } else {
-                $scope.region = "";
-            }
-
             if ($scope.startDate === '' || $scope.endDate === '' || $scope.startDate === undefined || $scope.endDate === undefined) {
                 return;
             }
@@ -80,12 +71,10 @@
                     return;
                 }
             }
-
             createGraph($scope, $filter, resourceMappingService, availableDaysService, monthlyHeaderListService, allocationService, projectService, skillSetService, leaveService);
         }
 
     }
-
 
 
     function createGraph($scope, $filter, resourceMappingService, availableDaysService, monthlyHeaderListService, allocationService, projectService, skillSetService, leaveService) {
@@ -125,11 +114,11 @@
         var strDt = $scope.startDate.split("/");
         var endDt = $scope.endDate.split("/");
 
-        resourceMappingService.getMappedResourcesByYear(strDt[1], endDt[1],$scope.AO).then(function (mapping) {
+        resourceMappingService.getMappedResourcesByYear(strDt[1], endDt[1],$scope.region).then(function (mapping) {
             leaveService.getLeave().then(function (res) {
                 $scope.leaveList = res.data;
                 var monthCol = months($scope.startDate, $scope.endDate);
-                allocationService.getAllAllocationByYear(strDt[1], endDt[1],$scope.AO,$scope.AO).then(function (allocation) {
+                allocationService.getAllAllocationByYear(strDt[1], endDt[1],$scope.region).then(function (allocation) {
                     drawDeamndAndCapcityGraphFYF($scope, $filter, mapping.data, monthCol, $scope.leaveList, allocation.data);
                 });
 
@@ -387,7 +376,7 @@
                     responsive: true,
                     title: {
                         display: true,
-                        text: $scope.region + 'Capacity Demand FYF'
+                        text: $scope.region + ' Capacity Demand FYF'
                     },
                     tooltips: {
                         mode: 'index',
@@ -415,7 +404,7 @@
             leaveService.getLeave().then(function (res) {
                 $scope.leaveList = res.data;
                 var monthCol = months($scope.startDate, $scope.endDate);
-                allocationService.getAllAllocationByYear(strDt[1], endDt[1],$scope.AO).then(function (allocation) {
+                allocationService.getAllAllocationByYear(strDt[1], endDt[1],$scope.region).then(function (allocation) {
                     drawDeamndAndCapcityGraph($scope, $filter, mapping.data, monthCol, $scope.leaveList, allocation.data);
                 });
 
@@ -709,8 +698,9 @@
         var strDt = $scope.startDate.split("/");
         var endDt = $scope.endDate.split("/");
 
-        projectService.getProject().then(function (project) {
+        projectService.getProject($scope.region).then(function (project) {
             $scope.project = project.data;
+            console.log(project.data);
 
             if ($scope.projectHTML === '') {
 
@@ -723,7 +713,7 @@
             }
 
 
-            allocationService.getAllAllocationByYear(strDt[1], endDt[1],$scope.AO).then(function (allocation) {
+            allocationService.getAllAllocationByYear(strDt[1], endDt[1],$scope.region).then(function (allocation) {
                 var monthCol = months($scope.startDate, $scope.endDate);
                 drawTotalManDaysGraph($scope, $filter, project.data, allocation.data, monthCol);
             }).catch(function (err) {
@@ -821,8 +811,8 @@
 
         skillSetService.getSkillSets().then(function (skill) {
             $scope.skillSetList = skill.data;
-            resourceMappingService.getMappedResourcesByYear(strDt[1], endDt[1],$scope.AO).then(function (mapping) {
-                allocationService.getAllAllocationByYear(strDt[1], endDt[1], $scope.AO).then(function (allocation) {
+            resourceMappingService.getMappedResourcesByYear(strDt[1], endDt[1],$scope.region).then(function (mapping) {
+                allocationService.getAllAllocationByYear(strDt[1], endDt[1], $scope.region).then(function (allocation) {
                     var monthCol = months($scope.startDate, $scope.endDate);
 
                     leaveService.getLeave().then(function (res) {

@@ -442,14 +442,6 @@
 				}
 			}
 
-			/*	var div_header = document.getElementById(data[4]);
-					var div_detail = document.getElementById(data[4] + '_detail');
-	
-					if (div_header.style.display != "none") {
-						div_header.style.display = "none";
-						div_detail.style.display = "none";
-					}*/
-
 		}
 
 		$scope.getAllocationStatus = function () {
