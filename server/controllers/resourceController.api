@@ -8,14 +8,29 @@ var express = require("express"),
  var nodeExcel=require("excel-export");
  //var nodemailer = require('nodemailer');
  
-router.get("/", function(req, res) {
- resourceDAO.find({},null, {sort:{resourcename: 1}}, function(err, data) {
- if (err) {
- res.send("error");
- return;
- }
- res.send(data);
- });
+router.get("/region/:region", function(req, res) {
+var region = req.params.region;	
+		if(region == 'All'){
+       resourceDAO.find({},null, {sort:{resourcename: 1}}, function(err, data) {
+        if (err) {
+          res.send("error");
+          return;
+        }
+        res.send(data);
+        });
+    
+    }else{
+      resourceDAO.find({region:region},null, {sort:{resourcename: 1}}, function(err, data) {
+        if (err) {
+          res.send("error");
+          return;
+        }
+        res.send(data);
+        });
+
+    }
+
+
 }).get("/eb", function(req, res) {
  resourceEBDAO.find({},null, {sort:{CEN: 1}}, function(err, data) {
  if (err) {

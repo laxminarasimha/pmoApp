@@ -25,7 +25,7 @@
         };
 
         $scope.mongoMappedResourceData = [];
-        getMappedResourceData(resourceMappingService, $rootScope, $scope);
+        getMappedResourceData(resourceMappingService, $scope);
 
         $scope.resourceList = [];
         getResourceData(resourceService, $scope);
@@ -77,7 +77,7 @@
                     $scope.taggedToEuroclearList = months($scope.startDate, $scope.endDate);
                     $scope.yearSelect =
                         checkPreTagged($scope.resourcemap, $scope.mongoMappedResourceData, $scope.taggedToEuroclearList); // to check if already existed allocaiton 
-                    $scope.hidden = "";
+                    $scope.hidden = "visible";
                 } else {
                     app.loading = false;
                     app.successMsg = false;
@@ -760,7 +760,7 @@
         return day != 0 && day != 6;
     }
 
-    function getMappedResourceData(resourceMappingService, $rootScope, $scope) {
+    function getMappedResourceData(resourceMappingService, $scope) {
 
         console.log('Region '+$scope.region);
 
