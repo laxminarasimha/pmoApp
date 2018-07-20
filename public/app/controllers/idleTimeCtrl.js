@@ -186,7 +186,7 @@ angular.module('pmoApp').controller('idleTimeCtrl', Controller);
                         monthlyIdleTimeArray.push(monthlyIdleTimeObject);
 
                  }
-                 console.log(monthlyIdleTimeArray);
+                 //console.log(monthlyIdleTimeArray);
                  resourceObj.idleTimeArray = monthlyIdleTimeArray;
                  //console.log(resourceObj.idleTimeArray);
                  resourceIdleTimeArray.push(resourceObj);
