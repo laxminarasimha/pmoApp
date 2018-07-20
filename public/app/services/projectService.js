@@ -10,7 +10,6 @@
  var url = "";
    return {
        getProject: function(region) {
-       console.log("Region :"+region);
        url = globalConfig.apiAddress + "/project/region/"+ region;
        return $http.get(url);
        },
