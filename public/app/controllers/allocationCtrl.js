@@ -259,7 +259,7 @@
 	}
 
 
-	Controller.$inject = ['$rootScope', '$scope','$window', 'DTOptionsBuilder', 'DTColumnBuilder', '$compile', 'resourceService', 'projectService', 'allocationService', 'leaveService', 'resourceMappingService', '$filter', 'availableDaysService', 'holidayListService'];
+	Controller.$inject = ['$rootScope', '$scope', '$window', 'DTOptionsBuilder', 'DTColumnBuilder', '$compile', 'resourceService', 'projectService', 'allocationService', 'leaveService', 'resourceMappingService', '$filter', 'availableDaysService', 'holidayListService'];
 
 
 	function Controller($rootScope, $scope, $window, DTOptionsBuilder, DTColumnBuilder, $compile, resourceService, projectService, allocationService, leaveService, resourceMappingService, $filter, availableDaysService, holidayListService) {
@@ -391,8 +391,6 @@
 
 		$scope.childInfo = function (resource, year, region, listIndex, event, updateTable) {
 
-			console.log("search clicked");
-
 			var scope = $scope.$new(true);
 			var link = angular.element(event.currentTarget),
 				icon = link.find('.glyphicon'),
@@ -451,7 +449,6 @@
 
 	}
 
-
 	function checkmonth(index) {
 		var currentMonth = new Date().getMonth();
 		return index < currentMonth;
@@ -505,8 +502,6 @@
 			console.log(err);
 		});
 	}
-
-
 
 	function getGraphData($scope, allocationService, leaveService, resourceMappingService, availableDaysService) {
 		var allocation = [];

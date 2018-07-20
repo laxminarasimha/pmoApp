@@ -4,12 +4,12 @@
 
     angular.module('pmoApp').controller('graphsController', Controller);
 
-    Controller.$inject = ['$scope', '$rootScope', '$window','$filter', 'locationService', 'skillSetService', 'resourceMappingService', 'allocationService', 'leaveService', 'availableDaysService', 'monthlyHeaderListService', 'projectService'];
+    Controller.$inject = ['$scope', '$rootScope', '$window', '$filter', 'locationService', 'skillSetService', 'resourceMappingService', 'allocationService', 'leaveService', 'availableDaysService', 'monthlyHeaderListService', 'projectService'];
     // var barChartData;
     //var colors = ['#7394CB', '#E1974D', '#84BB5C', '#D35D60', '#6B4C9A', '#9066A7', '#AD6A58', '#CCC374', '#3869B1', '#DA7E30', '#3F9852', '#6B4C9A', '#922427', 'rgba(253, 102, 255, 0.2)', 'rgba(153, 202, 255, 0.2)'];
     //var chartColors = ['rgb(255, 99, 132)', 'rgb(255, 159, 64)', 'rgb(255, 205, 86)', 'rgb(75, 192, 192)', 'rgb(54, 162, 235)', 'rgb(153, 102, 255)', 'rgb(201, 203, 207)', 'rgba(253, 102, 255)', 'rgba(153, 202, 255)', 'rgb(255, 99, 132)', 'rgb(255, 159, 64)', 'rgb(255, 205, 86)', 'rgb(75, 192, 192)', 'rgb(54, 162, 235)', 'rgb(153, 102, 255)', 'rgb(201, 203, 207)', 'rgba(253, 102, 255)', 'rgba(153, 202, 255)'];
     //var color = Chart.helpers.color;
-    function Controller($scope, $rootScope,$window, $filter, locationService, skillSetService, resourceMappingService, allocationService, leaveService, availableDaysService, monthlyHeaderListService, projectService) {
+    function Controller($scope, $rootScope, $window, $filter, locationService, skillSetService, resourceMappingService, allocationService, leaveService, availableDaysService, monthlyHeaderListService, projectService) {
 
         var app = $scope;
         $scope.region = $window.localStorage.getItem("region");
@@ -114,11 +114,11 @@
         var strDt = $scope.startDate.split("/");
         var endDt = $scope.endDate.split("/");
 
-        resourceMappingService.getMappedResourcesByYear(strDt[1], endDt[1],$scope.region).then(function (mapping) {
+        resourceMappingService.getMappedResourcesByYear(strDt[1], endDt[1], $scope.region).then(function (mapping) {
             leaveService.getLeave().then(function (res) {
                 $scope.leaveList = res.data;
                 var monthCol = months($scope.startDate, $scope.endDate);
-                allocationService.getAllAllocationByYear(strDt[1], endDt[1],$scope.region).then(function (allocation) {
+                allocationService.getAllAllocationByYear(strDt[1], endDt[1], $scope.region).then(function (allocation) {
                     drawDeamndAndCapcityGraphFYF($scope, $filter, mapping.data, monthCol, $scope.leaveList, allocation.data);
                 });
 
@@ -239,6 +239,10 @@
         var productionDemand = new Array(monthCol.length);
         productionDemand.fill(0, 0, monthCol.length);
 
+        var totalDemand = new Array(monthCol.length);
+        totalDemand.fill(0, 0, monthCol.length);
+
+
         angular.forEach(allocationData, function (allocaitons) {
 
             angular.forEach(allocaitons.allocation, function (allocData) {
@@ -247,24 +251,33 @@
                     if (monthCol.indexOf(allocData.month) >= 0) {
                         var indx = monthCol.indexOf(allocData.month);
                         var value = productionDemand[indx];
+                        var tvalue = totalDemand[indx]; // total demand
+
                         if (!isNaN(allocData.value)) {
                             productionDemand[indx] = round((parseInt(value) + parseInt(allocData.value)), 1);
+                            totalDemand[indx] = round((parseInt(tvalue) + parseInt(allocData.value)), 1);
                         }
                     }
                 } else if (allocaitons.project.startsWith("Maintainance")) {
                     if (monthCol.indexOf(allocData.month) >= 0) {
                         var indx = monthCol.indexOf(allocData.month);
                         var value = maintainceDemand[indx];
+                        var tvalue = totalDemand[indx]; // total demand
+
                         if (!isNaN(allocData.value)) {
                             maintainceDemand[indx] = round((parseInt(value) + parseInt(allocData.value)), 1);
+                            totalDemand[indx] = round((parseInt(tvalue) + parseInt(allocData.value)), 1);
                         }
                     }
                 } else {
                     if (monthCol.indexOf(allocData.month) >= 0) {
                         var indx = monthCol.indexOf(allocData.month);
                         var value = projectDemand[indx];
+                        var tvalue = totalDemand[indx]; // total demand
+
                         if (!isNaN(allocData.value)) {
                             projectDemand[indx] = round((parseInt(value) + parseInt(allocData.value)), 1);
+                            totalDemand[indx] = round((parseInt(tvalue) + parseInt(allocData.value)), 1);
                         }
                     }
 
@@ -272,12 +285,40 @@
             });
         });
 
-        console.log(stFtCapacity);
 
+
+
+        var prodSupportCon = new Array(monthCol.length);
+        prodSupportCon.fill(round((18.333 * 3), 1), 0, monthCol.length);
+
+        var maintainceCon = new Array(monthCol.length);
+        maintainceCon.fill(round((18.333 * 9), 1), 0, monthCol.length);
+
+        var projSupportCon = new Array(monthCol.length);
+        projSupportCon.fill(round((18.333 * 10), 1), 0, monthCol.length);
+
+        var availableCapacity = new Array(monthCol.length);
+        availableCapacity.fill(0, 0, monthCol.length);
+
+        var availableCapacityP = new Array(monthCol.length);
+        availableCapacityP.fill(0, 0, monthCol.length);
+
+        for (var i = 0; i < monthCol.length; i++) {
+            availableCapacity[i] = stFtCapacity[i] - totalDemand[i];
+            availableCapacityP[i] = round(((availableCapacity[i] / stFtCapacity[i]) * 100), 1) + "%";
+        }
 
         var chartData = {
             labels: monthCol,
             datasets: [{
+                type: 'line',
+                label: 'Total Demand',
+                borderColor: "#ffc0cb",
+                borderWidth: 2,
+                fill: false,
+                data: totalDemand
+
+            }, {
                 type: 'line',
                 label: 'Total Capacity (ST + FT)',
                 borderColor: "#660066",
@@ -287,54 +328,38 @@
 
             }, {
                 type: 'line',
-                label: 'Dataset 2',
-                borderColor: 'blue',
+                label: 'Production Support (Contractual)',
+                borderColor: '#800080',
                 borderWidth: 2,
                 fill: false,
-                data: [
-                    200,
-                    400,
-                    500,
-                    800,
-                    850,
-                    300,
-                    1200
-                ],
+                data: prodSupportCon
 
             }, {
                 type: 'line',
-                label: 'Dataset 3',
-                borderColor: 'blue',
+                label: 'Maintaince (Contractual)',
+                borderColor: '#ff0000',
                 borderWidth: 2,
                 fill: false,
-                data: [
-                    100,
-                    300,
-                    600,
-                    700,
-                    300,
-                    300,
-                    100
-                ],
+                data: maintainceCon
 
             }, {
                 type: 'line',
-                label: 'Dataset 3',
-                borderColor: 'blue',
+                label: 'Project Support (Contractual)',
+                borderColor: '#556b2f',
+                borderWidth: 2,
+                fill: false,
+                data: projSupportCon
+
+            }, {
+                type: 'line',
+                label: 'Avialble Capacity',
+                borderColor: '#4b0082',
                 borderWidth: 2,
                 borderDash: [10, 10],
                 fill: false,
-                data: [
-                    300,
-                    300,
-                    300,
-                    300,
-                    300,
-                    300,
-                    300
-                ],
+                data: availableCapacity
 
-            }, {
+            },{
                 type: 'bar',
                 label: 'Total ST Capacity',
                 backgroundColor: "#00bfff",
@@ -361,10 +386,18 @@
         };
 
         $scope.GraphData.push({ label: "Total ST Capacity", backgroundColor: "#00bfff", data: stCapacity });
-        $scope.GraphData.push({ label: "Project Demand", backgroundColor: "#739900", data: projectDemand });
-        $scope.GraphData.push({ label: "Maintaince Demand", backgroundColor: "#b30000", data: maintainceDemand });
         $scope.GraphData.push({ label: "Production Support Demand", backgroundColor: "#0040ff", data: productionDemand });
+        $scope.GraphData.push({ label: "Maintaince Demand", backgroundColor: "#b30000", data: maintainceDemand });
+        $scope.GraphData.push({ label: "Project Demand", backgroundColor: "#739900", data: projectDemand });
+
+
+        $scope.GraphData.push({ label: "Total Demand", backgroundColor: "#ffc0cb", data: totalDemand });
         $scope.GraphData.push({ label: "Total Capacity (ST + FT)", backgroundColor: "#660066", data: stFtCapacity });
+        $scope.GraphData.push({ label: "Production Support (Contractual)", backgroundColor: "#800080", data: prodSupportCon });
+        $scope.GraphData.push({ label: "Maintaince (Contractual)", backgroundColor: "#ff0000", data: maintainceCon });
+        $scope.GraphData.push({ label: "Project Support (Contractual)", backgroundColor: "#556b2f", data: projSupportCon });
+        $scope.GraphData.push({ label: "Available Capacity", backgroundColor: "#add8e6", data: availableCapacity });
+        $scope.GraphData.push({ label: "Available Capacity %", backgroundColor: "#ffa500", data: availableCapacityP });
         $scope.GraphData.months = monthCol;
 
         var ctx = CreateCanvas("drawDeamndAndCapcityGraphFYF");
@@ -404,7 +437,7 @@
             leaveService.getLeave().then(function (res) {
                 $scope.leaveList = res.data;
                 var monthCol = months($scope.startDate, $scope.endDate);
-                allocationService.getAllAllocationByYear(strDt[1], endDt[1],$scope.region).then(function (allocation) {
+                allocationService.getAllAllocationByYear(strDt[1], endDt[1], $scope.region).then(function (allocation) {
                     drawDeamndAndCapcityGraph($scope, $filter, mapping.data, monthCol, $scope.leaveList, allocation.data);
                 });
 
@@ -713,7 +746,7 @@
             }
 
 
-            allocationService.getAllAllocationByYear(strDt[1], endDt[1],$scope.region).then(function (allocation) {
+            allocationService.getAllAllocationByYear(strDt[1], endDt[1], $scope.region).then(function (allocation) {
                 var monthCol = months($scope.startDate, $scope.endDate);
                 drawTotalManDaysGraph($scope, $filter, project.data, allocation.data, monthCol);
             }).catch(function (err) {
@@ -811,7 +844,7 @@
 
         skillSetService.getSkillSets().then(function (skill) {
             $scope.skillSetList = skill.data;
-            resourceMappingService.getMappedResourcesByYear(strDt[1], endDt[1],$scope.region).then(function (mapping) {
+            resourceMappingService.getMappedResourcesByYear(strDt[1], endDt[1], $scope.region).then(function (mapping) {
                 allocationService.getAllAllocationByYear(strDt[1], endDt[1], $scope.region).then(function (allocation) {
                     var monthCol = months($scope.startDate, $scope.endDate);
 
@@ -1069,24 +1102,12 @@
 
     function getRandomColor(index) {
         var Colors = [
-            "#00ffff",
-            "#000000",
-            "#0000ff",
-            "#a52a2a",
-            "#00008b",
-            "#008b8b",
-            "#a9a9a9",
-            "#006400",
-            "#bdb76b",
-            "#8b008b",
-            "#556b2f",
-            "#ff8c00",
-            "#8b0000",
-            "#e9967a",
-            "#9400d3",
-            "#ff00ff",
-            "#ffd700",
-            "#008000",
+            "#00ffff", "#000000", "#0000ff",
+            "#a52a2a", "#00008b", "#008b8b",
+            "#a9a9a9", "#006400", "#bdb76b",
+            "#8b008b", "#556b2f", "#ff8c00",
+            "#8b0000", "#e9967a", "#9400d3",
+            "#ff00ff", "#ffd700", "#008000",
             "#4b0082",
             "#f0e68c",
             "#add8e6",
