@@ -134,8 +134,8 @@
 
         $scope.prepareUtilisationData = function (availableDaysService, monthlyHeaderListService) {
 
-            var fromDate = "01-" + $scope.headingList[0];
-            var toDate = "01-" + $scope.headingList[$scope.headingList.length - 1];
+            var fromDate = new Date();
+            var toDate = new Date().setMonth(fromDate.getMonth()+11);
             var list = availableDaysService.getData(fromDate, toDate);
             //console.log("List====");
             //console.log(list);

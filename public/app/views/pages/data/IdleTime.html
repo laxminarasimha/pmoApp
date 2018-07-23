@@ -9,7 +9,7 @@
              <div  class=form-group>
                   <label for="resourcename">Resource Name</label>                  
                   <select ng-model="idleTimeDTO.resource" id="resource"  class="form-control input-sm {{errorClass}}">
-                    <option ng-repeat="x in resourceList" value="{{x.resourcename}}">{{x.resourcename }}</option>
+                    <option ng-repeat="x in resourceList track by $index" value="{{x.resourcename}} ">{{x.resourcename }}</option>
                  </select>
               </div>   
          </div>
@@ -27,7 +27,7 @@
             <div  class=form-group>
             <label for="region">Region</label>
             <select ng-model="idleTimeDTO.region" id="region"  class="form-control input-sm {{errorClass}}">
-              <option ng-repeat="x in regionList" value="{{x.regionname}}">{{x.regionname}}</option>
+              <option ng-repeat="x in regionList" value="{{x.regionname}}  track by $index">{{x.regionname}}</option>
            </select>
            </div>
          </div>
@@ -119,23 +119,22 @@
                         <th>Resource name</th>
                         <th>Resource type</th>
                         <th>Region</th>
-                         <th ng-repeat="column in headingList">{{column}}</th>  
+                         <th ng-repeat="column in headingList  track by $index">{{column}}</th>  
                       </tr>
                     </thead>
                     <tbody>
-                        <tr ng-repeat="resourceVar in idleTimeData">                       
+                        <tr ng-repeat="resourceVar in idleTimeData  track by $index">                       
                             <td>{{ resourceVar.name }}</td>
                             <td>{{ resourceVar.resourcetype}}</td>
                             <td>{{ resourceVar.region}}</td>
-                            <td ng-repeat="column in headingList">                              
-                              <div ng-repeat="idleTime in resourceVar.idleTimeArray">
+                            <td ng-repeat="column in headingList  track by $index">                              
+                              <div ng-repeat="idleTime in resourceVar.idleTimeArray track by $index">
                                   <div ng-if="idleTime.key==column">
-                                    <span ng-if="idleTime.value==100" class="label label-success">
-                                    {{idleTime.value}}%
+                                    <span  class="label label-success" ng-if="idleTime.value==100">{{idleTime.value}}%
                                     </span>
-                                    <span ng-if="idleTime.value==0 && idleTime.value!=100" class="label label-info">{{idleTime.value}}%
+                                    <span  class="label label-info" ng-if="idleTime.value==0 && idleTime.value!=100" >{{idleTime.value}}%
                                     </span>
-                                    <span ng-if="idleTime.value < 100 && idleTime.value!=0" class="label label-danger">{{idleTime.value}}%
+                                    <span class="label label-danger" ng-if="idleTime.value < 100 && idleTime.value!=0" >{{idleTime.value}}%
                                     </span>
                                   </div>
                               </div>

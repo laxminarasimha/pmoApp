@@ -9,7 +9,7 @@
              <div  class=form-group>
                   <label for="resourcename">Resource Name</label>                  
                   <select ng-model="utilisationDTO.resource" id="resource"  class="form-control input-sm {{errorClass}}">
-                    <option ng-repeat="x in resourceList" value="{{x.resourcename}}">{{x.resourcename }}</option>
+                    <option ng-repeat="x in resourceList track by $index" value="{{x.resourcename}}">{{x.resourcename }}</option>
                  </select>
               </div>   
          </div>
