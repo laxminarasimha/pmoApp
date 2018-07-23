@@ -19,6 +19,10 @@ angular.module('pmoApp').controller('idleTimeCtrl', Controller);
 
  $scope.region = $window.localStorage.getItem("region");
 
+ 
+ console.log("Idle Time Region scope:"+$scope.region);
+ console.log("Idle Time Region rootScope:"+$rootScope.region);
+
  $scope.idleTimeData = [];
  $scope.originalData = [];
  //getIdleTimeData(idleTimeService,$scope);
@@ -126,8 +130,8 @@ angular.module('pmoApp').controller('idleTimeCtrl', Controller);
            var fromDate = "01-"+$scope.headingList[0];
            var toDate = "01-"+$scope.headingList[$scope.headingList.length-1];
            var list =  availableDaysService.getData(fromDate,toDate);
-           //console.log("List====");
            console.log(list);
+           //console.log(list);
            var resourceIdleTimeArray = [];
            for(var i=0; i<list.length;i++){
              
@@ -174,6 +178,7 @@ angular.module('pmoApp').controller('idleTimeCtrl', Controller);
                             idleTime = 0;
                         }else{
                            idleTime = monthlyHeaderListService.getRoundNumber((parseFloat(allocationOBJ.buffertime)/sum)*100,1);
+                           console.log("idleTime:"+ idleTime);
                         }
                         
                         var monthlyIdleTimeObject = {
@@ -186,7 +191,7 @@ angular.module('pmoApp').controller('idleTimeCtrl', Controller);
                         monthlyIdleTimeArray.push(monthlyIdleTimeObject);
 
                  }
-                 //console.log(monthlyIdleTimeArray);
+                 console.log("monthlyIdleTimeArray:"+monthlyIdleTimeArray);
                  resourceObj.idleTimeArray = monthlyIdleTimeArray;
                  resourceIdleTimeArray.push(resourceObj);
                  
@@ -296,7 +301,7 @@ function getGraphData($scope,allocationService,leaveService,resourceMappingServi
  }
 
  function getProjectData(projectService,$scope){
-      projectService.getProject().then(function(res) {
+      projectService.getProject($scope.region).then(function(res) {
          $scope.projectList = res.data;
          }).catch(function(err) {
          console.log(err);
