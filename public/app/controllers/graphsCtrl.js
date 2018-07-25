@@ -11,6 +11,14 @@
     //var color = Chart.helpers.color;
     function Controller($scope, $rootScope, $window, $filter, locationService, skillSetService, resourceMappingService, allocationService, leaveService, availableDaysService, monthlyHeaderListService, projectService) {
 
+        //This if condition is used for StartsWith() not supported IE11) 
+        if (!String.prototype.startsWith) {
+            String.prototype.startsWith = function(searchString, position) {
+              position = position || 0;
+              return this.indexOf(searchString, position) === position;
+            };
+          }
+        
         var app = $scope;
         $scope.region = $window.localStorage.getItem("region");
 
@@ -733,7 +741,7 @@
 
         projectService.getProject($scope.region).then(function (project) {
             $scope.project = project.data;
-            console.log(project.data);
+           // console.log(project.data);
 
             if ($scope.projectHTML === '') {
 
@@ -748,6 +756,7 @@
 
             allocationService.getAllAllocationByYear(strDt[1], endDt[1], $scope.region).then(function (allocation) {
                 var monthCol = months($scope.startDate, $scope.endDate);
+              //  console.log(monthCol);
                 drawTotalManDaysGraph($scope, $filter, project.data, allocation.data, monthCol);
             }).catch(function (err) {
                 console.log(err);
@@ -763,9 +772,9 @@
 
         $scope.GraphData = [];
         $scope.projectFilter = [];
-
+        
         if ($scope.projectSelect === undefined || $scope.projectSelect === 'ALL') {
-            angular.forEach(projectList, function (project, index) {
+                angular.forEach(projectList, function (project, index) {
                 $scope.projectFilter.push(project.projectname);
             });
 
@@ -781,12 +790,13 @@
             var monthWise = new Array(monthCol.length);
             monthWise.fill(0, 0, monthWise.length);
             var filterAllocation = $filter('filter')(allocationList, { project: projectname });
-
+            //console.log(filterAllocation);
             angular.forEach(filterAllocation, function (alloc) {
                 angular.forEach(alloc.allocation, function (data) {
                     if (monthCol.indexOf(data.month) >= 0) { // check if months equal to the predefined month array(user selected)
                         var indx = monthCol.indexOf(data.month);
                         var value = monthWise[indx];
+                        //console.log("Value:"+Value);
                         if (!isNaN(data.value))
                             monthWise[indx] = round((parseInt(value) + parseInt(data.value)), 1);
                         //monthWise[indx] = parseInt(value) + parseInt(data.value);
@@ -795,6 +805,7 @@
             });
 
             $scope.GraphData.push({ label: projectname, backgroundColor: getRandomColor(index), data: monthWise });
+            //console.log($scope.GraphData);
         });
         $scope.GraphData.months = monthCol;
 
@@ -1047,8 +1058,9 @@
 
     function CreateCanvas(canvasId) {
 
-        if (document.contains(document.getElementById("chartSubContainer"))) {
-            document.getElementById("chartSubContainer").remove();
+        if (document.body.contains(document.getElementById("chartSubContainer"))) {
+            //document.getElementById("chartSubContainer").remove();
+            $('#chartSubContainer').remove();
         }
 
         var canvas = document.createElement('canvas');
