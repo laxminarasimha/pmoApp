@@ -19,6 +19,10 @@ angular.module('pmoApp').controller('idleTimeCtrl', Controller);
 
  $scope.region = $window.localStorage.getItem("region");
 
+ 
+ console.log("Idle Time Region scope:"+$scope.region);
+ console.log("Idle Time Region rootScope:"+$rootScope.region);
+
  $scope.idleTimeData = [];
  $scope.originalData = [];
  //getIdleTimeData(idleTimeService,$scope);
@@ -172,6 +176,7 @@ angular.module('pmoApp').controller('idleTimeCtrl', Controller);
                             idleTime = 0;
                         }else{
                            idleTime = monthlyHeaderListService.getRoundNumber((parseFloat(allocationOBJ.buffertime)/sum)*100,1);
+                           console.log("idleTime:"+ idleTime);
                         }
                         
                         var monthlyIdleTimeObject = {

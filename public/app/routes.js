@@ -26,7 +26,7 @@ var app = angular.module('appRoutes', ['ui.router'])
 				views: {
 					'header': {
 						templateUrl: 'app/views/pages/users/mainmenu.html',
-						controller: "menuCtrl"
+						controller: 'menuCtrl'
 					},
 					'footer': {
 						templateUrl: 'app/views/pages/users/footer.html'

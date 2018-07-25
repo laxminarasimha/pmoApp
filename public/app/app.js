@@ -7,6 +7,7 @@ angular.module('pmoApp', ['appRoutes', 'userController', 'userServices', 'ngAnim
         $httpProvider.defaults.headers.common["Cache-Control"] = "no-cache";
         $httpProvider.defaults.headers.common.Pragma = "no-cache";
         $httpProvider.defaults.headers.common["If-Modified-Since"] = "0";
+
         $httpProvider.interceptors.push('AuthInterceptors');
     }).controller('footerCtrl', ['$scope', 'appConstants', function ($scope, appConstants) {
         $scope.rightToReserveMsg = appConstants.right_reserve;
