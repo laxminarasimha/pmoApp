@@ -13,7 +13,7 @@
 		$http.get("app/data/menuData.txt").then(function (response) {
 			$scope.menuData = response.data;
 			getCustomizedmenu($rootScope, $scope, Auth, response.data);
-		});
+		});		
 		if ($rootScope.region !== undefined)
 			$window.localStorage.setItem("region", $rootScope.region);
 	}

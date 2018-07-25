@@ -4,21 +4,25 @@
  
 angular.module('pmoApp').controller('dashboardController', Controller);
  
-Controller.$inject = ['$scope', '$rootScope','$filter','dashboardService','resourceService'];
+Controller.$inject = ['$scope', '$rootScope','$window','$filter','dashboardService','resourceService'];
   
  
   
- function Controller($scope, $rootScope, $filter,dashboardService,resourceService) {
+ function Controller($scope, $rootScope,$window, $filter,dashboardService,resourceService) {
      
 	 var app = $scope;
-	   $rootScope.Title = "Dash Board";
+    $rootScope.Title = "Dash Board";
+
+    $scope.region = $rootScope.region;//$window.localStorage.getItem("region");
+    console.log($scope.region);
+
      app.ProjectData = [];
      app.ResourceData = [];
      var projects = [];
      $scope.projectNames = [];
      $scope.projectDates = [];
      var ctx = document.getElementById('myChart').getContext('2d');
-     getProjectGraph(dashboardService,app,$filter);     
+     getProjectGraph(dashboardService,$scope,$filter);     
      getProjectChartjs(dashboardService,app,$filter,ctx);     
      getResourceData(resourceService,$scope);
       var piChart = document.getElementById('piChart').getContext('2d');
@@ -26,7 +30,7 @@ Controller.$inject = ['$scope', '$rootScope','$filter','dashboardService','resou
  }
 
  function getResourceData(resourceService,$scope){
-      resourceService.getResources().then(function(res) {
+      resourceService.getResources($scope.region).then(function(res) {
          $scope.ResourceData = res.data;
          }).catch(function(err) {
          console.log(err);
@@ -110,8 +114,9 @@ function createPieChart(dashboardService,$scope,$filter,ctx){
 }
  
  function getProjectGraph(dashboardService,$scope,$filter){        
-    dashboardService.getProject().then(function(res) {      
-            $scope.ProjectData = res.data;            
+    dashboardService.getProject($scope.region).then(function(res) {      
+            $scope.ProjectData = res.data; 
+             
             /*angular.forEach(res.data,function(value, key){
                 $scope.projectNames.push(value.projectname);               
                 var pdates = [];
