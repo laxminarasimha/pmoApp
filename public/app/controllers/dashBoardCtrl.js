@@ -13,7 +13,7 @@ Controller.$inject = ['$scope', '$rootScope','$window','$filter','dashboardServi
 	 var app = $scope;
     $rootScope.Title = "Dash Board";
 
-    $scope.region = $rootScope.region;//$window.localStorage.getItem("region");
+    $scope.region = $window.localStorage.getItem("region");
     console.log($scope.region);
 
      app.ProjectData = [];
