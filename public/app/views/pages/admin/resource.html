@@ -89,7 +89,10 @@
                   <option ng-repeat="x in regionList" value="{{x.regionname}}">{{x.regionname}}</option>
                 </select>
               </div>
-            </div>            
+            </div>   
+            
+            
+            
           </div>
 
           <div class='row'>
@@ -107,7 +110,7 @@
               </div>
 
             </div> -->
-            <div class='col-sm-7'>
+            <div class='col-sm-12' style="padding-top: 2px">
 
               <div align="right">
                 <input type="submit" value="Update" ng-click="saveData(resource)" class="btn btn-primary" ng-show="resource._id!=null" />
