@@ -155,9 +155,12 @@
             }
 
             $scope.taggedToEuroclearList = [];
+            console.log($scope.mongoMappedResourceData);
             angular.forEach($scope.mongoMappedResourceData, function (data) {
                 if (data._id === id) {
                     $scope.resourcemap = data;
+                    console.log("===========");
+                    console.log($scope.resourcemap);
                 }
             });
 
@@ -254,7 +257,6 @@
                     var location = row.mappedResource.baseentity;
                   
                     holidayListService.getAggegrateLocationHolidays(location).then(function (res) {
-                        console.log(res.data);
                         var aggegrateHolidayList = res.data;
                         var monthyearLabel = new Map();
 

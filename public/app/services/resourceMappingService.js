@@ -39,7 +39,7 @@
         return $http.delete(url);
       },
       getMappedResourceForKinIDtoDelete: function (Id) {
-        url = globalConfig.apiAddress + "/mappedresource/kinId/ForDelete/" + Id;
+        url = globalConfig.apiAddress + "/mappedresource/kinId/ForDelete/resource/" + Id;
         return $http.get(url);
       }
 

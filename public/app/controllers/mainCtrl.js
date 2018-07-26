@@ -1,5 +1,5 @@
 angular.module('mainController',['authServices'])
-.controller('mainController', function(Auth, $http,$location,$timeout,$rootScope,$scope){	
+.controller('mainController', function(Auth, $http,$location,$timeout,$rootScope,$scope,$window){	
 	var app = this;
 	app.loadMe = false;		
 
@@ -32,6 +32,7 @@ angular.module('mainController',['authServices'])
 			if(data.data.success){				
 				Auth.getUser().then(function(data){										
 					app.username = data.data.resourcename;
+					console.log("app.username"+app.username);
 					app.email = data.data.email;
 					app._id = data.data._id;
 					app.kinId = data.data.kinId;
@@ -39,6 +40,12 @@ angular.module('mainController',['authServices'])
 					app.alias = data.data.alias;
 					app.etype = data.data.etype;
 					app.region = data.data.region;
+					
+					console.log("app.region"+app.region);
+					$rootScope.region = data.data.region;
+					if ($rootScope.region !== undefined)
+					$window.localStorage.setItem("region", $rootScope.region);
+					
 					app.loadMe = true;
 				});
 		
@@ -59,6 +66,7 @@ angular.module('mainController',['authServices'])
 	};
 	
 	this.logout = function(){
+		$window.localStorage.clear();
 		Auth.logout();
 		$location.path('/logout');
 		$timeout(function(){

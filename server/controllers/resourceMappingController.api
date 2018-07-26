@@ -82,7 +82,7 @@ router.get("/region/:region", function(req, res) {
 								 console.log(data);
 								 res.send(data);
 								 });
-}).get("/kinId/ForDelete/:kin", function(req, res) {
+}).get("/kinId/ForDelete/resource/:kin", function(req, res) {
  var kinID = req.params.kin;
  resourceMappingDAO.aggregate([
                            {$match : {"mappedResource.kinId": kinID}}

@@ -5,16 +5,14 @@
 angular.module('pmoApp').controller('dashboardController', Controller);
  
 Controller.$inject = ['$scope', '$rootScope','$window','$filter','dashboardService','resourceService'];
-  
- 
-  
+    
  function Controller($scope, $rootScope,$window, $filter,dashboardService,resourceService) {
      
 	 var app = $scope;
     $rootScope.Title = "Dash Board";
 
     $scope.region = $window.localStorage.getItem("region");
-    console.log($scope.region);
+   // console.log($scope.region);
 
      app.ProjectData = [];
      app.ResourceData = [];
@@ -32,6 +30,8 @@ Controller.$inject = ['$scope', '$rootScope','$window','$filter','dashboardServi
  function getResourceData(resourceService,$scope){
       resourceService.getResources($scope.region).then(function(res) {
          $scope.ResourceData = res.data;
+         //console.log($scope.ResourceData);
+         //console.log($scope.ResourceData.region);
          }).catch(function(err) {
          console.log(err);
      });
