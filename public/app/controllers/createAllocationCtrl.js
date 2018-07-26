@@ -44,9 +44,9 @@
 	};
 
 
-	Controller.$inject = ['$scope', '$rootScope','projectService', 'resourceMappingService', 'allocationService', 'resourceTypeService', '$filter'];
+	Controller.$inject = ['$scope', '$rootScope','$window','projectService', 'resourceMappingService', 'allocationService', 'resourceTypeService', '$filter'];
 
-	function Controller($scope, $rootScope, projectService, resourceMappingService, allocationService, resourceTypeService, $filter) {
+	function Controller($scope, $rootScope, $window, projectService, resourceMappingService, allocationService, resourceTypeService, $filter) {
 
 
 		$scope.names = [{ 'drname': 'Dr.Test1' }, { 'drname': 'Dr.Test2' }, { 'drname': 'Dr.Test3' }];
@@ -63,7 +63,7 @@
 		$scope.hidden = "none";
 		$scope.newData = false;
 
-
+		$scope.region = $window.localStorage.getItem("region");
 
 		function allocObject(object) {
 			var month;
@@ -75,7 +75,7 @@
 			}
 		};
 
-		getMappedResourceData(resourceMappingService, $rootScope, $scope);
+		getMappedResourceData(resourceMappingService, $scope);
 		getProjectData(projectService, $scope);
 		getResourceTypeData(resourceTypeService, $scope);
 
@@ -123,7 +123,8 @@
 				resource: $scope.resource,
 				project: $scope.projselect,
 				resourcetype: $scope.resourcetype,
-				region: $rootScope.region,
+				//region: $rootScope.region,
+				region: $scope.region,
 				//startdate: $scope.startDate,
 				//enddate: $scope.endDate,
 				allocation: [],
@@ -259,8 +260,8 @@
 
 
 
-		function getMappedResourceData(resourceMappingService,$rootScope, $scope) {
-			resourceMappingService.getMappedResources($rootScope.region).then(function (res) {
+		function getMappedResourceData(resourceMappingService,$scope) {
+			resourceMappingService.getMappedResources($scope.region).then(function (res) {
 				$scope.mappedResourceData = filterUniqueResource(res.data);
 				// var htm = '';
 

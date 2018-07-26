@@ -2,9 +2,18 @@
 
       'use strict';
 
-      angular.module('pmoApp').factory('allocationService', Service);
+     var app = angular.module('pmoApp').factory('allocationService', Service);
 
       Service.$inject = ['$http', 'globalConfig'];
+
+      app.filter('removeSpaces', [function() {
+            return function(string) {
+                if (!angular.isString(string)) {
+                    return string;
+                }
+                return string.replace(/[\s]/g, '');
+            };
+        }])
 
       function Service($http, globalConfig) {
             var url = "";
@@ -15,8 +24,9 @@
                         return $http.get(url);
                   },
 
-                  getAllAllocationByYear: function (startYr, EndYr,region) {
-                        url = globalConfig.apiAddress + "/allocation/" + startYr + "/" + EndYr+"/" + region;
+                  getAllAllocationByYear: function (startYr, endYr,region) {                        
+                        console.log(region);
+                        url = globalConfig.apiAddress + "/allocation/" + startYr + "/" + endYr+"/" + region;
                         console.log('url'+url);
                         return $http.get(url);
                   },
