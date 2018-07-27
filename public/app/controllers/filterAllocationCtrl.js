@@ -43,9 +43,9 @@
 
 
 
-    Controller.$inject = ['$scope', '$compile', 'DTOptionsBuilder', 'DTColumnBuilder', 'resourceService', 'projectService', 'allocationService', 'leaveService', 'resourceMappingService', '$filter', 'availableDaysService', 'holidayListService'];
+    Controller.$inject = ['$rootScope','$scope', '$window','$compile', 'DTOptionsBuilder', 'DTColumnBuilder', 'resourceService', 'projectService', 'allocationService', 'leaveService', 'resourceMappingService', '$filter', 'availableDaysService', 'holidayListService'];
 
-    function Controller($scope, $compile, DTOptionsBuilder, DTColumnBuilder, resourceService, projectService, allocationService, leaveService, resourceMappingService, $filter, availableDaysService, holidayListService) {
+    function Controller($rootScope,$scope, $window,$compile, DTOptionsBuilder, DTColumnBuilder, resourceService, projectService, allocationService, leaveService, resourceMappingService, $filter, availableDaysService, holidayListService) {
 
         $scope.projectSelect = "ALL";
         //$scope.resourceWiseAllocaiton = [];
@@ -61,8 +61,12 @@
         $scope.resource = '';
         $scope.mappedResourceData = [];
 
+		$scope.region = $window.localStorage.getItem("region");
+        
         // getMappedResourceData(resourceMappingService, $scope);
         intialize(projectService, resourceService, $scope);
+
+      
 
 
         function allocObject(object) {
@@ -116,7 +120,7 @@
 
             $scope.ShowSpinnerStatus = true;
 
-            allocationService.getAllAllocationByYear(strDt[1], endDt[1], 'ALL').then(function (allocation) {
+            allocationService.getAllAllocationByYear(strDt[1], endDt[1], $scope.region).then(function (allocation) {
                 listRecords($scope, $filter, $scope.project, allocation.data, $scope.monthCol, $scope.selectProject);
             }).catch(function (err) {
                 console.log(err);
@@ -215,9 +219,10 @@
 
 
     function intialize(projectService, resourceService, $scope) {
-        projectService.getProject().then(function (res) {
+        console.log($scope.region);
+        projectService.getProject($scope.region).then(function (res) {
             $scope.project = res.data;
-            resourceService.getResources().then(function (res) {
+            resourceService.getResources($scope.region).then(function (res) {
                 $scope.mappedResourceData = res.data;
             }).catch(function (err) {
                 console.log(err);
