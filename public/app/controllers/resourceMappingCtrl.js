@@ -159,7 +159,7 @@
             angular.forEach($scope.mongoMappedResourceData, function (data) {
                 if (data._id === id) {
                     $scope.resourcemap = data;
-                }
+                   }
             });
 
             for (var i = 0; i < $scope.resourcemap.taggToEuroclear.length; i++) {
