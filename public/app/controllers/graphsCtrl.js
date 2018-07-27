@@ -161,7 +161,7 @@
                         var indx = monthCol.indexOf(mapData.key);
                         var value = stCapacity[indx];
                         if (!isNaN(mapData.value)) {
-                            stCapacity[indx] = round((parseInt(value) + parseInt(mapData.value)), 1);
+                            stCapacity[indx] = round((parseFloat(value) + parseFloat(mapData.value)), 1);
                         }
                     }
                 });
@@ -182,7 +182,7 @@
 
                             if (!isNaN(leave.value)) {
                                 var percentV = (leave.value * percent) / 100;
-                                stCapacity[indx] = round((parseInt(value) - parseInt(percentV)), 1);
+                                stCapacity[indx] = round((parseFloat(value) - parseFloat(percentV)), 1);
                                 //console.log('ST' + leave.month + '--' + leaves.resourcename + '--' + mapping.mappedResource.resourcename + '--' + percentV);
                             }
                         }
@@ -196,7 +196,7 @@
                         var indx = monthCol.indexOf(mapData.key);
                         var value = ftCapacity[indx];
                         if (!isNaN(mapData.value)) {
-                            ftCapacity[indx] = round((parseInt(value) + parseInt(mapData.value)), 1);
+                            ftCapacity[indx] = round((parseFloat(value) + parseFloat(mapData.value)), 1);
                             // stFtCapacity[indx] = round((parseInt(stFtCapacity[indx])) + ,1);  
                         }
                     }
@@ -217,7 +217,7 @@
 
                             if (!isNaN(leave.value)) {
                                 var percentV = (leave.value * percent) / 100;
-                                ftCapacity[indx] = round((parseInt(value) - parseInt(percentV)), 1);
+                                ftCapacity[indx] = round((parseFloat(value) - parseFloat(percentV)), 1);
                                 // console.log('FT ' + leave.month + '--' + leaves.resourcename + '--' + mapping.mappedResource.resourcename + '--' + percentV);
                             }
                         }
@@ -262,8 +262,8 @@
                         var tvalue = totalDemand[indx]; // total demand
 
                         if (!isNaN(allocData.value)) {
-                            productionDemand[indx] = round((parseInt(value) + parseInt(allocData.value)), 1);
-                            totalDemand[indx] = round((parseInt(tvalue) + parseInt(allocData.value)), 1);
+                            productionDemand[indx] = round((parseFloat(value) + parseFloat(allocData.value)), 1);
+                            totalDemand[indx] = round((parseFloat(tvalue) + parseFloat(allocData.value)), 1);
                         }
                     }
                 } else if (allocaitons.project.startsWith("Maintainance")) {
@@ -273,8 +273,8 @@
                         var tvalue = totalDemand[indx]; // total demand
 
                         if (!isNaN(allocData.value)) {
-                            maintainceDemand[indx] = round((parseInt(value) + parseInt(allocData.value)), 1);
-                            totalDemand[indx] = round((parseInt(tvalue) + parseInt(allocData.value)), 1);
+                            maintainceDemand[indx] = round((parseFloat(value) + parseFloat(allocData.value)), 1);
+                            totalDemand[indx] = round((parseFloat(tvalue) + parseFloat(allocData.value)), 1);
                         }
                     }
                 } else {
@@ -284,8 +284,8 @@
                         var tvalue = totalDemand[indx]; // total demand
 
                         if (!isNaN(allocData.value)) {
-                            projectDemand[indx] = round((parseInt(value) + parseInt(allocData.value)), 1);
-                            totalDemand[indx] = round((parseInt(tvalue) + parseInt(allocData.value)), 1);
+                            projectDemand[indx] = round((parseFloat(value) + parseFloat(allocData.value)), 1);
+                            totalDemand[indx] = round((parseFloat(tvalue) + parseFloat(allocData.value)), 1);
                         }
                     }
 
@@ -477,7 +477,7 @@
                         var indx = monthCol.indexOf(mapData.key);
                         var value = stCapacity[indx];
                         if (!isNaN(mapData.value)) {
-                            stCapacity[indx] = round((parseInt(value) + parseInt(mapData.value)), 1);
+                            stCapacity[indx] = round((parseFloat(value) + parseFloat(mapData.value)), 1);
                         }
                     }
                 });
@@ -498,7 +498,7 @@
 
                             if (!isNaN(leave.value)) {
                                 var percentV = (leave.value * percent) / 100;
-                                stCapacity[indx] = round((parseInt(value) - parseInt(percentV)), 1);
+                                stCapacity[indx] = round((parseFloat(value) - parseFloat(percentV)), 1);
                                 //console.log('ST' + leave.month + '--' + leaves.resourcename + '--' + mapping.mappedResource.resourcename + '--' + percentV);
                             }
                         }
@@ -512,7 +512,7 @@
                         var indx = monthCol.indexOf(mapData.key);
                         var value = ftCapacity[indx];
                         if (!isNaN(mapData.value)) {
-                            ftCapacity[indx] = round((parseInt(value) + parseInt(mapData.value)), 1);
+                            ftCapacity[indx] = round((parseFloat(value) + parseFloat(mapData.value)), 1);
                             // stFtCapacity[indx] = round((parseInt(stFtCapacity[indx])) + ,1);  
                         }
                     }
@@ -533,7 +533,7 @@
 
                             if (!isNaN(leave.value)) {
                                 var percentV = (leave.value * percent) / 100;
-                                ftCapacity[indx] = round((parseInt(value) - parseInt(percentV)), 1);
+                                ftCapacity[indx] = round((parseFloat(value) - parseFloat(percentV)), 1);
                                 // console.log('FT ' + leave.month + '--' + leaves.resourcename + '--' + mapping.mappedResource.resourcename + '--' + percentV);
                             }
                         }
@@ -567,7 +567,7 @@
                         var indx = monthCol.indexOf(allocData.month);
                         var value = productionDemand[indx];
                         if (!isNaN(allocData.value)) {
-                            productionDemand[indx] = round((parseInt(value) + parseInt(allocData.value)), 1);
+                            productionDemand[indx] = round((parseFloat(value) + parseFloat(allocData.value)), 1);
                         }
                     }
                 } else if (allocaitons.project.startsWith("Maintenance")) {
@@ -575,7 +575,7 @@
                         var indx = monthCol.indexOf(allocData.month);
                         var value = maintainceDemand[indx];
                         if (!isNaN(allocData.value)) {
-                            maintainceDemand[indx] = round((parseInt(value) + parseInt(allocData.value)), 1);
+                            maintainceDemand[indx] = round((parseFloat(value) + parseFloat(allocData.value)), 1);
                         }
                     }
                 } else {
@@ -583,7 +583,7 @@
                         var indx = monthCol.indexOf(allocData.month);
                         var value = projectDemand[indx];
                         if (!isNaN(allocData.value)) {
-                            projectDemand[indx] = round((parseInt(value) + parseInt(allocData.value)), 1);
+                            projectDemand[indx] = round((parseFloat(value) + parseFloat(allocData.value)), 1);
                         }
                     }
 
@@ -797,7 +797,7 @@
                         var value = monthWise[indx];
                         //console.log("Value:"+Value);
                         if (!isNaN(data.value))
-                            monthWise[indx] = round((parseInt(value) + parseInt(data.value)), 1);
+                            monthWise[indx] = round((parseFloat(value) + parseFloat(data.value)), 1);
                         //monthWise[indx] = parseInt(value) + parseInt(data.value);
                     }
                 });
@@ -901,7 +901,7 @@
                         var indx = monthCol.indexOf(data.key);
                         var value = monthWise[indx];
                         if (!isNaN(data.value))
-                            monthWise[indx] = round((parseInt(value) + parseInt(data.value)), 1);
+                            monthWise[indx] = round((parseFloat(value) + parseFloat(data.value)), 1);
                     }
                 });
 
@@ -914,7 +914,7 @@
                             var indx = monthCol.indexOf(data.month);
                             var value = monthWise[indx];
                             if (!isNaN(data.value)) {
-                                var value = parseInt(value) - parseInt(data.value);
+                                var value = round((parseFloat(value) - parseFloat(data.value)),1);
                                 monthWise[indx] = value;
                             }
 
@@ -931,7 +931,7 @@
                             var indx = monthCol.indexOf(leave.month);
                             var value = monthWise[indx];
                             if (!isNaN(leave.value)) {
-                                var value = parseInt(value) - parseInt(leave.value);
+                                var value = round((parseFloat(value) - parseFloat(leave.value)),1);
                                 monthWise[indx] = value;
                             }
 
