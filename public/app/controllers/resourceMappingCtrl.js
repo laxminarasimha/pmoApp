@@ -159,8 +159,6 @@
             angular.forEach($scope.mongoMappedResourceData, function (data) {
                 if (data._id === id) {
                     $scope.resourcemap = data;
-                    console.log("===========");
-                    console.log($scope.resourcemap);
                 }
             });
 

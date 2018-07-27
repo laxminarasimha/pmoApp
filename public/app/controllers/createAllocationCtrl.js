@@ -44,7 +44,7 @@
 	};
 
 
-	Controller.$inject = ['$scope', '$rootScope','$window','projectService', 'resourceMappingService', 'allocationService', 'resourceTypeService', '$filter'];
+	Controller.$inject = ['$scope', '$rootScope', '$window', 'projectService', 'resourceMappingService', 'allocationService', 'resourceTypeService', '$filter'];
 
 	function Controller($scope, $rootScope, $window, projectService, resourceMappingService, allocationService, resourceTypeService, $filter) {
 
@@ -118,13 +118,23 @@
 				$scope.months.push($scope.monthWiseAllocation);
 			});
 
+			var vRegion = '';
+			angular.forEach($scope.mappedResourceData, function (mapped) {
+				if (mapped.mappedResource.resourcename === $scope.resource) {
+					vRegion = mapped.mappedResource.region;
+				}
+
+			});
+
+			console.log('region '+vRegion);
+
 			//for (var res = 0; res < $scope.resource.length; res++) {
 			$scope.rowWiseAllocation = {
 				resource: $scope.resource,
 				project: $scope.projselect,
 				resourcetype: $scope.resourcetype,
 				//region: $rootScope.region,
-				region: $scope.region,
+				region: vRegion,
 				//startdate: $scope.startDate,
 				//enddate: $scope.endDate,
 				allocation: [],
@@ -260,7 +270,7 @@
 
 
 
-		function getMappedResourceData(resourceMappingService,$scope) {
+		function getMappedResourceData(resourceMappingService, $scope) {
 			resourceMappingService.getMappedResources($scope.region).then(function (res) {
 				$scope.mappedResourceData = filterUniqueResource(res.data);
 				// var htm = '';

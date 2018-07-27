@@ -753,10 +753,9 @@
                 $('#project-select').multiselect('rebuild');
             }
 
-
+            console.log($scope.region);
             allocationService.getAllAllocationByYear(strDt[1], endDt[1], $scope.region).then(function (allocation) {
                 var monthCol = months($scope.startDate, $scope.endDate);
-              //  console.log(monthCol);
                 drawTotalManDaysGraph($scope, $filter, project.data, allocation.data, monthCol);
             }).catch(function (err) {
                 console.log(err);

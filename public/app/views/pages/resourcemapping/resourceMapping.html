@@ -44,8 +44,9 @@
           <div class='col-sm-3'>
             <div class=form-group>
               <label for="role">Role</label>
-              <select ng-model="resourcemap.mappedResource.role" id="role" class="form-control input-sm {{errorClass}}" disabled>
-              <option ng-repeat="x in roleList" value="{{x.rolename}}">{{x.rolename}}</option>
+              <!-- <select ng-model="resourcemap.mappedResource.role" id="role" class="form-control input-sm {{errorClass}}" disabled>
+              <option ng-repeat="x in roleList" value="{{x.rolename}}">{{x.rolename}}</option> -->
+              <input id="alias" ng-model="resourcemap.mappedResource.role" required="true" type="text" disabled class="form-control input-sm {{errorClass}}"
            </select>
             </div>
 
@@ -56,8 +57,9 @@
           <div class='col-sm-3'>
             <div class=form-group>
               <label for="location">Location</label>
-              <select ng-model="resourcemap.mappedResource.baseentity" id="location" class="form-control input-sm {{errorClass}}" disabled>
-              <option ng-repeat="x in locationList" value="{{x.locationname}}">{{x.locationname}}</option>
+              <!-- <select ng-model="resourcemap.mappedResource.baseentity" id="location" class="form-control input-sm {{errorClass}}" disabled>
+              <option ng-repeat="x in locationList" value="{{x.locationname}}">{{x.locationname}}</option> -->
+              <input id="alias" ng-model="resourcemap.mappedResource.baseentity" required="true" type="text" disabled class="form-control input-sm {{errorClass}}"
            </select>
             </div>
           </div>
@@ -65,8 +67,10 @@
           <div class='col-sm-3'>
             <div class=form-group>
               <label for="skill">Skill</label>
-              <select ng-model="resourcemap.mappedResource.skill" id="skill" class="form-control input-sm {{errorClass}}" disabled>
-              <option ng-repeat="x in skillSetList" value="{{x.skillname}}">{{x.skillname}}</option>
+              <!-- <select ng-model="resourcemap.mappedResource.skill" id="skill" class="form-control input-sm {{errorClass}}" disabled>
+              <option ng-repeat="x in skillSetList" value="{{x.skillname}}">{{x.skillname}}</option> -->
+
+              <input id="alias" ng-model="resourcemap.mappedResource.skill" required="true" type="text" disabled class="form-control input-sm {{errorClass}}"
            </select>
             </div>
           </div>
@@ -74,8 +78,9 @@
           <div class='col-sm-3'>
             <div class=form-group>
               <label for="region">Region</label>
-              <select ng-model="resourcemap.region" id="region" class="form-control input-sm {{errorClass}}">
-              <option ng-repeat="x in regionList" value="{{x.regionname}}">{{x.regionname}}</option>
+              <!-- <select ng-model="resourcemap.region" id="region" class="form-control input-sm {{errorClass}}" disabled>
+              <option ng-repeat="x in regionList" value="{{resourcemap.region}}">{{resourcemap.region}}</option> -->
+              <input id="alias" ng-model="resourcemap.mappedResource.region" required="true" type="text" disabled class="form-control input-sm {{errorClass}}"
            </select>
             </div>
           </div>
