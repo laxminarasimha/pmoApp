@@ -56,7 +56,6 @@
         var year = mapping.year;
         var month = monthsWithYear(year);
 
-
         for (var alloc = 0; alloc < allocationList.length; alloc++) {
 
           if (allocationList[alloc].year === mapping.year //&& allocationList[alloc].resourcetype === mapping.resourceType
@@ -140,7 +139,6 @@
       this.maps = [];
     }
 
-
     var allocationObj = new Array();
     var allocatonWithBufferTime = new Array();
     var projA = new Array();
@@ -148,7 +146,6 @@
     var rLoop = false;
     var leavesFilter = null;
     var allocationFilter = null;
-
 
     angular.forEach(resource, function (rname) {
 
@@ -193,7 +190,6 @@
       this.buffertime;
     }
 
-
     angular.forEach(months, function (month) {
 
       var vAlloc = new Allocation();
@@ -230,7 +226,6 @@
     return allocation;
 
   }
-
 
   function setLeave(object, leaves, mappedResourceData) {
 
@@ -281,7 +276,6 @@
     object.buffertime = round((mappedDays - vBuffer), 1);
 
   }
-
 
   function mapResoruceDetails(nResource, mappedResourceData) {
     for (var user = 0; user < mappedResourceData.length; user++) {
@@ -334,8 +328,4 @@
     return arr;
   }
 
-
 })();
-
-
-

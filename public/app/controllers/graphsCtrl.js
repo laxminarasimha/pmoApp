@@ -13,12 +13,12 @@
 
         //This if condition is used for StartsWith() not supported IE11) 
         if (!String.prototype.startsWith) {
-            String.prototype.startsWith = function(searchString, position) {
-              position = position || 0;
-              return this.indexOf(searchString, position) === position;
+            String.prototype.startsWith = function (searchString, position) {
+                position = position || 0;
+                return this.indexOf(searchString, position) === position;
             };
-          }
-        
+        }
+
         var app = $scope;
         $scope.region = $window.localStorage.getItem("region");
 
@@ -84,7 +84,6 @@
 
     }
 
-
     function createGraph($scope, $filter, resourceMappingService, availableDaysService, monthlyHeaderListService, allocationService, projectService, skillSetService, leaveService) {
         $scope.ShowSpinnerStatus = true;
         switch ($scope.graphid) {
@@ -115,9 +114,7 @@
 
     }//End OF CreateGraph()
 
-
     function demandGraphFYF($scope, $filter, resourceMappingService, allocationService, leaveService) {
-
 
         var strDt = $scope.startDate.split("/");
         var endDt = $scope.endDate.split("/");
@@ -139,9 +136,7 @@
         });
     }
 
-
     function drawDeamndAndCapcityGraphFYF($scope, $filter, mappingData, monthCol, leaveList, allocationData) {
-
 
         $scope.GraphData = [];
         var stCapacity = new Array(monthCol.length);
@@ -250,7 +245,6 @@
         var totalDemand = new Array(monthCol.length);
         totalDemand.fill(0, 0, monthCol.length);
 
-
         angular.forEach(allocationData, function (allocaitons) {
 
             angular.forEach(allocaitons.allocation, function (allocData) {
@@ -266,35 +260,36 @@
                             totalDemand[indx] = round((parseFloat(tvalue) + parseFloat(allocData.value)), 1);
                         }
                     }
-                } else if (allocaitons.project.startsWith("Maintainance")) {
-                    if (monthCol.indexOf(allocData.month) >= 0) {
-                        var indx = monthCol.indexOf(allocData.month);
-                        var value = maintainceDemand[indx];
-                        var tvalue = totalDemand[indx]; // total demand
+                } else if (allocaitons.project.startsWith("Maintenance")) {
+                    if (allocaitons.resourcetype === "Sufficient" || allocaitons.resourcetype === "FlexTeam") {
+                        if (monthCol.indexOf(allocData.month) >= 0) {
+                            var indx = monthCol.indexOf(allocData.month);
+                            var value = maintainceDemand[indx];
+                            var tvalue = totalDemand[indx]; // total demand
 
-                        if (!isNaN(allocData.value)) {
-                            maintainceDemand[indx] = round((parseFloat(value) + parseFloat(allocData.value)), 1);
-                            totalDemand[indx] = round((parseFloat(tvalue) + parseFloat(allocData.value)), 1);
+                            if (!isNaN(allocData.value)) {
+                                maintainceDemand[indx] = round((parseFloat(value) + parseFloat(allocData.value)), 1);
+                                totalDemand[indx] = round((parseFloat(tvalue) + parseFloat(allocData.value)), 1);
+                            }
                         }
                     }
                 } else {
-                    if (monthCol.indexOf(allocData.month) >= 0) {
-                        var indx = monthCol.indexOf(allocData.month);
-                        var value = projectDemand[indx];
-                        var tvalue = totalDemand[indx]; // total demand
+                    if (allocaitons.resourcetype === "Sufficient" || allocaitons.resourcetype === "FlexTeam") {
+                        if (monthCol.indexOf(allocData.month) >= 0) {
+                            var indx = monthCol.indexOf(allocData.month);
+                            var value = projectDemand[indx];
+                            var tvalue = totalDemand[indx]; // total demand
 
-                        if (!isNaN(allocData.value)) {
-                            projectDemand[indx] = round((parseFloat(value) + parseFloat(allocData.value)), 1);
-                            totalDemand[indx] = round((parseFloat(tvalue) + parseFloat(allocData.value)), 1);
+                            if (!isNaN(allocData.value)) {
+                                projectDemand[indx] = round((parseFloat(value) + parseFloat(allocData.value)), 1);
+                                totalDemand[indx] = round((parseFloat(tvalue) + parseFloat(allocData.value)), 1);
+                            }
                         }
-                    }
 
+                    }
                 }
             });
         });
-
-
-
 
         var prodSupportCon = new Array(monthCol.length);
         prodSupportCon.fill(round((18.333 * 3), 1), 0, monthCol.length);
@@ -312,8 +307,8 @@
         availableCapacityP.fill(0, 0, monthCol.length);
 
         for (var i = 0; i < monthCol.length; i++) {
-            availableCapacity[i] = stFtCapacity[i] - totalDemand[i];
-            availableCapacityP[i] = round(((availableCapacity[i] / stFtCapacity[i]) * 100), 1) + "%";
+            availableCapacity[i] = round((stFtCapacity[i] - totalDemand[i]), 1);
+            availableCapacityP[i] =Math.ceil(((availableCapacity[i] / stFtCapacity[i]) * 100)) + "%";
         }
 
         var chartData = {
@@ -367,7 +362,7 @@
                 fill: false,
                 data: availableCapacity
 
-            },{
+            }, {
                 type: 'bar',
                 label: 'Total ST Capacity',
                 backgroundColor: "#00bfff",
@@ -397,7 +392,6 @@
         $scope.GraphData.push({ label: "Production Support Demand", backgroundColor: "#0040ff", data: productionDemand });
         $scope.GraphData.push({ label: "Maintaince Demand", backgroundColor: "#b30000", data: maintainceDemand });
         $scope.GraphData.push({ label: "Project Demand", backgroundColor: "#739900", data: projectDemand });
-
 
         $scope.GraphData.push({ label: "Total Demand", backgroundColor: "#ffc0cb", data: totalDemand });
         $scope.GraphData.push({ label: "Total Capacity (ST + FT)", backgroundColor: "#660066", data: stFtCapacity });
@@ -441,7 +435,7 @@
         var strDt = $scope.startDate.split("/");
         var endDt = $scope.endDate.split("/");
 
-        resourceMappingService.getMappedResourcesByYear(strDt[1], endDt[1]).then(function (mapping) {
+        resourceMappingService.getMappedResourcesByYear(strDt[1], endDt[1], $scope.region).then(function (mapping) {
             leaveService.getLeave().then(function (res) {
                 $scope.leaveList = res.data;
                 var monthCol = months($scope.startDate, $scope.endDate);
@@ -459,6 +453,7 @@
     }
 
     function drawDeamndAndCapcityGraph($scope, $filter, mappingData, monthCol, leaveList, allocationData) {
+
         $scope.GraphData = [];
         var stCapacity = new Array(monthCol.length);
         stCapacity.fill(0, 0, monthCol.length);
@@ -560,43 +555,44 @@
 
         angular.forEach(allocationData, function (allocaitons) {
 
-            angular.forEach(allocaitons.allocation, function (allocData) {
-                var total = 0;
-                if (allocaitons.project.startsWith("Production Support")) {
-                    if (monthCol.indexOf(allocData.month) >= 0) {
-                        var indx = monthCol.indexOf(allocData.month);
-                        var value = productionDemand[indx];
-                        if (!isNaN(allocData.value)) {
-                            productionDemand[indx] = round((parseFloat(value) + parseFloat(allocData.value)), 1);
+            if (allocaitons.resourcetype === "Sufficient" || allocaitons.resourcetype === "FlexTeam") {
+
+                angular.forEach(allocaitons.allocation, function (allocData) {
+                    var total = 0;
+                    if (allocaitons.project.startsWith("Production Support")) {
+                        if (monthCol.indexOf(allocData.month) >= 0) {
+                            var indx = monthCol.indexOf(allocData.month);
+                            var value = productionDemand[indx];
+                            if (!isNaN(allocData.value)) {
+                                productionDemand[indx] = round((parseFloat(value) + parseFloat(allocData.value)), 1);
+                            }
                         }
-                    }
-                } else if (allocaitons.project.startsWith("Maintenance")) {
-                    if (monthCol.indexOf(allocData.month) >= 0) {
-                        var indx = monthCol.indexOf(allocData.month);
-                        var value = maintainceDemand[indx];
-                        if (!isNaN(allocData.value)) {
-                            maintainceDemand[indx] = round((parseFloat(value) + parseFloat(allocData.value)), 1);
+                    } else if (allocaitons.project.startsWith("Maintenance")) {
+                        if (monthCol.indexOf(allocData.month) >= 0) {
+                            var indx = monthCol.indexOf(allocData.month);
+                            var value = maintainceDemand[indx];
+                            if (!isNaN(allocData.value)) {
+                                maintainceDemand[indx] = round((parseFloat(value) + parseFloat(allocData.value)), 1);
+                            }
                         }
-                    }
-                } else {
-                    if (monthCol.indexOf(allocData.month) >= 0) {
-                        var indx = monthCol.indexOf(allocData.month);
-                        var value = projectDemand[indx];
-                        if (!isNaN(allocData.value)) {
-                            projectDemand[indx] = round((parseFloat(value) + parseFloat(allocData.value)), 1);
+                    } else {
+                        if (monthCol.indexOf(allocData.month) >= 0) {
+                            var indx = monthCol.indexOf(allocData.month);
+                            var value = projectDemand[indx];
+                            if (!isNaN(allocData.value)) {
+                                projectDemand[indx] = round((parseFloat(value) + parseFloat(allocData.value)), 1);
+                            }
                         }
+
                     }
 
-                }
-
-            });
+                });
+            }
         });
-
 
         //console.log('projectDemand' + projectDemand);
         //console.log('maintainceDemand' + maintainceDemand);
         //console.log('productionDemand' + productionDemand);
-
 
         var yAxisValue = 1000;
         var total = 0;
@@ -678,8 +674,6 @@
         $scope.GraphData.push({ label: "Total Capacity (ST + FT)", backgroundColor: "#660066", data: stFtCapacity });
         $scope.GraphData.months = monthCol;
 
-
-
         var ctx = CreateCanvas("DemandCapacity");
         var mixedChart = new Chart(ctx, {
             type: 'bar',
@@ -741,7 +735,7 @@
 
         projectService.getProject($scope.region).then(function (project) {
             $scope.project = project.data;
-           // console.log(project.data);
+            // console.log(project.data);
 
             if ($scope.projectHTML === '') {
 
@@ -766,14 +760,13 @@
         });
     }
 
-
     function drawTotalManDaysGraph($scope, $filter, projectList, allocationList, monthCol) {
 
         $scope.GraphData = [];
         $scope.projectFilter = [];
-        
+
         if ($scope.projectSelect === undefined || $scope.projectSelect === 'ALL') {
-                angular.forEach(projectList, function (project, index) {
+            angular.forEach(projectList, function (project, index) {
                 $scope.projectFilter.push(project.projectname);
             });
 
@@ -783,28 +776,32 @@
             }
         }
 
-
         angular.forEach($scope.projectFilter, function (projectname, index) {
 
             var monthWise = new Array(monthCol.length);
             monthWise.fill(0, 0, monthWise.length);
             var filterAllocation = $filter('filter')(allocationList, { project: projectname });
-            //console.log(filterAllocation);
+
             angular.forEach(filterAllocation, function (alloc) {
-                angular.forEach(alloc.allocation, function (data) {
-                    if (monthCol.indexOf(data.month) >= 0) { // check if months equal to the predefined month array(user selected)
-                        var indx = monthCol.indexOf(data.month);
-                        var value = monthWise[indx];
-                        //console.log("Value:"+Value);
-                        if (!isNaN(data.value))
-                            monthWise[indx] = round((parseFloat(value) + parseFloat(data.value)), 1);
-                        //monthWise[indx] = parseInt(value) + parseInt(data.value);
+
+                if (alloc.resourcetype === "Sufficient" || alloc.resourcetype === "FlexTeam") {
+                    if (!alloc.project.startsWith("Production Support") && !alloc.project.startsWith("Maintenance")) {
+                        angular.forEach(alloc.allocation, function (data) {
+                            if (monthCol.indexOf(data.month) >= 0) { // check if months equal to the predefined month array(user selected)
+                                var indx = monthCol.indexOf(data.month);
+                                var value = monthWise[indx];
+                                if (!isNaN(data.value))
+                                    monthWise[indx] = round((parseFloat(value) + parseFloat(data.value)), 1);
+                                //monthWise[indx] = parseInt(value) + parseInt(data.value);
+                            }
+                        });
                     }
-                });
+                }
             });
 
-            $scope.GraphData.push({ label: projectname, backgroundColor: getRandomColor(index), data: monthWise });
-            //console.log($scope.GraphData);
+            if (!projectname.startsWith("Production Support") && !projectname.startsWith("Maintenance")) {
+                $scope.GraphData.push({ label: projectname, backgroundColor: getRandomColor(index), data: monthWise });
+            }
         });
         $scope.GraphData.months = monthCol;
 
@@ -845,7 +842,6 @@
 
         }
     }
-
 
     function avlCapcitySkillGraph($scope, $filter, allocationService, resourceMappingService, skillSetService, leaveService) {
 
@@ -914,7 +910,7 @@
                             var indx = monthCol.indexOf(data.month);
                             var value = monthWise[indx];
                             if (!isNaN(data.value)) {
-                                var value = round((parseFloat(value) - parseFloat(data.value)),1);
+                                var value = round((parseFloat(value) - parseFloat(data.value)), 1);
                                 monthWise[indx] = value;
                             }
 
@@ -931,7 +927,7 @@
                             var indx = monthCol.indexOf(leave.month);
                             var value = monthWise[indx];
                             if (!isNaN(leave.value)) {
-                                var value = round((parseFloat(value) - parseFloat(leave.value)),1);
+                                var value = round((parseFloat(value) - parseFloat(leave.value)), 1);
                                 monthWise[indx] = value;
                             }
 
@@ -1011,7 +1007,6 @@
         });
     }//Endf OF createStackedBarGraph($scope)
 
-
     function createBarGraph($scope) {
         var ctx = CreateCanvas("SkillsetChart");
         var chart = new Chart(ctx, {
@@ -1053,7 +1048,6 @@
             }
         });
     }//Endf OF createStackedBarGraph($scope)
-
 
     function CreateCanvas(canvasId) {
 
@@ -1146,7 +1140,6 @@
 
     }
 
-
     /*function getActualResourceCapacity(availableDaysService, monthlyHeaderListService, $scope) {
     var fromDate = "01-" + $scope.headingList[0];
     var toDate = "01-" + $scope.headingList[$scope.headingList.length - 1];
@@ -1191,7 +1184,7 @@
                      //console.log("Allocation=================="+allocationOBJ.allocation[k]);
                      sum = sum + parseFloat(allocationOBJ.allocation[k]);
                  }
- 
+
                  if (isNaN(allocationOBJ.leave)) {
                      allocationOBJ.leave = 0.0;
                  }
@@ -1202,15 +1195,15 @@
                  //console.log("buffertime=================="+allocationOBJ.buffertime);
                  sum = sum + parseFloat(allocationOBJ.leave);
                  totalAllocation = sum;
- 
+
                  if (parseFloat(allocationOBJ.buffertime) > 0) {
                      totalAllocation = totalAllocation + parseFloat(allocationOBJ.buffertime);
                  }
- 
+
                  sum = sum + parseFloat(allocationOBJ.buffertime);
- 
+
                  actualAvailablemandays = sum;
- 
+
                  var utilisation = 0;
                  if (sum == 0.0) {
                      utilisation = 0;
@@ -1219,30 +1212,30 @@
                  } else {
                      utilisation = monthlyHeaderListService.getRoundNumber((totalAllocation / actualAvailablemandays) * 100, 1);
                  }
- 
+
                  var monthlyUtilisationObject = {
                      "key": allocationOBJ.month,
                      "value": utilisation
                  };
- 
+
  
                  monthlyUtilisationArray.push(monthlyUtilisationObject);
- 
+
              }
              resource.utilisationArray.push(monthlyUtilisationArray);
              resources.push(resource);
- 
+
          }
- 
+
          var fillLabels = true;
          $scope.chartlabels = [];
- 
+
          for (var i = 0; i < resources.length; i++) {
              if ($scope.locationId === "All" || resources[i].location === $scope.locationId) {
- 
+
                  angular.forEach(resources[i].utilisationArray, function (value, key) {
                      var data = [];
- 
+
                      for (var j = 0; j < value.length; j++) {
                          if (fillLabels) {
                              $scope.chartlabels.push(value[j].key);
@@ -1263,9 +1256,9 @@
                      $scope.barChartData["labels"] = $scope.chartlabels;
                      $scope.chartlabel = $scope.locationId + " - Recource Utilization";
                  });
- 
+
              }
- 
+
          }
          createBarGraph($scope);
      }*/
@@ -1304,7 +1297,6 @@
              console.log(err);
          });
      }*/
-
 
     /* function getMappedResourceData(resourceMappingService, $scope) {
         resourceMappingService.getMappedResources().then(function (res) {
@@ -1346,7 +1338,6 @@
             console.log(err);
         });
     }*/
-
 
     /*function getMappedSkillData(resourceMappingService, $scope) {
         resourceMappingService.getMappedResources().then(function (res) {
@@ -1417,6 +1408,5 @@
             console.log(err);
         });
     }*/
-
 
 })();
