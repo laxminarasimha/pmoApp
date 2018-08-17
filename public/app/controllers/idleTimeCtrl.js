@@ -176,7 +176,7 @@ angular.module('pmoApp').controller('idleTimeCtrl', Controller);
                             idleTime = 0;
                         }else{
                            idleTime = monthlyHeaderListService.getRoundNumber((parseFloat(allocationOBJ.buffertime)/sum)*100,1);
-                           console.log("idleTime:"+ idleTime);
+                           //console.log("idleTime:"+ idleTime);
                         }
                         
                         var monthlyIdleTimeObject = {
@@ -252,13 +252,13 @@ function getGraphData($scope,allocationService,leaveService,resourceMappingServi
 
 
 
- function getIdleTimeData(idleTimeService,$scope){
-      idleTimeService.getMappedResources().then(function(res) {
-        $scope.idleTimeData = res.data;
-         }).catch(function(err) {
-         console.log(err);
-     });
- }
+//  function getIdleTimeData(idleTimeService,$scope){
+//       idleTimeService.getMappedResources().then(function(res) {
+//         $scope.idleTimeData = res.data;
+//          }).catch(function(err) {
+//          console.log(err);
+//      });
+//  }
 
  function getResourceData(resourceService,$scope){
       resourceService.getResources($scope.region).then(function(res) {

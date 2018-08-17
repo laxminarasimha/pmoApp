@@ -279,9 +279,10 @@
 
   function mapResoruceDetails(nResource, mappedResourceData) {
     for (var user = 0; user < mappedResourceData.length; user++) {
+      //console.log(mappedResourceData);  
       if (mappedResourceData[user].mappedResource.resourcename === nResource.resource) {
         nResource.location = mappedResourceData[user].location;
-        nResource.region = mappedResourceData[user].region;
+        nResource.region = mappedResourceData[user].mappedResource.region;
         nResource.status = mappedResourceData[user].status;
         nResource.skill = mappedResourceData[user].skill;
         nResource.kinid = mappedResourceData[user].mappedResource.kinId;
