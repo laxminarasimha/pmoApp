@@ -38,12 +38,12 @@
 					</thead>
 					<tbody>
 						<tr ng-repeat="allocation in mappingValue" ng-value="{{$index}}">
-							<td style="text-align: center;"><a class="green shortinfo" ng-click="childInfo(allocation.mappedResource.resourcename,allocation.year,allocation.region,$index, $event,false)"
+							<td style="text-align: center;"><a class="green shortinfo" ng-click="childInfo(allocation.mappedResource.resourcename,allocation.year,allocation.mappedResource.baseentity,$index, $event,false)"
 								title="Click to view more"><i class="glyphicon glyphicon-plus-sign"></a></td>
 							<td style="text-align: center;">{{allocation.mappedResource.resourcename}}</td>
 							<td style="text-align: center;">{{allocation.year}}</td>
 							<td style="text-align: center;">{{allocation.mappedResource.skill}}</td>
-							<td style="text-align: center;">{{allocation.region}}</td>
+							<td style="text-align: center;">{{allocation.mappedResource.region}}</td>
 							<td style="text-align: center;">{{allocation.mappedResource.baseentity}}</td>
 
 							<td style="width:7%;" align="center">
@@ -51,7 +51,7 @@
 									<a class="red" data-toggle="modal" title="Conflict in  Allociton">
 										<i class="glyphicon glyphicon-flash"></i>
 									</a>
-								</span>
+								</span>8
 								<span class="label">
 									<a class="green" ng-click="updateAllocaiton(allocation.mappedResource.resourcename,allocation.year,allocation.mappedResource.baseentity,$index,$event);"
 									 title="Save Allocation">

@@ -4,11 +4,11 @@
     angular.module('pmoApp').controller('resourceMappingCtrl', Controller);
 
 
-    Controller.$inject = ['$scope', '$rootScope', '$window', 'DTOptionsBuilder', 'DTColumnBuilder', '$compile', 'resourceMappingService', 'resourceService', 'roleService', 'locationService',
+    Controller.$inject = ['$scope', '$rootScope', '$window', 'DTOptionsBuilder', 'DTColumnBuilder', '$compile', 'resourceMappingService', 'resourceService', 'designationService','roleService', 'locationService',
         'regionService', 'skillSetService', 'statusService', 'resourceTypeService', 'holidayListService',
         'monthlyHeaderListService'];
 
-    function Controller($scope, $rootScope, $window, DTOptionsBuilder, DTColumnBuilder, $compile, resourceMappingService, resourceService, roleService, locationService,
+    function Controller($scope, $rootScope, $window, DTOptionsBuilder, DTColumnBuilder, $compile, resourceMappingService, resourceService, designationService ,roleService, locationService,
         regionService, skillSetService, statusService, resourceTypeService, holidayListService, monthlyHeaderListService) {
 
         //$scope.resourcemap = {};
@@ -40,6 +40,9 @@
 
         $scope.statusList = [];
         getStatusData(statusService, $scope);
+
+        $scope.designationList=[];
+        getDesignationData(designationService,$scope);
 
         $scope.roleList = [];
         getRoleData(roleService, $scope);
@@ -785,6 +788,14 @@
         locationService.getLocation().then(function (res) {
             $scope.locationList = res.data;
         }).catch(function (err) {
+            console.log(err);
+        });
+    }
+
+    function getDesignationData(designationService,$scope){
+        designationService.getDesignations().then(function (res){
+            $scope.designationList = res.data;
+        }).catch(function (err){
             console.log(err);
         });
     }

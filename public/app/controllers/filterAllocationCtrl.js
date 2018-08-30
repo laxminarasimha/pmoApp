@@ -25,7 +25,6 @@
         };
     });
 
-
     app.controller('filterAllocationCtrl', Controller);
 
     app.filter('projectfilter', function () {
@@ -41,11 +40,9 @@
     })
 
 
+    Controller.$inject = ['$rootScope', '$scope', '$window', '$compile', 'DTOptionsBuilder', 'DTColumnBuilder', 'resourceService', 'projectService', 'allocationService', 'leaveService', 'resourceMappingService', '$filter', 'availableDaysService', 'holidayListService'];
 
-
-    Controller.$inject = ['$rootScope','$scope', '$window','$compile', 'DTOptionsBuilder', 'DTColumnBuilder', 'resourceService', 'projectService', 'allocationService', 'leaveService', 'resourceMappingService', '$filter', 'availableDaysService', 'holidayListService'];
-
-    function Controller($rootScope,$scope, $window,$compile, DTOptionsBuilder, DTColumnBuilder, resourceService, projectService, allocationService, leaveService, resourceMappingService, $filter, availableDaysService, holidayListService) {
+    function Controller($rootScope, $scope, $window, $compile, DTOptionsBuilder, DTColumnBuilder, resourceService, projectService, allocationService, leaveService, resourceMappingService, $filter, availableDaysService, holidayListService) {
 
         $scope.projectSelect = "ALL";
         //$scope.resourceWiseAllocaiton = [];
@@ -61,13 +58,10 @@
         $scope.resource = '';
         $scope.mappedResourceData = [];
 
-		$scope.region = $window.localStorage.getItem("region");
-        
+        $scope.region = $window.localStorage.getItem("region");
+
         // getMappedResourceData(resourceMappingService, $scope);
         intialize(projectService, resourceService, $scope);
-
-      
-
 
         function allocObject(object) {
             var month;
@@ -83,15 +77,12 @@
             }
         };
 
-
         $scope.vm = {};
         $scope.vm.dtInstance = null;
         $scope.vm.dtOptions = DTOptionsBuilder.newOptions().withOption('order', [0, 'asc']);
         $scope.vm.dtOptions.withDOM('Bfrtip');
         $scope.vm.dtOptions.withOption('buttons', ['print', 'pdf', 'excel']);
         $scope.vm.dtOptions.withOption('lengthMenu', [10, 25, 50, "All"]);
-
-
 
         $scope.filterSeach = function () {
 
@@ -150,7 +141,6 @@
         $scope.totalMonthWise = new Array(len);
         $scope.totalMonthWise.fill(0, 0, len);
 
-
         if (selectProject !== 'ALL')
             projectList = $filter('filter')(projectList, { projectname: selectProject });
 
@@ -183,9 +173,10 @@
                             var indx = monthCol.indexOf(alloc.month);
                             var value = monthWise[indx];
                             if (!isNaN(alloc.value)) {
-                                var value = parseInt(value) + parseInt(alloc.value);
+                                var value = round(parseFloat(value) + parseFloat(alloc.value), 1);
                                 monthWise[indx] = value;
                                 $scope.totalMonthWise[indx] += value;
+                                $scope.totalMonthWise[indx] = round($scope.totalMonthWise[indx],1);
                                 totalResourceWise += value;
                             }
 
@@ -201,7 +192,8 @@
         for (var i = 0; i < $scope.totalMonthWise.length; i++) {
             total += $scope.totalMonthWise[i];
         }
-        $scope.totalMonthWise[len - 1] = total;
+
+        $scope.totalMonthWise[len - 1] = round(total,1);
 
         $scope.ShowSpinnerStatus = false;
         var spinner = document.getElementById("spinner");
@@ -211,12 +203,10 @@
         }
     }
 
-
     function checkmonth(index) {
         var currentMonth = new Date().getMonth();
         return index < currentMonth;
     }
-
 
     function intialize(projectService, resourceService, $scope) {
         console.log($scope.region);
@@ -233,13 +223,7 @@
         });
     }
 
-
-
-
     function filterUniqueResource(collection) {
-
-        console.log(collection);
-
         var output = [], item;
         for (var col = 0; col < collection.length; col++) {
             item = collection[col];
@@ -247,11 +231,9 @@
                 output.push(item.mappedResource.resourcename);
             }
         }
-        console.log(output);
         return output;
 
     }
-
 
     function daysInMonthAndYear(year, holidays) {
         var holidayList = [];
@@ -323,10 +305,15 @@
         return arr;
     }
 
-
     function openDialog() {
         $('#confirmModal').modal('show');
     }
 
+    function round(value, precision) {
+        var multiplier = Math.pow(10, precision || 0);
+        return Math.round(value * multiplier) / multiplier;
+    }
+
 })();
+
 

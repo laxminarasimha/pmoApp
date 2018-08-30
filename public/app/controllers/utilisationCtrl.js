@@ -56,6 +56,7 @@
             app.successMsg = false;
             app.errorMsg = false;
             app.errorClass = "";
+            getGraphData($scope, allocationService, leaveService, resourceMappingService, availableDaysService, monthlyHeaderListService);
         };
 
 
@@ -265,6 +266,7 @@
         }).catch(function (err) {
             console.log(err);
         });
+        
     }
 
     //====================================================//

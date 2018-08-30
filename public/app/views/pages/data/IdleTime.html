@@ -1,6 +1,6 @@
 
 <div ng-controller="idleTimeCtrl">
-<form name="idleTimeForm" ng-submit="getIdleTimes(idleTimeDTO);" novalidate >
+<form name="idleTimeForm" ng-submit="getIdleTimes(idleTimeDTO)" novalidate >
 <legend>Idle Time</legend>
 <div class="panel panel-info" >  
   <div class="panel-heading">  
@@ -22,17 +22,17 @@
            </select>
            </div>
         </div> 
-
-        <div class='col-sm-3'>
+      </div>
+        <!-- <div class='col-sm-3'>
             <div  class=form-group>
             <label for="region">Region</label>
             <select ng-model="idleTimeDTO.region" id="region"  class="form-control input-sm {{errorClass}}">
               <option ng-repeat="x in regionList" value="{{x.regionname}}  track by $index">{{x.regionname}}</option>
            </select>
            </div>
-         </div>
+         </div> -->
 
-      </div>
+     
    
 
      <!-- <div class='row'>
