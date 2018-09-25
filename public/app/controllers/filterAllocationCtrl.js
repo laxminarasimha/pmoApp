@@ -39,7 +39,6 @@
         };
     })
 
-
     Controller.$inject = ['$rootScope', '$scope', '$window', '$compile', 'DTOptionsBuilder', 'DTColumnBuilder', 'resourceService', 'projectService', 'allocationService', 'leaveService', 'resourceMappingService', '$filter', 'availableDaysService', 'holidayListService'];
 
     function Controller($rootScope, $scope, $window, $compile, DTOptionsBuilder, DTColumnBuilder, resourceService, projectService, allocationService, leaveService, resourceMappingService, $filter, availableDaysService, holidayListService) {
@@ -137,6 +136,7 @@
         $scope.listData = [];
         var len = monthCol.length + 1;
         var allocFilter = [];
+        var duplicateCheck = new Array();
 
         $scope.totalMonthWise = new Array(len);
         $scope.totalMonthWise.fill(0, 0, len);
@@ -147,53 +147,60 @@
         angular.forEach(projectList, function (project) {
 
             allocFilter = $filter('filter')(allocationList, { project: project.projectname });
+
             if ($scope.resource != '' && $scope.resource != undefined) {
-                console.log($scope.resource);
                 allocFilter = $filter('filter')(allocFilter, { resource: $scope.resource });
             }
 
             angular.forEach(allocFilter, function (allocation) {
                 var totalResourceWise = 0;
                 var filterResourceWiseAllocation = [];
+                var vResource = null;
+                var vDcheck = "";
 
                 if ($scope.resource === '' || $scope.resource === undefined) {
-                    filterResourceWiseAllocation = $filter('filter')(allocFilter, { resource: allocation.resource });
+                    vResource = allocation.resource;
                 } else {
-                    filterResourceWiseAllocation = $filter('filter')(allocFilter, { resource: $scope.resource });
+                    vResource = $scope.resource;
                 }
 
-                //console.log(filterResourceWiseAllocation);
+                vDcheck = project.projectname + "-" + vResource;
+                if (duplicateCheck.indexOf(vDcheck) < 0) {
 
-                var monthWise = new Array(monthCol.length);
-                monthWise.fill(0, 0, monthWise.length);
+                    filterResourceWiseAllocation = $filter('filter')(allocFilter, { resource: vResource });
+                    var monthWise = new Array(monthCol.length);
+                    monthWise.fill(0, 0, monthWise.length);
 
-                angular.forEach(filterResourceWiseAllocation, function (allAlloc) {
-                    angular.forEach(allAlloc.allocation, function (alloc) {
-                        if (monthCol.indexOf(alloc.month) >= 0) { // check if months equal to the predefined month array(user selected)
-                            var indx = monthCol.indexOf(alloc.month);
-                            var value = monthWise[indx];
-                            if (!isNaN(alloc.value)) {
-                                var value = round(parseFloat(value) + parseFloat(alloc.value), 1);
-                                monthWise[indx] = value;
-                                $scope.totalMonthWise[indx] += value;
-                                $scope.totalMonthWise[indx] = round($scope.totalMonthWise[indx],1);
-                                totalResourceWise += value;
+                    angular.forEach(filterResourceWiseAllocation, function (allAlloc) {
+                        angular.forEach(allAlloc.allocation, function (alloc) {
+                            if (monthCol.indexOf(alloc.month) >= 0) { // check if months equal to the predefined month array(user selected)
+                                var indx = monthCol.indexOf(alloc.month);
+                                var value = monthWise[indx];
+
+                                if (!isNaN(alloc.value)) {
+                                    var value = round(parseFloat(value) + parseFloat(alloc.value), 1);
+                                    monthWise[indx] = value;
+                                    console.log(parseFloat($scope.totalMonthWise[indx]) + "<><><>" + parseFloat(alloc.value));
+                                    $scope.totalMonthWise[indx] = round((parseFloat($scope.totalMonthWise[indx]) + parseFloat(alloc.value)), 1);
+                                    totalResourceWise += round(parseFloat(alloc.value), 1);
+                                }
                             }
-
-                        }
+                        });
+                        //}
                     });
-
-                });
-                $scope.listData.push({ project: project.projectname, resource: allocation.resource, allocation: monthWise, total: totalResourceWise });
+                    $scope.listData.push({ project: project.projectname, resource: allocation.resource, allocation: monthWise, total: round(totalResourceWise, 1) });
+                    duplicateCheck.push(vDcheck); // resource and project should be once count
+                }
             });
         });
 
         var total = 0;
         for (var i = 0; i < $scope.totalMonthWise.length; i++) {
             total += $scope.totalMonthWise[i];
+
         }
 
-        $scope.totalMonthWise[len - 1] = round(total,1);
+        $scope.totalMonthWise[len - 1] = round(total, 1);
 
         $scope.ShowSpinnerStatus = false;
         var spinner = document.getElementById("spinner");
@@ -315,5 +322,6 @@
     }
 
 })();
+
 
 

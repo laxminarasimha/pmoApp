@@ -140,7 +140,7 @@
 
         $scope.GraphData = [];
         var stCapacity = new Array(monthCol.length);
-        stCapacity.fill(0, 0, monthCol.length);
+       stCapacity.fill(0, 0, monthCol.length);
 
         var ftCapacity = new Array(monthCol.length);
         ftCapacity.fill(0, 0, monthCol.length);
@@ -308,7 +308,7 @@
 
         for (var i = 0; i < monthCol.length; i++) {
             availableCapacity[i] = round((stFtCapacity[i] - totalDemand[i]), 1);
-            availableCapacityP[i] =Math.ceil(((availableCapacity[i] / stFtCapacity[i]) * 100)) + "%";
+            availableCapacityP[i] = Math.ceil(((availableCapacity[i] / stFtCapacity[i]) * 100)) + "%";
         }
 
         var chartData = {
@@ -504,7 +504,7 @@
             if (mapping.resourceType === 'FlexTeam') {
                 angular.forEach(mapping.monthlyAvailableActualMandays, function (mapData) {
                     if (monthCol.indexOf(mapData.key) >= 0) { // check if months equal to the predefined month array(user selected)
-                        var indx = monthCol.indexOf(mapData.key);
+                       var indx = monthCol.indexOf(mapData.key);
                         var value = ftCapacity[indx];
                         if (!isNaN(mapData.value)) {
                             ftCapacity[indx] = round((parseFloat(value) + parseFloat(mapData.value)), 1);
@@ -877,11 +877,15 @@
     function drawAvailCapacityGraph($scope, $filter, mappingList, skillSetList, allocationList, monthCol, leaveList) {
 
         $scope.GraphData = [];
+        var duplicateCheck = new Array();
+
         if ($scope.skillSelect != 'ALL')
             skillSetList = $filter('filter')(skillSetList, { skillname: $scope.skillSelect });
 
         angular.forEach(skillSetList, function (skill, index) {
             var monthWise = new Array(monthCol.length);
+            var vDcheck = "";
+
             monthWise.fill(0, 0, monthWise.length);
             var resourceMappBySkill = [];
 
@@ -901,45 +905,49 @@
                     }
                 });
 
-                // check for alloction ,and if it is there for that resource and skill then minus that value
-                var allocationFilter = $filter('filter')(allocationList, { resource: mappedRes.mappedResource.resourcename });
+                vDcheck = skill.skillname + "-" + mappedRes.mappedResource.resourcename;
+                if (duplicateCheck.indexOf(vDcheck) < 0) {
 
-                angular.forEach(allocationFilter, function (alloc) {
-                    angular.forEach(alloc.allocation, function (data) {
-                        if (monthCol.indexOf(data.month) >= 0) { // check if months equal to the predefined month array(user selected)
-                            var indx = monthCol.indexOf(data.month);
-                            var value = monthWise[indx];
-                            if (!isNaN(data.value)) {
-                                var value = round((parseFloat(value) - parseFloat(data.value)), 1);
-                                monthWise[indx] = value;
+                    // check for alloction ,and if it is there for that resource and skill then minus that value
+                    var allocationFilter = $filter('filter')(allocationList, { resource: mappedRes.mappedResource.resourcename });
+
+                    angular.forEach(allocationFilter, function (alloc) {
+                        angular.forEach(alloc.allocation, function (data) {
+                            if (monthCol.indexOf(data.month) >= 0) { // check if months equal to the predefined month array(user selected)
+                                var indx = monthCol.indexOf(data.month);
+                                var value = monthWise[indx];
+                                if (!isNaN(data.value)) {
+                                    var value = round((parseFloat(value) - parseFloat(data.value)), 1);
+                                    monthWise[indx] = value;
+                                }
+
                             }
-
-                        }
+                        });
                     });
-                });
 
-                //deduct the leave aswell for that resource
+                    //deduct the leave aswell for that resource
 
-                var leaveFilter = $filter('filter')(leaveList, { resourcename: mappedRes.mappedResource.resourcename });
-                angular.forEach(leaveFilter, function (leaves) {
-                    angular.forEach(leaves.leavedaysinmonth, function (leave) {
-                        if (monthCol.indexOf(leave.month) >= 0) { // check if months equal to the predefined month array(user selected)
-                            var indx = monthCol.indexOf(leave.month);
-                            var value = monthWise[indx];
-                            if (!isNaN(leave.value)) {
-                                var value = round((parseFloat(value) - parseFloat(leave.value)), 1);
-                                monthWise[indx] = value;
+                    var leaveFilter = $filter('filter')(leaveList, { resourcename: mappedRes.mappedResource.resourcename });
+                    angular.forEach(leaveFilter, function (leaves) {
+                        angular.forEach(leaves.leavedaysinmonth, function (leave) {
+                            if (monthCol.indexOf(leave.month) >= 0) { // check if months equal to the predefined month array(user selected)
+                                var indx = monthCol.indexOf(leave.month);
+                                var value = monthWise[indx];
+                                if (!isNaN(leave.value)) {
+                                    var value = round((parseFloat(value) - parseFloat(leave.value)), 1);
+                                    monthWise[indx] = value;
+                                }
                             }
-
-                        }
+                        });
                     });
-                });
+                    duplicateCheck.push(vDcheck);
+                }
             });
 
             $scope.GraphData.push({ label: skill.skillname, backgroundColor: getRandomColor(index), data: monthWise });
         });
 
-        $scope.GraphData.months = monthCol;
+       $scope.GraphData.months = monthCol;
 
         var ctx = CreateCanvas("avlCapcitySkillGraph");
         var myChart = new Chart(ctx, {
@@ -1218,7 +1226,7 @@
                      "value": utilisation
                  };
 
- 
+
                  monthlyUtilisationArray.push(monthlyUtilisationObject);
 
              }
@@ -1410,3 +1418,4 @@
     }*/
 
 })();
+
