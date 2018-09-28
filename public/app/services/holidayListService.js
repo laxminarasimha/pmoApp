@@ -1,4 +1,3 @@
-
 (function () {
 
   'use strict';
@@ -17,12 +16,16 @@
       },
       getLocationHolidays: function (locationname) {
         url = globalConfig.apiAddress + "/holiday/location/" + locationname;
-        console.log(url);
         return $http.get(url);
       },
 
       getLocationHolidaysWithYear: function (year) {
         url = globalConfig.apiAddress + "/holiday/aggegrate/byyear/" + year;
+        return $http.get(url);
+      },
+
+      getLocationHolidaysYearRange: function (startYear,endYear) {
+        url = globalConfig.apiAddress + "/holiday/aggegrate/byyear/range/" + startYear +"/"+endYear;
         return $http.get(url);
       },
 
