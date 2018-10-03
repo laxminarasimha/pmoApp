@@ -1,7 +1,7 @@
 var app = angular.module('appRoutes', ['ui.router'])
 	.config(function ($stateProvider, $urlRouterProvider, $urlMatcherFactoryProvider, $locationProvider) {
 
-		$urlRouterProvider.otherwise('/home');
+		$urlRouterProvider.otherwise('/Resources');
 		$urlMatcherFactoryProvider.caseInsensitive(true);
 		$urlMatcherFactoryProvider.strictMode(false);
 
@@ -35,20 +35,11 @@ var app = angular.module('appRoutes', ['ui.router'])
 				resolve: {
 					loggedIn: onlyLoggedIn
 				},
-				data: { pageTitle: 'Home', roles: ['ADMIN'] }
+				data: { pageTitle: 'Resources', roles: ['ADMIN'] }
 
 			})
 
-			.state('root.home', {
-				url: '/Home',
-				views: {
-					'container@': {
-						templateUrl: 'app/views/pages/reporting/dashboard.html'
-					}
-				},
-				data: { pageTitle: 'Home', roles: ['ADMIN'] }
-
-			})
+			
 
 			.state('root.logout', {
 				url: '/logout',
@@ -239,14 +230,14 @@ var app = angular.module('appRoutes', ['ui.router'])
 				data: { pageTitle: 'Filter Allocation', roles: ['ADMIN'] }
 			})
 
-			.state('root.Resource Mapping', {
-				url: '/Resource Mapping',
+			.state('root.Resources', {
+				url: '/Resources',
 				views: {
 					'container@': {
 						templateUrl: 'app/views/pages/resourcemapping/resourceMapping.html'
 					}
 				},
-				data: { pageTitle: 'Resource Mapping', roles: ['ADMIN'] }
+				data: { pageTitle: 'Resources', roles: ['ADMIN'] }
 			})
 
 

@@ -4,11 +4,11 @@
 "name" : "Home",
 "submenu" : [],
 "role" : ["SAdmin","Admin"],
-"visbile" : "true"
+"visbile" : "false"
 },
 {
 "id" : "2",
-"name" : "Resource Mapping" ,
+"name" : "Resources" ,
 "submenu" : [],
 "role" : ["SAdmin","Admin"],
 "visbile" : "true"
@@ -24,7 +24,7 @@
 "name" : "Status" ,
 "submenu" : [{"id":"1", "name":"IdleTime","visible":"true"},{"id":"2", "name":"Utilisation","visible":"true"},{"id":"3", "name":"AvailableActualMandays","visible":"true"}],
 "role" : ["SAdmin","Admin"],
-"visbile" : "true"
+"visbile" : "false"
 },
 {
 "id" : "5",
