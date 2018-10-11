@@ -52,7 +52,7 @@ angular.module('mainController',['authServices'])
 			app.loading =false;
 			app.successMsg = data.data.message + '... Redirecting';
 
-			$timeout(function(){$location.path('/Home');
+			$timeout(function(){$location.path('/Resources');
 					app.loginData = '';
 					app.successMsg = false;
 				},2000);

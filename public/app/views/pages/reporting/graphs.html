@@ -49,17 +49,19 @@
             <label>Project:</label>
           </div>
           <div class="col-sm-3">
+            <div id="xx" style="display:block">
               <!-- <select id="resource-select" id="resource" class="form-control input-sm" ng-model="resource" ng-change="graphidchange()" required multiple="multiple" multi-select class="form-control"></select> -->
-            <select id="project-select"  ng-init="inputVal='ALL'"  ng-model="projectSelect"  required multiple="multiple" multi-select ng-change="graphidchange()" class="form-control" >
+            <select  id="project-select" name="project-select" ng-init="inputVal='ALL'"  ng-model="projectSelect"   multiple="multiple" multi-select ng-change="graphidchange()" class="form-control project" >
 
               <!-- <option ng-repeat="x in project" value="{{x.projectname}}">{{x.projectname}}</option> -->
             </select>
+          </div>
           </div>
           <div class="col-sm-1 col-md-offset-4">
             <label>Technology:</label>
           </div>
           <div class="col-sm-3 span">
-            <select id="skill-select" class="form-control input-sm" ng-model="skillSelect" ng-init="inputVal='ALL'" ng-change="graphidchange()">
+            <select id="skill-select" class="form-control input-sm" ng-model="skillSelect" ng-init="inputVal='ALL'" ng-change="graphidchange()" >
               <option value="ALL">All Skills</option>
               <option ng-repeat="x in skillSetList" value="{{x.skillname}}">{{x.skillname}}</option>
             </select>
@@ -72,6 +74,9 @@
             <input type="button" id="save_image" value="Download as image" class="btn btn-primary input-sm" onclick="Capture()">
             <a href="#" style="display :none"  id="download">Download as image</a>
           </div>
+          <span></span>
+          <span></span>
+          <span></span>
           <div id="capture" class="container">
           <div class="row">
             <div id="ChartContainer">
@@ -125,6 +130,17 @@ function Capture() {
     });
 }
 
+// $("select#graphid").change(function(){
+//   if($(this).val()=='DemandCapacity'){
+//     $("#project-select").style.visibility="hidden";
+//   }else{
+//     $("#project-select").style.visibility="visible";
+//   }
+ 
+// });
+ 
+ 
+ 
   $('#project-select').multiselect();
   $('.form_date').datetimepicker({
     format: "mm/yyyy",
@@ -134,6 +150,26 @@ function Capture() {
     startDate: '1m'
 
   });
+
+
+
+
+  // $(document).ready(function(){
+//   $("select#graphid").change(function(){
+//     if($(this).val()=='ProjectMDS'){
+//     $("#skill-select").prop('disabled',true);
+//     }
+//     else if ($(this).val()=='DemandCapacity'|| $(this).val()=='CapacityFYF') {
+//       $("#project-select").prop('disabled',true);
+//      $("#skill-select").prop('disabled',true);
+    
+//     } else {
+//       $("#skill-select").prop('disabled',false);
+//     }
+//   })
+// })
+
+
 
 </script>
 <style>
@@ -151,11 +187,18 @@ function Capture() {
 				0% { transform: rotate(0deg); }
 				100% { transform: rotate(360deg); }
 			}
-			html, body, container {
+			html, body {
 				height: 100%;
 				width: 100%;
 				margin: 0;
-			}
+      }
+      .container{
+        height: 100%;
+        width: 100%;
+        margin: 0;
+      }
+     
+
 </style>
 
 

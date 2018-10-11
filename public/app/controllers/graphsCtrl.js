@@ -57,9 +57,9 @@
 
         //getGraphData($scope,allocationService,leaveService,resourceMappingService,availableDaysService,monthlyHeaderListService);
         //getActualResourceCapacity(availableDaysService,monthlyHeaderListService);
-
+      
         $scope.graphidchange = function () {
-
+          
             if ($scope.startDate === '' || $scope.endDate === '' || $scope.startDate === undefined || $scope.endDate === undefined) {
                 return;
             }
@@ -83,9 +83,21 @@
         }
 
     }
-
+    // function hideData(){
+    //     $('#skill-select').css("display","none");
+    //     $('#project-select').css("display","none");
+       
+    // }
     function createGraph($scope, $filter, resourceMappingService, availableDaysService, monthlyHeaderListService, allocationService, projectService, skillSetService, leaveService, holidayListService) {
         $scope.ShowSpinnerStatus = true;
+
+        
+         
+              //console.log(document.getElementById("project-select").style.display);
+         
+              
+          
+        
         switch ($scope.graphid) {
             case "Resource Capacity":
                 //  getMappedResourceData(resourceMappingService, $scope);
@@ -97,15 +109,23 @@
                 //  getActualResourceCapacity(availableDaysService, monthlyHeaderListService, $scope);
                 break;
             case "ProjectMDS":
+                document.getElementById("skill-select").style.display ="none";
+                document.getElementById("xx").style.display ="block";
                 projectManDaysGraph($scope, $filter, allocationService, projectService);
                 break;
             case "AvlCapcitySkill":
+                document.getElementById("xx").style.display ="none";
+                document.getElementById("skill-select").style.display ="block";
                 avlCapcitySkillGraph($scope, $filter, allocationService, resourceMappingService, skillSetService, leaveService, holidayListService);
                 break;
             case "DemandCapacity":
+                document.getElementById("xx").style.display ="none";
+                document.getElementById("skill-select").style.display ="none";
                 demandGraph($scope, $filter, resourceMappingService, allocationService, leaveService, holidayListService);
                 break;
             case "CapacityFYF":
+                document.getElementById("xx").style.display ="none";
+                document.getElementById("skill-select").style.display ="none";
                 demandGraphFYF($scope, $filter, resourceMappingService, allocationService, leaveService, holidayListService);
                break;
             default:
@@ -351,7 +371,7 @@
 
         for (var i = 0; i < monthCol.length; i++) {
             availableCapacity[i] = round((stFtCapacity[i] - totalDemand[i]), 1);
-            availableCapacityP[i] = Math.ceil(((availableCapacity[i] / stFtCapacity[i]) * 100)) + "%";
+            availableCapacityP[i] = Math.ceil(((availableCapacity[i] / stFtCapacity[i]) * 100)) ;
         }
 
         var chartData = {
@@ -367,7 +387,7 @@
             }, {
                 type: 'line',
                 label: 'Total Capacity (ST + FT)',
-                borderColor: "#660066",
+                borderColor: "#e9967a",
                 borderWidth: 2,
                 fill: false,
                 data: stFtCapacity
@@ -399,11 +419,20 @@
             }, {
                 type: 'line',
                 label: 'Avialble Capacity',
-                borderColor: '#4b0082',
+                borderColor: 'yellow',
                 borderWidth: 2,
                 borderDash: [10, 10],
                 fill: false,
                 data: availableCapacity
+
+            },
+            {
+                type: 'line',
+                label: 'Available Capacity %',
+                borderColor: '#ffa500',
+                borderWidth: 2,
+                fill: false,
+                data: availableCapacityP
 
             }, {
                 type: 'bar',
@@ -437,11 +466,11 @@
         $scope.GraphData.push({ label: "Project Demand", backgroundColor: "#739900", data: projectDemand });
 
         $scope.GraphData.push({ label: "Total Demand", backgroundColor: "#ffc0cb", data: totalDemand });
-        $scope.GraphData.push({ label: "Total Capacity (ST + FT)", backgroundColor: "#660066", data: stFtCapacity });
+        $scope.GraphData.push({ label: "Total Capacity (ST + FT)", backgroundColor: "#e9967a", data: stFtCapacity });
         $scope.GraphData.push({ label: "Production Support (Contractual)", backgroundColor: "#800080", data: prodSupportCon });
         $scope.GraphData.push({ label: "Maintaince (Contractual)", backgroundColor: "#ff0000", data: maintainceCon });
         $scope.GraphData.push({ label: "Project Support (Contractual)", backgroundColor: "#556b2f", data: projSupportCon });
-        $scope.GraphData.push({ label: "Available Capacity", backgroundColor: "#add8e6", data: availableCapacity });
+        $scope.GraphData.push({ label: "Available Capacity", backgroundColor: "yellow", data: availableCapacity });
         $scope.GraphData.push({ label: "Available Capacity %", backgroundColor: "#ffa500", data: availableCapacityP });
         $scope.GraphData.months = monthCol;
 
@@ -461,6 +490,23 @@
                         intersect: true
                     }, legend: {
                         display: false
+                    },
+                    scales: {
+                        xAxes: [{
+                            
+                            scaleLabel: {
+                                display:     true,
+                                labelString: 'Months'
+                            }
+                           
+                        }],
+                        yAxes: [{
+                            
+                            scaleLabel: {
+                                display:     true,
+                                labelString: 'ManDays'
+                            }
+                        }]
                     }
                 }
             });
@@ -780,13 +826,21 @@
                     xAxes: [{
                         stacked: true,
                         maxBarThickness: 40,
+                        scaleLabel: {
+                            display:     true,
+                            labelString: 'Months'
+                        }
                     }],
                     yAxes: [{
                         stacked: false,
                         ticks: {
                             beginAtZero: true,
                             min: 0,
-                            max: 1500
+                            max:  yAxisValue
+                        },
+                        scaleLabel: {
+                            display:     true,
+                            labelString: 'ManDays'
                         }
                     }, {
                         id: "bar-y-axis",
@@ -795,9 +849,10 @@
                         ticks: {
                             beginAtZero: true,
                             min: 0,
-                            max: 100
+                            max:  yAxisValue
                         },
                         type: 'linear'
+                        
                     }]
                 }
             }
@@ -824,9 +879,11 @@
             // console.log(project.data);
 
             if ($scope.projectHTML === '') {
-
+                
                 angular.forEach($scope.project, function (item) {
+                    if(!item.projectname.startsWith("Production Support")&& !item.projectname.startsWith("Maintenance")){
                     $scope.projectHTML += '<option>' + item.projectname + '</option>';
+                    }
                 });
 
                 $('#project-select').append($scope.projectHTML);
@@ -908,11 +965,20 @@
                     },
                     scales: {
                         xAxes: [{
-                            maxBarThickness: 30
+                            maxBarThickness: 30,
+                            scaleLabel: {
+                                display:     true,
+                                labelString: 'Months'
+                            }
+                           
                         }],
                         yAxes: [{
                             ticks: {
                                 beginAtZero: false
+                            },
+                            scaleLabel: {
+                                display:     true,
+                                labelString: 'ManDays'
                             }
                         }]
                     }
@@ -1098,8 +1164,22 @@
                     display: false
                 },
                 scales: {
-                    xAxes: [{ stacked: true, min: 0, maxBarThickness: 40 }],
-                    yAxes: [{ stacked: true, min: 0 }]
+                    xAxes: [{ 
+                        stacked: true,
+                         min: 0, 
+                         maxBarThickness: 40 ,
+                         scaleLabel: {
+                            display:     true,
+                            labelString: 'Months'
+                        }
+                        }],
+                    yAxes: [{ 
+                        stacked: true, 
+                        min: 0,
+                        scaleLabel: {
+                            display:     true,
+                            labelString: 'Buffer Availability'
+                        } }]
 
                 },
                 scaleBeginAtZero: true
@@ -1139,9 +1219,17 @@
                 scales: {
                     xAxes: [{
                         stacked: true,
+                        scaleLabel: {
+                            display:     true,
+                            labelString: 'Months'
+                        }
                     }],
                     yAxes: [{
-                        stacked: true
+                        stacked: true,
+                        scaleLabel: {
+                            display:     true,
+                            labelString: 'ManDays'
+                        }
                     }]
                 }
             }
@@ -1175,13 +1263,13 @@
                     xAxes: [{
                         scaleLabel: {
                             display: true,
-                            labelString: $scope.chartxlabel
+                            labelString: 'Months'
                         }
                     }],
                     yAxes: [{
                         scaleLabel: {
                             display: true,
-                            labelString: $scope.chartylabel,
+                            labelString: 'ManDays',
                             barPercentage: 0.5
                         }
                     }]
