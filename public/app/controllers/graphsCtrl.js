@@ -105,23 +105,23 @@
                 //  getActualResourceCapacity(availableDaysService, monthlyHeaderListService, $scope);
                 break;
             case "ProjectMDS":
-                document.getElementById("skill-select").style.display ="none";
+                document.getElementById("skill").style.display ="none";
                 document.getElementById("project").style.display ="block";
                 projectManDaysGraph($scope, $filter, allocationService, projectService);
                 break;
             case "AvlCapcitySkill":
                 document.getElementById("project").style.display ="none";
-                document.getElementById("skill-select").style.display ="block";
+                document.getElementById("skill").style.display ="block";
                 avlCapcitySkillGraph($scope, $filter, allocationService, resourceMappingService, skillSetService, leaveService, holidayListService);
                 break;
             case "DemandCapacity":
                 document.getElementById("project").style.display ="none";
-                document.getElementById("skill-select").style.display ="none";
+                document.getElementById("skill").style.display ="none";
                 demandGraph($scope, $filter, resourceMappingService, allocationService, leaveService, holidayListService);
                 break;
             case "CapacityFYF":
                 document.getElementById("project").style.display ="none";
-                document.getElementById("skill-select").style.display ="none";
+                document.getElementById("skill").style.display ="none";
                 demandGraphFYF($scope, $filter, resourceMappingService, allocationService, leaveService, holidayListService);
                break;
             default:
