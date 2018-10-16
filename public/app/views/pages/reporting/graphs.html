@@ -49,18 +49,28 @@
             <label>Project:</label>
           </div>
           <div class="col-sm-3">
-            <div id="xx" style="display:block">
+            <div id="project">
               <!-- <select id="resource-select" id="resource" class="form-control input-sm" ng-model="resource" ng-change="graphidchange()" required multiple="multiple" multi-select class="form-control"></select> -->
-            <select  id="project-select" name="project-select" ng-init="inputVal='ALL'"  ng-model="projectSelect"   multiple="multiple" multi-select ng-change="graphidchange()" class="form-control project" >
+            <select  id="project-select" ng-init="inputVal='ALL'"  ng-model="projectSelect"   multiple="multiple" multi-select ng-change="graphidchange()" class="form-control" >
 
               <!-- <option ng-repeat="x in project" value="{{x.projectname}}">{{x.projectname}}</option> -->
             </select>
           </div>
           </div>
-          <div class="col-sm-1 col-md-offset-4">
+
+          <div class="col-sm-1">
+              <label>Region:</label>
+            </div>
+            <div class="col-sm-3">
+            <select id="region-select" class="form-control">
+              <option ng-repeat="x in regionData">{{x.regionname}}</option>
+            </select>
+          </div>
+
+          <div class="col-sm-1">
             <label>Technology:</label>
           </div>
-          <div class="col-sm-3 span">
+          <div class="col-sm-3">
             <select id="skill-select" class="form-control input-sm" ng-model="skillSelect" ng-init="inputVal='ALL'" ng-change="graphidchange()" >
               <option value="ALL">All Skills</option>
               <option ng-repeat="x in skillSetList" value="{{x.skillname}}">{{x.skillname}}</option>
@@ -92,10 +102,21 @@
               </tr>
             </thead>
             <tbody>
-              <tr ng-repeat="record in GraphData">
+              <tr ng-repeat="record in GraphData">   
                 <td style="text-align: center;">
-                  <span style="background-color:{{record.backgroundColor}}; width: 50px; height: 10px;display: inline-block;"></span>
+                    <div ng-if="record.showLine=='true'">
+                        <span  style="background-color:{{record.backgroundColor}}; width: 50px; height: 2px;display: inline-block;"></span>
                   <span>{{record.label}}</span>
+                </div>
+                <div ng-if="record.showDot=='true'">
+                    <span  style="border: 2px dashed {{record.backgroundColor}}; width: 50px; height: 2px;display: inline-block;"></span>
+                
+                  <span>{{record.label}}</span>
+            </div>
+                <div ng-if="record.showLine!='true'&& record.showDot!='true' ">
+                  <span  style="background-color:{{record.backgroundColor}}; width: 50px; height: 10px;display: inline-block; "></span>
+                  <span>{{record.label}}</span>
+                </div>
                 </td>
                 <td style="text-align: center" ; ng-repeat="total in record.data track by $index">{{total}}</td>
               </tr>

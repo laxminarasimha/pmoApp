@@ -4,12 +4,12 @@
 
     angular.module('pmoApp').controller('graphsController', Controller);
 
-    Controller.$inject = ['$scope', '$rootScope', '$window', '$filter', 'locationService', 'skillSetService', 'resourceMappingService', 'allocationService', 'leaveService', 'availableDaysService', 'monthlyHeaderListService', 'projectService', 'holidayListService'];
+    Controller.$inject = ['$scope', '$rootScope', '$window', '$filter', 'locationService', 'skillSetService', 'resourceMappingService', 'allocationService', 'leaveService', 'availableDaysService', 'monthlyHeaderListService', 'projectService', 'holidayListService','regionService'];
     // var barChartData;
     //var colors = ['#7394CB', '#E1974D', '#84BB5C', '#D35D60', '#6B4C9A', '#9066A7', '#AD6A58', '#CCC374', '#3869B1', '#DA7E30', '#3F9852', '#6B4C9A', '#922427', 'rgba(253, 102, 255, 0.2)', 'rgba(153, 202, 255, 0.2)'];
     //var chartColors = ['rgb(255, 99, 132)', 'rgb(255, 159, 64)', 'rgb(255, 205, 86)', 'rgb(75, 192, 192)', 'rgb(54, 162, 235)', 'rgb(153, 102, 255)', 'rgb(201, 203, 207)', 'rgba(253, 102, 255)', 'rgba(153, 202, 255)', 'rgb(255, 99, 132)', 'rgb(255, 159, 64)', 'rgb(255, 205, 86)', 'rgb(75, 192, 192)', 'rgb(54, 162, 235)', 'rgb(153, 102, 255)', 'rgb(201, 203, 207)', 'rgba(253, 102, 255)', 'rgba(153, 202, 255)'];
     //var color = Chart.helpers.color;
-    function Controller($scope, $rootScope, $window, $filter, locationService, skillSetService, resourceMappingService, allocationService, leaveService, availableDaysService, monthlyHeaderListService, projectService, holidayListService) {
+    function Controller($scope, $rootScope, $window, $filter, locationService, skillSetService, resourceMappingService, allocationService, leaveService, availableDaysService, monthlyHeaderListService, projectService, holidayListService,regionService) {
 
         //This if condition is used for StartsWith() not supported IE11) 
         if (!String.prototype.startsWith) {
@@ -24,6 +24,7 @@
 
         $rootScope.Title = "Reporting";
         $scope.LocationData = [];
+        $scope.regionData=[];
         $scope.locationId = "All"
         $scope.MappedResourceData = [];
         $scope.barChartData = [];
@@ -44,7 +45,8 @@
         $scope.skillSetList = [];
         $scope.projectHTML = '';
         $scope.ShowSpinnerStatus = false;
-
+       
+        getRegion(regionService,$scope);
         //getLocationData(locationService, $scope);
         // getMappedResourceData(resourceMappingService, $scope);
         //$scope.headingList = [];
@@ -57,7 +59,12 @@
 
         //getGraphData($scope,allocationService,leaveService,resourceMappingService,availableDaysService,monthlyHeaderListService);
         //getActualResourceCapacity(availableDaysService,monthlyHeaderListService);
-      
+        console.log($scope.region);
+        if($scope.region!='All'){
+            document.getElementById("region-select").style.display="none";
+        }else{
+            document.getElementById("region-select").style.display="block";
+        }
         $scope.graphidchange = function () {
           
             if ($scope.startDate === '' || $scope.endDate === '' || $scope.startDate === undefined || $scope.endDate === undefined) {
@@ -83,20 +90,9 @@
         }
 
     }
-    // function hideData(){
-    //     $('#skill-select').css("display","none");
-    //     $('#project-select').css("display","none");
-       
-    // }
+   
     function createGraph($scope, $filter, resourceMappingService, availableDaysService, monthlyHeaderListService, allocationService, projectService, skillSetService, leaveService, holidayListService) {
         $scope.ShowSpinnerStatus = true;
-
-        
-         
-              //console.log(document.getElementById("project-select").style.display);
-         
-              
-          
         
         switch ($scope.graphid) {
             case "Resource Capacity":
@@ -110,21 +106,21 @@
                 break;
             case "ProjectMDS":
                 document.getElementById("skill-select").style.display ="none";
-                document.getElementById("xx").style.display ="block";
+                document.getElementById("project").style.display ="block";
                 projectManDaysGraph($scope, $filter, allocationService, projectService);
                 break;
             case "AvlCapcitySkill":
-                document.getElementById("xx").style.display ="none";
+                document.getElementById("project").style.display ="none";
                 document.getElementById("skill-select").style.display ="block";
                 avlCapcitySkillGraph($scope, $filter, allocationService, resourceMappingService, skillSetService, leaveService, holidayListService);
                 break;
             case "DemandCapacity":
-                document.getElementById("xx").style.display ="none";
+                document.getElementById("project").style.display ="none";
                 document.getElementById("skill-select").style.display ="none";
                 demandGraph($scope, $filter, resourceMappingService, allocationService, leaveService, holidayListService);
                 break;
             case "CapacityFYF":
-                document.getElementById("xx").style.display ="none";
+                document.getElementById("project").style.display ="none";
                 document.getElementById("skill-select").style.display ="none";
                 demandGraphFYF($scope, $filter, resourceMappingService, allocationService, leaveService, holidayListService);
                break;
@@ -133,6 +129,15 @@
         }
 
     }//End OF CreateGraph()
+
+    function getRegion(regionService,$scope){
+        regionService.getRegion().then(function(res){
+            console.log(res.data);
+            $scope.regionData=res.data;
+        })
+
+    }
+   
 
     function demandGraphFYF($scope, $filter, resourceMappingService, allocationService, leaveService, holidayListService) {
 
@@ -419,7 +424,7 @@
             }, {
                 type: 'line',
                 label: 'Avialble Capacity',
-                borderColor: 'yellow',
+                borderColor: 'cyan',
                 borderWidth: 2,
                 borderDash: [10, 10],
                 fill: false,
@@ -465,13 +470,13 @@
         $scope.GraphData.push({ label: "Maintaince Demand", backgroundColor: "#b30000", data: maintainceDemand });
         $scope.GraphData.push({ label: "Project Demand", backgroundColor: "#739900", data: projectDemand });
 
-        $scope.GraphData.push({ label: "Total Demand", backgroundColor: "#ffc0cb", data: totalDemand });
-        $scope.GraphData.push({ label: "Total Capacity (ST + FT)", backgroundColor: "#e9967a", data: stFtCapacity });
-        $scope.GraphData.push({ label: "Production Support (Contractual)", backgroundColor: "#800080", data: prodSupportCon });
-        $scope.GraphData.push({ label: "Maintaince (Contractual)", backgroundColor: "#ff0000", data: maintainceCon });
-        $scope.GraphData.push({ label: "Project Support (Contractual)", backgroundColor: "#556b2f", data: projSupportCon });
-        $scope.GraphData.push({ label: "Available Capacity", backgroundColor: "yellow", data: availableCapacity });
-        $scope.GraphData.push({ label: "Available Capacity %", backgroundColor: "#ffa500", data: availableCapacityP });
+        $scope.GraphData.push({ label: "Total Demand", backgroundColor: "#ffc0cb", data: totalDemand,showLine:"true" });
+        $scope.GraphData.push({ label: "Total Capacity (ST + FT)", backgroundColor: "#e9967a", data: stFtCapacity,showLine:"true" });
+        $scope.GraphData.push({ label: "Production Support (Contractual)", backgroundColor: "#800080", data: prodSupportCon,showLine:"true" });
+        $scope.GraphData.push({ label: "Maintaince (Contractual)", backgroundColor: "#ff0000", data: maintainceCon,showLine:"true" });
+        $scope.GraphData.push({ label: "Project Support (Contractual)", backgroundColor: "#556b2f", data: projSupportCon,showLine:"true" });
+        $scope.GraphData.push({ label: "Available Capacity", backgroundColor: "cyan", data: availableCapacity,showDot:"true" });
+        $scope.GraphData.push({ label: "Available Capacity %", backgroundColor: "#ffa500", data: availableCapacityP,showLine:"true" });
         $scope.GraphData.months = monthCol;
 
         var ctx = CreateCanvas("drawDeamndAndCapcityGraphFYF");
@@ -675,6 +680,7 @@
             stFtCapacity[i] = stCapacity[i] + ftCapacity[i];
             console.log(ftCapacity[i]);
         }
+        
 
         var projectDemand = new Array(monthCol.length);
         projectDemand.fill(0, 0, monthCol.length);
@@ -799,11 +805,11 @@
             }]
         };
 
-        $scope.GraphData.push({ label: "Total ST Capacity", backgroundColor: "#00bfff", data: stCapacity });
+        $scope.GraphData.push({ label: "Total ST Capacity", backgroundColor: "#00bfff", data: stCapacity,showFill:"true" });
         $scope.GraphData.push({ label: "Project Demand", backgroundColor: "#739900", data: projectDemand });
         $scope.GraphData.push({ label: "Maintaince Demand", backgroundColor: "#b30000", data: maintainceDemand });
-        $scope.GraphData.push({ label: "Production Support Demand", backgroundColor: "#0040ff", data: productionDemand });
-        $scope.GraphData.push({ label: "Total Capacity (ST + FT)", backgroundColor: "#660066", data: stFtCapacity });
+        $scope.GraphData.push({ label: "Production Support Demand", backgroundColor: "#0040ff", data: productionDemand});
+        $scope.GraphData.push({ label: "Total Capacity (ST + FT)", backgroundColor: "#660066", data: stFtCapacity ,showLine:"true"});
         $scope.GraphData.months = monthCol;
 
         var ctx = CreateCanvas("DemandCapacity");
