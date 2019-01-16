@@ -15,6 +15,7 @@ var app = angular.module('appRoutes', ['ui.router'])
 						templateUrl: 'app/views/pages/users/login.html',
 						controller: 'mainController',
 						controllerAs: 'main'
+						
 					}
 				},
 				data: { pageTitle: 'Login' }
@@ -376,7 +377,7 @@ var app = angular.module('appRoutes', ['ui.router'])
 	});
 
 
-app.run(['$rootScope', 'Auth', '$location', '$state', '$stateParams', function ($rootScope, Auth, $location, $state, $stateParams) {
+app.run(['$rootScope', 'Auth', '$location', '$state', '$stateParams',function ($rootScope, Auth, $location, $state, $stateParams) {
 	$rootScope.$state = $state;
 	$rootScope.$stateParams = $stateParams;
 

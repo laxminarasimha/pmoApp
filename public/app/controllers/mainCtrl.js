@@ -1,5 +1,5 @@
 angular.module('mainController',['authServices'])
-.controller('mainController', function(Auth, $http,$location,$timeout,$rootScope,$scope,$window){	
+.controller('mainController', function(Auth, $http,$location,$timeout,$rootScope,$scope,$window,$state){	
 	var app = this;
 	app.loadMe = false;		
 
@@ -8,6 +8,7 @@ angular.module('mainController',['authServices'])
 			app.isLoggedIn = true;			
 			Auth.getUser().then(function(data){										
 				app.username = data.data.resourcename;
+				console.log("HI HERE"+app.username);
 				app.email = data.data.email;
 				app._id = data.data._id;
 				app.kinId = data.data.kinId;
@@ -42,6 +43,7 @@ angular.module('mainController',['authServices'])
 					app.region = data.data.region;
 					
 					console.log("app.region"+app.region);
+					$state.transitionTo('Resources');
 					$rootScope.region = data.data.region;
 					if ($rootScope.region !== undefined)
 					$window.localStorage.setItem("region", $rootScope.region);
@@ -52,10 +54,11 @@ angular.module('mainController',['authServices'])
 			app.loading =false;
 			app.successMsg = data.data.message + '... Redirecting';
 
-			$timeout(function(){$location.path('/Resources');
+			$timeout(function(){
+				$location.path('/Resources');
 					app.loginData = '';
 					app.successMsg = false;
-				},2000);
+				});
 				
 			}else{
 				app.loading =false;

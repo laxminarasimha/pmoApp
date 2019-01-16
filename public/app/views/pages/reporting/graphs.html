@@ -76,7 +76,7 @@
           <div class="col-sm-3">
             <select id="skill-select" class="form-control input-sm" ng-model="skillSelect" ng-init="inputVal='ALL'" ng-change="graphidchange()" >
               <option value="ALL">All Skills</option>
-              <option ng-repeat="x in skillSetList" value="{{x.skillname}}">{{x.skillname}}</option>
+              <option ng-repeat="skill in skillSetList" value="{{skill}}">{{skill}}</option>
             </select>
           </div>
         </div>
