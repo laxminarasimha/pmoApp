@@ -178,6 +178,7 @@ return res.status(200).send(new Buffer(result.toString(), 'binary').toString('ba
    });
 }).post("/", function(req, res) {
  var obj = req.body;
+ console.log(obj);
  var model = new projectDAO(obj);
  model.save(function(err) {
  if (err) {

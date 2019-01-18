@@ -1,0 +1,146 @@
+var express = require("express"),
+router = express.Router(),
+ecrDAO = require("../models/ecrDAO.js")
+router.post("/", function(req, res) {
+ var obj = req.body;
+ console.log(obj);
+ var model = new ecrDAO(obj);
+ model.save(function(err) {
+ if (err) {
+ console.log(err);
+ logger.error('Error while data creation in Project Dao ='+err);
+ res.send("error");
+ return;
+ }
+ res.send("created");
+ });
+}).get("/:region", function(req, res) {  
+ ecrDAO.count({}, function(err, data) {
+ if (err) {
+ logger.error('Error while data count fetching from Ecr Dao 1='+err);
+ res.send("error");
+ return;
+ }
+ if(data == 0){
+    res.send("");
+ }else{   
+   var region = req.params.region;
+
+		if(region == 'All'){
+       ecrDAO.find({},null, {sort:{ecrname: 1}}, function(err, data) {
+        if (err) {
+        logger.error('Error while data fetching from Ecr Dao ='+err);
+        res.send("error");
+        return;
+      }
+      res.send(data);
+      });
+    }else{
+        ecrDAO.find({regionname:region},null, {sort:{ecrname: 1}}, function(err, data) {
+        if (err) {
+        logger.error('Error while data fetching from Ecr Dao ='+err);
+        res.send("error");
+        return;
+        }
+        res.send(data);
+        });
+
+    }
+  
+ }
+ 
+ }); 
+}).get("/ecrName/:ecrname/:regionname", function(req, res) {
+ var ecrName = req.params.ecrname;
+ var regionName = req.params.regionname;
+ ecrDAO.aggregate([
+      {
+      $ecr: {
+        //Convert EndUser to UpperCase
+        "ecrname": {
+          "$let": {
+            //var declaration
+            "vars": {
+              "ecrVar": "$ecrname"
+            },
+            "in": {
+              //conversion to upper case
+              "$toUpper": "$$ecrVar"
+            }
+          }
+        },
+
+        "regionname":{
+           "$let": {
+            //var declaration
+            "vars": {
+              "regionVar": "$regionname"
+            },
+            "in": {
+              //conversion to upper case
+              "$toUpper": "$$regionVar"
+            }
+          }
+        }
+       
+      }
+    },
+ 
+    // Stage 2: match using in operator
+    {
+      $match: {
+        "ecrname" : {
+          "$in" : [
+            ecrName.toUpperCase()
+          ]
+        },
+        "regionname" : {
+          "$in" : [
+            regionName.toUpperCase()
+          ]
+        },
+      }
+    }
+ 
+  ], function(err, data) {
+   if (err) {
+   logger.error('Error while data fetching from Ecr Dao for aggregate='+err);
+   res.send("error");
+   return;
+   }
+
+   console.log(data);
+   res.send(data);
+   });
+}).get("/ecrId/:id", function(req, res) {
+ var id = req.params.id;
+ ecrDAO.find({ _id: id }, function(err, data) {
+ if (err) {
+ logger.error('Error while data fetching from Ecr Dao for id ='+err);
+ res.send("error");
+ return;
+ }
+ res.send(data[0]);
+ });
+}).put("/:id", function(req, res) {
+ var id = req.params.id;
+ var obj = req.body;
+
+//For date filed dont use findByIdAndUpdate. previous date is stored in that case. else use in all case. 
+
+ecrDAO.find({ _id: id }, function(err, data) {
+ if (err) {
+ res.send("error");
+ return;
+ }
+ var model = data[0];
+ model.ecrname = obj.ecrname;
+ model.regionname = obj.regionname;
+ model.manager = obj.manager;
+ model.startDate = obj.startDate;
+ model.endDate = obj.endDate;
+ model.save();
+ res.send("updated");
+ });
+});
+module.exports = router;

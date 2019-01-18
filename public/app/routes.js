@@ -117,6 +117,16 @@ var app = angular.module('appRoutes', ['ui.router'])
 				data: { pageTitle: 'Project', roles: ['ADMIN'] }
 			})
 
+			.state('root.ECRManagement', {
+				url: '/ECRManagement',
+				views: {
+					'container@': {
+						templateUrl: 'app/views/pages/admin/ECRManagement.html'
+					}
+				},
+				data: { pageTitle: 'ECRManagement', roles: ['ADMIN'] }
+			})
+
 			.state('root.Status', {
 				url: '/Status',
 				views: {

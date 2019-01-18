@@ -127,7 +127,7 @@ router.use("/upload", require("../controllers/profileController.api"));
 
 router.use("/uploadDataFile", require("../controllers/uploadDataFileController.api"));
 
-
+router.use("/ecr", require("../controllers/ecrController.api"));
 
 router.use("/sla", require("../controllers/projectSLAController.api"));
 
