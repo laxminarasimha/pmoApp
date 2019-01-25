@@ -44,9 +44,9 @@
 	};
 
 
-	Controller.$inject = ['$scope', '$rootScope', '$window', 'projectService', 'resourceMappingService', 'allocationService', 'resourceTypeService', '$filter'];
+	Controller.$inject = ['$scope', '$rootScope', '$window', 'projectService', 'ecrService' ,'resourceMappingService', 'allocationService', 'resourceTypeService', '$filter'];
 
-	function Controller($scope, $rootScope, $window, projectService, resourceMappingService, allocationService, resourceTypeService, $filter) {
+	function Controller($scope, $rootScope, $window, projectService,ecrService  ,resourceMappingService,allocationService, resourceTypeService, $filter) {
 
 
 		$scope.names = [{ 'drname': 'Dr.Test1' }, { 'drname': 'Dr.Test2' }, { 'drname': 'Dr.Test3' }];
@@ -78,7 +78,7 @@
 		getMappedResourceData(resourceMappingService, $scope);
 		getProjectData(projectService, $scope);
 		getResourceTypeData(resourceTypeService, $scope);
-
+		getEcrData(ecrService,$scope);
 		$scope.createAllocation = function () {
 
 			if ($scope.resource == null || $scope.resource.length <= 0) {
@@ -127,11 +127,13 @@
 			});
 
 			console.log('region '+vRegion);
-
+	
 			//for (var res = 0; res < $scope.resource.length; res++) {
 			$scope.rowWiseAllocation = {
 				resource: $scope.resource,
 				project: $scope.projselect,
+				
+				ecr:$scope.ecrselect,
 				resourcetype: $scope.resourcetype,
 				//region: $rootScope.region,
 				region: vRegion,
@@ -161,6 +163,7 @@
 				var allocationYearWise = splitAllocationByYear($scope.resourceWiseAllocaiton, $scope.startDate, $scope.endDate);
 				angular.forEach(allocationYearWise, function (item) {
 					if (item.rowSelect) {// if row delete in screen,then it should not save
+						console.log(item.ecr);
 						if (item.project === undefined && typeof item.project === "undefined") {
 							$scope.errorMsg = "Please enter valid data for all the input field.";
 							//error = true;
@@ -259,7 +262,13 @@
 			});
 
 		}
-
+		function getEcrData(ecrService,$scope){
+			ecrService.getEcr($scope.region).then(function(res) {
+				$scope.ecr = res.data;
+				}).catch(function(err) {
+				console.log(err);
+			});
+		}
 		function getResourceTypeData(resourceTypeService, $scope) {
 			resourceTypeService.getResourceType().then(function (res) {
 				$scope.resourceTypeList = res.data;

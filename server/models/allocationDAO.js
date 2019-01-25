@@ -9,6 +9,7 @@ var allocationSchema = new Schema(
     resourcetype: { type: String, required: true },
     region: { type: String, required: true },
     project: { type: String, required: true },
+    ecr:{type:String, required:true},
     year: { type: String, required: true },
     allocation: []
   },

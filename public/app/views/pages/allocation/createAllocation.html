@@ -64,7 +64,7 @@
     </div>
 
 
-    <div class="panel-footer" style='overflow-y:visible; display:{{hidden}}'>
+    <div class="panel-footer" style=' display:{{hidden}}'>
       <div class="row" allign="right" style="padding-top: 2px">
         <!--<div class='col-sm-10' />
         <div class='col-sm-2'>
@@ -94,7 +94,15 @@
                     <span id="project" editable-select="allocRows.project" e-name="project" e-form="rowform">
                       <select class="form-control" ng-model="allocRows.project" ng-options="item.projectname as item.projectname for item in project | projectfilter:'Vacation'"
                         ng-change="dataChanged();" />
+                        
                     </span>
+                  </td>
+                  <td ng-if="allocRows.project=='Maintenance(Sweden)'">
+                    <label for="ecr">ECR</label>
+                    <span id="ecr" editable-select="allocRows.ecr" e-name="ecr" e-form="rowform"></span>
+                    <select class="form-control" ng-model="allocRows.ecr" ng-options="item.ecrname as item.ecrname for item in ecr "
+                    ng-change="dataChanged();" />
+                   
                   </td>
                   <td ng-repeat="months in allocRows.allocation">
                     <label for="{{months.month}}">{{months.month}}</label>
