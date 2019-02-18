@@ -162,3 +162,7 @@ heade .nabar {
     margin-bottom: .25rem;
 }
 
+.multiselect-native-select .dropdown-menu{
+    height: 300px;
+    overflow-y: scroll;
+}

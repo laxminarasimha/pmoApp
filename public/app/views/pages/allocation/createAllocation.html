@@ -1,9 +1,11 @@
 <form name="createAllocationForm" ng-submit="" novalidate ng-controller="createAllocationCtrl">
-  <legend class="text-info"><h2>Create Allocation</h2></legend>
+  <legend class="text-info" style="padding-left:.5cm">
+    <h2>Create Allocation</h2>
+  </legend>
   <div class="panel panel-info">
     <div class="panel-heading" align="center">
       <div class='row'>
-        <div class='col-sm-3'>
+        <div class='col-sm-2'>
           <div class="form-group">
             <label for="startDate">Allocation Start Month:</label>
             <div class="input-group date form_date " data-date-format="dd MM yyyy" data-link-format="yyyy-mm-dd">
@@ -14,9 +16,9 @@
             </div>
           </div>
         </div>
-        <div class='col-sm-3'>
+        <div class='col-sm-2'>
           <div class="form-group">
-            <label for="startDate"  >Allocation End Month:</label>
+            <label for="startDate">Allocation End Month:</label>
             <div class="input-group date form_date " data-date-format="dd MM yyyy" data-link-format="yyyy-mm-dd">
               <input class="form-control" type="text" ng-model="endDate" class="form-control" readonly>
               <span class="input-group-addon">
@@ -25,105 +27,128 @@
             </div>
           </div>
         </div>
-        <div class='col-sm-3' style="padding-top:.1cm;">
+        <div class='col-sm-3' style="padding-top:0cm;">
           <div class=form-group>
-            <label for="resource" >Resources:</label>
-            <!-- <select id="resource-select" id="resource" ng-model="resource" required multiple="multiple" multi-select class="form-control"></select> -->
-
-            <input list="resource" type="text" ng-model="resource" style="width: 290px; padding: 2px" required>
+            <label for="region">Region:</label>
+            <span id="region" editable-select="allocRows.region" e-name="region" e-form="rowform">
+              </span> 
+              <select  class="form-control" ng-options="x.regionname for x in regionData" id="oregion" ng-change="getregiondata()" ng-model="oregion">
+                <option value="{{x.regionname}}" ></option> 
+              </select>
+            </span>
+          </div>
+        </div>
+        <div class='col-sm-2' style="padding-top:.5cm;">
+          <div class=form-group>
+            <label for="resource">Resources:</label>
+            <span id="region" editable-select="" e-name="region" e-form="rowform" >
+            <select id="resource-select" ng-model="resource" required multiple="multiple" multi-select  class="form-control">
+            </select>
+            </span>
+            <!-- <input list="resource" type="text" ng-model="resource" style="width: 290px; padding: 2px" required>
             <datalist id="resource">
               <option ng-repeat="resource in mappedResourceData" value="{{resource.mappedResource.resourcename}}">
-            </datalist>
+            </datalist> -->
           </div>
         </div>
-         <div class='col-sm-3' style="padding-top:.5cm;">
+        <div>
+          
+        <div class='col-sm-3' style="padding-top:.5cm;">
           <div class=form-group>
-            <button id="projectBtn" class="btn btn-primary" type="button" ng-click="clearFields();createAllocation()">Projection</button>
-            <button id="clrBtn" class="btn btn-warning" ng-click="clearFields()" type="button" style="display:none">Clear</button>
-          </div>
-        </div>
-
-      </div>     
-    </div>
-
-    <div class="panel-body" ng-show="loading || successMsg || errorMsg">
-      <div class="row">
-        <div class='col-sm-12'>
-          <div class="jumbotron text-center" ng-show="loading">
-            <span class="glyphicon glyphicon-repeat spinner"></span>
-            <p>Loading...</p>
-          </div>
-          <div class="row show-hide-message" ng-show="successMsg">
-            <div class="alert alert-success">{{successMsg}}</div>
-          </div>
-          <div class="row show-hide-message" ng-show="errorMsg">
-            <div class="alert alert-danger">{{errorMsg}}</div>
+            <button id="projectBtn" class="btn btn-primary" type="button" ng-click="createAllocation()">Projection</button>
+            <button id="save" class="btn btn-primary" ng-click="saveAllocation()" type="button">Save</button>
+            <button id="clrBtn" class="btn btn-warning" ng-click="clearFields()" type="button">Reset</button>
           </div>
         </div>
       </div>
     </div>
+  </div>
 
 
-    <div class="panel-footer" style=' display:{{hidden}}'>
-      <div class="row" allign="right" style="padding-top: 2px">
-        <!--<div class='col-sm-10' />
-        <div class='col-sm-2'>
-          <button class="btn btn-primary" type="button" ng-click="saveAllocation();clearFields()">Save</button>
+  <div class="panel-body" ng-show="loading || successMsg || errorMsg">
+    <div class="row">
+      <div class='col-sm-12'>
+        <div class="jumbotron text-center" ng-show="loading">
+          <span class="glyphicon glyphicon-repeat spinner"></span>
+          <p>Loading...</p>
         </div>
-      </div>-->
-        <div class="panel-body form-group" style="overflow: scroll;">
-          <table class="table table-striped table-curved" cellspacing="0" width="100%" style="text-align:center">
-            <thead>
-              <tbody>
-                <tr ng-repeat="allocRows in resourceWiseAllocaiton" id="{{$index}}">
-                  <td>
-                    <label for="resourcename">Resource Name</label>
-                    <span id="resourcename" class="form-control" editable-text="allocRows.resource" e-name="resource" e-form="rowform">
-                      {{ allocRows.resource }}
-                    </span>
-                  </td>
-                  <td>
-                    <label for="resourcetype">Resource Type</label>
-                    <span id="resourcetype" editable-select="allocRows.resourcetype" e-name="resourcetype" e-form="rowform">
-                      <select class="form-control" ng-model="allocRows.resourcetype" ng-options="item.resourceTypename as item.resourceTypename for item in resourceTypeList"
-                        ng-change="dataChanged();" />
-                    </span>
-                  </td>
-                  <td>
-                    <label for="project">Project</label>
-                    <span id="project" editable-select="allocRows.project" e-name="project" e-form="rowform">
-                      <select class="form-control" ng-model="allocRows.project" ng-options="item.projectname as item.projectname for item in project | projectfilter:'Vacation'"
-                        ng-change="dataChanged();" />
-                        
-                    </span>
-                  </td>
-                  <td ng-if="allocRows.project=='Maintenance(Sweden)'">
-                    <label for="ecr">ECR</label>
-                    <span id="ecr" editable-select="allocRows.ecr" e-name="ecr" e-form="rowform"></span>
-                    <select class="form-control" ng-model="allocRows.ecr" ng-options="item.ecrname as item.ecrname for item in ecr "
-                    ng-change="dataChanged();" />
-                   
-                  </td>
-                  <td ng-repeat="months in allocRows.allocation">
+        <div class="row show-hide-message" ng-show="successMsg">
+          <div class="alert alert-success">{{successMsg}}</div>
+        </div>
+        <div class="row show-hide-message" ng-show="errorMsg">
+          <div class="alert alert-danger">{{errorMsg}}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class=''>
+
+    <div class="panel-footer" style="display:'{{hidden}}'">
+      <div class="panel-body form-group">
+        <div ng-repeat="allocRows in resourceWiseAllocaiton" id="{{$index}}">
+          <div class="row" style="text-align:center">
+            <div class="col-sm-6">
+              <div class="row" style="width: auto">
+                <div class="col-sm-3">
+                  <label for="resourcename" style="width: 100%">Resource Name</label>
+                  <span id="resourcename" class="form-control" style=" width: 100%; height: fit-content; padding-left:1px;padding-right:1px;"
+                    editable-text="allocRows.resource" e-name="resource" e-form="rowform">
+                    {{ allocRows.resource }}
+                  </span>
+                </div>
+                <div class="col-sm-3">
+                  <label for="resourcetype">Resource Type</label>
+                  <span id="resourcetype" editable-select="allocRows.resourcetype" e-name="resourcetype" e-form="rowform">
+                    <select class="form-control" ng-model="allocRows.resourcetype" ng-options="item.resourceTypename as item.resourceTypename for item in resourceTypeList"
+                      ng-change="dataChanged();" />
+                  </span>
+                </div>
+                <div class="col-sm-6">
+                  <table>
+                    <tr>
+                      <td>
+                        <label for="project">Project</label>
+                        <span id="project" editable-select="allocRows.project" e-name="project" e-form="rowform">
+                          <select class="form-control" ng-model="allocRows.project" ng-options="item.projectname as item.projectname for item in project | projectfilter:'Vacation'"
+                            ng-change="dataChanged();" />
+
+                        </span>
+                      </td>
+                      <td ng-if="allocRows.project =='Maintenance(Sweden)'" style="padding-left: 10px">
+                        <label for="ecr">ECR</label>
+                        <span id="ecr" editable-select="allocRows.ecr" e-name="ecr" e-form="rowform"></span>
+                        <select class="form-control" style="padding: 1px" ng-model="allocRows.ecr" ng-options="item.ecrname as item.ecrname for item in ecr"
+                          ng-change="dataChanged();" />
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-5" style="overflow-x:auto;">
+              <table class="col-sm-12">
+                <tr>
+                  <td style="width:auto" ng-repeat="months in allocRows.allocation">
                     <label for="{{months.month}}">{{months.month}}</label>
                     <span editable-select="alloc.tag" e-name="tag" e-form="rowform">
-                      <input id={{months.month}} class="form-control" type="text" name="tagged" ng-model="months.value" maxlength="4" size="4"
-                        ng-change="dataChanged();" />
+                      <input id={{months.month}} class="form-control" style="text-align: left;padding: 0px" type="number"
+                        name="tagged" ng-model="months.value" maxlength="4" size="4" ng-change="dataChanged();" />
                     </span>
                   </td>
-                  <td style="white-space: nowrap" >
-                    <div class="row" allign="right" style="padding-top: 10px;position: relative">
-                      <button type="button" class="btn btn-primary" ng-click="clearAllocation($index)">
-                        Clear</button>
-                      <button class="btn btn-primary" type="button" ng-click="saveAllocation()">Save</button>
-                      <!--<button type="button" class="btn btn-danger" ng-click="removeAllocation($index)">Delete</button>-->
-                    </div>
-                  </td>
                 </tr>
-              </tbody>
-          </table>
+              </table>
+            </div>
+            <div class="col-sm-1" style="padding-top: 12px">
+              <div class="row" allign="right" style="padding: 5px; position: relative">
+                <button type="button" class="btn btn-primary" style="padding: 6px ; margin: 0px;" ng-click="clearAllocation($index)">
+                  Clear</button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
+    </div>
+
 </form>
 
 <script>
