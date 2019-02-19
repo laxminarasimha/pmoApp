@@ -41,9 +41,9 @@
         return newAlloc;
     };
 
-    Controller.$inject = ['$scope', '$rootScope', '$window', 'projectService', 'ecrService', 'resourceMappingService', 'allocationService', 'resourceTypeService', '$filter','regionService'];
+    Controller.$inject = ['$scope', '$rootScope', '$window', 'projectService', 'ecrService', 'resourceMappingService', 'allocationService', 'resourceTypeService', '$filter', 'regionService'];
 
-    function Controller($scope, $rootScope, $window, projectService, ecrService, resourceMappingService, allocationService, resourceTypeService, $filter,regionService) {
+    function Controller($scope, $rootScope, $window, projectService, ecrService, resourceMappingService, allocationService, resourceTypeService, $filter, regionService) {
 
         $scope.names = [{ 'drname': 'Dr.Test1' }, { 'drname': 'Dr.Test2' }, { 'drname': 'Dr.Test3' }];
         $scope.detailDiv = true;
@@ -62,10 +62,10 @@
         $scope.regionData = [];
 
         $scope.region = $window.localStorage.getItem("region");
-    
+
 
         console.log("region from window" + $scope.region);
-        
+
         function allocObject(object) {
             var month;
             var allocation;
@@ -75,24 +75,24 @@
                 value: object.value,
             }
         };
-        
+
         // getDisabledData();
         getMappedResourceData(resourceMappingService, $scope);
         getProjectData(projectService, $scope);
         getResourceTypeData(resourceTypeService, $scope);
         getEcrData(ecrService, $scope);
         getRegion(regionService, $scope);
-        
+
         if ($scope.region != 'All') {
             console.log(document.getElementById("oregion"))
-                    document.getElementById("oregion").value = $scope.regionname;
-                    document.getElementsByName("oregion").enable = true;
-                    document.getElementById("oregion").disabled = true;
-                    
-                    } else {
-                    document.getElementById("oregion").enable = true;
-                    
-                    } 
+            document.getElementById("oregion").value = $scope.regionname;
+            document.getElementsByName("oregion").enable = true;
+            document.getElementById("oregion").disabled = true;
+
+        } else {
+            document.getElementById("oregion").enable = true;
+
+        }
 
         $scope.createAllocation = function () {
 
@@ -105,7 +105,7 @@
                 $scope.errorMsg = "Please select a valid date range."
                 return;
             }
-            
+
             var strDt = $scope.startDate.split("/");
             var endDt = $scope.endDate.split("/");
 
@@ -141,31 +141,31 @@
             console.log('region ' + vRegion);
 
             //for (var res = 0; res < $scope.resource.length; res++) {
-                console.log("Resource >>>>>>>>>>>>>>>>> "+$scope.resource);
-            
-        
-            angular.forEach($scope.resource,function(res){  
+            console.log("Resource >>>>>>>>>>>>>>>>> " + $scope.resource);
 
-            $scope.rowWiseAllocation = {
-                resource:res,
-                project: $scope.projselect,
 
-                ecr: $scope.ecrselect,
-                resourcetype: $scope.resourcetype,
-                //region: $rootScope.region,
-                region: $scope.region,
-                //startdate: $scope.startDate,
-                //enddate: $scope.endDate,
-                allocation: [],
-                rowSelect: true
-            };
+            angular.forEach($scope.resource, function (res) {
 
-            angular.forEach($scope.months, function (item) {
-                var obj = new allocObject(item);
-                $scope.rowWiseAllocation.allocation.push(obj);
-            });
-           
-            $scope.resourceWiseAllocaiton.push($scope.rowWiseAllocation);
+                $scope.rowWiseAllocation = {
+                    resource: res,
+                    project: $scope.projselect,
+
+                    ecr: $scope.ecrselect,
+                    resourcetype: $scope.resourcetype,
+                    //region: $rootScope.region,
+                    region: $scope.region,
+                    //startdate: $scope.startDate,
+                    //enddate: $scope.endDate,
+                    allocation: [],
+                    rowSelect: true
+                };
+
+                angular.forEach($scope.months, function (item) {
+                    var obj = new allocObject(item);
+                    $scope.rowWiseAllocation.allocation.push(obj);
+                });
+
+                $scope.resourceWiseAllocaiton.push($scope.rowWiseAllocation);
 
             });
 
@@ -174,9 +174,9 @@
             //  $scope.rowWiseAllocation.allocation.push(obj);
             // });
 
-        //  $scope.resourceWiseAllocaiton.push($scope.rowWiseAllocation);
+            //  $scope.resourceWiseAllocaiton.push($scope.rowWiseAllocation);
             //}
-            
+
             $scope.resource = [];
             $scope.detailDiv = false;
             $scope.hidden = "";
@@ -226,13 +226,14 @@
                 }
             });
 
-            //console.log(">>>>>>>>>>>>>>>>>>>>> $scope.errvalue " + $scope.errvalue);
-            if ($scope.errvalue == false) {
+            console.log(">>>>>>>>>>>>>>>>>>>>> $scope.errvalue " + $scope.errvalue);
+            if ($scope.errvalue === false) {
                 angular.forEach($scope.resourceWiseAllocaiton, function (it) {
                     $scope.clearMessages();
                     if (it != null) {
 
                         var allocationYearWise = splitAllocationByYear($scope.resourceWiseAllocaiton, $scope.startDate, $scope.endDate);
+                        console.log(allocationYearWise);
                         angular.forEach(allocationYearWise, function (item) {
                             if (item.rowSelect) {// if row delete in screen,then it should not save
                                 if (!$scope.newData) {
@@ -245,13 +246,9 @@
 
                                 allocationService.createAllocation(item).then(function (res) {
                                     if (res.data == "created") {
-
                                         $scope.clearMessages();
-
                                         $scope.successMsg = "Allocaiton created successfully";
-
                                         $('#resource-select').multiselect('rebuild');
-
                                     }
                                 }).catch(function (err) {
                                     console.log(err);
@@ -330,10 +327,8 @@
 
         }
         function getEcrData(ecrService, $scope) {
-            console.log("hihi");
             ecrService.getEcr($scope.region).then(function (res) {
                 $scope.ecr = res.data;
-                console.log($scope.ecr);
             }).catch(function (err) {
                 console.log(err);
             });
@@ -346,25 +341,21 @@
             });
         }
 
-        $scope.getregiondata = function(){
+        $scope.getregiondata = function () {
             $scope.region = $scope.oregion.regionname;
-            console.log("region from get reg" + $scope.region);
             getMappedResourceData(resourceMappingService, $scope);
         }
-        
+
         function getMappedResourceData(resourceMappingService, $scope) {
             resourceMappingService.getMappedResources($scope.region).then(function (res) {
 
                 $scope.mappedResourceData = filterUniqueResource(res.data);
-                console.log("res " + $scope.mappedResourceData)
                 var htm = '';
                 angular.forEach($scope.mappedResourceData, function (item) {
                     htm += '<option>' + item.mappedResource.resourcename + '</option>';
-                    console.log("option " + item);
                 });
                 $('#resource-select').empty();
                 $('#resource-select').append(htm);
-                console.log(htm);
                 $('#resource-select').multiselect('rebuild');
             }).catch(function (err) {
                 console.log(err);
@@ -459,9 +450,9 @@
             regionService.getRegion().then(function (res) {
                 $scope.regionData = res.data;
             })
-    
+
         }
     }
-    
+
 })();
 

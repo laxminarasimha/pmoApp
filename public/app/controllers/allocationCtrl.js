@@ -54,7 +54,6 @@
 
         angular.forEach(allocationDetails, function (item) {
             item.allocation = eachMonthAllocaiton(scope.monthLabel, item.allocation);
-
         });
 
         // create the hoilidays with month-year fromat and store in a map
@@ -91,6 +90,8 @@
         var collection = [];
         var oldObject = null;
         var readonly = monthsReadonly(scope.monthLabel);
+
+        console.log(allocationDetails);
 
         for (var k = 0; k < allocationDetails.length; k++) {
             resoruceType = allocationDetails[k].resourcetype;
@@ -134,6 +135,9 @@
             }
             oldObject = null;
         }
+
+        console.log(collection);
+        console.log(mappedToResource);
 
         checkOverAllocaiton(scope, collection, year, leaveList, mappedToResource, resource);
         return collection;
@@ -223,7 +227,7 @@
 
         if (alloCollection.length <= 0 && mappedResourceData.length > 0) {
 
-            scope.noallocation =  [];
+            scope.noallocation = [];
             function NoAllocation() {
                 this.type;
                 this.availableday = [];
@@ -268,19 +272,6 @@
         //console.log("*************"+$rootScope.region);
         $scope.region = $window.localStorage.getItem("region");
 
-        function allocObject(object) {
-            var month;
-            var allocation;
-            var date;
-
-            return {
-                month: object.month,
-                value: object.value,
-                date: object.date,
-                project: object.project,
-                label: object.label,
-            }
-        };
 
         getMappedResourceData($scope, resourceMappingService, holidayListService);
         getAlloctionData(allocationService, $scope);
@@ -393,6 +384,7 @@
 
             holidayListService.getAggegrateLocationHolidays(region).then(function (res) {
                 scope.allocCollection = filter(scope, $scope.allocationList, resource, year, $scope.mappedResourceData, leaves, res.data, childShown);
+                console.log(scope.allocCollection);
                 if (typeof scope.allocCollection !== "undefined") {
 
                     var isConflict = false;
