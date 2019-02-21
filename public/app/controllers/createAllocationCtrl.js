@@ -81,18 +81,20 @@
         getProjectData(projectService, $scope);
         getResourceTypeData(resourceTypeService, $scope);
         getEcrData(ecrService, $scope);
-        getRegion(regionService, $scope);
+    
 
-        if ($scope.region != 'All') {
-            console.log(document.getElementById("oregion"))
-            document.getElementById("oregion").value = $scope.regionname;
-            document.getElementsByName("oregion").enable = true;
-            document.getElementById("oregion").disabled = true;
+
+        if ($scope.region != "All") {
+            $('oregion').val($scope.region);
+            getRegionForName(regionService, $scope);
 
         } else {
-            document.getElementById("oregion").enable = true;
-
+            getRegion(regionService, $scope);
+            // 
+            // document.getElementById("region").value=$scope.region;
         }
+
+
 
         $scope.createAllocation = function () {
 
@@ -201,17 +203,10 @@
                         return;
                     }
 
-                    // }
-
                 });
 
-                // if ($scope.errorMsg === null) {
-                //     $scope.clearFields();
-                //     $('#projectBtn').attr('disabled', false);
-                // }
             });
 
-            console.log(">>>>>>>>>>>>>>>>>>>>> $scope.errvalue " + $scope.errvalue);
             if ($scope.errvalue === false) {
                 $scope.clearMessages();
                 var allocationYearWise = splitAllocationByYear($scope.resourceWiseAllocaiton, $scope.startDate, $scope.endDate);
@@ -435,6 +430,12 @@
                 $scope.regionData = res.data;
             })
 
+        }
+
+        function getRegionForName(regionService, $scope) {
+            regionService.getRegionForName($scope.region).then(function (res) {
+                $scope.regionData = res.data;
+            })
         }
     }
 
