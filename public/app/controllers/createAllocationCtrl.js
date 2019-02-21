@@ -186,87 +186,71 @@
 
         }
 
-        $scope.saveAllocation = function (i) {
-            angular.forEach($scope.resourceWiseAllocaiton, function (it) {
-                console.log("Resource at save alloc" + it.project);
-                if (it != null) {
-                    if (it.project === "Maintenance(Sweden)" && (typeof it.ecr === "undefined" || it.ecr === null)) {
-                        console.log("ECR IS UNDEFINED")
-                        $scope.errorMsg = "Please enter ecr data for all the input field.";
-                        $scope.errvalue = true;
-                        return forEach.break();
-                    } else {
-                        var allocationYearWise = splitAllocationByYear($scope.resourceWiseAllocaiton, $scope.startDate, $scope.endDate);
-                        angular.forEach(allocationYearWise, function (item) {
-                            if (item.rowSelect) {// if row delete in screen,then it should not save
-                                console.log("ECR" + it.ecr);
-                                if (item.project === undefined && typeof item.project === "undefined") {
-                                    $scope.errorMsg = "Please enter valid data for all the input field.";
-                                    $scope.errvalue = true;
-                                    return;
-                                }
-                                else {
-                                    $scope.errvalue = false;
-                                    return;
-                                }
-                            }
+        $scope.saveAllocation = function () {
 
-                        });
+            console.log($scope.resourceWiseAllocaiton);
+            $scope.errvalue = false;
+            angular.forEach($scope.resourceWiseAllocaiton, function (it) {
+
+                // var allocationYearWise = splitAllocationByYear($scope.resourceWiseAllocaiton, $scope.startDate, $scope.endDate);
+                angular.forEach($scope.resourceWiseAllocaiton, function (item) {
+                    // if (item.rowSelect) {// if row delete in screen,then it should not save
+                    if (item.project === undefined || item.resourcetype === undefined || item.project === undefined) {
+                        $scope.errorMsg = "Please enter valid data for all the input field.";
+                        $scope.errvalue = true;
+                        return;
                     }
 
-                }
-                else {
-                    $scope.errorMsg = "Please enter valid data for all the input field.";
-                    $scope.errvalue = true;
-                    return;
-                }
-                if ($scope.errorMsg == null) {
-                    $scope.clearFields();
-                    $('#projectBtn').attr('disabled', false);
-                }
+                    // }
+
+                });
+
+                // if ($scope.errorMsg === null) {
+                //     $scope.clearFields();
+                //     $('#projectBtn').attr('disabled', false);
+                // }
             });
 
             console.log(">>>>>>>>>>>>>>>>>>>>> $scope.errvalue " + $scope.errvalue);
             if ($scope.errvalue === false) {
-                angular.forEach($scope.resourceWiseAllocaiton, function (it) {
-                    $scope.clearMessages();
-                    if (it != null) {
-
-                        var allocationYearWise = splitAllocationByYear($scope.resourceWiseAllocaiton, $scope.startDate, $scope.endDate);
-                        console.log(allocationYearWise);
-                        angular.forEach(allocationYearWise, function (item) {
-                            if (item.rowSelect) {// if row delete in screen,then it should not save
-                                if (!$scope.newData) {
-                                    $scope.clearMessages();
-                                    var r = confirm("There is duplicate records,Are sure want to continue?");
-                                    if (r === false) {
-                                        return;
-                                    }
-                                }
-
-                                allocationService.createAllocation(item).then(function (res) {
-                                    if (res.data == "created") {
-                                        $scope.clearMessages();
-                                        $scope.successMsg = "Allocaiton created successfully";
-                                        $('#resource-select').multiselect('rebuild');
-                                    }
-                                }).catch(function (err) {
-                                    console.log(err);
-                                });
-                            }
+                $scope.clearMessages();
+                var allocationYearWise = splitAllocationByYear($scope.resourceWiseAllocaiton, $scope.startDate, $scope.endDate);
+                console.log(allocationYearWise);
+                angular.forEach(allocationYearWise, function (item) {
+                    if (item.rowSelect) {// if row delete in screen,then it should not save
+                        if (!$scope.newData) {
                             $scope.clearMessages();
+                            var r = confirm("There is duplicate records,Are sure want to continue?");
+                            if (r === false) {
+                                return;
+                            }
+                        }
+
+                        console.log(item);
+
+                        allocationService.createAllocation(item).then(function (res) {
+                            if (res.data == "created") {
+                                $scope.clearMessages();
+                                $scope.successMsg = "Allocaiton created successfully";
+                                $('#resource-select').multiselect('rebuild');
+                            }
+                        }).catch(function (err) {
+                            console.log(err);
                         });
-                    } else {
-                        $scope.errorMsg = "Please enter valid data for all the input field.";
-                        return;
                     }
-                    if ($scope.errorMsg == null) {
-                        $scope.clearFields();
-                        $('#projectBtn').attr('disabled', false);
-
-                    }
-
+                    $scope.clearMessages();
                 });
+                // } else {
+                //  $scope.errorMsg = "Please enter valid data for all the input field.";
+                //  return;
+                // }
+                if ($scope.errorMsg == null) {
+                    $scope.clearFields();
+                    $('#projectBtn').attr('disabled', false);
+
+                }
+
+                // });
                 $scope.newData = false;
             }
         }

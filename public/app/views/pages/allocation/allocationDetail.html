@@ -46,7 +46,7 @@
           <tr id="{{records._id}}">
             <td align="center" colspan="100%" style="font-weight: bold;">
               <span
-                style="text-align: center;color:yellow;background-color:gray;">{{records.project.startsWith("Maintenance") ? records.ecr : records.project}}
+                style="text-align: center;color:yellow;background-color:gray;">{{records.project.startsWith("Maintenance") ?records.project +" - " + records.ecr : records.project}}
               </span>
             </td>
           </tr>
