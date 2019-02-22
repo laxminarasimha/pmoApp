@@ -61,8 +61,9 @@
         $scope.errvalue = false;
         $scope.regionData = [];
 
-        $scope.region = $window.localStorage.getItem("region");
 
+        $scope.region = $window.localStorage.getItem("region");
+        $scope.regionname = $window.localStorage.getItem("region");
 
         console.log("region from window" + $scope.region);
 
@@ -90,8 +91,6 @@
 
         } else {
             getRegion(regionService, $scope);
-            // 
-            // document.getElementById("region").value=$scope.region;
         }
 
 
@@ -140,10 +139,6 @@
 
             });
 
-            console.log('region ' + vRegion);
-
-            //for (var res = 0; res < $scope.resource.length; res++) {
-            console.log("Resource >>>>>>>>>>>>>>>>> " + $scope.resource);
 
 
             angular.forEach($scope.resource, function (res) {
@@ -171,13 +166,6 @@
 
             });
 
-            // angular.forEach($scope.months, function (item) {
-            //  var obj = new allocObject(item);
-            //  $scope.rowWiseAllocation.allocation.push(obj);
-            // });
-
-            //  $scope.resourceWiseAllocaiton.push($scope.rowWiseAllocation);
-            //}
 
             $scope.resource = [];
             $scope.detailDiv = false;
@@ -220,9 +208,6 @@
                                 return;
                             }
                         }
-
-                        console.log(item);
-
                         allocationService.createAllocation(item).then(function (res) {
                             if (res.data == "created") {
                                 $scope.clearMessages();
@@ -235,10 +220,7 @@
                     }
                     $scope.clearMessages();
                 });
-                // } else {
-                //  $scope.errorMsg = "Please enter valid data for all the input field.";
-                //  return;
-                // }
+
                 if ($scope.errorMsg == null) {
                     $scope.clearFields();
                     $('#projectBtn').attr('disabled', false);
@@ -321,13 +303,12 @@
         }
 
         $scope.getregiondata = function () {
-            $scope.region = $scope.oregion.regionname;
+            $scope.regionname = $scope.selectRegion.regionname;
             getMappedResourceData(resourceMappingService, $scope);
         }
 
         function getMappedResourceData(resourceMappingService, $scope) {
-            resourceMappingService.getMappedResources($scope.region).then(function (res) {
-
+            resourceMappingService.getMappedResources($scope.regionname).then(function (res) {
                 $scope.mappedResourceData = filterUniqueResource(res.data);
                 var htm = '';
                 angular.forEach($scope.mappedResourceData, function (item) {
@@ -352,7 +333,6 @@
                 }
             }
             return output;
-
         }
 
         function splitAllocationByYear(entryAllocaiton, from, to) {
@@ -395,15 +375,7 @@
             return maps;
         }
 
-        // function getDisabledData(){
-        //  if ($scope.region != 'All') {
-        //      document.getElementById("oregion").value = $scope.region;
-        //      document.getElementById("oregion").disabled = true;
-        //      } else {
-        //      document.getElementById("oregion").enable = true;
-        //      } 
-        //   return;
-        // }
+     
 
         function months(from, to) {
             var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
