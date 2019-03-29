@@ -128,8 +128,18 @@
             $scope.totalMonthWise = [];
         }
 
-    }
+        $scope.clearFields = function () {           
+            $scope.startDate = '';
+            $scope.endDate = '';
+            $scope.selectProject = 'ALL';
+            $scope.resource = '';
+            app.loading = false;
+            app.successMsg = false;
+            app.errorMsg = false;
+            app.errorClass = "";
+        }
 
+    }
     function listRecords($scope, $filter, projectList, allocationList, monthCol, selectProject) {
 
         var allocFilter = [];
@@ -241,6 +251,8 @@
         return output;
 
     }
+
+
 
     function daysInMonthAndYear(year, holidays) {
         var holidayList = [];

@@ -5,9 +5,9 @@
             <div class="panel-heading">
                 <div class="row">
                     <div class='col-sm-3'>
-                        <div class="form-inline">
+                        <div class="form-group">
                             <label for project>Project:</label>
-                            <select id="project" class="form-control" ng-model="selectProject" ng-init="inputVal='ALL'">
+                            <select id="project" class="form-control input-sm {{errorClass}}" ng-model="selectProject" ng-init="inputVal='ALL'">
                                 <option value='ALL'>All Project</option>
                                 <option ng-repeat="item in project" value="{{item.projectname}}">{{item.projectname}}</option>
                             </select>
@@ -15,42 +15,51 @@
                     </div>
 
                     <div class='col-sm-3'>
-                        <div class="form-inline">
-                            <label for="startDate">From:</label>
-                            <div class="input-group date _date " data-date-format="dd MM yyyy" data-link-format="yyyy-mm-dd">
-                                <input class="form-control" type="text" id="startDate" ng-model="startDate" class="form-control" readonly>
-                                <span class="input-group-addon">
-                                    <span class="glyphicon glyphicon-calendar"></span>
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class='col-sm-3'>
-                        <div class="form-inline">
-                            <label for="endDate">To:</label>
-                            <div class="input-group date _date " data-date-format="dd MM yyyy" data-link-format="yyyy-mm-dd">
-                                <input class="form-control" id="endDate" type="text" ng-model="endDate" class="form-control" readonly>
-                                <span class="input-group-addon">
-                                    <span class="glyphicon glyphicon-calendar"></span>
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class='col-sm-3'>
-                        <div class="form-inline">
+                        <div class="form-group">
                             <label for="resource">Resources:</label>
                             <!-- <select id="resource-select" id="resource" ng-model="resource" required multiple="multiple" multi-select class="form-control"></select> -->
 
-                            <input list="resource" type="text" ng-model="resource" style="width: 200px;" required>
+                            <input list="resource" type="text" ng-model="resource" style="width: 290px;" class="form-control input-sm {{errorClass}}"
+                                required>
                             <datalist id="resource">
                                 <option ng-repeat="resource in mappedResourceData" value="{{resource.resourcename}}">
                             </datalist>
+                        </div>
+                    </div>
+
+
+
+                </div>
+                <div class="row">
+                    <div class='col-sm-3'>
+                        <div class="form-group">
+                            <label for="startDate">From:</label>
+                            <div class="input-group date _date " data-date-format="dd MM yyyy" data-link-format="yyyy-mm-dd">
+                                <input class="form-control input-sm {{errorClass}}" type="text" id="startDate" ng-model="startDate" class="form-control"
+                                    readonly>
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class='col-sm-3'>
+                        <div class="form-group">
+                            <label for="endDate">To:</label>
+                            <div class="input-group date _date " data-date-format="dd MM yyyy" data-link-format="yyyy-mm-dd">
+                                <input class="form-control input-sm {{errorClass}}" id="endDate" type="text" ng-model="endDate" class="form-control" readonly>
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                            </div>
                         </div>
                     </div>
                 </div>
                 <div class='row'>
                     <div align="right">
                         <input type="submit" value="Search" class="btn btn-primary" ng-click="filterSeach();" />
+                        <input type="submit" value="Clear" class="btn btn-warning" ng-click="clearFields();" />
+                      
                     </div>
                 </div>
             </div>

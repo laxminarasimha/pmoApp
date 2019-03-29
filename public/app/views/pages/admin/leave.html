@@ -10,7 +10,7 @@
           <div class='col-sm-3'>
             <div class=form-group>
               <label>Resource Name:</label>
-              <select ng-model="leave.resourcename" class="form-control input-sm {{errorClass}}">
+              <select ng-model="leave.resourcename" class="form-control input-sm {{errorClass}}" ng-required="true">
                 <option ng-repeat="x in resourceList" value="{{x.resourcename}}">{{x.resourcename}}</option>
               </select>
             </div>
@@ -19,7 +19,7 @@
           <div class='col-sm-3'>
             <div class=form-group>
               <label>Location:</label>
-              <select ng-model="leave.locationname" ng-change="getHolidayDataForLoaction(leave.locationname)" class="form-control input-sm {{errorClass}}">
+              <select ng-model="leave.locationname" ng-change="getHolidayDataForLoaction(leave.locationname)" ng-required="true" class="form-control input-sm {{errorClass}}">
                    <option ng-repeat="x in locationList" value="{{x.locationname}}">{{x.locationname}}</option>
               </select>
 
@@ -37,7 +37,7 @@
             <div class="form-group">
               <label>Start  Date:</label>
               <div class="input-group date form_date " data-date="" data-date-format="dd-MM-yy" data-link-format="yyyy-mm-dd">
-                <input class="form-control" type="text" ng-model="leave.fromDate" readonly>
+                <input class="form-control" type="text" ng-model="leave.fromDate" readonly ng-required="true">
                 <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
               </div>
             </div>
@@ -48,7 +48,7 @@
             
 
               <div class="input-group date form_date " data-date="" data-date-format="dd-MM-yy" data-link-format="yyyy-mm-dd">
-                <input class="form-control" type="text" ng-model="leave.toDate" readonly>
+                <input class="form-control" type="text" ng-model="leave.toDate" readonly ng-required="true">
                 <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
               </div>
 

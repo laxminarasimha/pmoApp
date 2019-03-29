@@ -87,6 +87,77 @@ $scope.editProject = function (id) {
 
     
  };
+
+ $scope.numberofdays = function (startDate, endDate) {
+    
+                if (endDate != null && startDate != null) {
+                    if (new Date(startDate) > new Date(endDate)) {
+                        console.log("Start Date should be less than End date");
+                        app.loading = false;
+                        app.successMsg = false;
+                        app.errorMsg = "Start Date should be less than End date";
+                        app.errorClass = "error"
+                    } else {
+                        app.loading = false;
+                        app.errorMsg = false;
+    
+    
+                        var holidays = {};
+                        holidays["holiday"] = $scope.holidayList.split(",");
+                        var aDay = 24 * 60 * 60 * 1000,
+                            daysDiff = parseInt((new Date(endDate).getTime() - new Date(startDate).getTime()) / aDay, 10) + 1;
+    
+                        if (daysDiff > 0) {
+                            for (var i = new Date(startDate).getTime(), lst = new Date(endDate).getTime(); i <= lst; i += aDay) {
+                                var d = new Date(i);
+                                if (d.getDay() == 6 || d.getDay() == 0 // weekend
+                                    || holidays.holiday.indexOf(formatDate(d)) != -1) {
+                                    daysDiff--;
+                                }
+                            }
+    
+                            $scope.numberOfLeaves = daysDiff;
+                            monthwiseLeave(daysDiff, startDate, endDate, $scope);
+    
+                            return $scope.numberOfLeaves;
+                        }
+    
+                    }
+                }
+            };
+
+            function monthwiseLeave(days, fromDate, toDate, $scope) {
+                
+                            var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                                "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+                
+                            $scope.monthwiseLeave = [];
+                
+                            function Object(month, days) {
+                                this.month = month
+                                this.value = days
+                            }
+                
+                            var totalDays = days;
+                            var fDate = new Date(fromDate);
+                            var lDate = new Date(fDate.getFullYear(), fDate.getMonth() + 1, 0);
+                            var dt = 0;
+                            var month = "";
+                            while (totalDays > 0) {
+                                dt = daysDiff(fDate, lDate);
+                                month = monthNames[fDate.getMonth()] + "-" + fDate.getFullYear().toString().substr(-2);
+                                if (totalDays > dt) {
+                                    $scope.monthwiseLeave.push(new Object(month, dt));
+                                    totalDays = totalDays - dt;
+                                    fDate = new Date(fDate.getFullYear(), fDate.getMonth() + 1, 1);
+                                    lDate = new Date(fDate.getFullYear(), fDate.getMonth() + 1, 0);
+                                } else {
+                                    $scope.monthwiseLeave.push(new Object(month, totalDays));
+                                    break;
+                                }
+                            }
+                
+                        }
  
  $scope.createProject = function(project) {
      $rootScope.Title = "Create Project";

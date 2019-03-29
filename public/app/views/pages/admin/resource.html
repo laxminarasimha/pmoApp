@@ -43,7 +43,7 @@
                 </select>
               </div>
             </div>
-            <div class='col-sm-4'>
+            <!--div class='col-sm-4'>
               <div class='form-group'>
                 <label for="eype">Type</label>
                 <select class="form-control input-sm {{errorClass}}" ng-model="resource.etype" name="etype" ng-required="true">
@@ -52,10 +52,7 @@
                   <option value="User" selected="true">General User</option>
                 </select>
               </div>
-            </div>
-          </div>
-
-          <div class='row'>
+            </div-->
             <div class='col-sm-4'>
               <div class='form-group'>
                 <label for="baseentity">Location</label>
@@ -64,6 +61,17 @@
                 </select>
               </div>
             </div>
+          </div>
+
+          <div class='row'>
+            <!--div class='col-sm-4'>
+              <div class='form-group'>
+                <label for="baseentity">Location</label>
+                <select ng-model="resource.baseentity" id="baseentity" class="form-control input-sm {{errorClass}}">
+                  <option ng-repeat="x in locationList" value="{{x.locationname}}">{{x.locationname}}</option>
+                </select>
+              </div>
+            </div-->
             <div class='col-sm-4'>
               <div class='form-group'>
                 <label for="skill">Skill</label>
@@ -80,8 +88,16 @@
                 </select>
               </div>
             </div>
+            <div class='col-sm-4'>
+              <div class='form-group'>
+                <label for="region">Region</label>
+                <select ng-model="resource.region" id="role" class="form-control input-sm {{errorClass}}">
+                  <option ng-repeat="x in regionList" value="{{x.regionname}}">{{x.regionname}}</option>
+                </select>
+              </div>
+            </div>  
           </div>
-          <div class='row'>
+          <!--div class='row'>
             <div class='col-sm-4'>
               <div class='form-group'>
                 <label for="region">Region</label>
@@ -93,7 +109,7 @@
             
             
             
-          </div>
+          </div-->
 
           <div class='row'>
 

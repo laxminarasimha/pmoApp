@@ -48,7 +48,8 @@
 						<div class=form-group>
 							<label>End Date:</label>
 							<div class="input-group date endDate " data-date="" data-date-format="dd-MM-yy" data-link-format="yyyy-mm-dd">
-								<input class="form-control" type="text" ng-model="project.endDate" readonly ng-required="true" class="form-control input-sm {{errorClass}}">
+								<input class="form-control" type="text" ng-model="project.endDate" readonly ng-required="true" class="form-control input-sm {{errorClass}}" 
+								ng-value="numberofdays(project.startDate,project.endDate)">
 								<span class="input-group-addon">
 									<span class="glyphicon glyphicon-calendar"></span>
 								</span>

@@ -14,9 +14,12 @@
         $scope.fromDate;
         $scope.numberOfLeaves;
         $scope.resourcename;
+        $scope.totaleDays=0;
 
 
         var app = $scope;
+
+        
 
         $scope.region = $window.localStorage.getItem("region");
 
@@ -102,6 +105,7 @@
             $rootScope.Title = "Create Leave";
             $scope.IsSubmit = true;
 
+           
             if ($scope.leaveForm.$valid) {
                 leave.fromDate = $scope.leave.fromDate;
                 leave.toDate = $scope.leave.toDate;
@@ -127,15 +131,18 @@
                  console.log(err);
                  });*/
             } else {
+               // nameRequired(resourcename);
                 app.loading = false;
                 app.successMsg = false;
-                app.errorMsg = "Please Enter Required value";
+                app.errorMsg = "Please enter required value";
                 app.errorClass = "error"
             }
 
         };
 
+
         $scope.numberofdays = function (fromDate, toDate, resourcename) {
+            console.log("numberofdays");
 
             if (toDate != null && fromDate != null) {
                 if (new Date(fromDate) > new Date(toDate)) {
@@ -146,7 +153,7 @@
                     app.errorClass = "error"
                 } else {
                     app.loading = false;
-                    app.errorMsg = false;
+                   // app.errorMsg = false;
 
 
                     var holidays = {};
@@ -165,8 +172,8 @@
 
                         $scope.numberOfLeaves = daysDiff;
                         monthwiseLeave(daysDiff, fromDate, toDate, $scope);
-
-                        return $scope.numberOfLeaves;
+                        
+                        $scope.totalDays = $scope.numberOfLeaves;
                     }
 
                 }
