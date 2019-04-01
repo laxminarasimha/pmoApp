@@ -120,7 +120,7 @@
 
                         </span>
                       </td>
-                      <td ng-if="allocRows.project =='Maintenance(Sweden)'" style="padding-left: 10px">
+                      <td ng-if="allocRows.project =='Maintenance(Sweden)'||allocRows.project =='Maintainance(Finland)'" style="padding-left: 10px">
                         <label for="ecr">ECR</label>
                         <span id="ecr" editable-select="allocRows.ecr" e-name="ecr" e-form="rowform"></span>
                         <select class="form-control" style="padding: 1px" ng-model="allocRows.ecr"
@@ -167,7 +167,7 @@
     startView: "year",
     minView: "year",
     autoclose: 1,
-    startDate: '-0m'
+    startDate: '0m'
   });
 
 </script>

@@ -18,7 +18,8 @@
 
         var app = $scope;
         $scope.region = $window.localStorage.getItem("region");
-
+        $scope.regionname = $window.localStorage.getItem("region");
+        console.log("root region"+$scope.regionname);
         $rootScope.Title = "Reporting";
         $scope.LocationData = [];
         $scope.regionData = [];
@@ -64,6 +65,7 @@
             document.getElementById("region-select").style.display = "block";
         }
         $scope.regionChange = function () {
+            $scope.regionname = $scope.selectRegion;
             $scope.newRegion = true;
             $scope.graphidchange();
 
@@ -102,22 +104,22 @@
             case "ProjectMDS":
                 document.getElementById("skill").style.display = "none";
                 document.getElementById("project").style.display = "block";
-                projectManDaysGraph($scope, $filter, allocationService, projectService);
+                projectManDaysGraph($scope, $filter, allocationService, projectService,$scope.regionname);
                 break;
             case "AvlCapcitySkill":
                 document.getElementById("project").style.display = "none";
                 document.getElementById("skill").style.display = "block";
-                avlCapcitySkillGraph($scope, $filter, allocationService, resourceMappingService, skillSetService, leaveService, holidayListService);
+                avlCapcitySkillGraph($scope, $filter, allocationService, resourceMappingService, skillSetService, leaveService, holidayListService,$scope.regionname);
                 break;
             case "DemandCapacity":
                 document.getElementById("project").style.display = "none";
                 document.getElementById("skill").style.display = "none";
-                demandGraph($scope, $filter, resourceMappingService, allocationService, leaveService, holidayListService);
+                demandGraph($scope, $filter, resourceMappingService, allocationService, leaveService, holidayListService,$scope.regionname);
                 break;
             case "CapacityFYF":
                 document.getElementById("project").style.display = "none";
                 document.getElementById("skill").style.display = "none";
-                demandGraphFYF($scope, $filter, resourceMappingService, allocationService, leaveService, holidayListService);
+                demandGraphFYF($scope, $filter, resourceMappingService, allocationService, leaveService, holidayListService,$scope.regionname);
                 break;
             default:
                 break;
@@ -132,16 +134,16 @@
 
     }
 
-    function demandGraphFYF($scope, $filter, resourceMappingService, allocationService, leaveService, holidayListService) {
+    function demandGraphFYF($scope, $filter, resourceMappingService, allocationService, leaveService, holidayListService,regionname) {
 
         var strDt = $scope.startDate.split("/");
         var endDt = $scope.endDate.split("/");
 
-        resourceMappingService.getMappedResourcesByYear(strDt[1], endDt[1], $scope.region).then(function (mapping) {
+        resourceMappingService.getMappedResourcesByYear(strDt[1], endDt[1], regionname).then(function (mapping) {
             leaveService.getLeave().then(function (res) {
                 $scope.leaveList = res.data;
                 var monthCol = months($scope.startDate, $scope.endDate);
-                allocationService.getAllAllocationByYear(strDt[1], endDt[1], $scope.region).then(function (allocation) {
+                allocationService.getAllAllocationByYear(strDt[1], endDt[1], regionname).then(function (allocation) {
                     holidayListService.getLocationHolidaysYearRange(strDt[1], endDt[1]).then(function (holidayData) {
                         drawDeamndAndCapcityGraphFYF($scope, $filter, mapping.data, monthCol, $scope.leaveList, allocation.data, holidayData.data);
                     });
@@ -518,15 +520,15 @@
         }
     }
 
-    function demandGraph($scope, $filter, resourceMappingService, allocationService, leaveService, holidayListService) {
+    function demandGraph($scope, $filter, resourceMappingService, allocationService, leaveService, holidayListService,regionname) {
         var strDt = $scope.startDate.split("/");
         var endDt = $scope.endDate.split("/");
 
-        resourceMappingService.getMappedResourcesByYear(strDt[1], endDt[1], $scope.region).then(function (mapping) {
+        resourceMappingService.getMappedResourcesByYear(strDt[1], endDt[1], regionname).then(function (mapping) {
             leaveService.getLeave().then(function (res) {
                 $scope.leaveList = res.data;
                 var monthCol = months($scope.startDate, $scope.endDate);
-                allocationService.getAllAllocationByYear(strDt[1], endDt[1], $scope.region).then(function (allocation) {
+                allocationService.getAllAllocationByYear(strDt[1], endDt[1],regionname).then(function (allocation) {
 
                     holidayListService.getLocationHolidaysYearRange(strDt[1], endDt[1]).then(function (holdata) {
                         drawDeamndAndCapcityGraph($scope, $filter, mapping.data, monthCol, $scope.leaveList, allocation.data, holdata.data);
@@ -863,12 +865,12 @@
         }
     }
 
-    function projectManDaysGraph($scope, $filter, allocationService, projectService) {
+    function projectManDaysGraph($scope, $filter, allocationService, projectService,regionname) {
 
         var strDt = $scope.startDate.split("/");
         var endDt = $scope.endDate.split("/");
 
-        projectService.getProject($scope.region).then(function (project) {
+        projectService.getProject(regionname).then(function (project) {
             $scope.project = project.data;
 
             if ($scope.projectHTML === '' || $scope.newRegion) {
@@ -885,7 +887,7 @@
                 $('#project-select').multiselect('rebuild');
             }
 
-            allocationService.getAllAllocationByYear(strDt[1], endDt[1], $scope.region).then(function (allocation) {
+            allocationService.getAllAllocationByYear(strDt[1], endDt[1],regionname).then(function (allocation) {
                 var monthCol = months($scope.startDate, $scope.endDate);
                 drawTotalManDaysGraph($scope, $filter, project.data, allocation.data, monthCol);
 
@@ -955,7 +957,7 @@
                 options: {
                     title: {
                         display: true,
-                        text: $scope.region + ' Project Demand & Pipeline (MDs)'
+                        text: $scope.regionname + ' Project Demand & Pipeline (MDs)'
                     },
                     legend: {
                         display: false
@@ -992,14 +994,14 @@
         $scope.newRegion = false;
     }
 
-    function avlCapcitySkillGraph($scope, $filter, allocationService, resourceMappingService, skillSetService, leaveService, holidayListService) {
+    function avlCapcitySkillGraph($scope, $filter, allocationService, resourceMappingService, skillSetService, leaveService, holidayListService,regionname) {
 
         var strDt = $scope.startDate.split("/");
         var endDt = $scope.endDate.split("/");
 
         // skillSetService.getSkillSets().then(function (skill) {
         //  $scope.skillSetList = "";
-        resourceMappingService.getMappedResourcesByYear(strDt[1], endDt[1], $scope.region).then(function (mapping) {
+        resourceMappingService.getMappedResourcesByYear(strDt[1], endDt[1], regionname).then(function (mapping) {
 
             angular.forEach(mapping.data, function (mappValue) {
                 if ($scope.skillSetList.indexOf(mappValue.mappedResource.skill) < 0) {
@@ -1007,7 +1009,7 @@
                 }
             });
 
-            allocationService.getAllAllocationByYear(strDt[1], endDt[1], $scope.region).then(function (allocation) {
+            allocationService.getAllAllocationByYear(strDt[1], endDt[1], regionname).then(function (allocation) {
                 var monthCol = months($scope.startDate, $scope.endDate);
 
                 leaveService.getLeave().then(function (res) {
@@ -1153,7 +1155,7 @@
             options: {
                 title: {
                     display: true,
-                    text: $scope.region + ' Skillset Available Capacity (MDs)',
+                    text: $scope.regionname+ ' Skillset Available Capacity (MDs)',
                 },
                 legend: {
                     display: false

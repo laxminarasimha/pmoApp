@@ -173,7 +173,7 @@
                         $scope.numberOfLeaves = daysDiff;
                         monthwiseLeave(daysDiff, fromDate, toDate, $scope);
                         
-                        $scope.totalDays = $scope.numberOfLeaves;
+                        return $scope.numberOfLeaves;
                     }
 
                 }
