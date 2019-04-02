@@ -71,7 +71,7 @@
             var date_1 = new Date(strDt[1], parseInt(strDt[0]) - 1);
             var date_2 = new Date(endDt[1], parseInt(endDt[0]) - 1);
             if (date_1 != "Invalid Date" && date_2 != "Invalid Date") {
-                if (date_2 >= date_1) {
+                if (date_2 >= date_1 && $scope.resourcemap.resourcename!=null ) {
                     $scope.taggedToEuroclearList = months($scope.startDate, $scope.endDate);
                     $scope.yearSelect =
                         checkPreTagged($scope.resourcemap, $scope.mongoMappedResourceData, $scope.taggedToEuroclearList); // to check if already existed allocaiton 
@@ -176,6 +176,7 @@
         };
 
         $scope.saveData = function (resourcemap) {
+            console.log("Saving Data");
             $rootScope.Title = "Update Resourcemap";
             if ($scope.resourceMappingForm.$valid) {
                 prepareTaggedToEuroclearData($scope, resourcemap);
@@ -190,15 +191,19 @@
 
         $scope.createResourceMapping = function (resourcemap) {
             $rootScope.Title = "Create resourcemap";
+            console.log("Create MApping");
             $scope.IsSubmit = true;
             if ($scope.resourceMappingForm.$valid) {
                 prepareTaggedToEuroclearData($scope, resourcemap);
                 prepareData(resourceMappingService, app, holidayListService, $scope, resourcemap, true);
             } else {
+                $scope.errorMsgs=[];
+                console.log("In else of Create Mapping");
                 app.loading = false;
                 app.successMsg = false;
-                app.errorMsg = "Please Enter Required value";
-                app.errorClass = "error"
+                app.errorMsg = " ";
+                app.errorClass = "error";
+                $scope.errorMsgs.push("Please enter  required value");
             }
 
         }

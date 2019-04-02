@@ -60,8 +60,8 @@
         $scope.newData = false;
         $scope.errvalue = false;
         $scope.regionData = [];
-
-
+       // $scope.save=false;
+       // $scope.vishnu="none";
         $scope.region = $window.localStorage.getItem("region");
         $scope.regionname = $window.localStorage.getItem("region");
 
@@ -96,7 +96,7 @@
 
 
         $scope.createAllocation = function () {
-
+          //  $scope.vishnu="vishnu";
             if ($scope.resource == null || $scope.resource.length <= 0) {
                 $scope.errorMsg = "Please select a resource."
                 return;
@@ -116,6 +116,8 @@
             if (date_1 != "Invalid Date" && date_2 != "Invalid Date") {
                 if (date_2 >= date_1) {
                     monthCol = months($scope.startDate, $scope.endDate);
+                    $scope.errorMsg ="";
+                    app.errorMsg = false;
                 } else {
                     $scope.errorMsg = "Please select a valid date range."
                     return;
@@ -263,7 +265,7 @@
             app.successMsg = false;
             app.errorMsg = false;
             $scope.hidden = "none";
-
+           // $scope.vishnu="none";
             $('#projectBtn').attr('disabled', false);
         }
 
