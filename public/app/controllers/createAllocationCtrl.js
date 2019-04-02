@@ -255,8 +255,8 @@
         $scope.clearFields = function () {
             $('#resource-select').multiselect('rebuild');
             $scope.clearMessages();
-            //$scope.startDate = null;
-            //$scope.endDate = null;
+            $scope.startDate = "";
+            $scope.endDate = "";
             $scope.months = [];
             $scope.resourceWiseAllocaiton = [];
             app.loading = false;

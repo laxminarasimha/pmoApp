@@ -28,15 +28,28 @@
             openDialog();
         
          }
+
+         $scope.numberofdays = function (startDate, endDate) {
+    
+            if (endDate != null && startDate != null) {
+                if (new Date(startDate) > new Date(endDate)) {
+                    console.log("Start Date should be less than End date");
+                    app.loading = false;
+                    app.successMsg = false;
+                    app.errorMsg = "Start Date should be less than End date";
+                    app.errorClass = "error"
+                } 
+            }
+        };
         
     $scope.createECR = function(ecr) {
             console.log(ecr);
             $rootScope.Title = "Create ECR";
             $scope.IsSubmit = true;
             if ($scope.ECRManagementForm.$valid) {
-            //ecrService.getEcrForName($scope.ecr.ecrname,$scope.ecr.regionname).then(function(res) {
-                //console.log(res.data.length);
-               // if(res.data.length == 0){
+            ecrService.getEcrForName($scope.ecr.ecrname,$scope.ecr.regionname).then(function(res) {
+                console.log(res.data);
+               if(res.data.length == 0){
                  ecrService.createEcr(ecr).then(function(res) {  
                            if (res.data == "created") {
                                getECRData(ecrService,$scope);
@@ -52,17 +65,17 @@
                                 app.successMsg = false;
                                  app.errorClass = "error";
                             });
-                 //  }
+                   }
                 
-                //    else  if(res.data.length > 0){
-                //                app.loading =false;
-                //                app.errorMsg = "ECR already exist";
-                //               app.successMsg = false;
-                //                app.errorClass = "error";
-                //   }
-            //     }).catch(function(err) {
-            //     console.log(err);
-            //    }); 
+                   else  if(res.data.length > 0){
+                               app.loading =false;
+                               app.errorMsg = "ECR already exist";
+                               app.successMsg = false;
+                                app.errorClass = "error";
+                   }
+               }).catch(function(err) {
+                console.log(err);
+               }); 
             }else 
             {
                    app.loading =false;
@@ -71,7 +84,7 @@
                    app.errorClass = "error"
             }
             
-        
+        }
 
 
          $scope.editEcr = function (id) {
@@ -121,7 +134,7 @@
        
            
         };
-    }
+    
 
 }
     function getRegionData(regionService,$scope){

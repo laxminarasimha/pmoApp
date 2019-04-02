@@ -76,6 +76,7 @@
                     $scope.yearSelect =
                         checkPreTagged($scope.resourcemap, $scope.mongoMappedResourceData, $scope.taggedToEuroclearList); // to check if already existed allocaiton 
                     $scope.hidden = "visible";
+                    app.errorMsg="";
                 } else {
                     app.loading = false;
                     app.successMsg = false;

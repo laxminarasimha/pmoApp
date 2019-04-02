@@ -83,15 +83,34 @@
         </div>
         </div>
       </div>
+      <div class="panel-body" ng-show="loading || successMsg || errorMsg">
+				<div class="row">
+					<div class='col-sm-12'>
+						<div class="jumbotron text-center" ng-show="loading">
+							<span class="glyphicon glyphicon-repeat spinner"></span>
+							<p>Loading...</p>
+						</div>
+						<div class="row show-hide-message" ng-show="successMsg">
+							<div class="alert alert-success">{{successMsg}}</div>
+						</div>
+						<div class="row show-hide-message" ng-show="errorMsg">
+							<div class="alert alert-danger">{{errorMsg}}</div>
+						</div>
+					</div>
+				</div>
+			</div>
       <div class="panel-footer">
         <div id="graphDiv" class="panel-body" style="display:none">
           <div align="right">
             <input type="button" id="save_image" value="Download as image" class="btn btn-primary input-sm" onclick="Capture()">
             <a href="#" style="display :none"  id="download">Download as image</a>
           </div>
+          
+			
           <span></span>
           <span></span>
           <span></span>
+
           <div id="capture" class="container">
           <div class="row">
             <div id="ChartContainer">
@@ -137,6 +156,7 @@
 </div>  
 </form>
 
+
 <script>
 
 function downloadURI(uri, name) {
@@ -166,8 +186,10 @@ function Capture() {
 // });
  
  
- 
-  $('#project-select').multiselect();
+$('#project-select').multiselect({
+  includeSelectAllOption: true,
+  nonSelectedText: 'Select Project',
+  }); 
   $('.form_date').datetimepicker({
     format: "mm/yyyy",
     startView: "year",

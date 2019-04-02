@@ -20,6 +20,10 @@
                 console.log(url);
                 return $http.get(url);
             },
+            getEcrForName: function (ecrname, regionname) {
+                url = globalConfig.apiAddress + "/ecr/ecrname/" + ecrname + "/" + regionname;
+                return $http.get(url);
+            },
             updateECR: function (ecr) {
                 url = globalConfig.apiAddress + "/ecr/" + ecr._id;
                 return $http.put(url, ecr);

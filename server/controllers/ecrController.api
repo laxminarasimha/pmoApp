@@ -1,6 +1,8 @@
 var express = require("express"),
 router = express.Router(),
 ecrDAO = require("../models/ecrDAO.js")
+const log4js = require('log4js');
+  const logger = log4js.getLogger('demandcapacity');
 router.get("/:region", function(req, res) {  
  ecrDAO.count({}, function(err, data) {
  if (err) {
@@ -37,6 +39,70 @@ router.get("/:region", function(req, res) {
  }
  
  }); 
+}).get("/ecrname/:ecrname/:regionname", function(req, res) {
+  console.log("***********");
+ var ecName = req.params.ecrname;
+ var regionName = req.params.regionname;
+ ecrDAO.aggregate([
+      {
+      $project: {
+        //Convert EndUser to UpperCase
+        "ecrname": {
+          "$let": {
+            //var declaration
+            "vars": {
+              "ecrVar": "$ecrname"
+            },
+            "in": {
+              //conversion to upper case
+              "$toUpper": "$$ecrVar"
+            }
+          }
+        },
+
+        "regionname":{
+           "$let": {
+            //var declaration
+            "vars": {
+              "regionVar": "$regionname"
+            },
+            "in": {
+              //conversion to upper case
+              "$toUpper": "$$regionVar"
+            }
+          }
+        }
+       
+      }
+    },
+ 
+    // Stage 2: match using in operator
+    {
+      $match: {
+        "ecrname" : {
+          "$in" : [
+            ecName.toUpperCase()
+          ]
+        },
+        "regionname" : {
+          "$in" : [
+            regionName.toUpperCase()
+          ]
+        },
+      }
+    }
+ 
+  ], function(err, data) {
+   if (err) {
+     console.log('Error while data fetching from Project Dao for aggregate='+err);
+   logger.error('Error while data fetching from Project Dao for aggregate='+err);
+   res.send("error");
+   return;
+   }
+
+   console.log(data);
+   res.send(data);
+   });
 }).post("/", function(req, res) {
  var obj = req.body;
  console.log(obj);

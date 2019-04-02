@@ -44,7 +44,7 @@
         $scope.projectHTML = '';
         $scope.ShowSpinnerStatus = false;
         $scope.newRegion = false;
-
+        $scope.errorMsg=false;
         getRegion(regionService, $scope);
         //getLocationData(locationService, $scope);
         // getMappedResourceData(resourceMappingService, $scope);
@@ -87,12 +87,23 @@
             if (date_1 != "Invalid Date" && date_2 != "Invalid Date") {
                 if (date_2 >= date_1) {
                     monthCol = months($scope.startDate, $scope.endDate);
+                    app.errorMsg=false;
+                    createGraph($scope, $filter, resourceMappingService, availableDaysService, monthlyHeaderListService, allocationService, projectService, skillSetService, leaveService, holidayListService);
                 } else {
-                    alert("Please select a valid date range.");
-                    return;
+                   // alert("Please select a valid date range.");
+                  //  return;
+                  if (date_2 != null && date_1 != null) {
+                    if (new Date(date_1) > new Date(date_2)) {
+                        console.log("Start Date should be less than End date");
+                        app.loading = false;
+                        app.successMsg = false;
+                        app.errorMsg = "Start Date should be less than End date";
+                        app.errorClass = "error"
+                    } 
+                }
                 }
             }
-            createGraph($scope, $filter, resourceMappingService, availableDaysService, monthlyHeaderListService, allocationService, projectService, skillSetService, leaveService, holidayListService);
+           
         }
 
     }
@@ -869,13 +880,13 @@
 
         var strDt = $scope.startDate.split("/");
         var endDt = $scope.endDate.split("/");
-
+        //$scope.projectSelect = "ALL";
         projectService.getProject(regionname).then(function (project) {
             $scope.project = project.data;
 
             if ($scope.projectHTML === '' || $scope.newRegion) {
                 $scope.projectHTML = "";
-                $scope.projectSelect = "ALL";
+               // $scope.projectSelect = "ALL";
 
                 angular.forEach($scope.project, function (item) {
                     if (!item.projectname.startsWith("Production Support") && !item.projectname.startsWith("Maintenance")) {
@@ -886,7 +897,7 @@
                 $('#project-select').find('option').remove().end().append($scope.projectHTML);
                 $('#project-select').multiselect('rebuild');
             }
-
+            console.log("project"+$scope.projectSelect);
             allocationService.getAllAllocationByYear(strDt[1], endDt[1],regionname).then(function (allocation) {
                 var monthCol = months($scope.startDate, $scope.endDate);
                 drawTotalManDaysGraph($scope, $filter, project.data, allocation.data, monthCol);
@@ -905,13 +916,15 @@
 
         $scope.GraphData = [];
         $scope.projectFilter = [];
-
+      
+        console.log("project Select"+$scope.projectSelect);
         if ($scope.projectSelect === undefined || $scope.projectSelect === 'ALL') {
             angular.forEach(projectList, function (project, index) {
                 $scope.projectFilter.push(project.projectname);
             });
 
         } else {
+          
             for (var k = 0; k < $scope.projectSelect.length; k++) {
                 $scope.projectFilter.push($scope.projectSelect[k]);
             }

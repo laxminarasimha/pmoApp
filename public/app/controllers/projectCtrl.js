@@ -97,32 +97,7 @@ $scope.editProject = function (id) {
                         app.successMsg = false;
                         app.errorMsg = "Start Date should be less than End date";
                         app.errorClass = "error"
-                    } else {
-                        app.loading = false;
-                        app.errorMsg = false;
-    
-    
-                        var holidays = {};
-                        holidays["holiday"] = $scope.holidayList.split(",");
-                        var aDay = 24 * 60 * 60 * 1000,
-                            daysDiff = parseInt((new Date(endDate).getTime() - new Date(startDate).getTime()) / aDay, 10) + 1;
-    
-                        if (daysDiff > 0) {
-                            for (var i = new Date(startDate).getTime(), lst = new Date(endDate).getTime(); i <= lst; i += aDay) {
-                                var d = new Date(i);
-                                if (d.getDay() == 6 || d.getDay() == 0 // weekend
-                                    || holidays.holiday.indexOf(formatDate(d)) != -1) {
-                                    daysDiff--;
-                                }
-                            }
-    
-                            $scope.numberOfLeaves = daysDiff;
-                            monthwiseLeave(daysDiff, startDate, endDate, $scope);
-    
-                            return $scope.numberOfLeaves;
-                        }
-    
-                    }
+                    } 
                 }
             };
 
