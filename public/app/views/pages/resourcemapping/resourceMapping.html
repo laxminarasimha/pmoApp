@@ -17,11 +17,11 @@
               </datalist>-->
               
               <select ng-show="resourcemap._id==null" ng-model="resourcemap.mappedResource" ng-options="x.resourcename for x in resourceList"
-                class="form-control input-sm {{errorClass}}">
+                class="form-control input-sm {{errorClass}}" ng-change="dateEnable();">
                   </select>
 
               <input ng-show="resourcemap._id!=null" id="resourcename" ng-model="resourcemap.mappedResource.resourcename" type="text" disabled
-                class="form-control input-sm" />
+                class="form-control input-sm"  />
             </div>
           </div>
 
@@ -117,8 +117,8 @@
             <div class="form-group">
               <label for startDate>Tagged Start Date:</label>
               <div class="input-group date form_date " data-date="" data-date-format="dd MM yyyy" data-link-format="yyyy-mm-dd">
-                <input class="form-control" type="text" ng-model="startDate" ng-change="createMapping();" readonly>
-                <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                <input class="form-control" type="text" ng-model="startDate" ng-change="createMapping();" readonly disabled>
+                <span class="input-group-addon" id="startDisable"><span class="glyphicon glyphicon-calendar"></span></span>
               </div>
             </div>
 
@@ -133,8 +133,8 @@
             <div class="form-group">
               <label for endDate>Tagged End Date:</label>
               <div class="input-group date form_date " data-date="" data-date-format="dd MM yyyy" data-link-format="yyyy-mm-dd">
-                <input class="form-control" type="text" ng-model="endDate" ng-change="createMapping();" readonly>
-                <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                <input class="form-control" type="text" ng-model="endDate" ng-change="createMapping();" readonly disabled>
+                <span class="input-group-addon" id="endDisable"><span class="glyphicon glyphicon-calendar" ></span></span>
               </div>
             </div>
 
@@ -266,14 +266,17 @@
 </div>
 
 <script>
+
+ 
   $('.form_date').datetimepicker({
     format: "mm/yyyy",
     startView: "year",
     minView: "year",
     autoclose: 1,
-    startDate: '1m'
+    startDate: '-0m'
   });
-
+  $("#startDisable").css("pointer-events", "none");
+  $("#endDisable").css("pointer-events", "none");
 </script>
 <style>
   .loader {

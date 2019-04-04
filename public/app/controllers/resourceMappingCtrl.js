@@ -4,11 +4,11 @@
     angular.module('pmoApp').controller('resourceMappingCtrl', Controller);
 
 
-    Controller.$inject = ['$scope', '$rootScope', '$window', 'DTOptionsBuilder', 'DTColumnBuilder', '$compile', 'resourceMappingService', 'resourceService', 'designationService','roleService', 'locationService',
+    Controller.$inject = ['$scope', '$rootScope', '$window', 'DTOptionsBuilder', 'DTColumnBuilder', '$compile', 'resourceMappingService', 'resourceService', 'designationService', 'roleService', 'locationService',
         'regionService', 'skillSetService', 'statusService', 'resourceTypeService', 'holidayListService',
         'monthlyHeaderListService'];
 
-    function Controller($scope, $rootScope, $window, DTOptionsBuilder, DTColumnBuilder, $compile, resourceMappingService, resourceService, designationService ,roleService, locationService,
+    function Controller($scope, $rootScope, $window, DTOptionsBuilder, DTColumnBuilder, $compile, resourceMappingService, resourceService, designationService, roleService, locationService,
         regionService, skillSetService, statusService, resourceTypeService, holidayListService, monthlyHeaderListService) {
 
         //$scope.resourcemap = {};
@@ -41,8 +41,8 @@
         $scope.statusList = [];
         getStatusData(statusService, $scope);
 
-        $scope.designationList=[];
-        getDesignationData(designationService,$scope);
+        $scope.designationList = [];
+        getDesignationData(designationService, $scope);
 
         $scope.roleList = [];
         getRoleData(roleService, $scope);
@@ -62,25 +62,24 @@
         $scope.endDate = "";
         $scope.hidden = "none";
         $scope.errorMsgs = new Array();
-
+        
         $scope.createMapping = function () {
-
+          
             var strDt = $scope.startDate.split("/");
             var endDt = $scope.endDate.split("/");
 
             var date_1 = new Date(strDt[1], parseInt(strDt[0]) - 1);
             var date_2 = new Date(endDt[1], parseInt(endDt[0]) - 1);
             if (date_1 != "Invalid Date" && date_2 != "Invalid Date") {
-                if (date_2 >= date_1 && $scope.resourcemap.resourcename!=null ) {
+                if (date_2 >= date_1) {
                     $scope.taggedToEuroclearList = months($scope.startDate, $scope.endDate);
                     $scope.yearSelect =
                         checkPreTagged($scope.resourcemap, $scope.mongoMappedResourceData, $scope.taggedToEuroclearList); // to check if already existed allocaiton 
                     $scope.hidden = "visible";
-                    app.errorMsg="";
                 } else {
                     app.loading = false;
                     app.successMsg = false;
-                    app.errorMsg = " ";
+                    app.errorMsg = true;
                     app.errorClass = "error";
                     $scope.errorMsgs.push("Please Enter valid date range");
                 }
@@ -116,7 +115,10 @@
             $scope.msg = "";
             $scope.deletedID = "";
         }
-
+       $scope.dateEnable = function (){
+            $("#startDisable").css("pointer-events", "auto");
+          $("#endDisable").css("pointer-events", "auto");
+          }
         $scope.deleteResourceMapping = function (id) {
             var selectedId = document.getElementsByName("action");
             if (selectedId.length <= 0) {
@@ -143,6 +145,8 @@
         };
 
         $scope.editResourceMapping = function () {
+            $("#startDisable").css("pointer-events", "auto");
+            $("#endDisable").css("pointer-events", "auto");
             var selectedId = document.getElementsByName("action");
             var id = 0;
             var count = 0;
@@ -163,7 +167,7 @@
             angular.forEach($scope.mongoMappedResourceData, function (data) {
                 if (data._id === id) {
                     $scope.resourcemap = data;
-                   }
+                }
             });
 
             for (var i = 0; i < $scope.resourcemap.taggToEuroclear.length; i++) {
@@ -176,7 +180,6 @@
         };
 
         $scope.saveData = function (resourcemap) {
-            console.log("Saving Data");
             $rootScope.Title = "Update Resourcemap";
             if ($scope.resourceMappingForm.$valid) {
                 prepareTaggedToEuroclearData($scope, resourcemap);
@@ -190,21 +193,26 @@
         };
 
         $scope.createResourceMapping = function (resourcemap) {
+            console.log("Create Mapping");
             $rootScope.Title = "Create resourcemap";
-            console.log("Create MApping");
             $scope.IsSubmit = true;
             if ($scope.resourceMappingForm.$valid) {
-                prepareTaggedToEuroclearData($scope, resourcemap);
-                prepareData(resourceMappingService, app, holidayListService, $scope, resourcemap, true);
+                   
+                        prepareTaggedToEuroclearData($scope, resourcemap);
+                        prepareData(resourceMappingService, app, holidayListService, $scope, resourcemap, true);
+                   
+                
             } else {
-                $scope.errorMsgs=[];
-                console.log("In else of Create Mapping");
+                console.log("Hii");
+                $scope.errorMsgs = [];
                 app.loading = false;
                 app.successMsg = false;
-                app.errorMsg = " ";
+                app.errorMsg = true;
                 app.errorClass = "error";
-                $scope.errorMsgs.push("Please enter  required value");
+                $scope.errorMsgs.push("Please Enter Required value");
             }
+
+            console.log($scope.errorMsgs);
 
         }
 
@@ -262,7 +270,7 @@
                 if (typeof row.holidaydeducted === 'undefined') {
 
                     var location = row.mappedResource.baseentity;
-                  
+
                     holidayListService.getAggegrateLocationHolidays(location).then(function (res) {
                         var aggegrateHolidayList = res.data;
                         var monthyearLabel = new Map();
@@ -336,7 +344,7 @@
 
     function saveResoucreMap(resourceMappingService, app, $scope) {
 
-        $scope.errorMsgs = [];
+        $scope.errorMsgs.clear;
         checkOverAllocation($scope, $scope.resourcemap, true);
 
         if ($scope.errorMsgs.length >= 1) {
@@ -769,7 +777,7 @@
         resourceMappingService.getMappedResources($scope.region).then(function (res) {
             $scope.mongoMappedResourceData = res.data;
             $scope.filterResourceWithYear = filterUniqueResourceWithYear(res.data);
-            
+
             $scope.ShowSpinnerStatus = false;
             var spinner = document.getElementById("spinner");
             if (spinner.style.display != "none") {
@@ -798,10 +806,10 @@
         });
     }
 
-    function getDesignationData(designationService,$scope){
-        designationService.getDesignations().then(function (res){
+    function getDesignationData(designationService, $scope) {
+        designationService.getDesignations().then(function (res) {
             $scope.designationList = res.data;
-        }).catch(function (err){
+        }).catch(function (err) {
             console.log(err);
         });
     }
