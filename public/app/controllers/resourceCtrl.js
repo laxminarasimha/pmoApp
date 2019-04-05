@@ -117,6 +117,9 @@
                     if (res.data == "updated") {
                         getResourceData(resourceService, $scope);
                         $scope.resource = {};
+                        app.loading = false;
+                        app.successMsg = "Resource Updated successfully";
+                        app.errorMsg = false;
                     }
                 }).catch(function (err) {
                     console.log(err);

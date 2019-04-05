@@ -62,9 +62,9 @@
         $scope.endDate = "";
         $scope.hidden = "none";
         $scope.errorMsgs = new Array();
-        
+
         $scope.createMapping = function () {
-          
+
             var strDt = $scope.startDate.split("/");
             var endDt = $scope.endDate.split("/");
 
@@ -115,10 +115,10 @@
             $scope.msg = "";
             $scope.deletedID = "";
         }
-       $scope.dateEnable = function (){
+        $scope.dateEnable = function () {
             $("#startDisable").css("pointer-events", "auto");
-          $("#endDisable").css("pointer-events", "auto");
-          }
+            $("#endDisable").css("pointer-events", "auto");
+        }
         $scope.deleteResourceMapping = function (id) {
             var selectedId = document.getElementsByName("action");
             if (selectedId.length <= 0) {
@@ -135,6 +135,9 @@
                                 app.errorMsg = false;
                                 $scope.msg = "";
                                 $scope.deletedID = "";
+                                $("#startDisable").css("pointer-events", "none");
+                                $("#endDisable").css("pointer-events", "none");
+
                             }
                         }).catch(function (err) {
                             console.log(err);
@@ -197,11 +200,11 @@
             $rootScope.Title = "Create resourcemap";
             $scope.IsSubmit = true;
             if ($scope.resourceMappingForm.$valid) {
-                   
-                        prepareTaggedToEuroclearData($scope, resourcemap);
-                        prepareData(resourceMappingService, app, holidayListService, $scope, resourcemap, true);
-                   
-                
+
+                prepareTaggedToEuroclearData($scope, resourcemap);
+                prepareData(resourceMappingService, app, holidayListService, $scope, resourcemap, true);
+
+
             } else {
                 console.log("Hii");
                 $scope.errorMsgs = [];
@@ -366,6 +369,8 @@
                     app.loading = false;
                     app.successMsg = "Resource mapping updated successfully";
                     app.errorMsg = false;
+                    $("#startDisable").css("pointer-events", "none");
+                    $("#endDisable").css("pointer-events", "none");
                 }
             }).catch(function (err) {
                 console.log(err);
@@ -417,6 +422,8 @@
                                 $scope.hidden = "none";
                                 $scope.startDate = "";
                                 $scope.endDate = "";
+                                $("#startDisable").css("pointer-events", "none");
+                                $("#endDisable").css("pointer-events", "none");
                             }
                         }).catch(function (err) {
                             console.log(err);

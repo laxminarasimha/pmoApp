@@ -137,6 +137,7 @@
             app.successMsg = false;
             app.errorMsg = false;
             app.errorClass = "";
+            $scope.errorMsg ="";
         }
 
     }
