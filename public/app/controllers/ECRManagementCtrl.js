@@ -33,7 +33,7 @@
     
             if (endDate != null && startDate != null) {
                 if (new Date(startDate) > new Date(endDate)) {
-                    console.log("Start Date should be less than End date");
+                   // console.log("Start Date should be less than End date");
                     app.loading = false;
                     app.successMsg = false;
                     app.errorMsg = "Start Date should be less than End date";
@@ -43,12 +43,12 @@
         };
         
     $scope.createECR = function(ecr) {
-            console.log(ecr);
+
             $rootScope.Title = "Create ECR";
             $scope.IsSubmit = true;
             if ($scope.ECRManagementForm.$valid) {
             ecrService.getEcrForName($scope.ecr.ecrname,$scope.ecr.regionname).then(function(res) {
-                console.log(res.data);
+
                if(res.data.length == 0){
                  ecrService.createEcr(ecr).then(function(res) {  
                            if (res.data == "created") {
@@ -117,7 +117,7 @@
         };
 
          $scope.saveData = function(ecr) {
-             console.log("hiiii")
+           
             if ($scope.ECRManagementForm.$valid) {
             ecrService.updateECR(ecr).then(function(res) {
             if (res.data == "updated") {

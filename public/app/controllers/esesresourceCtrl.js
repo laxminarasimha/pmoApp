@@ -60,8 +60,7 @@
         $scope.vm.dtOptions = DTOptionsBuilder.newOptions().withOption('order', [0, 'asc']);
 
         $scope.childInfo = function (cen, yearSelect, event) {
-            console.log(cen);
-
+       
             var scope = $scope.$new(true);
             scope.records = $filter('filter')($scope.esesResource, {CEN: cen});
 

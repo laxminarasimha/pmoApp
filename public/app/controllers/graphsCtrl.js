@@ -897,7 +897,7 @@
                 $('#project-select').find('option').remove().end().append($scope.projectHTML);
                 $('#project-select').multiselect('rebuild');
             }
-            console.log("project"+$scope.projectSelect);
+           // console.log("project"+$scope.projectSelect);
             allocationService.getAllAllocationByYear(strDt[1], endDt[1],regionname).then(function (allocation) {
                 var monthCol = months($scope.startDate, $scope.endDate);
                 drawTotalManDaysGraph($scope, $filter, project.data, allocation.data, monthCol);
@@ -917,7 +917,7 @@
         $scope.GraphData = [];
         $scope.projectFilter = [];
       
-        console.log("project Select"+$scope.projectSelect);
+      //  console.log("project Select"+$scope.projectSelect);
         if ($scope.projectSelect === undefined || $scope.projectSelect === 'ALL') {
             angular.forEach(projectList, function (project, index) {
                 $scope.projectFilter.push(project.projectname);

@@ -191,7 +191,7 @@
                                 if (!isNaN(alloc.value)) {
                                     var value = round(parseFloat(value) + parseFloat(alloc.value), 1);
                                     monthWise[indx] = value;
-                                    console.log(parseFloat($scope.totalMonthWise[indx]) + "<><><>" + parseFloat(alloc.value));
+                                  //  console.log(parseFloat($scope.totalMonthWise[indx]) + "<><><>" + parseFloat(alloc.value));
                                     $scope.totalMonthWise[indx] = round((parseFloat($scope.totalMonthWise[indx]) + parseFloat(alloc.value)), 1);
                                     totalResourceWise += round(parseFloat(alloc.value), 1);
                                 }
@@ -227,7 +227,6 @@
     }
 
     function intialize(projectService, resourceService, $scope) {
-        console.log($scope.region);
         projectService.getProject($scope.region).then(function (res) {
             $scope.project = res.data;
             resourceService.getResources($scope.region).then(function (res) {

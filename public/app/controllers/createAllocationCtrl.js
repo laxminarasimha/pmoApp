@@ -65,7 +65,7 @@
         $scope.region = $window.localStorage.getItem("region");
         $scope.regionname = $window.localStorage.getItem("region");
 
-        console.log("region from window" + $scope.region);
+       // console.log("region from window" + $scope.region);
 
         function allocObject(object) {
             var month;
@@ -180,7 +180,7 @@
 
         $scope.saveAllocation = function () {
 
-            console.log($scope.resourceWiseAllocaiton);
+           // console.log($scope.resourceWiseAllocaiton);
             $scope.errvalue = false;
             angular.forEach($scope.resourceWiseAllocaiton, function (it) {
 
@@ -200,7 +200,7 @@
             if ($scope.errvalue === false) {
                 $scope.clearMessages();
                 var allocationYearWise = splitAllocationByYear($scope.resourceWiseAllocaiton, $scope.startDate, $scope.endDate);
-                console.log(allocationYearWise);
+                //console.log(allocationYearWise);
                 angular.forEach(allocationYearWise, function (item) {
                     if (item.rowSelect) {// if row delete in screen,then it should not save
                         if (!$scope.newData) {
