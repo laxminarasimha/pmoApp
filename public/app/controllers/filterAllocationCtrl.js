@@ -159,7 +159,15 @@
 
             if (project.projectname === selectProject) {  // This is second check sometimes it get same project with start name . Ex- it picks "CSDR" and "CSDR Settlement"
 
-                allocFilter = $filter('filter')(allocationList, { project: project.projectname });
+               // allocFilter = $filter('filter')(allocationList, { project: project.projectname });
+
+                angular.forEach(allocationList, function (alloc) {
+                    if(alloc.project === selectProject){
+                        allocFilter.push(alloc);
+                    }
+                });
+
+
 
                 if ($scope.resource != '' && $scope.resource != undefined) {
                     allocFilter = $filter('filter')(allocFilter, { resource: $scope.resource });
