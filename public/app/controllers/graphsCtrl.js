@@ -1015,7 +1015,7 @@
         // skillSetService.getSkillSets().then(function (skill) {
         //  $scope.skillSetList = "";
         resourceMappingService.getMappedResourcesByYear(strDt[1], endDt[1], regionname).then(function (mapping) {
-
+            
             angular.forEach(mapping.data, function (mappValue) {
                 if ($scope.skillSetList.indexOf(mappValue.mappedResource.skill) < 0) {
                     $scope.skillSetList.push(mappValue.mappedResource.skill);
