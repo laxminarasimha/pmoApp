@@ -30,7 +30,7 @@
         <div class='col-sm-2'>
           <div class=form-group>
             <label for="region">Region:</label>
-            <span ng-show="region === 'All'" id="region" editable-select="allocRows.region" e-name="region"
+            <span  id="region" editable-select="allocRows.region" e-name="region"
               e-form="rowform">
               <select class="form-control" ng-model="selectRegion" ng-options="x.regionname for x in regionData"
                 value="{{x.regionname}}" ng-change="getregiondata()">

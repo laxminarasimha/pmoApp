@@ -60,12 +60,12 @@
         $scope.newData = false;
         $scope.errvalue = false;
         $scope.regionData = [];
-       // $scope.save=false;
-       // $scope.vishnu="none";
+        // $scope.save=false;
+        // $scope.vishnu="none";
         $scope.region = $window.localStorage.getItem("region");
         $scope.regionname = $window.localStorage.getItem("region");
 
-       // console.log("region from window" + $scope.region);
+        // console.log("region from window" + $scope.region);
 
         function allocObject(object) {
             var month;
@@ -82,21 +82,10 @@
         getProjectData(projectService, $scope);
         getResourceTypeData(resourceTypeService, $scope);
         getEcrData(ecrService, $scope);
-    
-
-
-        if ($scope.region != "All") {
-            $('oregion').val($scope.region);
-            getRegionForName(regionService, $scope);
-
-        } else {
-            getRegion(regionService, $scope);
-        }
-
-
+        getRegion(regionService, $scope);
 
         $scope.createAllocation = function () {
-          //  $scope.vishnu="vishnu";
+            //  $scope.vishnu="vishnu";
             if ($scope.resource == null || $scope.resource.length <= 0) {
                 $scope.errorMsg = "Please select a resource."
                 return;
@@ -116,8 +105,8 @@
             if (date_1 != "Invalid Date" && date_2 != "Invalid Date") {
                 if (date_2 >= date_1) {
                     monthCol = months($scope.startDate, $scope.endDate);
-                    $scope.errorMsg ="";
-                    app.errorMsg = false;
+                    $scope.errorMsg = "";
+                    app.errorMsg = false;
                 } else {
                     $scope.errorMsg = "Please select a valid date range."
                     return;
@@ -180,7 +169,7 @@
 
         $scope.saveAllocation = function () {
 
-           // console.log($scope.resourceWiseAllocaiton);
+            // console.log($scope.resourceWiseAllocaiton);
             $scope.errvalue = false;
             angular.forEach($scope.resourceWiseAllocaiton, function (it) {
 
@@ -202,6 +191,7 @@
                 var allocationYearWise = splitAllocationByYear($scope.resourceWiseAllocaiton, $scope.startDate, $scope.endDate);
                 //console.log(allocationYearWise);
                 angular.forEach(allocationYearWise, function (item) {
+                    item.region = $scope.regionname;
                     if (item.rowSelect) {// if row delete in screen,then it should not save
                         if (!$scope.newData) {
                             $scope.clearMessages();
@@ -265,7 +255,7 @@
             app.successMsg = false;
             app.errorMsg = false;
             $scope.hidden = "none";
-           // $scope.vishnu="none";
+            // $scope.vishnu="none";
             $('#projectBtn').attr('disabled', false);
         }
 
@@ -377,7 +367,7 @@
             return maps;
         }
 
-     
+
 
         function months(from, to) {
             var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
@@ -399,18 +389,18 @@
 
             return arr;
         }
+
         function getRegion(regionService, $scope) {
             regionService.getRegion().then(function (res) {
-                $scope.regionData = res.data;
-            })
+                angular.forEach(res.data, function (item) {
+                    if (item.regionname !== 'All') {
+                        $scope.regionData.push(item);
+                    }
+                });
+            });
 
         }
 
-        function getRegionForName(regionService, $scope) {
-            regionService.getRegionForName($scope.region).then(function (res) {
-                $scope.regionData = res.data;
-            })
-        }
     }
 
 })();
