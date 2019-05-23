@@ -175,14 +175,14 @@
 
                 // var allocationYearWise = splitAllocationByYear($scope.resourceWiseAllocaiton, $scope.startDate, $scope.endDate);
                 angular.forEach($scope.resourceWiseAllocaiton, function (item) {
-                    // if (item.rowSelect) {// if row delete in screen,then it should not save
+                    if (item.rowSelect)  {
                     if (item.project === undefined || item.resourcetype === undefined || item.project === undefined) {
                         $scope.errorMsg = "Please enter valid data for all the input field.";
                         $scope.errvalue = true;
                         return;
                     }
 
-                });
+                 } });
 
             });
 

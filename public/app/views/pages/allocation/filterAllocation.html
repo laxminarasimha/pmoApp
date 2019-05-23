@@ -27,6 +27,15 @@
                         </div>
                     </div>
 
+                    <div class='col-sm-3'>
+                            <div class="form-group">
+                                <label for project>Resource Type:</label>
+                                <select id="resType" class="form-control input-sm {{errorClass}}" ng-model="resTypeSelect" ng-init="inputVal='ALL'">
+                                    <option value='ALL'>All Types</option>
+                                    <option ng-repeat="item in resourceType" value="{{item.resourceTypename}}">{{item.resourceTypename}}</option>
+                                </select>
+                            </div>
+                        </div>
 
 
                 </div>
@@ -87,6 +96,7 @@
                             <tr>
                                 <th style="text-align:center">Project</th>
                                 <th style="text-align:center">Resource</th>
+                                <th style="text-align:center">ResourceType</th>
                                 <th style="text-align:center" ng-repeat="month in monthCol">
                                     {{month}}
                                 </th>
@@ -97,6 +107,7 @@
                             <tr ng-repeat="data in listData">
                                 <td style="text-align:center">{{data.project}}</td>
                                 <td style="text-align:center">{{data.resource}}</td>
+                                <td style="text-align:center">{{data.resType}}</td>
                                 <td style="text-align: center;background-color:gray;color:yellow;" ng-repeat="value in data.allocation track by $index">
                                     {{value}}
                                 </td>
@@ -109,6 +120,7 @@
                                 <td style="text-align:center">
                                     <span class="label label-default">Total :</span>
                                 </td>
+                                  <td style="text-align:center"></td>
                                 <td style="text-align: center;background-color:yello;color:red;" ng-repeat="value in totalMonthWise track by $index">
                                     {{value}}
                                 </td>
