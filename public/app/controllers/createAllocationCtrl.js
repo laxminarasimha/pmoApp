@@ -183,7 +183,6 @@
                     }
 
                  } });
-
             });
 
             if ($scope.errvalue === false) {
@@ -229,11 +228,17 @@
         }
 
         $scope.removeAllocation = function (rowId) {
+            
             $("#" + rowId).hide();
             $scope.resourceWiseAllocaiton[rowId].rowSelect = false;
+         
             var rowDelete = $filter('filter')($scope.resourceWiseAllocaiton, { rowSelect: false });
+            
             if ($scope.resourceWiseAllocaiton.length === rowDelete.length) {
+               
                 $scope.months = [];
+                $("#startDisable").css("pointer-events", "none");
+                $("#endDisable").css("pointer-events", "none");
             }
         }
 
