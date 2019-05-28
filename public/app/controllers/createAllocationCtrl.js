@@ -311,9 +311,9 @@
                 angular.forEach($scope.mappedResourceData, function (item) {
                     htm += '<option>' + item.mappedResource.resourcename + '</option>';
                 });
-                $('#resource-select').empty();
+                 $('#resource-select').empty();
                 $('#resource-select').append(htm);
-                $('#resource-select').multiselect('rebuild');
+                 $('#resource-select').multiselect('rebuild');
             }).catch(function (err) {
                 console.log(err);
             });
