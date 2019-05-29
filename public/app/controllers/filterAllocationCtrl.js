@@ -39,9 +39,9 @@
         };
     })
 
-    Controller.$inject = ['$rootScope', '$scope', '$window', '$compile', 'DTOptionsBuilder', 'DTColumnBuilder', 'resourceService', 'projectService', 'allocationService','resourceTypeService' ,'leaveService', 'resourceMappingService', '$filter', 'availableDaysService', 'holidayListService'];
+    Controller.$inject = ['$rootScope', '$scope', '$window', '$compile', 'DTOptionsBuilder', 'DTColumnBuilder', 'resourceService', 'projectService', 'allocationService', 'resourceTypeService', 'leaveService', 'resourceMappingService', '$filter', 'availableDaysService', 'holidayListService'];
 
-    function Controller($rootScope, $scope, $window, $compile, DTOptionsBuilder, DTColumnBuilder, resourceService, projectService, allocationService, resourceTypeService ,leaveService, resourceMappingService, $filter, availableDaysService, holidayListService) {
+    function Controller($rootScope, $scope, $window, $compile, DTOptionsBuilder, DTColumnBuilder, resourceService, projectService, allocationService, resourceTypeService, leaveService, resourceMappingService, $filter, availableDaysService, holidayListService) {
 
         $scope.projectSelect = "ALL";
         //$scope.resourceWiseAllocaiton = [];
@@ -55,13 +55,13 @@
         $scope.listData = [];
         $scope.selectProject = 'ALL';
         $scope.resTypeSelect = 'ALL';
-        $scope.resource = '';
+        $scope.resource = [];
         $scope.mappedResourceData = [];
         $scope.resourceType = [];
         $scope.region = $window.localStorage.getItem("region");
 
         // getMappedResourceData(resourceMappingService, $scope);
-        intialize(projectService, resourceService,resourceTypeService, $scope);
+        intialize(projectService, resourceService, resourceTypeService, $scope);
 
         function allocObject(object) {
             var month;
@@ -112,7 +112,7 @@
             $scope.ShowSpinnerStatus = true;
 
             allocationService.getAllAllocationByYear(strDt[1], endDt[1], $scope.region).then(function (allocation) {
-                listRecords($scope, $filter, $scope.project, allocation.data, $scope.monthCol, $scope.selectProject,$scope.resTypeSelect);
+                listRecords($scope, $filter, $scope.project, allocation.data, $scope.monthCol, $scope.selectProject, $scope.resTypeSelect);
             }).catch(function (err) {
                 console.log(err);
             });
@@ -143,7 +143,10 @@
         }
 
     }
-    function listRecords($scope, $filter, projectList, allocationList, monthCol, selectProject,resTypeSelect) {
+
+
+
+    function listRecords($scope, $filter, projectList, allocationList, monthCol, selectProject, resTypeSelect) {
 
         var allocFilter = [];
         $scope.listData = [];
@@ -154,70 +157,73 @@
         $scope.totalMonthWise = new Array(len);
         $scope.totalMonthWise.fill(0, 0, len);
 
-        if (selectProject !== 'ALL')
-            projectList = $filter('filter')(projectList, { projectname: selectProject });
 
-        angular.forEach(projectList, function (project) {
 
-           if (project.projectname === selectProject) {  // This is second check sometimes it get same project with start name . Ex- it picks "CSDR" and "CSDR Settlement"
+        angular.forEach($scope.resource, function (resource) {
 
-               // allocFilter = $filter('filter')(allocationList, { project: project.projectname });
+            //  if (project.projectname === selectProject || selectProject === 'ALL') {  // This is second check sometimes it get same project with start name . Ex- it picks "CSDR" and "CSDR Settlement"
 
-                angular.forEach(allocationList, function (alloc) {
-                    if(alloc.project === selectProject){
-                        allocFilter.push(alloc);
-                    }
-                });
+            // allocFilter = $filter('filter')(allocationList, { project: project.projectname });
 
-                if (resTypeSelect !== 'ALL') {
-                    allocFilter = $filter('filter')(allocFilter, {resourcetype: resTypeSelect});
+            angular.forEach(allocationList, function (alloc) {
+                if (alloc.project === selectProject || selectProject === 'ALL') {
+                    allocFilter.push(alloc);
                 }
+            });
 
-                if ($scope.resource != '' && $scope.resource != undefined) {
-                    allocFilter = $filter('filter')(allocFilter, { resource: $scope.resource });
-                }
-
-                angular.forEach(allocFilter, function (allocation) {
-                    var totalResourceWise = 0;
-                    var filterResourceWiseAllocation = [];
-                    var vResource = null;
-                    var vDcheck = "";
-
-                    if ($scope.resource === '' || $scope.resource === undefined) {
-                        vResource = allocation.resource;
-                    } else {
-                        vResource = $scope.resource;
-                    }
-
-                    vDcheck = project.projectname + "-" + vResource;
-                    if (duplicateCheck.indexOf(vDcheck) < 0) {
-
-                        filterResourceWiseAllocation = $filter('filter')(allocFilter, { resource: vResource });
-                        var monthWise = new Array(monthCol.length);
-                        monthWise.fill(0, 0, monthWise.length);
-
-                        angular.forEach(filterResourceWiseAllocation, function (allAlloc) {
-                            angular.forEach(allAlloc.allocation, function (alloc) {
-                                if (monthCol.indexOf(alloc.month) >= 0) { // check if months equal to the predefined month array(user selected)
-                                    var indx = monthCol.indexOf(alloc.month);
-                                    var value = monthWise[indx];
-
-                                    if (!isNaN(alloc.value)) {
-                                        var value = round(parseFloat(value) + parseFloat(alloc.value), 1);
-                                        monthWise[indx] = value;
-                                        //  console.log(parseFloat($scope.totalMonthWise[indx]) + "<><><>" + parseFloat(alloc.value));
-                                        $scope.totalMonthWise[indx] = round((parseFloat($scope.totalMonthWise[indx]) + parseFloat(alloc.value)), 1);
-                                        totalResourceWise += round(parseFloat(alloc.value), 1);
-                                    }
-                                }
-                            });
-                            //}
-                        });
-                        $scope.listData.push({ project: project.projectname, resource: allocation.resource,resType:allocation.resourcetype,allocation: monthWise, total: round(totalResourceWise, 1) });
-                        duplicateCheck.push(vDcheck); // resource and project should be once count
-                    }
-                });
+            if (resTypeSelect !== 'ALL') {
+                allocFilter = $filter('filter')(allocFilter, { resourcetype: resTypeSelect });
             }
+
+            allocFilter = $filter('filter')(allocFilter, { resource: resource });
+            console.log(allocFilter);
+
+
+            angular.forEach(allocFilter, function (allocation) {
+                var totalResourceWise = 0;
+                var filterResourceWiseAllocation = [];
+                var vResource = null;
+                var vDcheck = "";
+
+                var monthWise = new Array(monthCol.length);
+                monthWise.fill(0, 0, monthWise.length);
+
+                vDcheck = project.projectname + "-" + resource;
+                if (duplicateCheck.indexOf(vDcheck) < 0) {
+
+                    //filterResourceWiseAllocation = $filter('filter')(allocFilter, { resource: resource });
+                    //console.log(filterResourceWiseAllocation);
+                   
+
+                    console.log(monthWise +"--"+monthCol);
+
+                    angular.forEach(allocFilter, function (allAlloc) {
+                        angular.forEach(allAlloc.allocation, function (alloc) {
+                            //console.log(alloc);
+                            if (monthCol.indexOf(alloc.month) >= 0) { // check if months equal to the predefined month array(user selected)
+                                var indx = monthCol.indexOf(alloc.month);
+                                var value = monthWise[indx];
+
+                                if (!isNaN(alloc.value)) {
+                                    var _lv = round(parseFloat(value) + parseFloat(alloc.value), 1);
+                                    monthWise[indx] = _lv;
+                                    //  console.log(parseFloat($scope.totalMonthWise[indx]) + "<><><>" + parseFloat(alloc.value));
+                                    $scope.totalMonthWise[indx] = round((parseFloat($scope.totalMonthWise[indx]) + parseFloat(alloc.value)), 1);
+                                    totalResourceWise += round(parseFloat(alloc.value), 1);
+                                }
+                            }
+                        });
+
+                        var destinationArray = Array.from(monthWise);
+                        $scope.listData.push({ project: allAlloc.project, resource: resource, resType: allocation.resourcetype, allocation: destinationArray, total: round(totalResourceWise, 1) });
+                        totalResourceWise = 0;
+                        monthWise.fill(0, 0, monthWise.length);
+                        duplicateCheck.push(vDcheck); // resource and project should be once count
+                    });
+
+                }
+            });
+            // }
         });
 
         var total = 0;
@@ -236,17 +242,30 @@
         }
     }
 
+
+
+
     function checkmonth(index) {
         var currentMonth = new Date().getMonth();
         return index < currentMonth;
     }
 
-    function intialize(projectService, resourceService,resourceTypeService, $scope) {
+    function intialize(projectService, resourceService, resourceTypeService, $scope) {
         projectService.getProject($scope.region).then(function (res) {
             $scope.project = res.data;
             resourceService.getResources($scope.region).then(function (res) {
                 $scope.mappedResourceData = res.data;
-                resourceTypeService.getResourceType().then(function (res){
+                var htm = '';
+                angular.forEach($scope.mappedResourceData, function (item) {
+                    if (item.resourcename !== 'Admin') {
+                        htm += '<option>' + item.resourcename + '</option>';
+                    }
+                });
+                $('#resource-select').empty();
+                $('#resource-select').append(htm);
+                $('#resource-select').multiselect('rebuild');
+
+                resourceTypeService.getResourceType().then(function (res) {
                     $scope.resourceType = res.data;
                 })
             }).catch(function (err) {
