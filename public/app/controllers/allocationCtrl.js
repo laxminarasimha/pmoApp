@@ -39,7 +39,7 @@
         };
     })
 
-    function filter(scope, collection, resource, year, mappedResourceData, leaveList, holidayList, showdetail) {
+    function filter(scope, collection, resource, year, mappedResourceData, leaveList, holidayList, showdetail, $filter) {
         if (showdetail) return; // if details is going to close then return
 
         var allocationDetails = [];
@@ -52,10 +52,43 @@
 
         scope.monthLabel = months(year);
 
-        angular.forEach(allocationDetails, function (item) {
-            item.allocation = eachMonthAllocaiton(scope.monthLabel, item.allocation);
+        
+        //var duplicateProjectChk = [];
+        //var fileterTarget = [];
 
-        });
+        // angular.forEach(allocationDetails, function (item) {
+        //     item.allocation = eachMonthAllocaiton(scope.monthLabel, item);
+        //     //console.log(eachMonthAllocaiton(scope.monthLabel, item.allocation));
+
+        // });
+
+        /******************
+       * The below code for merge all the records for same project
+       */
+
+        /*    angular.forEach(allocationDetails, function (record) {
+                console.log(record.allocation);
+                console.log(record.project);
+                if (duplicateProjectChk.indexOf(record.project) <= 0) {
+                    fileterTarget.push(record);
+                    duplicateProjectChk.push(record.project);
+                } else {
+    
+                      angular.forEach(fileterTarget, function (data) {
+                        if(data.project === record.project){
+                            angular.forEach(data.allocation, function (alloc,index) {
+                                if(record.allocation[index].value > 0){
+                                alloc.value = record.allocation[index].value;
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+    
+            allocationDetails = fileterTarget;*/
+
+
 
         // create the hoilidays with month-year fromat and store in a map
         var monthyearLabel = new Map();
@@ -129,7 +162,6 @@
                     var arr = monthsWithYear(object.year);
                     object.availabledays = arr;
                     object.mappercent = arr;
-
                 }
             }
             oldObject = null;
@@ -148,9 +180,10 @@
 
         var tempAlloc = 0;
         var newAlloc = [];
+
         angular.forEach(source, function (month) {
             tempAlloc = 0;
-            angular.forEach(target, function (oldMonth) {
+            angular.forEach(target.allocation, function (oldMonth) {
                 if (oldMonth.month === month) {
                     tempAlloc = oldMonth.value;
                     return;
@@ -223,7 +256,7 @@
 
         if (alloCollection.length <= 0 && mappedResourceData.length > 0) {
 
-            scope.noallocation =  [];
+            scope.noallocation = [];
             function NoAllocation() {
                 this.type;
                 this.availableday = [];
@@ -303,21 +336,6 @@
             $scope.childInfo(resource, year, loc, rowIndex, event, true);
         }
 
-        /*  $scope.deleteConfirmation = function (rowIndex, event) {
-        
-                var myRadio = $('input[name="action"]');
-                var checkedValue = myRadio.filter(':checked').val();
-        
-                if (checkedValue == null) {
-                    alert('Please select a record to delete.')
-                    return;
-                } else {
-                    $scope.msg = checkedValue;
-                    $scope.deletedID = checkedValue;
-                    openDialog();
-                }
-                $scope.delRowIndex = event;
-            }*/
 
         $scope.deleteAllocation = function (resource, year, loc, rowIndex, event) {
 
@@ -351,21 +369,7 @@
                     }
                 }
 
-                //$scope.childInfo(resource, year, loc, rowIndex, event, true);
-                //  var div_header = document.getElementById(data[4]);
-                //  var div_detail = document.getElementById(data[4] + '_detail');
-
-                /*  if (div_header.style.visibility === "visible") {
-                        div_header.style.visibility = "hidden";
-                        div_detail.style.visibility = "hidden";
-                    }*/
-
-                //$scope.updateAllocaiton(data[0], data[2], $scope.delLoc, $scope.delRowIndex, event, true);
-                //getAlloctionData(allocationService, $scope);
-                //$scope.childInfo(data[0], data[2], $scope.delLoc, rowIndex, event, true);
-                //$scope.childInfo(resource, year, loc, rowIndex, event, true);
             }
-
         };
         ///////////////////////// start Datatable Code /////////////////////////////////
 
@@ -392,7 +396,7 @@
             var leaves = $filter('filter')($scope.leaveList, { resourcename: resource });
 
             holidayListService.getAggegrateLocationHolidays(region).then(function (res) {
-                scope.allocCollection = filter(scope, $scope.allocationList, resource, year, $scope.mappedResourceData, leaves, res.data, childShown);
+                scope.allocCollection = filter(scope, $scope.allocationList, resource, year, $scope.mappedResourceData, leaves, res.data, childShown, $filter);
                 if (typeof scope.allocCollection !== "undefined") {
 
                     var isConflict = false;

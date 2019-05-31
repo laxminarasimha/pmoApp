@@ -122,14 +122,13 @@
                 $scope.months.push($scope.monthWiseAllocation);
             });
 
+
             var vRegion = '';
             angular.forEach($scope.mappedResourceData, function (mapped) {
                 if (mapped.mappedResource.resourcename === $scope.resource) {
                     vRegion = mapped.mappedResource.region;
                 }
-
             });
-
 
 
             angular.forEach($scope.resource, function (res) {
@@ -137,7 +136,6 @@
                 $scope.rowWiseAllocation = {
                     resource: res,
                     project: $scope.projselect,
-
                     ecr: $scope.ecrselect,
                     resourcetype: $scope.resourcetype,
                     //region: $rootScope.region,
@@ -152,11 +150,9 @@
                     var obj = new allocObject(item);
                     $scope.rowWiseAllocation.allocation.push(obj);
                 });
-
                 $scope.resourceWiseAllocaiton.push($scope.rowWiseAllocation);
 
             });
-
 
             $scope.resource = [];
             $scope.detailDiv = false;
@@ -168,58 +164,109 @@
         }
 
         $scope.saveAllocation = function () {
-
             // console.log($scope.resourceWiseAllocaiton);
             $scope.errvalue = false;
             angular.forEach($scope.resourceWiseAllocaiton, function (it) {
 
+                console.log($scope.startDate, +"---" + $scope.endDate)
+
                 // var allocationYearWise = splitAllocationByYear($scope.resourceWiseAllocaiton, $scope.startDate, $scope.endDate);
                 angular.forEach($scope.resourceWiseAllocaiton, function (item) {
-                    if (item.rowSelect)  {
-                    if (item.project === undefined || item.resourcetype === undefined || item.project === undefined) {
-                        $scope.errorMsg = "Please enter valid data for all the input field.";
-                        $scope.errvalue = true;
-                        return;
+                    if (item.rowSelect) {
+                        if (item.project === undefined || item.resourcetype === undefined || item.project === undefined) {
+                            $scope.errorMsg = "Please enter valid data for all the input field.";
+                            $scope.errvalue = true;
+                            return;
+                        }
                     }
-
-                 } });
+                });
             });
 
             if ($scope.errvalue === false) {
                 $scope.clearMessages();
                 var allocationYearWise = splitAllocationByYear($scope.resourceWiseAllocaiton, $scope.startDate, $scope.endDate);
                 //console.log(allocationYearWise);
-                angular.forEach(allocationYearWise, function (item) {
-                    item.region = $scope.regionname;
-                    if (item.rowSelect) {// if row delete in screen,then it should not save
-                        if (!$scope.newData) {
-                            $scope.clearMessages();
-                            var r = confirm("There is duplicate records,Are sure want to continue?");
-                            if (r === false) {
-                                return;
+
+                var datFrom = $scope.startDate.split("/");
+                var datTo = $scope.endDate.split("/");
+
+                var fromYear = parseInt(datFrom[1]);
+                var toYear = parseInt(datTo[1]);
+
+
+                allocationService.getAllAllocationByYear(fromYear, toYear, $scope.regionname).then(function (res) {
+                    $scope.allAlocation = res.data;
+
+                    angular.forEach(allocationYearWise, function (item) {
+                        item.region = $scope.regionname;
+                        if (item.rowSelect) {// if row delete in screen,then it should not save
+                            if (!$scope.newData) {
+                                $scope.clearMessages();
+                                var r = confirm("There is duplicate records,Are sure want to continue?");
+                                if (r === false) {
+                                    return;
+                                }
+                            }
+
+                            var filter_1 = $filter('filter')($scope.allAlocation, { resource: item.resource });
+                            var filter_2 = $filter('filter')(filter_1, { project: item.project });
+                            var filter_3 = $filter('filter')(filter_2, { year: item.year });
+
+                            if (filter_3 !== null && filter_3.length > 0) {
+                                var existingObject = filter_3[0];
+
+                                var allocation = item.allocation;
+                                for (var count = 0; count < allocation.length; count++) {
+                                    if (allocation[count].value > 0) {
+
+                                        console.log('Before ' + existingObject.allocation[count].value);
+                                        existingObject.allocation[count].value = allocation[count].value;
+                                        console.log('After ' + existingObject.allocation[count].value);
+                                    }
+                                }
+
+                                allocationService.updateAllocation(existingObject).then(function (res) {
+                                    if (res.data === "updated") {
+                                        $scope.clearMessages();
+                                        $scope.successMsg = "Allocaiton created successfully";
+                                        $('#resource-select').multiselect('rebuild');
+                                    }
+                                }).catch(function (err) {
+                                    console.log(err);
+                                });
+
+                            } else {
+                                allocationService.createAllocation(item).then(function (res) {
+                                    if (res.data === "created") {
+                                        $scope.clearMessages();
+                                        $scope.successMsg = "Allocaiton created successfully";
+                                        $('#resource-select').multiselect('rebuild');
+                                    }
+                                }).catch(function (err) {
+                                    console.log(err);
+                                });
                             }
                         }
-                        allocationService.createAllocation(item).then(function (res) {
-                            if (res.data == "created") {
-                                $scope.clearMessages();
-                                $scope.successMsg = "Allocaiton created successfully";
-                                $('#resource-select').multiselect('rebuild');
-                            }
-                        }).catch(function (err) {
-                            console.log(err);
-                        });
+                        $scope.clearMessages();
+                    });
+
+                    if ($scope.errorMsg == null) {
+                        $scope.clearFields();
+                        $('#projectBtn').attr('disabled', false);
                     }
-                    $scope.clearMessages();
+                    // });
+                    $scope.newData = false;
+
+                }).catch(function (err) {
+                    console.log(err);
                 });
 
-                if ($scope.errorMsg == null) {
-                    $scope.clearFields();
-                    $('#projectBtn').attr('disabled', false);
 
-                }
 
-                // });
-                $scope.newData = false;
+
+
+
+
             }
         }
 
@@ -228,14 +275,13 @@
         }
 
         $scope.removeAllocation = function (rowId) {
-            
+
             $("#" + rowId).hide();
             $scope.resourceWiseAllocaiton[rowId].rowSelect = false;
-         
+
             var rowDelete = $filter('filter')($scope.resourceWiseAllocaiton, { rowSelect: false });
-            
+
             if ($scope.resourceWiseAllocaiton.length === rowDelete.length) {
-               
                 $scope.months = [];
                 $("#startDisable").css("pointer-events", "none");
                 $("#endDisable").css("pointer-events", "none");
@@ -246,7 +292,6 @@
             angular.forEach($scope.resourceWiseAllocaiton[rowId].allocation, function (item) {
                 item.value = 0;
             });
-
         }
 
         $scope.clearFields = function () {
@@ -311,9 +356,9 @@
                 angular.forEach($scope.mappedResourceData, function (item) {
                     htm += '<option>' + item.mappedResource.resourcename + '</option>';
                 });
-                 $('#resource-select').empty();
+                $('#resource-select').empty();
                 $('#resource-select').append(htm);
-                 $('#resource-select').multiselect('rebuild');
+                $('#resource-select').multiselect('rebuild');
             }).catch(function (err) {
                 console.log(err);
             });
@@ -347,6 +392,7 @@
             for (var yr = 0; yr < years.length; yr++) {
                 year = String(years[yr]);
                 yrs = year.substr(year.length - 2);
+                var monthLabel = monthsByYear(year);
 
                 for (var allocRec = 0; allocRec < entryAllocaiton.length; allocRec++) {
 
@@ -354,23 +400,55 @@
                     entryAlloc = entryAllocaiton[allocRec].allocation;
                     //obj = Object.create(entryAllocaiton[allocRec]);
                     obj = jQuery.extend({}, entryAllocaiton[allocRec]);
-                    obj.allocation = [];
+
+                    obj.allocation = eachMonthAllocaiton(monthLabel);
                     obj.year = year;
                     var month = "";
 
-                    for (var rs = 0; rs < allocLength; rs++) {
-                        month = String(entryAlloc[rs].month);
-                        if (month.endsWith(yrs)) {
-                            obj.allocation.push(entryAlloc[rs]);
+                    /* for (var rs = 0; rs < allocLength; rs++) {
+                         month = String(entryAlloc[rs].month);
+                         if (month.endsWith(yrs)) {
+                             obj.allocation.push(entryAlloc[rs]);
+                         }
+                     }*/
+
+                    for (var rs = 0; rs < 12; rs++) {
+                        for (var rs2 = 0; rs2 < allocLength; rs2++) {
+                            month = String(entryAlloc[rs2].month);
+                            if (month === obj.allocation[rs].month) {
+                                obj.allocation[rs].value = entryAlloc[rs2].value;
+                            }
                         }
                     }
+
                     maps.push(obj);
                 }
-
             }
-
             return maps;
         }
+
+        function eachMonthAllocaiton(source) {
+
+            function Object(month, value) {  // new object create for each month
+                this.month = month;
+                this.value = value;
+            }
+
+            var tempAlloc = 0;
+            var newAlloc = [];
+
+            angular.forEach(source, function (month) {
+                tempAlloc = 0;
+                // angular.forEach(target.allocation, function (oldMonth) {
+                //     if (oldMonth.month === month) {
+                //         tempAlloc = oldMonth.value;
+                //         return;
+                //     }
+                // });
+                newAlloc.push(new Object(month, tempAlloc));
+            });
+            return newAlloc;
+        };
 
 
 
@@ -392,6 +470,16 @@
                 arr.push(monthNames[i % 12] + "-" + Math.floor(fromYear + (i / 12)).toString().substr(-2));
             }
 
+            return arr;
+        }
+
+        function monthsByYear(year) {
+            var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+            var arr = [];
+            for (var i = 0; i < monthNames.length; i++) {
+                arr.push(monthNames[i] + "-" + year.substr(-2));
+            }
             return arr;
         }
 
