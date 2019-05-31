@@ -51,7 +51,7 @@
             </td>
           </tr>
           <tr id="{{records._id}}_detail">
-            <td style="font-weight: bold;text-align: center;color:blue; padding-top: .2cm;">Allocation In Day's</td>
+            <td style="font-weight: bold;text-align: center;color:blue; padding-top: .2cm;">Allocation Day's</td>
 
             <td ng-repeat="monthlyAlloc in records.allocation" ng-value="{{$index}}">
               <span>
@@ -77,7 +77,7 @@
           </tr>
 
           <tr style="font-weight: bold;text-align: center;color:blue;">
-            <td style="text-align: center;background-color:gray;color:yellow;">Vacation days </td>
+            <td style="text-align: center;background-color:gray;color:yellow;">Vacation Day's </td>
             <td style="text-align: center;background-color:gray;color:yellow;"
               ng-repeat="records in allocRecords.vacation">
               {{records.value}}
@@ -90,7 +90,7 @@
           </tr>
 
           <tr style="font-weight: bold;text-align: center;background-color:gray;color:blue;">
-            <td style="text-align: center;background-color:gray;color:yellow;">Buffer days</td>
+            <td style="text-align: center;background-color:gray;color:yellow;">Buffer Day's</td>
             <td
               style="text-align: center;background-color:{{buffer < 0 ? 'pink':'gray'}};color:{{buffer < 0 ? 'red':'yellow'}};"
               ng-repeat="buffer in allocRecords.buffertime track by $index">
