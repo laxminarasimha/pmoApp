@@ -6,36 +6,46 @@
                 <div class="row">
                     <div class='col-sm-3'>
                         <div class="form-group">
+                            <!-- <label for="resource">Resources:</label>
+                            <select id="resource-select" id="resource" ng-model="resource" required multiple="multiple" multi-select class="form-control"></select> 
+
+                            <input list="resource" type="text" ng-model="resource" style="width: 290px;"
+                                class="form-control input-sm {{errorClass}}" required>
+                            <datalist id="resource">
+                                <option ng-repeat="resource in mappedResourceData" value="{{resource.resourcename}}">
+                            </datalist> -->
+                            <label for="resource">Resources:</label><br>
+                            <span id="resource" editable-select="allocRows.resource" e-name="resource" e-form="rowform">
+                                <select id="resource-select" ng-model="resource" required multiple="multiple"
+                                    multi-select class="form-control">
+                                </select>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class='col-sm-3'>
+                        <div class="form-group">
                             <label for project>Project:</label>
-                            <select id="project" class="form-control input-sm {{errorClass}}" ng-model="selectProject" ng-init="inputVal='ALL'">
+                            <select id="project" class="form-control input-sm {{errorClass}}" ng-model="selectProject"
+                                ng-init="inputVal='ALL'">
                                 <option value='ALL'>All Project</option>
-                                <option ng-repeat="item in project" value="{{item.projectname}}">{{item.projectname}}</option>
+                                <option ng-repeat="item in project" value="{{item.projectname}}">{{item.projectname}}
+                                </option>
                             </select>
                         </div>
                     </div>
 
                     <div class='col-sm-3'>
                         <div class="form-group">
-                            <label for="resource">Resources:</label>
-                            <!-- <select id="resource-select" id="resource" ng-model="resource" required multiple="multiple" multi-select class="form-control"></select> -->
-
-                            <input list="resource" type="text" ng-model="resource" style="width: 290px;" class="form-control input-sm {{errorClass}}"
-                                required>
-                            <datalist id="resource">
-                                <option ng-repeat="resource in mappedResourceData" value="{{resource.resourcename}}">
-                            </datalist>
+                            <label for project>Resource Type:</label>
+                            <select id="resType" class="form-control input-sm {{errorClass}}" ng-model="resTypeSelect"
+                                ng-init="inputVal='ALL'">
+                                <option value='ALL'>All Types</option>
+                                <option ng-repeat="item in resourceType" value="{{item.resourceTypename}}">
+                                    {{item.resourceTypename}}</option>
+                            </select>
                         </div>
                     </div>
-
-                    <div class='col-sm-3'>
-                            <div class="form-group">
-                                <label for project>Resource Type:</label>
-                                <select id="resType" class="form-control input-sm {{errorClass}}" ng-model="resTypeSelect" ng-init="inputVal='ALL'">
-                                    <option value='ALL'>All Types</option>
-                                    <option ng-repeat="item in resourceType" value="{{item.resourceTypename}}">{{item.resourceTypename}}</option>
-                                </select>
-                            </div>
-                        </div>
 
 
                 </div>
@@ -43,9 +53,10 @@
                     <div class='col-sm-3'>
                         <div class="form-group">
                             <label for="startDate">From:</label>
-                            <div class="input-group date _date " data-date-format="dd MM yyyy" data-link-format="yyyy-mm-dd">
-                                <input class="form-control input-sm {{errorClass}}" type="text" id="startDate" ng-model="startDate" class="form-control"
-                                    readonly>
+                            <div class="input-group date _date " data-date-format="dd MM yyyy"
+                                data-link-format="yyyy-mm-dd">
+                                <input class="form-control input-sm {{errorClass}}" type="text" id="startDate"
+                                    ng-model="startDate" class="form-control" readonly>
                                 <span class="input-group-addon">
                                     <span class="glyphicon glyphicon-calendar"></span>
                                 </span>
@@ -55,8 +66,10 @@
                     <div class='col-sm-3'>
                         <div class="form-group">
                             <label for="endDate">To:</label>
-                            <div class="input-group date _date " data-date-format="dd MM yyyy" data-link-format="yyyy-mm-dd">
-                                <input class="form-control input-sm {{errorClass}}" id="endDate" type="text" ng-model="endDate" class="form-control" readonly>
+                            <div class="input-group date _date " data-date-format="dd MM yyyy"
+                                data-link-format="yyyy-mm-dd">
+                                <input class="form-control input-sm {{errorClass}}" id="endDate" type="text"
+                                    ng-model="endDate" class="form-control" readonly>
                                 <span class="input-group-addon">
                                     <span class="glyphicon glyphicon-calendar"></span>
                                 </span>
@@ -66,9 +79,9 @@
                 </div>
                 <div class='row'>
                     <div align="right">
-                        <input type="submit" value="Search" class="btn btn-primary" ng-click="filterSeach();" />
-                        <input type="submit" value="Clear" class="btn btn-warning" ng-click="clearFields();" />
-                      
+                        <button id="submit" class="btn btn-primary" ng-click="filterSeach()" type="button">Search</button>
+                        <!-- <input type="clrBtn"  class="btn btn-warning" value="Clear" ng-click="clearFields();" /> -->
+                        <button id="clrBtn" class="btn btn-warning" ng-click="clearFields()" type="button">Clear</button>
                     </div>
                 </div>
             </div>
@@ -90,8 +103,9 @@
             </div>
             <div class="panel-footer">
                 <div class="panel-body">
-                    <table id="datatable" class="table table-striped table-curved table-scroll" cellspacing="0" width="100%" cellspacing="0"
-                        width="100%" datatable="ng" dt-options="vm.dtOptions" dt-instance="vm.dtInstance" data-page-length='50'>
+                    <table id="datatable" class="table table-striped table-curved table-scroll" cellspacing="0"
+                        width="100%" cellspacing="0" width="100%" datatable="ng" dt-options="vm.dtOptions"
+                        dt-instance="vm.dtInstance" data-page-length='50'>
                         <thead class="bg-primary">
                             <tr>
                                 <th style="text-align:center">Project</th>
@@ -108,7 +122,8 @@
                                 <td style="text-align:center">{{data.project}}</td>
                                 <td style="text-align:center">{{data.resource}}</td>
                                 <td style="text-align:center">{{data.resType}}</td>
-                                <td style="text-align: center;background-color:gray;color:yellow;" ng-repeat="value in data.allocation track by $index">
+                                <td style="text-align: center;background-color:gray;color:yellow;"
+                                    ng-repeat="value in data.allocation track by $index">
                                     {{value}}
                                 </td>
                                 <td style="text-align:center">{{data.total}}</td>
@@ -120,8 +135,9 @@
                                 <td style="text-align:center">
                                     <span class="label label-default">Total :</span>
                                 </td>
-                                  <td style="text-align:center"></td>
-                                <td style="text-align: center;background-color:yello;color:red;" ng-repeat="value in totalMonthWise track by $index">
+                                <td style="text-align:center"></td>
+                                <td style="text-align: center;background-color:yello;color:red;"
+                                    ng-repeat="value in totalMonthWise track by $index">
                                     {{value}}
                                 </td>
                             </tr>
@@ -146,7 +162,10 @@
         startDate: '1m'
     });
 
-    $('#resource-select').multiselect();
+    $('#resource-select').multiselect({
+        includeSelectAllOption: true,
+        nonSelectedText: 'Select Resource',
+    });
 
 
 
@@ -169,6 +188,7 @@
         0% {
             transform: rotate(0deg);
         }
+
         100% {
             transform: rotate(360deg);
         }
