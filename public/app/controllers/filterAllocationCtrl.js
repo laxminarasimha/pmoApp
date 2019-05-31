@@ -50,7 +50,7 @@
         $scope.monthCol = [];
         $scope.allocationList = [];
         $scope.ShowSpinnerStatus = false;
-
+        $scope.resourceWiseAllocaiton = [];
         $scope.project = [];
         $scope.listData = [];
         $scope.selectProject = 'ALL';
@@ -116,6 +116,10 @@
             }).catch(function (err) {
                 console.log(err);
             });
+            // if ($scope.errorMsg == null) {
+            //     $scope.clearFields();
+            //     $('#submit').attr('disabled', false);
+            // }
 
         }
 
@@ -123,13 +127,16 @@
             $scope.successMsg = "";
             $scope.errorMsg = "";
             //$scope.hidden = "none";
-
+            $scope.resourceWiseAllocaiton = [];
             $scope.listData = [];
             $scope.totalMonthWise = [];
             $scope.totalMonthWise = [];
         }
 
         $scope.clearFields = function () {
+            $scope.clearMessages();
+            $scope.resource = [];
+            $('#resource-select').multiselect('rebuild');
             $scope.startDate = '';
             $scope.endDate = '';
             $scope.selectProject = 'ALL';
@@ -140,6 +147,9 @@
             app.errorMsg = false;
             app.errorClass = "";
             $scope.errorMsg = "";
+            $scope.resourceWiseAllocaiton = [];
+            
+           // $scope.hidden = "none";
         }
 
     }
