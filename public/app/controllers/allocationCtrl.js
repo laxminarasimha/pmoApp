@@ -52,15 +52,15 @@
 
         scope.monthLabel = months(year);
 
-        
+
         //var duplicateProjectChk = [];
         //var fileterTarget = [];
 
-        // angular.forEach(allocationDetails, function (item) {
-        //     item.allocation = eachMonthAllocaiton(scope.monthLabel, item);
-        //     //console.log(eachMonthAllocaiton(scope.monthLabel, item.allocation));
+         angular.forEach(allocationDetails, function (item) {
+             item.allocation = eachMonthAllocaiton(scope.monthLabel, item);
+             //console.log(eachMonthAllocaiton(scope.monthLabel, item.allocation));
 
-        // });
+         });
 
         /******************
        * The below code for merge all the records for same project
