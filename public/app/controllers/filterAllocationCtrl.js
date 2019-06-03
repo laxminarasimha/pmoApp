@@ -44,13 +44,13 @@
     function Controller($rootScope, $scope, $window, $compile, DTOptionsBuilder, DTColumnBuilder, resourceService, projectService, allocationService, resourceTypeService, leaveService, resourceMappingService, $filter, availableDaysService, holidayListService) {
 
         $scope.projectSelect = "ALL";
-        //$scope.resourceWiseAllocaiton = [];
+      
         $scope.startDate;
         $scope.endDate;
         $scope.monthCol = [];
         $scope.allocationList = [];
         $scope.ShowSpinnerStatus = false;
-        $scope.resourceWiseAllocaiton = [];
+  
         $scope.project = [];
         $scope.listData = [];
         $scope.selectProject = 'ALL';
@@ -87,6 +87,8 @@
         $scope.filterSeach = function () {
 
             if ($scope.startDate === '' || $scope.endDate === '' || $scope.startDate === undefined || $scope.endDate === undefined) {
+                // var date = new Date();
+                // $scope.startDate = date.getFullYear()+''+date.getMonth();
                 $scope.errorMsg = "Please select a valid date range."
                 return;
             }
@@ -127,16 +129,18 @@
             $scope.successMsg = "";
             $scope.errorMsg = "";
             //$scope.hidden = "none";
-            $scope.resourceWiseAllocaiton = [];
+        
             $scope.listData = [];
             $scope.totalMonthWise = [];
             $scope.totalMonthWise = [];
         }
 
         $scope.clearFields = function () {
+            $('#resource-select').multiselect('clearSelection');
+            $('#resource-select').multiselect('refresh');
             $scope.clearMessages();
-            $scope.resource = [];
-            $('#resource-select').multiselect('rebuild');
+           // $scope.resource = [];
+         
             $scope.startDate = '';
             $scope.endDate = '';
             $scope.selectProject = 'ALL';
@@ -147,7 +151,7 @@
             app.errorMsg = false;
             app.errorClass = "";
             $scope.errorMsg = "";
-            $scope.resourceWiseAllocaiton = [];
+         
             
            // $scope.hidden = "none";
         }
@@ -261,6 +265,12 @@
     }
 
     function intialize(projectService, resourceService, resourceTypeService, $scope) {
+        if ($scope.startDate === '' || $scope.endDate === '' || $scope.startDate === undefined || $scope.endDate === undefined) {
+            var date = new Date();
+           $scope.startDate = (date.getMonth()+1)+'/'+date.getFullYear();
+           $scope.endDate = (date.getMonth())+'/'+(date.getFullYear()+1);
+           console.log($scope.startDate);
+        }
         projectService.getProject($scope.region).then(function (res) {
             $scope.project = res.data;
             resourceService.getResources($scope.region).then(function (res) {
