@@ -87,7 +87,9 @@
         $scope.filterSeach = function () {
 
             if ($scope.startDate === '' || $scope.endDate === '' || $scope.startDate === undefined || $scope.endDate === undefined) {
-                $scope.errorMsg = "Please select a valid date range."
+              
+               
+                // $scope.errorMsg = "Please select a valid date range."
                 return;
             }
 
@@ -136,7 +138,9 @@
         $scope.clearFields = function () {
             $scope.clearMessages();
             $scope.resource = [];
+            $('#resource-select').multiselect('clearSelection');
             $('#resource-select').multiselect('rebuild');
+           
             $scope.startDate = '';
             $scope.endDate = '';
             $scope.selectProject = 'ALL';
@@ -261,6 +265,16 @@
     }
 
     function intialize(projectService, resourceService, resourceTypeService, $scope) {
+        if ($scope.startDate === '' || $scope.endDate === '' || $scope.startDate === undefined || $scope.endDate === undefined) {  
+        var today = new Date(); 
+        var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+        var yyyy = today.getFullYear();
+        
+        today = mm + '/'  + yyyy;
+        $scope.startDate = today;
+        $scope.endDate = today;
+        
+        }
         projectService.getProject($scope.region).then(function (res) {
             $scope.project = res.data;
             resourceService.getResources($scope.region).then(function (res) {
@@ -270,6 +284,10 @@
                     if (item.resourcename !== 'Admin') {
                         htm += '<option>' + item.resourcename + '</option>';
                     }
+                    // if(item.resourcename===''||item.resourcename===undefined){
+                    //     item.resourcename='All'
+                    //     console.log(All);
+                    // }
                 });
                 $('#resource-select').empty();
                 $('#resource-select').append(htm);

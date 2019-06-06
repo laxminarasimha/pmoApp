@@ -37,8 +37,10 @@
                   },
 
                   createAllocation: function (allocation) {
+                        console.log(allocation);
                         url = globalConfig.apiAddress + "/allocation";
                         return $http.post(url, allocation);
+
                   },
 
                   updateAllocation: function (allocation) {

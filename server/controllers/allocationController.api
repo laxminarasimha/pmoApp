@@ -61,6 +61,7 @@ router.get("/", function(req, res) {
 	 
  	
 }).post("/", function(req, res) {
+	console.log("hiigowthami");
  	var obj = req.body;
  	var model = new allocationDAO(obj);
  	model.save(function(err) {

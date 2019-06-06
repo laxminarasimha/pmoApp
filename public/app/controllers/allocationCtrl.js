@@ -47,20 +47,19 @@
         angular.forEach(collection, function (item) {
             if (item.resource === resource && item.year === year) {
                 allocationDetails.push(item);
+
             }
         });
 
         scope.monthLabel = months(year);
-
-
         //var duplicateProjectChk = [];
         //var fileterTarget = [];
 
-         angular.forEach(allocationDetails, function (item) {
-             item.allocation = eachMonthAllocaiton(scope.monthLabel, item);
-             //console.log(eachMonthAllocaiton(scope.monthLabel, item.allocation));
+        angular.forEach(allocationDetails, function (item) {
+            item.allocation = eachMonthAllocaiton(scope.monthLabel, item);
+            //console.log(eachMonthAllocaiton(scope.monthLabel, item.allocation));
 
-         });
+        });
 
         /******************
        * The below code for merge all the records for same project
@@ -194,6 +193,7 @@
         return newAlloc;
     };
 
+
     function checkOverAllocaiton(scope, alloCollection, year, leaveList, mappedResourceData, resource) {
 
         var buffertime = null;
@@ -281,9 +281,9 @@
 
     }
 
-    Controller.$inject = ['$rootScope', '$scope', '$window', 'DTOptionsBuilder', 'DTColumnBuilder', '$compile', 'resourceService', 'projectService', 'allocationService', 'leaveService', 'resourceMappingService', '$filter', 'availableDaysService', 'holidayListService'];
+    Controller.$inject = ['$rootScope', '$scope', '$window', 'DTOptionsBuilder', 'DTColumnBuilder', '$compile', 'resourceService', 'projectService', 'resourceTypeService', 'ecrService', 'allocationService', 'leaveService', 'resourceMappingService', '$filter', 'availableDaysService', 'holidayListService'];
 
-    function Controller($rootScope, $scope, $window, DTOptionsBuilder, DTColumnBuilder, $compile, resourceService, projectService, allocationService, leaveService, resourceMappingService, $filter, availableDaysService, holidayListService) {
+    function Controller($rootScope, $scope, $window, DTOptionsBuilder, DTColumnBuilder, $compile, resourceService, projectService, resourceTypeService, ecrService, allocationService, leaveService, resourceMappingService, $filter, availableDaysService, holidayListService) {
 
         $scope.resource = [];
         //$scope.resourceWiseAllocaiton = [];
@@ -314,7 +314,9 @@
                 label: object.label,
             }
         };
-
+        getResourceTypeData(resourceTypeService, $scope);
+        getProjectData(projectService, $scope);
+        getEcrData(ecrService, $scope);
         getMappedResourceData($scope, resourceMappingService, holidayListService);
         getAlloctionData(allocationService, $scope);
         getLeaveData(leaveService, $scope);
@@ -336,6 +338,44 @@
             $scope.childInfo(resource, year, loc, rowIndex, event, true);
         }
 
+        $scope.addNewRow = function (resource, year) {
+            //console.log( $scope.resourcetype);
+            var monthLabel = months(year);
+            var v_label = [];
+
+            angular.forEach(monthLabel, function (label) {
+                $scope.monthWiseAllocation = {
+                    month: label,  // this is allocation month name
+                    value: 0,
+                }
+                v_label.push($scope.monthWiseAllocation);
+            });
+            $scope.rowWiseAllocation = {
+                resource: resource,
+                project: '',
+                ecr: '',
+                resourcetype: '',
+                region: $scope.region,
+                year:year,
+                allocation: v_label,
+            }
+            oDialog();
+
+        }
+
+        $scope.saveNewRow = function () {
+
+            console.log($scope.rowWiseAllocation);
+            allocationService.createAllocation($scope.rowWiseAllocation).then(function (res) {
+                console.log(res.data);
+                if (res.data === "created") {
+                    // $scope.clearMessages();
+                    // $scope.successMsg = "Allocaiton created successfully";
+                   
+                }
+            })
+
+        }
 
         $scope.deleteAllocation = function (resource, year, loc, rowIndex, event) {
 
@@ -444,6 +484,29 @@
     function getAlloctionData(allocationService, $scope) {
         allocationService.getAllAllocation().then(function (res) {
             $scope.allocationList = res.data;
+        }).catch(function (err) {
+            console.log(err);
+        });
+    }
+    function getProjectData(projectService, $scope) {
+        projectService.getProject($scope.region).then(function (res) {
+            $scope.project = res.data;
+
+        }).catch(function (err) {
+            console.log(err);
+        });
+
+    }
+    function getEcrData(ecrService, $scope) {
+        ecrService.getEcr($scope.region).then(function (res) {
+            $scope.ecr = res.data;
+        }).catch(function (err) {
+            console.log(err);
+        });
+    }
+    function getResourceTypeData(resourceTypeService, $scope) {
+        resourceTypeService.getResourceType().then(function (res) {
+            $scope.resourceTypeList = res.data;
         }).catch(function (err) {
             console.log(err);
         });
@@ -635,5 +698,7 @@
     function openDialog() {
         $('#confirmModal').modal('show');
     }
-
+    function oDialog() {
+        $('#conmModal').modal('show');
+    }
 })();
