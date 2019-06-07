@@ -61,33 +61,6 @@
 
         });
 
-        /******************
-       * The below code for merge all the records for same project
-       */
-
-        /*    angular.forEach(allocationDetails, function (record) {
-                console.log(record.allocation);
-                console.log(record.project);
-                if (duplicateProjectChk.indexOf(record.project) <= 0) {
-                    fileterTarget.push(record);
-                    duplicateProjectChk.push(record.project);
-                } else {
-    
-                      angular.forEach(fileterTarget, function (data) {
-                        if(data.project === record.project){
-                            angular.forEach(data.allocation, function (alloc,index) {
-                                if(record.allocation[index].value > 0){
-                                alloc.value = record.allocation[index].value;
-                                }
-                            });
-                        }
-                    });
-                }
-            });
-    
-            allocationDetails = fileterTarget;*/
-
-
 
         // create the hoilidays with month-year fromat and store in a map
         var monthyearLabel = new Map();
@@ -338,10 +311,17 @@
             $scope.childInfo(resource, year, loc, rowIndex, event, true);
         }
 
-        $scope.addNewRow = function (resource, year) {
+        $scope.newRowIndex = 0;
+        $scope.newResourceType = "";
+        $scope.newRowEvent = null;
+        $scope.addNewRow = function (resource, year, resourceType, row, event) {
             //console.log( $scope.resourcetype);
             var monthLabel = months(year);
             var v_label = [];
+            $scope.newRowIndex = row;
+            $scope.newResourceType = resourceType;
+            $scope.newRowEvent = event;
+            
 
             angular.forEach(monthLabel, function (label) {
                 $scope.monthWiseAllocation = {
@@ -356,24 +336,35 @@
                 ecr: '',
                 resourcetype: '',
                 region: $scope.region,
-                year:year,
+                year: year,
                 allocation: v_label,
             }
             oDialog();
 
         }
 
-        $scope.saveNewRow = function () {
+        $scope.clearMessages = function () {
+            $scope.successMsg = "";
+            $scope.errorMsg = "";
+            //$scope.hidden = "none";
+        }
 
-            console.log($scope.rowWiseAllocation);
+        $scope.saveNewRow = function (event, rowIndex) {
+            $scope.clearMessages();
             allocationService.createAllocation($scope.rowWiseAllocation).then(function (res) {
-                console.log(res.data);
                 if (res.data === "created") {
-                    // $scope.clearMessages();
-                    // $scope.successMsg = "Allocaiton created successfully";
-                   
+                    $scope.successMsg = "Allocaiton created successfully";
+                    $scope.cancel(event);
+                    $scope.allocationList.push($scope.rowWiseAllocation); // add new row to the existing list to update the screen
+                } else {
+                    $scope.errorMsg = "Allocaiton creation failed,Please try  again";
                 }
             })
+
+            $scope.childInfo($scope.rowWiseAllocation.resource, $scope.rowWiseAllocation.year, $scope.newResourceType, $scope.newRowIndex, $scope.newRowEvent, true);
+        }
+
+        $scope.cancel = function (event) {
 
         }
 
@@ -527,7 +518,6 @@
             var spinner = document.getElementById("spinner");
             if (spinner.style.display != "none") {
                 spinner.style.display = "none";
-
             }
 
             var collection = res.data;
