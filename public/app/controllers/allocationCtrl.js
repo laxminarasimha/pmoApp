@@ -353,7 +353,7 @@
             $scope.clearMessages();
             allocationService.createAllocation($scope.rowWiseAllocation).then(function (res) {
                 if (res.data === "created") {
-                    $scope.successMsg = "Allocaiton created successfully";
+                    // $scope.successMsg = "Allocaiton created successfully";
                     $scope.cancel(event);
                     $scope.allocationList.push($scope.rowWiseAllocation); // add new row to the existing list to update the screen
                 } else {
