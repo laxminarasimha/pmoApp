@@ -7,7 +7,9 @@
 
     function Controller($scope, $rootScope,$window, resourceService, designationService, resourceMappingService, allocationService, DTOptionsBuilder, DTColumnBuilder, skillSetService, locationService, roleService, regionService ) {
         $scope.mongoResourceData = [];
-
+        $scope.startDate;
+        $scope.endDate;
+        $scope.months = [];
         var app = $scope;
 
         $scope.region = $window.localStorage.getItem("region");

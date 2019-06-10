@@ -13,6 +13,6 @@ angular.module('pmoApp', ['appRoutes', 'userController', 'userServices', 'ngAnim
         $scope.rightToReserveMsg = appConstants.right_reserve;
 
     }]).constant("globalConfig", {
-    // apiAddress: 'http://10.109.7.140:3000/api'
-        apiAddress: 'http://localhost:3000/api'
+     apiAddress: 'http://10.109.7.140:3000/api'
+        //apiAddress: 'http://localhost:3000/api'
     });

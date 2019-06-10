@@ -47,47 +47,19 @@
         angular.forEach(collection, function (item) {
             if (item.resource === resource && item.year === year) {
                 allocationDetails.push(item);
+
             }
         });
 
         scope.monthLabel = months(year);
-
-
         //var duplicateProjectChk = [];
         //var fileterTarget = [];
 
-         angular.forEach(allocationDetails, function (item) {
-             item.allocation = eachMonthAllocaiton(scope.monthLabel, item);
-             //console.log(eachMonthAllocaiton(scope.monthLabel, item.allocation));
+        angular.forEach(allocationDetails, function (item) {
+            item.allocation = eachMonthAllocaiton(scope.monthLabel, item);
+            //console.log(eachMonthAllocaiton(scope.monthLabel, item.allocation));
 
-         });
-
-        /******************
-       * The below code for merge all the records for same project
-       */
-
-        /*    angular.forEach(allocationDetails, function (record) {
-                console.log(record.allocation);
-                console.log(record.project);
-                if (duplicateProjectChk.indexOf(record.project) <= 0) {
-                    fileterTarget.push(record);
-                    duplicateProjectChk.push(record.project);
-                } else {
-    
-                      angular.forEach(fileterTarget, function (data) {
-                        if(data.project === record.project){
-                            angular.forEach(data.allocation, function (alloc,index) {
-                                if(record.allocation[index].value > 0){
-                                alloc.value = record.allocation[index].value;
-                                }
-                            });
-                        }
-                    });
-                }
-            });
-    
-            allocationDetails = fileterTarget;*/
-
+        });
 
 
         // create the hoilidays with month-year fromat and store in a map
@@ -194,6 +166,7 @@
         return newAlloc;
     };
 
+
     function checkOverAllocaiton(scope, alloCollection, year, leaveList, mappedResourceData, resource) {
 
         var buffertime = null;
@@ -281,9 +254,9 @@
 
     }
 
-    Controller.$inject = ['$rootScope', '$scope', '$window', 'DTOptionsBuilder', 'DTColumnBuilder', '$compile', 'resourceService', 'projectService', 'allocationService', 'leaveService', 'resourceMappingService', '$filter', 'availableDaysService', 'holidayListService'];
+    Controller.$inject = ['$rootScope', '$scope', '$window', 'DTOptionsBuilder', 'DTColumnBuilder', '$compile', 'resourceService', 'projectService', 'resourceTypeService', 'ecrService', 'allocationService', 'leaveService', 'resourceMappingService', '$filter', 'availableDaysService', 'holidayListService'];
 
-    function Controller($rootScope, $scope, $window, DTOptionsBuilder, DTColumnBuilder, $compile, resourceService, projectService, allocationService, leaveService, resourceMappingService, $filter, availableDaysService, holidayListService) {
+    function Controller($rootScope, $scope, $window, DTOptionsBuilder, DTColumnBuilder, $compile, resourceService, projectService, resourceTypeService, ecrService, allocationService, leaveService, resourceMappingService, $filter, availableDaysService, holidayListService) {
 
         $scope.resource = [];
         //$scope.resourceWiseAllocaiton = [];
@@ -314,7 +287,9 @@
                 label: object.label,
             }
         };
-
+        getResourceTypeData(resourceTypeService, $scope);
+        getProjectData(projectService, $scope);
+        getEcrData(ecrService, $scope);
         getMappedResourceData($scope, resourceMappingService, holidayListService);
         getAlloctionData(allocationService, $scope);
         getLeaveData(leaveService, $scope);
@@ -336,6 +311,62 @@
             $scope.childInfo(resource, year, loc, rowIndex, event, true);
         }
 
+        $scope.newRowIndex = 0;
+        $scope.newResourceType = "";
+        $scope.newRowEvent = null;
+        $scope.addNewRow = function (resource, year, resourceType, row, event) {
+            //console.log( $scope.resourcetype);
+            var monthLabel = months(year);
+            var v_label = [];
+            $scope.newRowIndex = row;
+            $scope.newResourceType = resourceType;
+            $scope.newRowEvent = event;
+            
+
+            angular.forEach(monthLabel, function (label) {
+                $scope.monthWiseAllocation = {
+                    month: label,  // this is allocation month name
+                    value: 0,
+                }
+                v_label.push($scope.monthWiseAllocation);
+            });
+            $scope.rowWiseAllocation = {
+                resource: resource,
+                project: '',
+                ecr: '',
+                resourcetype: '',
+                region: $scope.region,
+                year: year,
+                allocation: v_label,
+            }
+            oDialog();
+
+        }
+
+        $scope.clearMessages = function () {
+            $scope.successMsg = "";
+            $scope.errorMsg = "";
+            //$scope.hidden = "none";
+        }
+
+        $scope.saveNewRow = function (event, rowIndex) {
+            $scope.clearMessages();
+            allocationService.createAllocation($scope.rowWiseAllocation).then(function (res) {
+                if (res.data === "created") {
+                    // $scope.successMsg = "Allocaiton created successfully";
+                    $scope.cancel(event);
+                    $scope.allocationList.push($scope.rowWiseAllocation); // add new row to the existing list to update the screen
+                } else {
+                    $scope.errorMsg = "Allocaiton creation failed,Please try  again";
+                }
+            })
+
+            $scope.childInfo($scope.rowWiseAllocation.resource, $scope.rowWiseAllocation.year, $scope.newResourceType, $scope.newRowIndex, $scope.newRowEvent, true);
+        }
+
+        $scope.cancel = function (event) {
+
+        }
 
         $scope.deleteAllocation = function (resource, year, loc, rowIndex, event) {
 
@@ -448,6 +479,29 @@
             console.log(err);
         });
     }
+    function getProjectData(projectService, $scope) {
+        projectService.getProject($scope.region).then(function (res) {
+            $scope.project = res.data;
+
+        }).catch(function (err) {
+            console.log(err);
+        });
+
+    }
+    function getEcrData(ecrService, $scope) {
+        ecrService.getEcr($scope.region).then(function (res) {
+            $scope.ecr = res.data;
+        }).catch(function (err) {
+            console.log(err);
+        });
+    }
+    function getResourceTypeData(resourceTypeService, $scope) {
+        resourceTypeService.getResourceType().then(function (res) {
+            $scope.resourceTypeList = res.data;
+        }).catch(function (err) {
+            console.log(err);
+        });
+    }
 
     function getLeaveData(leaveService, $scope) {
         leaveService.getLeave().then(function (res) {
@@ -464,7 +518,6 @@
             var spinner = document.getElementById("spinner");
             if (spinner.style.display != "none") {
                 spinner.style.display = "none";
-
             }
 
             var collection = res.data;
@@ -635,5 +688,7 @@
     function openDialog() {
         $('#confirmModal').modal('show');
     }
-
+    function oDialog() {
+        $('#conmModal').modal('show');
+    }
 })();
