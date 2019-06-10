@@ -87,15 +87,9 @@
         $scope.filterSeach = function () {
 
             if ($scope.startDate === '' || $scope.endDate === '' || $scope.startDate === undefined || $scope.endDate === undefined) {
-<<<<<<< HEAD
-                // var date = new Date();
-                // $scope.startDate = date.getFullYear()+''+date.getMonth();
-                $scope.errorMsg = "Please select a valid date range."
-=======
               
                
                 // $scope.errorMsg = "Please select a valid date range."
->>>>>>> 542b26eb1079f5cc97185de70e76a7d1806c60b2
                 return;
             }
 
@@ -145,15 +139,10 @@
             $('#resource-select').multiselect('clearSelection');
             $('#resource-select').multiselect('refresh');
             $scope.clearMessages();
-<<<<<<< HEAD
-           // $scope.resource = [];
-         
-=======
             $scope.resource = [];
             $('#resource-select').multiselect('clearSelection');
             $('#resource-select').multiselect('rebuild');
            
->>>>>>> 542b26eb1079f5cc97185de70e76a7d1806c60b2
             $scope.startDate = '';
             $scope.endDate = '';
             $scope.selectProject = 'ALL';
