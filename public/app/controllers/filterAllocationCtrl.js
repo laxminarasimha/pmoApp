@@ -87,9 +87,9 @@
         $scope.filterSeach = function () {
 
             if ($scope.startDate === '' || $scope.endDate === '' || $scope.startDate === undefined || $scope.endDate === undefined) {
-              
-               
-                // $scope.errorMsg = "Please select a valid date range."
+                // var date = new Date();
+                // $scope.startDate = date.getFullYear()+''+date.getMonth();
+                $scope.errorMsg = "Please select a valid date range."
                 return;
             }
 
@@ -140,8 +140,7 @@
             $('#resource-select').multiselect('refresh');
             $scope.clearMessages();
             $scope.resource = [];
-            $('#resource-select').multiselect('clearSelection');
-            $('#resource-select').multiselect('rebuild');
+            
            
             $scope.startDate = '';
             $scope.endDate = '';
