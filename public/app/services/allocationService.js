@@ -31,8 +31,13 @@
                         return $http.get(url);
                   },
 
-                  getAlloctionForResource: function (id) {
+                  /*getAlloctionForResource: function (id) {
                         url = globalConfig.apiAddress + "/allocation/" + id;
+                        return $http.get(url);
+                  },*/
+                  getAlloctionForResource: function (resourcename) {
+                        url = globalConfig.apiAddress + "/allocation/byName/" + resourcename;;
+                        console.log(url)
                         return $http.get(url);
                   },
 

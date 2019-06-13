@@ -1,0 +1,222 @@
+<div class="inner container-fluid">
+    <div class="panel-body">
+        <div ng-if="allocCollection.length <= 0">
+            <!-- <span style="margin:auto; display:table;">Allocation has not done yet.</span> -->
+            <span style="margin:auto; display:table;color:blue;">
+                <b>Allocation has not done yet.</b>
+            </span>
+        </div>
+
+        <div id="{{allocRecords.allocation[0].resource+'-'+allocRecords.allocation[0].resourcetype+'-'+allocRecords.allocation[0].year}}"
+            style="display:inline;" ng-repeat="allocRecords in allocCollection">
+            <table class="table table-striped table-curved" cellspacing="0" width="100%">
+                <thead>
+                    <td colspan="12%">
+                        <h4>
+                            <span class="label label-primary">
+                                <b>{{allocRecords.resourcetype}} Allocaiton</b>
+                            </span>
+                        </h4>
+                    </td>
+                    <!-- <td style="border-left:none;">
+              <span style="margin:auto; display:table;">
+                <input name="action" type="radio" value="{{allocRecords.allocation[0].resource+'-'+allocRecords.allocation[0].resourcetype+'-'+allocRecords.allocation[0].year}}"
+                />Save/Delete</span>
+            </td> -->
+                    </tr>
+                    <tr>
+                        <th style="text-align: center;background-color:cyan;color:blue;">Months</th>
+                        <th align="center" style="text-align: center; background-color:cyan;color:blue;"
+                            ng-repeat="month in monthLabel">{{month}}</th>
+                        <th align="center" style="text-align: center; background-color:cyan;color:blue;">Action</th>
+                    </tr>
+                    <tr class="danger">
+                        <th style="text-align: center;background-color:gray;color:yellow;">Available Days</th>
+                        <th style="text-align: center;background-color:gray;color:yellow;"
+                            ng-repeat="days in allocRecords.availabledays" ng-value="{{$index}}"
+                            data-tooltip='Tagged - {{allocRecords.mappercent[$index].value}} %'>
+                            {{days.value}}
+                        </th>
+                        <!-- <span id ="{{allocation._id}}_span"    class="label" style="display: {{allocation.isConflict ? '' : 'none'}}">
+                <a class="red" data-toggle="modal" title="Conflict in  Allociton">
+                  <i class="glyphicon glyphicon-flash"></i>
+                </a>
+              </span> -->
+
+
+                    </tr>
+                    <tr>
+                </thead>
+
+                <tbody ng-repeat="records in allocRecords.allocation">
+                    <tr id="{{records._id}}">
+                        <td align="center" colspan="100%" style="font-weight: bold;">
+                            <span
+                                style="text-align: center;color:yellow;background-color:gray;">{{records.project.startsWith("Maintenance") ?records.project +" - " + records.ecr : records.project}}
+                            </span>
+                        </td>
+                    </tr>
+                    <tr id="{{records._id}}_detail">
+                        <td style="font-weight: bold;text-align: center;color:blue; padding-top: .2cm;">Allocation Day's
+                        </td>
+
+                        <td ng-repeat="monthlyAlloc in records.allocation" ng-value="{{$index}}">
+                            <span>
+                                <input type="text"
+                                    style="text-align: center;background-color:{{allocRecords.buffertime[$index] < 0 ? 'pink':''}}; color:{{allocRecords.buffertime[$index] < 0 ? 'red':'green'}};"
+                                    class="form-control" ng-model="monthlyAlloc.value" maxlength="5" size="5"
+                                    required="true" ng-readonly="{{allocRecords.readonly[$index]}}" />
+                            </span>
+                        </td>
+                        <td>
+                            <span style="margin:auto; display:table;">
+                                <input name="action" type="radio"
+                                    value="{{allocRecords.allocation[0].resource+'~'+allocRecords.allocation[0].resourcetype+'~'+allocRecords.allocation[0].year+'~'+records.project+'~'+records._id}}" />
+                            </span>
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td align="center" colspan="100%" style="font-weight: bold;">
+                            <span style="text-align: center;color:yellow;background-color:gray;">Vacation </span>
+                        </td>
+                    </tr>
+
+                    <tr style="font-weight: bold;text-align: center;color:blue;">
+                        <td style="text-align: center;background-color:gray;color:yellow;">Vacation Day's </td>
+                        <td style="text-align: center;background-color:gray;color:yellow;"
+                            ng-repeat="records in allocRecords.vacation">
+                            {{records.value}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="center" colspan="100%" style="font-weight: bold;">
+                            <span style="text-align: center;background-color:gray;color:yellow;">B u f f e r T i m e
+                            </span>
+                        </td>
+                    </tr>
+
+                    <tr style="font-weight: bold;text-align: center;background-color:gray;color:blue;">
+                        <td style="text-align: center;background-color:gray;color:yellow;">Buffer Day's</td>
+                        <td style="text-align: center;background-color:{{buffer < 0 ? 'pink':'gray'}};color:{{buffer < 0 ? 'red':'yellow'}};"
+                            ng-repeat="buffer in allocRecords.buffertime track by $index">
+                            {{buffer}}
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+
+        <table class="table table-striped table-curved" cellspacing="0" width="100%"
+            ng-if="allocCollection.length <= 0">
+            <thead>
+                <tr>
+                    <td colspan="12%">
+                        <h4>
+                            <span class="label label-primary">
+                                <b>{{allocRecords.resourcetype}} Buffer Time</b>
+                            </span>
+                        </h4>
+                    </td>
+                </tr>
+                <tr>
+                    <th style="text-align: center;background-color:cyan;color:blue;">Months</th>
+                    <th align="center" style="text-align: center; background-color:cyan;color:blue;"
+                        ng-repeat="month in monthLabel">{{month}}</th>
+                </tr>
+            </thead>
+            <tbody ng-repeat="noalloc in noallocation">
+                <tr>
+                    <td align="center" colspan="100%" style="font-weight: bold;">
+                        <span style="text-align: center;background-color:gray;color:yellow;">{{noalloc.type}}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <th style="text-align: center;background-color:gray;color:yellow;">Available Days</th>
+                    <th style="text-align: center;background-color:gray;color:yellow;"
+                        ng-repeat="days in noalloc.availableday" ng-value="{{$index}}"
+                        data-tooltip='Tagged - {{noalloc.percent[$index].value}} %'>
+                        {{days.value}}
+                    </th>
+                </tr>
+            </tbody>
+        </table>
+
+
+    </div>
+</div>
+
+<style>
+    /**
+  * Tooltip Styles
+  */
+
+    /* Add this attribute to the element that needs a tooltip */
+
+    [data-tooltip] {
+        position: relative;
+        z-index: 2;
+        cursor: pointer;
+    }
+
+    /* Hide the tooltip content by default */
+
+    [data-tooltip]:before,
+    [data-tooltip]:after {
+        visibility: hidden;
+        -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+        filter: progid: DXImageTransform.Microsoft.Alpha(Opacity=0);
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    /* Position tooltip above the element */
+
+    [data-tooltip]:before {
+        position: absolute;
+        bottom: 150%;
+        left: 50%;
+        margin-bottom: 5px;
+        margin-left: -80px;
+        padding: 7px;
+        width: 160px;
+        -webkit-border-radius: 3px;
+        -moz-border-radius: 3px;
+        border-radius: 3px;
+        background-color: #000;
+        background-color: blue;
+        color: #fff;
+        content: attr(data-tooltip);
+        text-align: center;
+        font-size: 14px;
+        line-height: 1.2;
+    }
+
+    /* Triangle hack to make tooltip look like a speech bubble */
+
+    [data-tooltip]:after {
+        position: absolute;
+        bottom: 150%;
+        left: 50%;
+        margin-left: -5px;
+        width: 0;
+        border-top: 5px solid #000;
+        border-top: 5px solid hsla(0, 0%, 20%, 0.9);
+        border-right: 5px solid transparent;
+        border-left: 5px solid transparent;
+        content: " ";
+        font-size: 0;
+        line-height: 0;
+    }
+
+    /* Show tooltip content on hover */
+
+    [data-tooltip]:hover:before,
+    [data-tooltip]:hover:after {
+        visibility: visible;
+        -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
+        filter: progid: DXImageTransform.Microsoft.Alpha(Opacity=100);
+        opacity: 1;
+    }
+</style>
