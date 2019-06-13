@@ -25,8 +25,6 @@
 
 	<div class="modal fade" id="conmModal" role="dialog" data-keyboard="false" data-backdrop="static">
 		<div class="modal-dialog  modal-lg">
-
-			Modal content
 			<div class="modal-content">
 
 				<div class="modal-header bg-primary">
@@ -118,59 +116,22 @@
 				dt-options="vm.dtOptions" dt-instance="vm.dtInstance">
 				<thead class="bg-primary">
 					<tr>
-						<th> </th>
+						<th  width="5%"> </th>
 						<th style="text-align: center;" width="30%">Name</th>
-						<th style="text-align: center;" width="5%">Year</th>
 						<th style="text-align: center;" width="10%">Skill</th>
 						<th style="text-align: center;" width="20%">Region</th>
 						<th style="text-align: center;" width="20%">Location</th>
-						<th style="text-align: center;" width="15%">Action</th>
 					</tr>
 				</thead>
 				<tbody>
-					<tr ng-repeat="allocation in mappingValue" ng-value="{{$index}}">
+					<tr ng-repeat="resource in resourceData" ng-value="{{$index}}">
 						<td style="text-align: center;"><a class="green shortinfo"
-								ng-click="childInfo(allocation.mappedResource.resourcename,allocation.year,allocation.mappedResource.baseentity,$index, $event,false)"
+								ng-click="childInfo(resource.resourcename,resource.region,$index, $event,false)"
 								title="Click to view more"><i class="glyphicon glyphicon-plus-sign"></a></td>
-						<td style="text-align: center;">{{allocation.mappedResource.resourcename}}</td>
-						<td style="text-align: center;">{{allocation.year}}</td>
-						<td style="text-align: center;">{{allocation.mappedResource.skill}}</td>
-						<td style="text-align: center;">{{allocation.mappedResource.region}}</td>
-						<td style="text-align: center;">{{allocation.mappedResource.baseentity}}</td>
-
-						<td style="width:7%;" align="center">
-							<span id="{{allocation._id}}_span" class="label"
-								style="display: {{allocation.isConflict ? '' : 'none'}}">
-								<a class="red" data-toggle="modal" title="Conflict in  Allociton">
-									<i class="glyphicon glyphicon-flash"></i>
-								</a>
-							</span>
-							<span class="label">
-								<a class="green"
-									ng-click="updateAllocaiton(allocation.mappedResource.resourcename,allocation.year,allocation.mappedResource.baseentity,$index,$event);"
-									title="Save Allocation">
-									<i class="glyphicon glyphicon-floppy-saved"></i>
-								</a>
-							</span>
-							<span class="label">
-								<a class="red" data-toggle="modal"
-									ng-click="deleteAllocation(allocation.mappedResource.resourcename,allocation.year,allocation.mappedResource.baseentity,$index,$event);"
-									title="Delete Allociton">
-									<i class="glyphicon glyphicon-remove"></i>
-								</a>
-							</span>
-
-							<span class="label">
-								<!-- <button type="button" input name="actionAdd" class="btn btn-default btn-xs" ng-click="addNewRow(allocation.mappedResource.resourcename,allocation.year,allocCollection.resourcetype)">
-									<span class="glyphicon glyphicon-plus"></span>
-								</button> -->
-								<a class="green" ng-click="addNewRow(allocation.mappedResource.resourcename,allocation.year,allocCollection.resourcetype);"
-								 title="New allocation">
-									<i class="glyphicon glyphicon-plus"></i>
-								</a>
-							</span>
-
-						</td>
+						<td style="text-align: center;">{{resource.resourcename}}</td>
+						<td style="text-align: center;">{{resource.skill}}</td>
+						<td style="text-align: center;">{{resource.region}}</td>
+						<td style="text-align: center;">{{resource.baseentity}}</td>
 					</tr>
 				</tbody>
 			</table>
