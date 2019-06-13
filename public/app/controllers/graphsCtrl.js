@@ -398,7 +398,7 @@
             }, {
                 type: 'line',
                 label: 'Total Capacity (ST + FT)',
-                borderColor: "#e9967a",
+                borderColor: "#d5cc4d",
                 borderWidth: 2,
                 fill: false,
                 data: stFtCapacity
@@ -430,7 +430,7 @@
             }, {
                 type: 'line',
                 label: 'Avialble Capacity',
-                borderColor: 'cyan',
+                borderColor: '#50C878',
                 borderWidth: 2,
                 borderDash: [10, 10],
                 fill: false,
@@ -440,7 +440,7 @@
             {
                 type: 'line',
                 label: 'Available Capacity %',
-                borderColor: '#ffa500',
+                borderColor: ' #febaad',
                 borderWidth: 2,
                 fill: false,
                 data: availableCapacityP
@@ -448,41 +448,41 @@
             }, {
                 type: 'bar',
                 label: 'Total ST Capacity',
-                backgroundColor: "#00bfff",
+                backgroundColor: "#7f868a",
                 data: stCapacity,
 
             }, {
                 type: 'bar',
                 label: 'Production Support Demand',
-                backgroundColor: "#0040ff",
+                backgroundColor: "#b24141 ",
                 data: productionDemand
             }, {
                 type: 'bar',
                 label: 'Maintaince Demand',
-                backgroundColor: "#b30000",
+                backgroundColor: "#003763",
                 data: maintainceDemand,
 
             }, {
                 type: 'bar',
                 label: 'Project Demand',
-                backgroundColor: "#739900",
+                backgroundColor: "#ddaf27",
                 data: projectDemand
             }]
 
         };
 
-        $scope.GraphData.push({ label: "Total ST Capacity", backgroundColor: "#00bfff", data: stCapacity });
-        $scope.GraphData.push({ label: "Production Support Demand", backgroundColor: "#0040ff", data: productionDemand });
-        $scope.GraphData.push({ label: "Maintaince Demand", backgroundColor: "#b30000", data: maintainceDemand });
-        $scope.GraphData.push({ label: "Project Demand", backgroundColor: "#739900", data: projectDemand });
+        $scope.GraphData.push({ label: "Total ST Capacity", backgroundColor: "#7f868a", data: stCapacity });
+        $scope.GraphData.push({ label: "Production Support Demand", backgroundColor: "#b24141 ", data: productionDemand });
+        $scope.GraphData.push({ label: "Maintaince Demand", backgroundColor: "#003763", data: maintainceDemand });
+        $scope.GraphData.push({ label: "Project Demand", backgroundColor: "#ddaf27", data: projectDemand });
 
         $scope.GraphData.push({ label: "Total Demand", backgroundColor: "#ffc0cb", data: totalDemand, showLine: "true" });
-        $scope.GraphData.push({ label: "Total Capacity (ST + FT)", backgroundColor: "#e9967a", data: stFtCapacity, showLine: "true" });
+        $scope.GraphData.push({ label: "Total Capacity (ST + FT)", backgroundColor: "#d5cc4d", data: stFtCapacity, showLine: "true" });
         $scope.GraphData.push({ label: "Production Support (Contractual)", backgroundColor: "#800080", data: prodSupportCon, showLine: "true" });
         $scope.GraphData.push({ label: "Maintaince (Contractual)", backgroundColor: "#ff0000", data: maintainceCon, showLine: "true" });
         $scope.GraphData.push({ label: "Project Support (Contractual)", backgroundColor: "#556b2f", data: projSupportCon, showLine: "true" });
-        $scope.GraphData.push({ label: "Available Capacity", backgroundColor: "cyan", data: availableCapacity, showDot: "true" });
-        $scope.GraphData.push({ label: "Available Capacity %", backgroundColor: "#ffa500", data: availableCapacityP, showLine: "true" });
+        $scope.GraphData.push({ label: "Available Capacity", backgroundColor: "#50C878", data: availableCapacity, showDot: "true" });
+        $scope.GraphData.push({ label: "Available Capacity %", backgroundColor: " #febaad", data: availableCapacityP, showLine: "true" });
         $scope.GraphData.months = monthCol;
 
         var ctx = CreateCanvas("drawDeamndAndCapcityGraphFYF");
@@ -748,17 +748,17 @@
             labels: monthCol,
             datasets: [{
                 label: 'Production Support Demand',
-                backgroundColor: "#0040ff",
+                backgroundColor: "#b24141 ",
                 yAxisID: "bar-y-axis",
                 data: productionDemand
             }, {
                 label: 'Maintaince Demand',
-                backgroundColor: "#b30000",
+                backgroundColor: "#003763",
                 yAxisID: "bar-y-axis",
                 data: maintainceDemand
             }, {
                 label: 'Project Demand',
-                backgroundColor: "#739900",
+                backgroundColor: "#ddaf27",
                 yAxisID: "bar-y-axis",
                 data: projectDemand
             }, {
@@ -766,8 +766,8 @@
                 type: 'line',
                 label: 'Total Capacity (ST+FT)',
                 fill: false,
-                backgroundColor: "#660066",
-                borderColor: "#660066",
+                backgroundColor: "#6bb300",
+                borderColor: "#6bb300",
                 borderCapStyle: 'butt',
                 borderDash: [],
                 borderDashOffset: 0.0,
@@ -787,8 +787,8 @@
                 type: 'line',
                 label: 'Total ST Capacity',
                 fill: true,
-                backgroundColor: "#00bfff",
-                borderColor: "#00bfff",
+                backgroundColor: "#7f868a",
+                borderColor: "#7f868a",
                 borderCapStyle: '',
                 borderDash: [],
                 borderDashOffset: 0.0,
@@ -806,11 +806,11 @@
             }]
         };
 
-        $scope.GraphData.push({ label: "Total ST Capacity", backgroundColor: "#00bfff", data: stCapacity, showFill: "true" });
-        $scope.GraphData.push({ label: "Project Demand", backgroundColor: "#739900", data: projectDemand });
-        $scope.GraphData.push({ label: "Maintaince Demand", backgroundColor: "#b30000", data: maintainceDemand });
-        $scope.GraphData.push({ label: "Production Support Demand", backgroundColor: "#0040ff", data: productionDemand });
-        $scope.GraphData.push({ label: "Total Capacity (ST + FT)", backgroundColor: "#660066", data: stFtCapacity, showLine: "true" });
+        $scope.GraphData.push({ label: "Total ST Capacity", backgroundColor: "#7f868a", data: stCapacity, showFill: "true" });
+        $scope.GraphData.push({ label: "Project Demand", backgroundColor: "#ddaf27", data: projectDemand });
+        $scope.GraphData.push({ label: "Maintaince Demand", backgroundColor: "#003763", data: maintainceDemand });
+        $scope.GraphData.push({ label: "Production Support Demand", backgroundColor: "#b24141 ", data: productionDemand });
+        $scope.GraphData.push({ label: "Total Capacity (ST + FT)", backgroundColor: "#6bb300", data: stFtCapacity, showLine: "true" });
         $scope.GraphData.months = monthCol;
 
         var ctx = CreateCanvas("DemandCapacity");
@@ -1353,33 +1353,36 @@
 
     function getRandomColor(index) {
         var Colors = [
-            "#00ffff", "#000000", "#0000ff",
-            "#a52a2a", "#00008b", "#008b8b",
-            "#a9a9a9", "#006400", "#bdb76b",
-            "#8b008b", "#556b2f", "#ff8c00",
-            "#8b0000", "#e9967a", "#9400d3",
-            "#ff00ff", "#ffd700", "#008000",
-            "#4b0082",
-            "#f0e68c",
-            "#add8e6",
-            "#e0ffff",
-            "#90ee90",
-            "#d3d3d3",
-            "#ffb6c1",
-            "#ffffe0",
-            "#00ff00",
-            "#ff00ff",
-            "#800000",
-            "#000080",
-            "#808000",
-            "#ffa500",
-            "#ffc0cb",
-            "#800080",
-            "#800080",
-            "#ff0000",
+            "#7ebab5", "#bc9f8a", "#003763",
+            "#97ca53", "#bcb88a", "#ff8c00",
+            "#7e83b9", "#cac253", "#008b8b",
+            "#b3b3b3", "#008000", "#e9967a",
+            "#637d96", "#006400", "#bdb76b",
+            "#556b2f", ,
+            "#7fffd4",  
+            "#ffd700", 
+            "#cce0ff",
+            "#ffebcc",
+            "#ca5379",
+            "#d1ccff",
+            "#967c64",
+            "#b4bc8a",
+            "#f7ccff",
+            "#8aa7bc",
+            "#deb887",
+            "#87adde",
+            "#405030",
+            "#312b21",
+            "#212121",
+            "#ffebcd",
+            "#191e28",
+            "#caa553",
+            "#1a2824",
+            "#1a2824",
+            "#53caa5",
             "#c0c0c0",
-            "#ffffff",
-            "#ffff00"
+            
+           
         ];
 
         return Colors[index];

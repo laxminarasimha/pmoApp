@@ -18,7 +18,9 @@ var resourceSchema = new Schema({
       status:{ type: String, required: false },
       isManager:{ type: Boolean, required: false},
       role:{ type: String, required: false },
-      region:{ type: String, required: false }
+      region:{ type: String, required: false },
+      resourceType: { type: String, required: false },
+      taggedP: { type: Number,  required: false }
     },  
     {
       collection: 'resource'

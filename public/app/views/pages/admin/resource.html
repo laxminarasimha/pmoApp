@@ -7,35 +7,33 @@
       <div class="panel-heading">
         <form name="resourceForm">
           <div class='row'>
-            <div class='col-sm-4'>
+            <div class='col-sm-2'>
               <div class=form-group>
                 <label for="user_firstname">Employee ID</label>
                 <input class="form-control input-sm {{errorClass}}" type="text" ng-model="resource.kinId" name="kinId" ng-required="true"
                 />
               </div>
             </div>
-            <div class='col-sm-4'>
+            <div class='col-sm-2'>
               <label for="user_title">Name</label>
               <input class="form-control input-sm {{errorClass}}" ng-model="resource.resourcename" name="resourcename" ng-required="true"
                 type="text" />
             </div>
-            <div class='col-sm-4'>
+            <div class='col-sm-2'>
               <div class='form-group'>
                 <label for="user_title">Alias</label>
                 <input class="form-control input-sm {{errorClass}}" type="text" ng-model="resource.alias" name="alias" ng-required="true"
                   class="form-control" />
               </div>
             </div>
-          </div>
-          <div class='row'>
-            <div class='col-sm-4'>
+            <div class='col-sm-2'>
               <div class='form-group'>
                 <label for="user_lastname">User Email</label>
                 <input type="text" class="form-control input-sm {{errorClass}}" id="inputWarning" ng-model="resource.email" name="email"
                   ng-required="true">
               </div>
             </div>
-            <div class='col-sm-4'>
+            <div class='col-sm-2'>
               <div class='form-group'>
                 <label for="designation">Designation</label>
                 <select ng-model="resource.designation" id="designation" class="form-control input-sm {{errorClass}}" ng-required="true">
@@ -43,17 +41,8 @@
                 </select>
               </div>
             </div>
-            <!--div class='col-sm-4'>
-              <div class='form-group'>
-                <label for="eype">Type</label>
-                <select class="form-control input-sm {{errorClass}}" ng-model="resource.etype" name="etype" ng-required="true">
-                  <option value="SAdmin">Super Administrator</option>
-                  <option value="Admin">Administrator</option>
-                  <option value="User" selected="true">General User</option>
-                </select>
-              </div>
-            </div-->
-            <div class='col-sm-4'>
+           
+            <div class='col-sm-2'>
               <div class='form-group'>
                 <label for="baseentity">Location</label>
                 <select ng-model="resource.baseentity" id="baseentity" class="form-control input-sm {{errorClass}}">
@@ -62,17 +51,11 @@
               </div>
             </div>
           </div>
+         
 
           <div class='row'>
-            <!--div class='col-sm-4'>
-              <div class='form-group'>
-                <label for="baseentity">Location</label>
-                <select ng-model="resource.baseentity" id="baseentity" class="form-control input-sm {{errorClass}}">
-                  <option ng-repeat="x in locationList" value="{{x.locationname}}">{{x.locationname}}</option>
-                </select>
-              </div>
-            </div-->
-            <div class='col-sm-4'>
+           
+            <div class='col-sm-2'>
               <div class='form-group'>
                 <label for="skill">Skill</label>
                 <select ng-model="resource.skill" id="skill" class="form-control input-sm {{errorClass}}">
@@ -80,7 +63,7 @@
                 </select>
               </div>
             </div>
-            <div class='col-sm-4'>
+            <div class='col-sm-2'>
               <div class='form-group'>
                 <label for="eype">Role</label>
                 <select ng-model="resource.role" id="role" class="form-control input-sm {{errorClass}}">
@@ -88,13 +71,26 @@
                 </select>
               </div>
             </div>
-            <div class='col-sm-4'>
+            <div class='col-sm-2'>
               <div class='form-group'>
                 <label for="region">Region</label>
                 <select ng-model="resource.region" id="role" class="form-control input-sm {{errorClass}}">
                   <option ng-repeat="x in regionList" value="{{x.regionname}}">{{x.regionname}}</option>
                 </select>
               </div>
+            </div>
+            <div class='col-sm-2'>
+              <div class='form-group'>
+                <label for="resourceType">Type</label>
+                <select ng-model="resource.resourceType" id="resourceType" class="form-control input-sm {{errorClass}}">
+                  <option ng-repeat="x in resourceTypeList" value="{{x.resourceTypename}}">{{x.resourceTypename}}</option>
+                </select>
+              </div>
+            </div>
+            <div class='col-sm-2'>
+              <label for="user_tagg%">Tagg%</label>
+              <input class="form-control input-sm {{errorClass}}" ng-model="resource.taggedP" name="taggPersent"
+                ng-required="true" type="number" value="100" />
             </div>  
           </div>
           <!--div class='row'>
@@ -112,7 +108,16 @@
           </div-->
 
           <div class='row'>
-
+ <!--div class='col-sm-4'>
+              <div class='form-group'>
+                <label for="eype">Type</label>
+                <select class="form-control input-sm {{errorClass}}" ng-model="resource.etype" name="etype" ng-required="true">
+                  <option value="SAdmin">Super Administrator</option>
+                  <option value="Admin">Administrator</option>
+                  <option value="User" selected="true">General User</option>
+                </select>
+              </div>
+            </div-->
             <!-- <div class='col-sm-5'>
               <div align="left">
                 <div class='form-group'>
@@ -126,6 +131,14 @@
               </div>
 
             </div> -->
+             <!--div class='col-sm-4'>
+              <div class='form-group'>
+                <label for="baseentity">Location</label>
+                <select ng-model="resource.baseentity" id="baseentity" class="form-control input-sm {{errorClass}}">
+                  <option ng-repeat="x in locationList" value="{{x.locationname}}">{{x.locationname}}</option>
+                </select>
+              </div>
+            </div-->
             <div class='col-sm-12' style="padding-top: 2px">
 
               <div align="right">

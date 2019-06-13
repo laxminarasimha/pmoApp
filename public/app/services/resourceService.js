@@ -30,7 +30,9 @@
        return $http.get(url);
        },
        createResource: function(resource) { 
+       
        url = globalConfig.apiAddress + "/resource";
+       console.log(url);
        return $http.post(url, resource);
        },
        getResourceForKinId: function(kinId) {

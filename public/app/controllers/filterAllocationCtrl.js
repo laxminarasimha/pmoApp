@@ -76,6 +76,17 @@
                 label: object.label,
             }
         };
+        // var myDate = new Date();
+       
+        // var previousMonth = new Date(myDate);
+        // previousMonth.setMonth(myDate.getMonth()-7);
+        // console.log(previousMonth);
+        // previousMonth = mm + '/'  + yyyy;
+
+
+       
+
+
 
         $scope.vm = {};
         $scope.vm.dtInstance = null;
@@ -267,13 +278,26 @@
 
     function intialize(projectService, resourceService, resourceTypeService, $scope) {
         if ($scope.startDate === '' || $scope.endDate === '' || $scope.startDate === undefined || $scope.endDate === undefined) {  
-        var today = new Date(); 
-        var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-        var yyyy = today.getFullYear();
-        
-        today = mm + '/'  + yyyy;
-        $scope.startDate = today;
-        $scope.endDate = today;
+            var today = new Date(); 
+      
+            var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+            var yyyy = today.getFullYear();
+            myDate = mm + '/'  + yyyy;
+            var preday = new Date(today);
+           
+            preday.setMonth(today.getMonth()-6);
+            var mn = String(preday.getMonth()+ 1).padStart(2, '0');
+            var yymm = preday.getFullYear();
+            prevday=mn + '/' +yymm;
+            console.log(prevday);
+           
+            $scope.startDate = today;
+            $scope.endDate = preday;
+    // console.log(myDate);
+    
+    // console.log(preday);
+        $scope.startDate = prevday;
+        $scope.endDate = myDate;
         
         }
         projectService.getProject($scope.region).then(function (res) {
