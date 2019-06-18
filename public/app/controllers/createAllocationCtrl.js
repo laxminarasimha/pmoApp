@@ -321,6 +321,7 @@
         }
 
         function getProjectData(projectService, $scope) {
+            console.log(projectService);
             projectService.getProject($scope.region).then(function (res) {
                 $scope.project = res.data;
 

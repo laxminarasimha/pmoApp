@@ -11,6 +11,7 @@
         return {
             getProject: function (region) {
                 url = globalConfig.apiAddress + "/project/region/" + region;
+                console.log(url);
                 return $http.get(url);
             },
             getProjectForID: function (id) {

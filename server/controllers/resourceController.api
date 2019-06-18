@@ -120,6 +120,7 @@ return res.status(200).send(new Buffer(result.toString(), 'binary').toString('ba
  });
 }).get("/:id", function(req, res) {
  var id = req.params.id;
+ 
  resourceDAO.find({ _id: id }, function(err, data) {
  if (err) {
  res.send("error");
@@ -226,7 +227,9 @@ resourceDAO.findByIdAndUpdate(id, {
       	status:	obj.status,
       	isManager:	obj.isManager,
       	role:	obj.role,
-        region: obj.region
+        region: obj.region,
+        resourceType: obj.resourceType,
+        taggedP: obj.taggedP
    }, 
 function(err) {
  if (err) {

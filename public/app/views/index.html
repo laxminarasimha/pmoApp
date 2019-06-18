@@ -1,72 +1,75 @@
 <!DOCTYPE html>
 <html lang="en" ng-app="pmoApp">
-  <head>
-    <base href="/">
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-   <title ng-bind="'D&C -' + $state.current.data.pageTitle"></title>
+
+<head>
+  <base href="/">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+  <title ng-bind="'D&C -' + $state.current.data.pageTitle"></title>
   <!-- Cascade Style Sheets -->
 
-  <link href="assets/css/bootstrap.min.css" rel="stylesheet"> 
+  <link href="assets/css/bootstrap.min.css" rel="stylesheet">
   <link href="assets/css/animate.css" rel="stylesheet">
   <link href="assets/css/style.css" rel="stylesheet">
-  <!--<link href ="assets/css/jquery-ui.css" rel="stylesheet">--><!-- For calender -->
+  <!--<link href ="assets/css/jquery-ui.css" rel="stylesheet">-->
+  <!-- For calender -->
   <link href="assets/css/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
 
-  
-  <link rel="stylesheet" href="assets/css/bootstrap.min.css"> 
-  <link rel='stylesheet' href="assets/css/font-awesome.min.css">  
+
+  <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+  <link rel='stylesheet' href="assets/css/font-awesome.min.css">
   <link rel="stylesheet" href="assets/css/buttons.dataTables.min.css">
   <link rel="stylesheet" href="assets/css/customDatatable.css">
   <link rel="stylesheet" href="assets/css/bootstrap-multiselect.css" />
-   
+
   <!-- Cascade Style Sheets for Datatable -->
   <link rel="stylesheet" href="assets/css/datatables.bootstrap.css">
   <link rel="stylesheet" href="assets/css/buttons.dataTables.css">
   <!--link rel="stylesheet" href="style.css" /-->
 
-  
+
 
   <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
   <script src="assets/js/jquery-3.2.1.js"></script>
-  
-  
- <!-- necessary for datatable Plugin and buttons-->
-<script src="assets/js/jquery.dataTables.min.js"></script>
-<script src="assets/js/dataTables.buttons.min.js"></script>
-<script src="assets/js/buttons.print.min.js"></script>
-<script src="assets/js/jszip.min.js"></script>
-<script src="assets/js/pdfmake.min.js"></script>
-<script src="assets/js/html2canvas.min.js"></script>
-<script src='assets/js/vfs_fonts.js'></script>
-<script src="assets/js/buttons.html5.min.js"></script>
+
+
+  <!-- necessary for datatable Plugin and buttons-->
+  <script src="assets/js/jquery.dataTables.min.js"></script>
+  <script src="assets/js/dataTables.buttons.min.js"></script>
+  <script src="assets/js/buttons.print.min.js"></script>
+  <script src="assets/js/jszip.min.js"></script>
+  <script src="assets/js/pdfmake.min.js"></script>
+  <script src="assets/js/html2canvas.min.js"></script>
+  <script src='assets/js/vfs_fonts.js'></script>
+  <script src="assets/js/buttons.html5.min.js"></script>
 
 
 
-  
-  <!--<script src="assets/js/jquery-ui.js"></script>--><!-- For calender --> 
-  <script src="assets/js/jquery.bootpag.min.js"></script><!-- For Pagination --> 
+
+  <!--<script src="assets/js/jquery-ui.js"></script>-->
+  <!-- For calender -->
+  <script src="assets/js/jquery.bootpag.min.js"></script><!-- For Pagination -->
 
   <!-- Main Angular Files -->
   <script src="assets/js/angular.min.js"></script>
 
   <!-- Angular (necessary for DataTable plugins) -->
   <script src="assets/js/angular-datatables.min.js"></script>
-  <script src="assets/js/angular-ui-router.min.js"></script>  
+  <script src="assets/js/angular-ui-router.min.js"></script>
   <script src="assets/js/angular-animate.min.js"></script>
   <script src="assets/js/bootstrap-multiselect.js"></script>
 
 
-  <script src="assets/js/ng-file-upload.min.js"></script><!-- For File Upload --> 
+  <script src="assets/js/ng-file-upload.min.js"></script><!-- For File Upload -->
   <script src="assets/js/ng-file-upload-shim.min.js"></script><!-- For File Upload -->
 
   <script src="assets/js/Chart.bundle.js"></script>
   <script src="assets/js/canvasjs.min.js"></script>
   <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>-->
-   <!--<script src = "https://code.highcharts.com/highcharts.js"></script>-->
-   <script src="assets/js/Polyfill.js"></script>
+  <!--<script src = "https://code.highcharts.com/highcharts.js"></script>-->
+  <script src="assets/js/Polyfill.js"></script>
 
   <!-- Angular Config/routes -->
   <script src="app/app.js"></script>
@@ -104,14 +107,14 @@
   <script src="app/controllers/esesresourceCtrl.js"></script>
   <script src="app/controllers/slaUploadCtrl.js"></script>
   <script src="app/controllers/ECRManagementCtrl.js"></script>
-  
-  
+
+
 
   <!-- For Graph Controllers -->
   <script src="app/controllers/Graph/MaingraphCtrl.js"></script>
-  
+
   <!-- Angular Services -->
-   <script src="app/services/availableDaysService.js"></script>
+  <script src="app/services/availableDaysService.js"></script>
   <script src="app/services/userservice.js"></script>
   <script src="app/services/authServices.js"></script>
   <script src="app/services/skillSetService.js"></script>
@@ -135,7 +138,7 @@
   <script src="app/services/projectSLAService.js"></script>
   <script src="app/services/ecrService.js"></script>
   <script src="app/services/ecrService.js"></script>
-  
+
 
 
   <!-- Angular Directive -->
@@ -154,24 +157,27 @@
 
   <script type="text/javascript">
     $.ajaxSetup({
-      cache: false});
+      cache: false
+    });
   </script>
 
-  
 
-  
 
-  </head>
-  <body ng-controller="mainController as main" ng-cloak>
-   <div ui-view="header"></div>
-   <div ui-view="container"></div>    
-   <div ui-view="footer"></div>
 
-    <!-- Include all compiled plugins (below), or include individual files as needed -->
 
-    <script src="assets/js/bootstrap.min.js"></script>    
-    <script src="assets/js/bootstrap-datetimepicker.js" charset="UTF-8"></script>
-    <script src="assets/js/moment.js" charset="UTF-8"></script>
+</head>
 
-  </body>
+<body ng-controller="mainController as main" ng-cloak>
+  <div ui-view="header"></div>
+  <div ui-view="container"></div>
+  <div ui-view="footer"></div>
+
+  <!-- Include all compiled plugins (below), or include individual files as needed -->
+
+  <script src="assets/js/bootstrap.min.js"></script>
+  <script src="assets/js/bootstrap-datetimepicker.js" charset="UTF-8"></script>
+  <script src="assets/js/moment.js" charset="UTF-8"></script>
+
+</body>
+
 </html>
