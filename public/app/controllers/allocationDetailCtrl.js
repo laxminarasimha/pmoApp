@@ -41,8 +41,6 @@
 
     function filter(scope, collection, resourceSharingService, year, location, leaveList, holidayList, showdetail, $filter) {
 
-        console.log(leaveList);
-
         function MappedResColl(mappingPercent, availableManDays, resourceType, year) {
             this.monthlyAvailableActualMandays = availableManDays;
             this.taggedPercent = mappingPercent;
@@ -51,8 +49,6 @@
         }
 
         var mappedResourceData = [];
-
-        console.log(collection);
 
         angular.forEach(collection, function (alloc) {
             var mapPercent = 0;
@@ -170,7 +166,7 @@
             oldObject = null;
         }
 
-        console.log(collection);
+        //        console.log(collection);
         checkOverAllocaiton(scope, collection, year, leaveList, mappedToResource, resourceSharingService);
 
         return collection;
@@ -400,15 +396,15 @@
         }
 
         $scope.newRowIndex = 0;
-        $scope.newResourceType = "";
         $scope.newRowEvent = null;
-        
-        $scope.addNewRow = function (resource, year, resourceType, row, event) {
+
+
+        $scope.addNewRow = function (year, row, event, update) {
             //console.log( $scope.resourcetype);
             var monthLabel = months(year);
             var v_label = [];
+
             $scope.newRowIndex = row;
-            $scope.newResourceType = resourceType;
             $scope.newRowEvent = event;
 
 
@@ -420,7 +416,7 @@
                 v_label.push($scope.monthWiseAllocation);
             });
             $scope.rowWiseAllocation = {
-                resource: resource,
+                resource: resourceInfoSharingService.resourceSelect,
                 project: '',
                 ecr: '',
                 resourcetype: '',
@@ -437,21 +433,21 @@
             //$scope.hidden = "none";
         }
 
-        $scope.saveNewRow = function (event, rowIndex) {
+        $scope.saveNewRow = function (event) {
+            
             $scope.clearMessages();
             allocationService.createAllocation($scope.rowWiseAllocation).then(function (res) {
-                if (res.data === "created") {
-                    // $scope.successMsg = "Allocaiton created successfully";
-                    $scope.cancel(event);
-                    $scope.allocationList.push($scope.rowWiseAllocation); // add new row to the existing list to update the screen
-                } else {
+                if (res.data !== "created") {
                     $scope.errorMsg = "Allocaiton creation failed,Please try  again";
                 }
             })
-            $scope.childInfo($scope.rowWiseAllocation.resource, $scope.rowWiseAllocation.year, $scope.newResourceType, $scope.newRowIndex, $scope.newRowEvent, true);
-        }
-        $scope.cancel = function (event) {
 
+            allocationService.getAlloctionForResource($scope.rowWiseAllocation.resource).then(function (res) {
+                $scope.allocationList = res.data;
+
+                $scope.childInfo($scope.yearSelect, $scope.newRowIndex, $scope.newRowEvent, true);
+               // $scope.childInfo($scope.rowWiseAllocation.resource, $scope.rowWiseAllocation.year, $scope.newResourceType, $scope.newRowIndex, $scope.newRowEvent, false);
+            });
         }
 
         $scope.deleteALLAllocation = function (rowIndex, objID, year, event) {
@@ -466,7 +462,6 @@
 
         $scope.deleteAllocation = function (rowIndex, objID, event) {
             if (confirm("Are you sure want to delete the alloction?")) {
-
                 for (var count = 0; count < $scope.allocationList.length; count++) {
                     var item = $scope.allocationList[count];
                     if (item._id === objID) {
@@ -510,8 +505,6 @@
 
             if ($scope.previousRowSelect2 !== null && $scope.previousRow2 !== listIndex) {
 
-                console.log('inside.....');
-
                 var link = angular.element($scope.previousRowSelect2.currentTarget),
                     icon = link.find('.glyphicon'),
                     tr = link.parent().parent(),
@@ -548,8 +541,6 @@
             holidayListService.getAggegrateLocationHolidays(resourceInfoSharingService.regionSelect).then(function (res) {
                 scope.allocCollection = filter(scope, $scope.allocationList, resourceInfoSharingService, year, $scope.resourceLocation, leaves, res.data, childShown, $filter);
 
-                console.log(scope.allocCollection);
-
                 if (typeof scope.allocCollection !== "undefined") {
 
                     var isConflict = false;
@@ -558,7 +549,7 @@
                             isConflict = true;
                     });
 
-                   // $scope.mappingValue[listIndex].isConflict = isConflict;           //comment to fix this
+                    // $scope.mappingValue[listIndex].isConflict = isConflict;           //comment to fix this
                 }
             }).catch(function (err) {
                 console.log(err);

@@ -107,7 +107,7 @@
                       <span class="glyphicon glyphicon-plus"></span>
                     </button> -->
               <a class="green"
-                ng-click="addNewRow(allocation.mappedResource.resourcename,allocation.year,allocCollection.resourcetype);"
+                ng-click="addNewRow(year,$index,$event,false);"
                 title="New allocation">
                 <i class="glyphicon glyphicon-plus"></i>
               </a>
