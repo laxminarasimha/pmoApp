@@ -2,25 +2,31 @@
 
     var app = angular.module('pmoApp');
 
-    app.service('allocationSharingService', function () {
+    app.service('resourceInfoSharingService', function () {
         var resourceSelect = "";
         var region = "";
-        var allocationList;
+        var location = "";
+        var mappingPercent = "";
+        var mappingType = "";
+        var topRowEvent = null;
+        var topRowSelect = 0;
+        var parentScope = null;
+        var resource = null;
 
     });
 
     app.controller('allocationCtrl', Controller);
 
+    Controller.$inject = ['$rootScope', '$scope', '$window', 'DTOptionsBuilder', 'DTColumnBuilder', '$compile', 'resourceService', 'resourceInfoSharingService'];
 
-    Controller.$inject = ['$rootScope', '$scope', '$window', 'DTOptionsBuilder', 'DTColumnBuilder', '$compile', 'resourceService', 'allocationSharingService'];
-
-    function Controller($rootScope, $scope, $window, DTOptionsBuilder, DTColumnBuilder, $compile, resourceService, allocationSharingService) {
+    function Controller($rootScope, $scope, $window, DTOptionsBuilder, DTColumnBuilder, $compile, resourceService, resourceInfoSharingService) {
 
         $scope.resource = [];
 
         $scope.region = $window.localStorage.getItem("region");
+        resourceInfoSharingService.parentScope = $scope; // keep use in child page to navigate the childinfo method.
 
-        getResourceData($scope, resourceService);
+        getResourceData($scope, resourceService); 
 
 
         ///////////////////////// start Datatable Code /////////////////////////////////
@@ -31,9 +37,13 @@
         $scope.vm.dtOptions = DTOptionsBuilder.newOptions().withOption('order', [0, 'asc']);
 
 
-        $scope.childInfo = function (resource, region, listIndex, event, updateTable) {
+        $scope.childInfo = function (resource, listIndex, event, updateTable) {
 
-            if ($scope.previousRowSelect !== null && listIndex != $scope.previousRow ) {
+            resourceInfoSharingService.topRowEvent = event;
+            resourceInfoSharingService.topRowSelect = listIndex;
+            resourceInfoSharingService.resource = resource;
+
+            if ($scope.previousRowSelect !== null && listIndex != $scope.previousRow) {
                 var link = angular.element($scope.previousRowSelect.currentTarget),
                     icon = link.find('.glyphicon'),
                     tr = link.parent().parent(),
@@ -46,10 +56,15 @@
             }
 
             $scope.previousRowSelect = event;
-            $scope.previousRow= listIndex;
+            $scope.previousRow = listIndex;
 
-            allocationSharingService.resourceSelect = resource;
-            allocationSharingService.regionSelect = region;
+
+            resourceInfoSharingService.resourceSelect = resource.resourcename;
+            resourceInfoSharingService.regionSelect = resource.region;
+            resourceInfoSharingService.location = resource.baseentity;
+            resourceInfoSharingService.mappingPercent = resource.taggedP;
+            resourceInfoSharingService.mappingType = resource.resourceType;
+
 
             var scope = $scope.$new(true);
             var link = angular.element(event.currentTarget),
@@ -64,7 +79,6 @@
             var childShown = false;
             if (updateTable == null)
                 childShown = row.child.isShown();
-
 
             if (updateTable) {
                 row.child($compile('<div tmpl class="clearfix"></div>')(scope)).show();
@@ -81,10 +95,7 @@
                     tr.addClass('shown');
                 }
             }
-
         }
-
-
     }
 
 

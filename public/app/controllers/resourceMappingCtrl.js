@@ -62,9 +62,9 @@
         $scope.endDate = "";
         $scope.hidden = "none";
         $scope.errorMsgs = new Array();
-        
+
         $scope.createMapping = function () {
-          
+
             var strDt = $scope.startDate.split("/");
             var endDt = $scope.endDate.split("/");
 
@@ -115,10 +115,10 @@
             $scope.msg = "";
             $scope.deletedID = "";
         }
-       $scope.dateEnable = function (){
+        $scope.dateEnable = function () {
             $("#startDisable").css("pointer-events", "auto");
-          $("#endDisable").css("pointer-events", "auto");
-          }
+            $("#endDisable").css("pointer-events", "auto");
+        }
         $scope.deleteResourceMapping = function (id) {
             var selectedId = document.getElementsByName("action");
             if (selectedId.length <= 0) {
@@ -197,13 +197,12 @@
             $rootScope.Title = "Create resourcemap";
             $scope.IsSubmit = true;
             if ($scope.resourceMappingForm.$valid) {
-                   
-                        prepareTaggedToEuroclearData($scope, resourcemap);
-                        prepareData(resourceMappingService, app, holidayListService, $scope, resourcemap, true);
-                   
-                
+
+                prepareTaggedToEuroclearData($scope, resourcemap);
+                prepareData(resourceMappingService, app, holidayListService, $scope, resourcemap, true);
+
+
             } else {
-                console.log("Hii");
                 $scope.errorMsgs = [];
                 app.loading = false;
                 app.successMsg = false;
@@ -689,7 +688,6 @@
 
                     monthlyAvailableActualMandaysArray.push(monthlyAvailableActualMandaysObject);
                     break;
-
                 }
             }
         }
@@ -701,7 +699,6 @@
         } else {
             saveResoucreMap(resourceMappingService, app, $scope); //update
         }
-
     }
 
     function getTaggToEuroclearPercentageForMonth(resourcemap, monthyear) {

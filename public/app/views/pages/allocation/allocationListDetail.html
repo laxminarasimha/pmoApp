@@ -30,20 +30,25 @@
                             ng-repeat="month in monthLabel">{{month}}</th>
                         <th align="center" style="text-align: center; background-color:cyan;color:blue;">Action</th>
                     </tr>
+
+                    <!-- <tr class="danger" ng-repeat="records in allocRecords.allocation">
+                        <th style="text-align: center;background-color:gray;color:yellow;">Mapping in %</th>
+                        <th style="text-align: center;background-color:gray;color:yellow;"
+                            ng-repeat="days in records.mappercent" ng-value="{{$index}}">
+                            <span>
+                                <input type="text" style="text-align: center;" class="form-control"
+                                    ng-model="days.value" maxlength="5" size="5" required="true"
+                                    ng-readonly="{{allocRecords.readonly[$index]}}" />
+                            </span>
+                        </th>
+                    </tr> -->
                     <tr class="danger">
-                        <th style="text-align: center;background-color:gray;color:yellow;">Available Days</th>
+                        <th style="text-align: center;background-color:gray;color:yellow;">Available Day</th>
                         <th style="text-align: center;background-color:gray;color:yellow;"
                             ng-repeat="days in allocRecords.availabledays" ng-value="{{$index}}"
-                            data-tooltip='Tagged - {{allocRecords.mappercent[$index].value}} %'>
+                            data-tooltip='Tagged - {{allocRecords.mappercent}} %'>
                             {{days.value}}
                         </th>
-                        <!-- <span id ="{{allocation._id}}_span"    class="label" style="display: {{allocation.isConflict ? '' : 'none'}}">
-                <a class="red" data-toggle="modal" title="Conflict in  Allociton">
-                  <i class="glyphicon glyphicon-flash"></i>
-                </a>
-              </span> -->
-
-
                     </tr>
                     <tr>
                 </thead>
@@ -69,9 +74,16 @@
                             </span>
                         </td>
                         <td>
-                            <span style="margin:auto; display:table;">
+                            <!-- <span style="margin:auto; display:table;">
                                 <input name="action" type="radio"
                                     value="{{allocRecords.allocation[0].resource+'~'+allocRecords.allocation[0].resourcetype+'~'+allocRecords.allocation[0].year+'~'+records.project+'~'+records._id}}" />
+                            </span> -->
+
+                            <span style="margin:auto; display:table;">
+                                <a class="red" data-toggle="modal" ng-click="deleteRow($index,records._id,$event);"
+                                    title="Delete Allociton">
+                                    <i class="glyphicon glyphicon-remove"></i>
+                                </a>
                             </span>
                         </td>
                     </tr>

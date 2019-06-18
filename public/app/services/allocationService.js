@@ -63,6 +63,11 @@
                         url = globalConfig.apiAddress + "/allocation/delete/name/" + deletedName;
                         return $http.delete(url);
 
+                  },
+                  deleteAllocationByYear: function (resource,allocationyear) {
+                        url = globalConfig.apiAddress + "/allocation/delete/resource/byyear/" + allocationyear +"/"+resource;
+                        return $http.delete(url);
+
                   }
 
                   // getAllocation: function (resource, type, year, project,region) {
