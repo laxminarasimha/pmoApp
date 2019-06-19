@@ -20,6 +20,15 @@ router.get("/", function(req, res) {
  	}
  		res.send(data[0]);
 	});
+}).get("/byName/:resourceName", function(req, res) {
+ 	var rName = req.params.resourceName;
+ 	allocationDAO.find({ resource: rName }, function(err, data) {
+ 	if (err) {
+ 		res.send("error");
+ 		return;
+ 	}
+ 		res.send(data);
+	});
 }).get("/type/:resource/:type/:year/:project", function(req, res) {
  	 
 	 var resource = req.params.resource;
@@ -75,9 +84,11 @@ router.get("/", function(req, res) {
 }).put("/:id", function(req, res) {
  	var id = req.params.id;
  	var obj = req.body;
+
  	allocationDAO.findByIdAndUpdate(id,  {
         $set: {
             allocation: req.body.allocation,
+			//mappercent:req.body.mappercent
         }
     }, 
 	function(err) {
@@ -101,6 +112,17 @@ router.get("/", function(req, res) {
 }).delete("/delete/name/:deletedName", function(req, res) {
  	var deletedName = req.params.deletedName;
  	allocationDAO.remove({resource:deletedName}, function(err) {
+ 	if (err) {
+ 		res.send("error");
+ 		return;
+ 	}
+ 		res.send("deleted");
+ 	});
+}).delete("/delete/resource/byyear/:year/:resource", function(req, res) {
+ 	var rs = req.params.resource;
+	var yr = req.params.year;
+
+   allocationDAO.deleteMany({resource:rs,year:yr},function(err){
  	if (err) {
  		res.send("error");
  		return;

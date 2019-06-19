@@ -3,15 +3,28 @@
 
     angular.module('pmoApp').controller('resourceCtrl', Controller);
 
-    Controller.$inject = ['$scope', '$rootScope','$window', 'resourceService', 'designationService', 'resourceMappingService', 'allocationService', 'DTOptionsBuilder', 'DTColumnBuilder', 'skillSetService', 'locationService', 'roleService','regionService'];
+    Controller.$inject = ['$scope', '$rootScope','$window', 'resourceService', 'designationService', 'resourceMappingService', 'allocationService', 'DTOptionsBuilder', 'DTColumnBuilder', 'skillSetService', 'locationService', 'roleService','regionService','resourceTypeService'];
 
-    function Controller($scope, $rootScope,$window, resourceService, designationService, resourceMappingService, allocationService, DTOptionsBuilder, DTColumnBuilder, skillSetService, locationService, roleService, regionService ) {
+    function Controller($scope, $rootScope,$window, resourceService, designationService, resourceMappingService, allocationService, DTOptionsBuilder, DTColumnBuilder, skillSetService, locationService, roleService, regionService, resourceTypeService ) {
         $scope.mongoResourceData = [];
         $scope.startDate;
         $scope.endDate;
         $scope.months = [];
         var app = $scope;
 
+         $scope.resource = {
+            alias: "",
+            baseentity: "",
+            designation: "",
+            email: "",
+            kinId: "",
+            password: "",
+            region: "",
+            resourceType: "",
+            resourcename: "",
+            role: "",
+            taggedP: 100
+        }
         $scope.region = $window.localStorage.getItem("region");
 
         $rootScope.Title = "Resource Listing";
@@ -35,6 +48,11 @@
 
         $scope.regionList = [];
         getRegionData(regionService, $scope);
+        
+        $scope.resourceTypeList = [];
+        getResourceTypeData(resourceTypeService, $scope);
+        // $scope.resourceTypeList = [];
+        // getResourceTypeData(resourceTypeService, $scope);
 
         // $scope.resourcemapList = [];
         //deleteResourcemapData(resourceMappingService,$scope);
@@ -114,10 +132,13 @@
         };
 
         $scope.saveData = function (resource) {
+           
             if ($scope.resourceForm.$valid) {
                 resourceService.updateResource(resource).then(function (res) {
+                    
                     if (res.data == "updated") {
                         getResourceData(resourceService, $scope);
+                       // console.log(resourceService);
                         $scope.resource = {};
                         app.loading = false;
                         app.successMsg = "Resource Updated successfully";
@@ -132,6 +153,7 @@
         };
 
         $scope.createResource = function (resource) {
+            console.log(resource);
             $rootScope.Title = "Create Resource";
             $scope.IsSubmit = true;
             if ($scope.resourceForm.$valid) {
@@ -142,9 +164,10 @@
                 resourceService.getResourceForKinId($scope.resource.kinId).then(function (res) {
                     if (res.data.length == 0) {
                         resourceService.createResource(resource).then(function (res) {
-
+                            console.log(resource);
                             if (res.data == "created") {
                                 getResourceData(resourceService, $scope);
+                                console.log(resourceService);
                                 $scope.resource = {};
                                 app.loading = false;
                                 app.successMsg = "Resource created successfully";
@@ -304,7 +327,7 @@
             console.log(err);
         });
     }
-
+    
     function getRegionData(regionService, $scope) {
         regionService.getRegion().then(function (res) {
             $scope.regionList = res.data;
@@ -312,7 +335,13 @@
             console.log(err);
         });
     }
-
+    function getResourceTypeData(resourceTypeService, $scope) {
+            resourceTypeService.getResourceType().then(function (res) {
+                $scope.resourceTypeList = res.data;
+            }).catch(function (err) {
+                console.log(err);
+            });
+        }
 
     //  function deleteAllocationData(allocationService,$scope){
     //     allocationService.deleteAllocation().then(function(res){

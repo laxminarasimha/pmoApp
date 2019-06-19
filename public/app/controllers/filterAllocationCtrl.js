@@ -76,6 +76,17 @@
                 label: object.label,
             }
         };
+        // var myDate = new Date();
+       
+        // var previousMonth = new Date(myDate);
+        // previousMonth.setMonth(myDate.getMonth()-7);
+        // console.log(previousMonth);
+        // previousMonth = mm + '/'  + yyyy;
+
+
+       
+
+
 
         $scope.vm = {};
         $scope.vm.dtInstance = null;
