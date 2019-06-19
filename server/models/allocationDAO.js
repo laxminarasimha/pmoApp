@@ -12,6 +12,7 @@ var allocationSchema = new Schema(
     ecr: { type: String, required: false },
     year: { type: String, required: true },
     allocation: []
+    //mappercent:[]
   },
   {
     collection: 'allocation'

@@ -43,7 +43,7 @@ angular.module('mainController',['authServices'])
 					app.region = data.data.region;
 					
 					console.log("app.region"+app.region);
-					$state.transitionTo('Resources');
+					$state.transitionTo('allocationList');
 					$rootScope.region = data.data.region;
 					if ($rootScope.region !== undefined)
 					$window.localStorage.setItem("region", $rootScope.region);
@@ -55,7 +55,7 @@ angular.module('mainController',['authServices'])
 			app.successMsg = data.data.message + '... Redirecting';
 
 			$timeout(function(){
-				$location.path('/Resources');
+				$location.path('/allocationList');
 					app.loginData = '';
 					app.successMsg = false;
 				});

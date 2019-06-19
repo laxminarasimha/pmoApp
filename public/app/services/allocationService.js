@@ -25,9 +25,7 @@
                   },
 
                   getAllAllocationByYear: function (startYr, endYr,region) {                        
-                        console.log(region);
                         url = globalConfig.apiAddress + "/allocation/" + startYr + "/" + endYr+"/" + region;
-                        console.log('url'+url);
                         return $http.get(url);
                   },
 
@@ -37,12 +35,10 @@
                   },*/
                   getAlloctionForResource: function (resourcename) {
                         url = globalConfig.apiAddress + "/allocation/byName/" + resourcename;;
-                        console.log(url)
                         return $http.get(url);
                   },
 
                   createAllocation: function (allocation) {
-                        console.log(allocation);
                         url = globalConfig.apiAddress + "/allocation";
                         return $http.post(url, allocation);
 
@@ -61,6 +57,11 @@
 
                   deleteAllocationByName: function (deletedName) {
                         url = globalConfig.apiAddress + "/allocation/delete/name/" + deletedName;
+                        return $http.delete(url);
+
+                  },
+                  deleteAllocationByYear: function (resource,allocationyear) {
+                        url = globalConfig.apiAddress + "/allocation/delete/resource/byyear/" + allocationyear +"/"+resource;
                         return $http.delete(url);
 
                   }

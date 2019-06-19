@@ -9,7 +9,18 @@
   function Service($http, globalConfig) {
     var url = "";
     return {
-     
+      getEBResources: function () {
+        url = globalConfig.apiAddress + "/resource/eb";
+        return $http.get(url);
+      },
+      getEsesResources: function () {
+        url = globalConfig.apiAddress + "/resource/eses";
+        return $http.get(url);
+      },
+      getHCResources: function () {
+        url = globalConfig.apiAddress + "/resource/hc";
+        return $http.get(url);
+      },
       getResources: function (region) {
         url = globalConfig.apiAddress + "/resource/region/" + region;
         return $http.get(url);
@@ -19,7 +30,9 @@
         return $http.get(url);
       },
       createResource: function (resource) {
+
         url = globalConfig.apiAddress + "/resource";
+        console.log(url);
         return $http.post(url, resource);
       },
       getResourceForKinId: function (kinId) {

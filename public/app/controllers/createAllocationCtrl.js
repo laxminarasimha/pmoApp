@@ -41,9 +41,9 @@
         return newAlloc;
     };
 
-    Controller.$inject = ['$scope', '$rootScope', '$window', 'projectService', 'ecrService', 'resourceMappingService', 'allocationService', 'resourceTypeService', '$filter', 'regionService'];
+    Controller.$inject = ['$scope', '$rootScope', '$window', 'projectService', 'ecrService', 'resourceService', 'allocationService', 'resourceTypeService', '$filter', 'regionService'];
 
-    function Controller($scope, $rootScope, $window, projectService, ecrService, resourceMappingService, allocationService, resourceTypeService, $filter, regionService) {
+    function Controller($scope, $rootScope, $window, projectService, ecrService, resourceService, allocationService, resourceTypeService, $filter, regionService) {
 
         $scope.names = [{ 'drname': 'Dr.Test1' }, { 'drname': 'Dr.Test2' }, { 'drname': 'Dr.Test3' }];
         $scope.detailDiv = true;
@@ -78,7 +78,8 @@
         };
 
         // getDisabledData();
-        getMappedResourceData(resourceMappingService, $scope);
+        //getMappedResourceData(resourceMappingService, $scope);
+        getResources(resourceService,$scope);
         getProjectData(projectService, $scope);
         getResourceTypeData(resourceTypeService, $scope);
         getEcrData(ecrService, $scope);
@@ -125,8 +126,8 @@
 
             var vRegion = '';
             angular.forEach($scope.mappedResourceData, function (mapped) {
-                if (mapped.mappedResource.resourcename === $scope.resource) {
-                    vRegion = mapped.mappedResource.region;
+                if (mapped.resourcename === $scope.resource) {
+                    vRegion = mapped.region;
                 }
             });
 
@@ -168,9 +169,7 @@
             $scope.errvalue = false;
             angular.forEach($scope.resourceWiseAllocaiton, function (it) {
 
-                console.log($scope.startDate, +"---" + $scope.endDate)
 
-                // var allocationYearWise = splitAllocationByYear($scope.resourceWiseAllocaiton, $scope.startDate, $scope.endDate);
                 angular.forEach($scope.resourceWiseAllocaiton, function (item) {
                     if (item.rowSelect) {
                         if (item.project === undefined || item.resourcetype === undefined || item.project === undefined) {
@@ -184,7 +183,7 @@
 
             if ($scope.errvalue === false) {
                 $scope.clearMessages();
-                var allocationYearWise = splitAllocationByYear($scope.resourceWiseAllocaiton, $scope.startDate, $scope.endDate);
+                var allocationYearWise = splitAllocationByYear($scope.resourceWiseAllocaiton, $scope.mappedResourceData, $filter, $scope.startDate, $scope.endDate);
                 //console.log(allocationYearWise);
 
                 var datFrom = $scope.startDate.split("/");
@@ -218,10 +217,7 @@
                                 var allocation = item.allocation;
                                 for (var count = 0; count < allocation.length; count++) {
                                     if (allocation[count].value > 0) {
-
-                                        console.log('Before ' + existingObject.allocation[count].value);
                                         existingObject.allocation[count].value = allocation[count].value;
-                                        console.log('After ' + existingObject.allocation[count].value);
                                     }
                                 }
 
@@ -260,13 +256,6 @@
                 }).catch(function (err) {
                     console.log(err);
                 });
-
-
-
-
-
-
-
             }
         }
 
@@ -305,6 +294,8 @@
             app.successMsg = false;
             app.errorMsg = false;
             $scope.hidden = "none";
+            $scope.selectRegion="";
+            //$scope.getregiondata="";
             // $scope.vishnu="none";
             $('#projectBtn').attr('disabled', false);
         }
@@ -345,17 +336,35 @@
             });
         }
 
-        $scope.getregiondata = function () {
-            $scope.regionname = $scope.selectRegion.regionname;
-            getMappedResourceData(resourceMappingService, $scope);
-        }
+         $scope.getregiondata = function () {
+             $scope.regionname = $scope.selectRegion.regionname;
+             console.log($scope.regionname);
+             getResources(resourceService, $scope);
 
-        function getMappedResourceData(resourceMappingService, $scope) {
-            resourceMappingService.getMappedResources($scope.regionname).then(function (res) {
+        
+         }
+        /* function getMappedResourceData(resourceMappingService, $scope) {
+             resourceMappingService.getMappedResources($scope.regionname).then(function (res) {
+                 $scope.mappedResourceData = filterUniqueResource(res.data);
+                 var htm = '';
+                 angular.forEach($scope.mappedResourceData, function (item) {
+                     htm += '<option>' + item.mappedResource.resourcename + '</option>';
+                 });
+                 $('#resource-select').empty();
+                 $('#resource-select').append(htm);
+                 $('#resource-select').multiselect('rebuild');
+             }).catch(function (err) {
+                 console.log(err);
+             });
+         }*/
+
+
+        function getResources(resourceService,$scope) {
+            resourceService.getResources($scope.regionname).then(function (res) {
                 $scope.mappedResourceData = filterUniqueResource(res.data);
                 var htm = '';
                 angular.forEach($scope.mappedResourceData, function (item) {
-                    htm += '<option>' + item.mappedResource.resourcename + '</option>';
+                    htm += '<option>' + item.resourcename + '</option>';
                 });
                 $('#resource-select').empty();
                 $('#resource-select').append(htm);
@@ -365,20 +374,21 @@
             });
         }
 
+
         function filterUniqueResource(collection) {
 
             var output = [], keys = [], item;
             for (var col = 0; col < collection.length; col++) {
                 item = collection[col];
-                if (keys.indexOf(item.mappedResource.resourcename) <= -1) {
+                if (keys.indexOf(item.resourcename) <= -1) {
                     output.push(item);
-                    keys.push(item.mappedResource.resourcename);
+                    keys.push(item.resourcename);
                 }
             }
             return output;
         }
 
-        function splitAllocationByYear(entryAllocaiton, from, to) {
+        function splitAllocationByYear(entryAllocaiton, mappedResourceData, $filter, from, to) {
 
             var maps = new Array();
             var obj, year, allocLength, entryAlloc, yrs;
@@ -390,12 +400,21 @@
                 years.push(i);
             }
 
+            var resourcePercent = 0;
             for (var yr = 0; yr < years.length; yr++) {
                 year = String(years[yr]);
                 yrs = year.substr(year.length - 2);
                 var monthLabel = monthsByYear(year);
 
                 for (var allocRec = 0; allocRec < entryAllocaiton.length; allocRec++) {
+                    //resourcePercent = 0;
+
+                   /* angular.forEach(mappedResourceData, function (data) {
+                        if (data.resourcename === entryAllocaiton[allocRec].resource &&
+                            data.resourceType === entryAllocaiton[allocRec].resourcetype) {
+                            resourcePercent = data.taggedP;
+                        }
+                    });*/
 
                     allocLength = entryAllocaiton[allocRec].allocation.length;
                     entryAlloc = entryAllocaiton[allocRec].allocation;
@@ -403,15 +422,12 @@
                     obj = jQuery.extend({}, entryAllocaiton[allocRec]);
 
                     obj.allocation = eachMonthAllocaiton(monthLabel);
+                    // obj.mappercent = eachMonthMapping(monthLabel, resourcePercent);
+                    //obj.mappercent = resourcePercent;
                     obj.year = year;
                     var month = "";
 
-                    /* for (var rs = 0; rs < allocLength; rs++) {
-                         month = String(entryAlloc[rs].month);
-                         if (month.endsWith(yrs)) {
-                             obj.allocation.push(entryAlloc[rs]);
-                         }
-                     }*/
+
 
                     for (var rs = 0; rs < 12; rs++) {
                         for (var rs2 = 0; rs2 < allocLength; rs2++) {
@@ -440,12 +456,23 @@
 
             angular.forEach(source, function (month) {
                 tempAlloc = 0;
-                // angular.forEach(target.allocation, function (oldMonth) {
-                //     if (oldMonth.month === month) {
-                //         tempAlloc = oldMonth.value;
-                //         return;
-                //     }
-                // });
+                newAlloc.push(new Object(month, tempAlloc));
+            });
+            return newAlloc;
+        };
+
+        function eachMonthMapping(source, resourcePercent) {
+
+            function Object(month, value) {  // new object create for each month
+                this.key = month;
+                this.value = value;
+            }
+
+            var tempAlloc = 0;
+            var newAlloc = [];
+
+            angular.forEach(source, function (month) {
+                tempAlloc = resourcePercent;
                 newAlloc.push(new Object(month, tempAlloc));
             });
             return newAlloc;

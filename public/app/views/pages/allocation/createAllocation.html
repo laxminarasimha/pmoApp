@@ -32,15 +32,15 @@
             <label for="region">Region:</label>
             <span  id="region" editable-select="allocRows.region" e-name="region"
               e-form="rowform">
-              <select class="form-control" ng-if="region == 'All'" ng-model="selectRegion" ng-options="x.regionname for x in regionData"
+              <select class="form-control"  ng-model="selectRegion" ng-options="x.regionname for x in regionData"
                 value="{{x.regionname}}" ng-change="getregiondata()">
               </select>
             </span>
-            <span ng-show="region != 'All'" id="region" editable-select="allocRows.region" e-name="region"
+            <!-- <span ng-show="region != 'All'" id="region" editable-select="allocRows.region" e-name="region"
               e-form="rowform">
               <input ng-if="region != 'All'" class="form-control" type="text" value={{region}} class="form-control"
                 readonly>
-            </span>
+            </span> -->
           </div>
         </div>
         <div class='col-sm-3'>
