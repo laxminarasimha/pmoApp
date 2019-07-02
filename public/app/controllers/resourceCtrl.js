@@ -82,6 +82,13 @@
             openDialog();
 
         }
+        $scope.validateInput = function (obj, taggedP) {
+            console.log(taggedP);
+            if (taggedP > 100) {
+                alert("Mapped should not exceed 100%");
+                return false;
+            }
+        };
 
         $scope.cancel = function (event) {
             $scope.msg = "";

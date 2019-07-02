@@ -92,7 +92,7 @@
             <div class='col-sm-2'>
               <label for="user_tagg%">Tagg%</label>
               <input class="form-control input-sm {{errorClass}}" ng-model="resource.taggedP" name="taggPersent"
-                ng-required="true" type="number" value="100" />
+                ng-required="true" type="number" value="100" ng-change="validateInput(this,resource.taggedP)" />
             </div>
           </div>
           <!--div class='row'>
