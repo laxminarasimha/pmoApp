@@ -11,7 +11,7 @@
 "name" : "Resources" ,
 "submenu" : [],
 "role" : ["SAdmin","Admin"],
-"visbile" : "true"
+"visbile" : "false"
 },
 {
 "name" : "Allocation",
@@ -21,8 +21,8 @@
 },
 {
 "id" : "4",
-"name" : "Status" ,
-"submenu" : [{"id":"1", "name":"IdleTime","visible":"true"},{"id":"2", "name":"Utilisation","visible":"true"},{"id":"3", "name":"AvailableActualMandays","visible":"true"}],
+"name" : "Reports" ,
+"submenu" : [{"id":"1", "name":"IdleTime","visible":"true"},{"id":"2", "name":"Utilisation","visible":"true"},{"id":"3", "name":"AvailableActualMandays","visible":"true"},{"id":"2","name":"Allocation","page":"filterAllocation","visible":"true"}],
 "role" : ["SAdmin","Admin"],
 "visbile" : "true"
 },
@@ -35,14 +35,14 @@
 {
 "id" : "6",
 "name" : "Graph",
-"submenu" : [{}],
+"submenu" : [],
 "role" : ["SAdmin","Admin"],
 "visbile" : "false"
 },
 {
 "id" : "7",
-"name" : "Reports",
-"submenu" : [{"id":"1","name":"Graph","page":"Graph","visible":"true"},{"id":"2","name":"Allocation","page":"filterAllocation","visible":"true"}],
+"name" : "Graphs",
+"submenu" : [{"id":"1","name":"Graph","page":"Graph","visible":"true"}],
 "role" : ["SAdmin","Admin"],
 "visbile" : "true"
 },

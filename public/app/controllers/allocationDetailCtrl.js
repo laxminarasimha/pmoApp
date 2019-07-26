@@ -612,6 +612,7 @@
     }
 
     function getProjectData(projectService, $scope) {
+       
         projectService.getProject($scope.region).then(function (res) {
             $scope.project = res.data;
 
@@ -620,7 +621,6 @@
         });
 
     }
-
     function getEcrData(ecrService, $scope) {
         ecrService.getEcr($scope.region).then(function (res) {
             $scope.ecr = res.data;
@@ -686,6 +686,7 @@
         var leave = [];
         allocationService.getAllAllocation().then(function (res) {
             allocation = res.data;
+            
             leaveService.getLeave().then(function (res) {
                 leave = res.data;
                 resourceMappingService.getMappedResources($scope.region).then(function (res) {
@@ -753,6 +754,7 @@
     }
 
     function months(year) {
+       
         var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
             "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
         var arr = [];

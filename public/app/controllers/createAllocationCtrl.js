@@ -79,7 +79,7 @@
 
         // getDisabledData();
         //getMappedResourceData(resourceMappingService, $scope);
-        getResources($scope);
+        getResources(resourceService,$scope);
         getProjectData(projectService, $scope);
         getResourceTypeData(resourceTypeService, $scope);
         getEcrData(ecrService, $scope);
@@ -294,6 +294,8 @@
             app.successMsg = false;
             app.errorMsg = false;
             $scope.hidden = "none";
+            $scope.selectRegion="";
+            //$scope.getregiondata="";
             // $scope.vishnu="none";
             $('#projectBtn').attr('disabled', false);
         }
@@ -310,6 +312,7 @@
         }
 
         function getProjectData(projectService, $scope) {
+            console.log(projectService);
             projectService.getProject($scope.region).then(function (res) {
                 $scope.project = res.data;
 
@@ -333,11 +336,13 @@
             });
         }
 
-        /* $scope.getregiondata = function () {
+         $scope.getregiondata = function () {
              $scope.regionname = $scope.selectRegion.regionname;
-             getMappedResourceData(resourceMappingService, $scope);
-         }*/
+             console.log($scope.regionname);
+             getResources(resourceService, $scope);
 
+        
+         }
         /* function getMappedResourceData(resourceMappingService, $scope) {
              resourceMappingService.getMappedResources($scope.regionname).then(function (res) {
                  $scope.mappedResourceData = filterUniqueResource(res.data);
@@ -354,7 +359,7 @@
          }*/
 
 
-        function getResources($scope) {
+        function getResources(resourceService,$scope) {
             resourceService.getResources($scope.regionname).then(function (res) {
                 $scope.mappedResourceData = filterUniqueResource(res.data);
                 var htm = '';

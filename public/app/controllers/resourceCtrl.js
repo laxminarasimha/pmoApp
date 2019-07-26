@@ -64,12 +64,14 @@
         //sendEmail(resourceService,null);
 
         $scope.clearFields = function () {
-
+            $('input[type=checkbox]').prop('checked',false);
             $scope.resource = {};
             app.loading = false;
             app.successMsg = false;
             app.errorMsg = false;
-            app.errorClass = ""
+            app.errorClass = "";
+            $scope.resource.taggedP=100
+    
         }
 
         $scope.deleteConfirmation = function (id, name, kinId, rname) {
@@ -80,6 +82,13 @@
             openDialog();
 
         }
+        $scope.validateInput = function (obj, taggedP) {
+            console.log(taggedP);
+            if (taggedP > 100) {
+                alert("Mapped should not exceed 100%");
+                return false;
+            }
+        };
 
         $scope.cancel = function (event) {
             $scope.msg = "";
@@ -125,17 +134,28 @@
             $rootScope.Title = "Edit Resource";
             resourceService.getResourceForID(id).then(function (res) {
                 $scope.resource = res.data;
+                //console.log( $scope.resource );
             }).catch(function (err) {
                 console.log(err);
             });
 
         };
-
+       
+$scope.alert= function ( ){
+    var str= $scope.resource.resourcename;
+ 
+    if(str.startsWith('admin')){
+        app.successMsg = "";
+    }else{
+        app.errorMsg ="name should start with admin";
+       
+    }
+}
         $scope.saveData = function (resource) {
-           
+            console.log(resource);
             if ($scope.resourceForm.$valid) {
                 resourceService.updateResource(resource).then(function (res) {
-                    
+                    console.log(res.data);
                     if (res.data == "updated") {
                         getResourceData(resourceService, $scope);
                        // console.log(resourceService);
@@ -172,6 +192,7 @@
                                 app.loading = false;
                                 app.successMsg = "Resource created successfully";
                                 app.errorMsg = false;
+                                $scope.resource.taggedP=100;
                                 //sendEmail(resourceService,resource);
                             }
                         }).catch(function (err) {

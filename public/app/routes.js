@@ -1,7 +1,7 @@
 var app = angular.module('appRoutes', ['ui.router'])
 	.config(function ($stateProvider, $urlRouterProvider, $urlMatcherFactoryProvider, $locationProvider) {
 
-		$urlRouterProvider.otherwise('/Resources');
+		$urlRouterProvider.otherwise('/allocationList');
 		$urlMatcherFactoryProvider.caseInsensitive(true);
 		$urlMatcherFactoryProvider.strictMode(false);
 
@@ -36,7 +36,7 @@ var app = angular.module('appRoutes', ['ui.router'])
 				resolve: {
 					loggedIn: onlyLoggedIn
 				},
-				data: { pageTitle: 'Resources', roles: ['ADMIN'] }
+				data: { pageTitle: 'Allocation List', roles: ['ADMIN'] }
 
 			})
 
