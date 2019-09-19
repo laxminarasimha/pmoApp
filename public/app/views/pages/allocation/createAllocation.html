@@ -30,17 +30,17 @@
         <div class='col-sm-2'>
           <div class=form-group>
             <label for="region">Region:</label>
-            <span  id="region" editable-select="allocRows.region" e-name="region"
-              e-form="rowform">
+              <span  id="region" ng-if="region == 'All'"  >
               <select class="form-control"  ng-model="selectRegion" ng-options="x.regionname for x in regionData"
-                value="{{x.regionname}}" ng-change="getregiondata()">
+                 ng-change="getregiondata(selectRegion.regionname)">
               </select>
+              {{selectRegion.regionname}}
             </span>
-            <!-- <span ng-show="region != 'All'" id="region" editable-select="allocRows.region" e-name="region"
+              <span ng-show="region != 'All'" id="region" editable-select="allocRows.region" e-name="region"
               e-form="rowform">
               <input ng-if="region != 'All'" class="form-control" type="text" value={{region}} class="form-control"
                 readonly>
-            </span> -->
+            </span>
           </div>
         </div>
         <div class='col-sm-3'>
@@ -101,11 +101,13 @@
                 </div>
                 <div class="col-sm-3">
                   <label for="resourcetype">Resource Type</label>
-                  <span id="resourcetype" editable-select="allocRows.resourcetype" e-name="resourcetype"
+                  <span id="resourcetype" class="form-control"
+                  style=" width: 100%; height: fit-content; padding-left:1px;padding-right:1px;" editable-select="allocRows.resourcetype" e-name="resourcetype"
                     e-form="rowform">
-                    <select class="form-control" ng-model="allocRows.resourcetype"
+                    {{ allocRows.resourcetype }}
+                    <!-- <select class="form-control" ng-model="allocRows.resourcetype"
                       ng-options="item.resourceTypename as item.resourceTypename for item in resourceTypeList"
-                      ng-change="dataChanged();" />
+                      ng-change="dataChanged();" /> -->
                   </span>
                 </div>
                 <div class="col-sm-6">

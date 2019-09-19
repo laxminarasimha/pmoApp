@@ -34,6 +34,7 @@
                         return $http.get(url);
                   },*/
                   getAlloctionForResource: function (resourcename) {
+                        console.log(resourcename);
                         url = globalConfig.apiAddress + "/allocation/byName/" + resourcename;;
                         return $http.get(url);
                   },
@@ -45,9 +46,14 @@
                   },
 
                   updateAllocation: function (allocation) {
+                        console.log(allocation);
                         url = globalConfig.apiAddress + "/allocation/" + allocation._id;
                         return $http.put(url, allocation);
                   },
+                  /*updateResourcebyName:function(allocation){
+                        url = globalConfig.apiAddress + "/allocation/update/" + resourceName;
+                        return $http.put(url);
+                  },*/
 
                   deleteAllocation: function (deletedID) {
                         url = globalConfig.apiAddress + "/allocation/delete/" + deletedID;

@@ -64,7 +64,7 @@
             resourceInfoSharingService.location = resource.baseentity;
             resourceInfoSharingService.mappingPercent = resource.taggedP;
             resourceInfoSharingService.mappingType = resource.resourceType;
-
+            console.log( resourceInfoSharingService.regionSelect);
 
             var scope = $scope.$new(true);
             var link = angular.element(event.currentTarget),
