@@ -22,6 +22,7 @@ router.get("/", function(req, res) {
 	});
 }).get("/byName/:resourceName", function(req, res) {
  	var rName = req.params.resourceName;
+	 console.log("rName"+rName);
  	allocationDAO.find({ resource: rName }, function(err, data) {
  	if (err) {
  		res.send("error");
@@ -84,15 +85,16 @@ router.get("/", function(req, res) {
 }).put("/:id", function(req, res) {
  	var id = req.params.id;
  	var obj = req.body;
-
+	console.log("update record");
  	allocationDAO.findByIdAndUpdate(id,  {
         $set: {
             allocation: req.body.allocation,
-			//mappercent:req.body.mappercent
+			resource:req.body.resource
         }
     }, 
 	function(err) {
  		if (err) {
+			console.log(err);
  			console.log('error');
  			res.send("error");
  			return;

@@ -123,22 +123,30 @@
                 $scope.months.push($scope.monthWiseAllocation);
             });
 
-
-            var vRegion = '';
+           // console.log($scope.mappedResourceData);
+            var resType = '';
             angular.forEach($scope.mappedResourceData, function (mapped) {
-                if (mapped.resourcename === $scope.resource) {
-                    vRegion = mapped.region;
-                }
+                angular.forEach($scope.resource,function(item){
+                    console.log(item);
+                    if (mapped.resourcename === item ) {
+                   
+                        resType = mapped.resourceType;
+                        console.log(resType);
+                    }
+                })
+                
             });
+
+            console.log(resType);
 
 
             angular.forEach($scope.resource, function (res) {
 
                 $scope.rowWiseAllocation = {
                     resource: res,
-                    project: $scope.projselect,
-                    ecr: $scope.ecrselect,
-                    resourcetype: $scope.resourcetype,
+                    project: '',
+                    ecr: '',
+                    resourcetype: resType,
                     //region: $rootScope.region,
                     region: $scope.region,
                     //startdate: $scope.startDate,
@@ -313,7 +321,7 @@
 
         function getProjectData(projectService, $scope) {
             console.log(projectService);
-            projectService.getProject($scope.region).then(function (res) {
+            projectService.getProject($scope.regionname).then(function (res) {
                 $scope.project = res.data;
 
             }).catch(function (err) {
@@ -322,7 +330,7 @@
 
         }
         function getEcrData(ecrService, $scope) {
-            ecrService.getEcr($scope.region).then(function (res) {
+            ecrService.getEcr($scope.regionname).then(function (res) {
                 $scope.ecr = res.data;
             }).catch(function (err) {
                 console.log(err);
@@ -336,11 +344,14 @@
             });
         }
 
-         $scope.getregiondata = function () {
-             $scope.regionname = $scope.selectRegion.regionname;
+         $scope.getregiondata = function (region) {
+             console.log(region);
+             $scope.regionname = region;
              console.log($scope.regionname);
              getResources(resourceService, $scope);
-
+            getProjectData(projectService,$scope);
+            getEcrData(ecrService,$scope);
+            
         
          }
         /* function getMappedResourceData(resourceMappingService, $scope) {
@@ -362,6 +373,7 @@
         function getResources(resourceService,$scope) {
             resourceService.getResources($scope.regionname).then(function (res) {
                 $scope.mappedResourceData = filterUniqueResource(res.data);
+               
                 var htm = '';
                 angular.forEach($scope.mappedResourceData, function (item) {
                     htm += '<option>' + item.resourcename + '</option>';
@@ -373,7 +385,8 @@
                 console.log(err);
             });
         }
-
+        
+       
 
         function filterUniqueResource(collection) {
 

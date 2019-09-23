@@ -293,7 +293,7 @@ var app = angular.module('appRoutes', ['ui.router'])
 			})
 
 			.state('root.Graph', {
-				url: '/Graph',
+				url: '/Graphs',
 				views: {
 					'container@': {
 						templateUrl: 'app/views/pages/reporting/graphs.html'

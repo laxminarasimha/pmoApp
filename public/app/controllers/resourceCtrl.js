@@ -45,7 +45,8 @@
         $scope.roleList = [];
         $scope.kinID = 0;
         getRoleData(roleService, $scope);
-
+        $scope.resourceName="";
+        $scope.allocationData=[];
         $scope.regionList = [];
         getRegionData(regionService, $scope);
         
@@ -98,8 +99,11 @@
         $scope.delete = function (event) {
             //if (confirm('Are you sure to delete?')) {
             resourceService.deleteResource($scope.deletedID).then(function (res) {
+                console.log($scope.deletedID);
                 if (res.data == "deleted") {
+                    console.log($scope.kinID);
                     resourceMappingService.getMappedResourceForKinIDtoDelete($scope.kinID).then(function (res) {
+                        
                         angular.forEach(res.data, function (item) {
                             $scope.deleteId = item._id;
                             resourceMappingService.deleteResourceMapping($scope.deleteId).then(function (res) {
@@ -134,7 +138,8 @@
             $rootScope.Title = "Edit Resource";
             resourceService.getResourceForID(id).then(function (res) {
                 $scope.resource = res.data;
-                //console.log( $scope.resource );
+                $scope.resourceName= res.data.resourcename;
+                console.log(res.data.resourcename);
             }).catch(function (err) {
                 console.log(err);
             });
@@ -157,6 +162,22 @@ $scope.alert= function ( ){
                 resourceService.updateResource(resource).then(function (res) {
                     console.log(res.data);
                     if (res.data == "updated") {
+                        allocationService.getAlloctionForResource($scope.resourceName).then(function(res){
+                             console.log(res.data);
+                    angular.forEach(res.data,function(item){
+                        console.log(item);
+                       item.resource=resource.resourcename;
+                         allocationService.updateAllocation(item).then(function(res){
+                           console.log(res.data);
+                           if(res.data=="updated"){
+                              console.log("record updated");
+                             }
+                        })
+                         })
+                    })
+                        //$scope.allocationData= res.data;
+                        //console.log($scope.allocationData);
+                        
                         getResourceData(resourceService, $scope);
                        // console.log(resourceService);
                         $scope.resource = {};

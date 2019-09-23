@@ -371,7 +371,7 @@
 
         getAlloctionData(allocationService, resourceInfoSharingService.resourceSelect, $scope);
         getResourceTypeData(resourceTypeService, $scope);
-        getProjectData(projectService, $scope);
+        getProjectData(projectService,resourceInfoSharingService, $scope);
         getEcrData(ecrService, $scope);
         //getMappedResourceData($scope, resourceMappingService, holidayListService);
         //getResourceData($scope, resourceService);
@@ -415,11 +415,12 @@
                 }
                 v_label.push($scope.monthWiseAllocation);
             });
+console.log(resourceInfoSharingService);
             $scope.rowWiseAllocation = {
                 resource: resourceInfoSharingService.resourceSelect,
                 project: '',
                 ecr: '',
-                resourcetype: '',
+                resourcetype: resourceInfoSharingService.mappingType,
                 region: $scope.region,
                 year: year,
                 allocation: v_label,
@@ -499,7 +500,7 @@
         $scope.resourceEvent = null;
 
         $scope.childInfo = function (year, listIndex, event, updateTable) {
-
+      
             $scope.resourceRowSelect = listIndex;
             $scope.resourceEvent = event;
 
@@ -611,9 +612,10 @@
         });
     }
 
-    function getProjectData(projectService, $scope) {
-       
-        projectService.getProject($scope.region).then(function (res) {
+    function getProjectData(projectService,resourceInfoSharingService, $scope) {
+
+       console.log(resourceInfoSharingService.regionSelect);
+        projectService.getProject(resourceInfoSharingService.regionSelect).then(function (res) {
             $scope.project = res.data;
 
         }).catch(function (err) {

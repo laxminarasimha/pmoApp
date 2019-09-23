@@ -42,7 +42,7 @@
 {
 "id" : "7",
 "name" : "Graphs",
-"submenu" : [{"id":"1","name":"Graph","page":"Graph","visible":"true"}],
+"submenu" : [],
 "role" : ["SAdmin","Admin"],
 "visbile" : "true"
 },
