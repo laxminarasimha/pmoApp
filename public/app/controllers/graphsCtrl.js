@@ -145,18 +145,18 @@
 
     }
 
-    function demandGraphFYF($scope, $filter, resourceMappingService, allocationService, leaveService, holidayListService, regionname) {
+    function demandGraphFYF($scope, $filter, resourceService, allocationService, leaveService, holidayListService, regionname) {
 
         var strDt = $scope.startDate.split("/");
         var endDt = $scope.endDate.split("/");
 
-        resourceMappingService.getMappedResourcesByYear(strDt[1], endDt[1], regionname).then(function (mapping) {
+        resourceService.getResources(regionname).then(function (resource) {
             leaveService.getLeave().then(function (res) {
                 $scope.leaveList = res.data;
                 var monthCol = months($scope.startDate, $scope.endDate);
                 allocationService.getAllAllocationByYear(strDt[1], endDt[1], regionname).then(function (allocation) {
                     holidayListService.getLocationHolidaysYearRange(strDt[1], endDt[1]).then(function (holidayData) {
-                        drawDeamndAndCapcityGraphFYF($scope, $filter, mapping.data, monthCol, $scope.leaveList, allocation.data, holidayData.data);
+                        drawDeamndAndCapcityGraphFYF($scope, $filter, resource.data, monthCol, $scope.leaveList, allocation.data, holidayData.data);
                     });
                 });
 
@@ -169,7 +169,7 @@
         });
     }
 
-    function drawDeamndAndCapcityGraphFYF($scope, $filter, mappingData, monthCol, leaveList, allocationData, holidayList) {
+    function drawDeamndAndCapcityGraphFYF($scope, $filter, resourceData, monthCol, leaveList, allocationData, holidayList) {
 
         $scope.GraphData = [];
         var stCapacity = new Array(monthCol.length);
@@ -179,12 +179,12 @@
         ftCapacity.fill(0, 0, monthCol.length);
 
         // Total ST Capacity (ST + Buffer - Vaction) , ST+Buffer = Total mapping value
-        angular.forEach(mappingData, function (mapping) {
-            var leaveFilter = $filter('filter')(leaveList, { resourcename: mapping.mappedResource.resourcename });
+        angular.forEach(resourceData, function (resource) {
+            var leaveFilter = $filter('filter')(leaveList, { resourcename: resource.resourcename });
+            monthlyAvailableDays(resource, monthCol);
 
-            if (mapping.resourceType === 'Sufficient') {
-
-                angular.forEach(mapping.monthlyAvailableActualMandays, function (mapData, index) {
+            if (resource.resourceType === 'Sufficient') {
+                angular.forEach(resource.monthlyAvailableActualMandays, function (mapData, index) {
                     if (monthCol.indexOf(mapData.key) >= 0) { // check if months equal to the predefined month array(user selected)
                         var indx = monthCol.indexOf(mapData.key);
                         var value = stCapacity[indx];
@@ -202,11 +202,11 @@
 
                             var indx = monthCol.indexOf(leave.month);
                             var value = stCapacity[indx];
-                            var percent = 0;
+                            var percent = resource.taggedP;
 
-                            angular.forEach(mapping.taggToEuroclear, function (tagged) {
+                            /*angular.forEach(mapping.taggToEuroclear, function (tagged) {
                                 if (tagged.key === leave.month) percent = tagged.value;
-                            });
+                            });*/
 
                             if (!isNaN(leave.value)) {
                                 var percentV = (leave.value * percent) / 100;
@@ -217,30 +217,30 @@
                     });
                 });
 
-                var holidayFilter = $filter('filter')(holidayList, { locationname: mapping.mappedResource.baseentity });
+                var holidayFilter = $filter('filter')(holidayList, { locationname: resource.baseentity });
                 angular.forEach(holidayFilter, function (holiday) {
                     var lmonth = getMonthAndYear(new Date(holiday.holidayDate).getMonth(), new Date(holiday.holidayDate).getFullYear());
 
-                    angular.forEach(mapping.monthlyAvailableActualMandays, function (data) { // if allocation is not done for the resource or he is not active
+                    angular.forEach(resource.monthlyAvailableActualMandays, function (data) { // if allocation is not done for the resource or he is not active
                         if (data.key === lmonth && data.value > 0) {
                             if (monthCol.indexOf(lmonth) >= 0) { // check if months equal to the predefined month array(user selected)
                                 var indx = monthCol.indexOf(lmonth);
                                 var value = stCapacity[indx];
-                                angular.forEach(mapping.taggToEuroclear, function (data) { // if allocation is not done for the resource or he is not active
-                                    if (data.key === lmonth) {
-                                        var percent = parseFloat(data.value);
-                                        var actualHDays = (1 * percent) / 100;
-                                        stCapacity[indx] = value - actualHDays;
-                                    }
-                                });
+                                // angular.forEach(mapping.taggToEuroclear, function (data) { // if allocation is not done for the resource or he is not active
+                                // if (data.key === lmonth) {
+                                var percent = parseFloat(resource.taggedP);
+                                var actualHDays = (1 * percent) / 100;
+                                stCapacity[indx] = value - actualHDays;
+                                // }
+                                //});
                             }
                         }
                     });
                 });
             }
 
-            if (mapping.resourceType === 'FlexTeam') {
-                angular.forEach(mapping.monthlyAvailableActualMandays, function (mapData) {
+            if (resource.resourceType === 'FlexTeam') {
+                angular.forEach(resource.monthlyAvailableActualMandays, function (mapData) {
                     if (monthCol.indexOf(mapData.key) >= 0) { // check if months equal to the predefined month array(user selected)
                         var indx = monthCol.indexOf(mapData.key);
                         var value = ftCapacity[indx];
@@ -258,11 +258,11 @@
 
                             var indx = monthCol.indexOf(leave.month);
                             var value = ftCapacity[indx];
-                            var percent = 0;
+                            var percent = resource.taggedP;
 
-                            angular.forEach(mapping.taggToEuroclear, function (tagged) {
+                           /* angular.forEach(mapping.taggToEuroclear, function (tagged) {
                                 if (tagged.key === leave.month) percent = tagged.value;
-                            });
+                            });*/
 
                             if (!isNaN(leave.value)) {
                                 var percentV = (leave.value * percent) / 100;
@@ -273,22 +273,22 @@
                     });
                 });
 
-                var holidayFilter = $filter('filter')(holidayList, { locationname: mapping.mappedResource.baseentity });
+                var holidayFilter = $filter('filter')(holidayList, { locationname: resource.baseentity });
                 angular.forEach(holidayFilter, function (holiday) {
                     var lmonth = getMonthAndYear(new Date(holiday.holidayDate).getMonth(), new Date(holiday.holidayDate).getFullYear());
 
-                    angular.forEach(mapping.monthlyAvailableActualMandays, function (data) { // if allocation is not done for the resource or he is not active
+                    angular.forEach(resource.monthlyAvailableActualMandays, function (data) { // if allocation is not done for the resource or he is not active
                         if (data.key === lmonth && data.value > 0) {
                             if (monthCol.indexOf(lmonth) >= 0) { // check if months equal to the predefined month array(user selected)
                                 var indx = monthCol.indexOf(lmonth);
                                 var value = ftCapacity[indx];
-                                angular.forEach(mapping.taggToEuroclear, function (data) { // if allocation is not done for the resource or he is not active
-                                    if (data.key === lmonth) {
-                                        var percent = parseFloat(data.value);
+                               // angular.forEach(mapping.taggToEuroclear, function (data) { // if allocation is not done for the resource or he is not active
+                                   // if (data.key === lmonth) {
+                                        var percent = parseFloat(resource.taggedP);
                                         var actualHDays = (1 * percent) / 100;
                                         ftCapacity[indx] = value - actualHDays;
-                                    }
-                                });
+                                   // }
+                               // });
                             }
                         }
                     });
