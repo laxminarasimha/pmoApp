@@ -371,7 +371,7 @@
 
         getAlloctionData(allocationService, resourceInfoSharingService.resourceSelect, $scope);
         getResourceTypeData(resourceTypeService, $scope);
-        getProjectData(projectService,resourceInfoSharingService, $scope);
+        getProjectData(projectService, resourceInfoSharingService, $scope);
         getEcrData(ecrService, $scope);
         //getMappedResourceData($scope, resourceMappingService, holidayListService);
         //getResourceData($scope, resourceService);
@@ -415,7 +415,7 @@
                 }
                 v_label.push($scope.monthWiseAllocation);
             });
-console.log(resourceInfoSharingService);
+            console.log(resourceInfoSharingService);
             $scope.rowWiseAllocation = {
                 resource: resourceInfoSharingService.resourceSelect,
                 project: '',
@@ -435,7 +435,7 @@ console.log(resourceInfoSharingService);
         }
 
         $scope.saveNewRow = function (event) {
-            
+
             $scope.clearMessages();
             allocationService.createAllocation($scope.rowWiseAllocation).then(function (res) {
                 if (res.data !== "created") {
@@ -447,7 +447,7 @@ console.log(resourceInfoSharingService);
                 $scope.allocationList = res.data;
 
                 $scope.childInfo($scope.yearSelect, $scope.newRowIndex, $scope.newRowEvent, true);
-               // $scope.childInfo($scope.rowWiseAllocation.resource, $scope.rowWiseAllocation.year, $scope.newResourceType, $scope.newRowIndex, $scope.newRowEvent, false);
+                // $scope.childInfo($scope.rowWiseAllocation.resource, $scope.rowWiseAllocation.year, $scope.newResourceType, $scope.newRowIndex, $scope.newRowEvent, false);
             });
         }
 
@@ -500,7 +500,7 @@ console.log(resourceInfoSharingService);
         $scope.resourceEvent = null;
 
         $scope.childInfo = function (year, listIndex, event, updateTable) {
-      
+
             $scope.resourceRowSelect = listIndex;
             $scope.resourceEvent = event;
 
@@ -612,9 +612,9 @@ console.log(resourceInfoSharingService);
         });
     }
 
-    function getProjectData(projectService,resourceInfoSharingService, $scope) {
+    function getProjectData(projectService, resourceInfoSharingService, $scope) {
 
-       console.log(resourceInfoSharingService.regionSelect);
+        console.log(resourceInfoSharingService.regionSelect);
         projectService.getProject(resourceInfoSharingService.regionSelect).then(function (res) {
             $scope.project = res.data;
 
@@ -756,7 +756,7 @@ console.log(resourceInfoSharingService);
     }
 
     function months(year) {
-       
+
         var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
             "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
         var arr = [];

@@ -141,7 +141,12 @@
 
 
             angular.forEach($scope.resource, function (res) {
-
+                angular.forEach($scope.mappedResourceData, function (mapped) {
+                    if(mapped.resourcename === res){
+                    resType = mapped.resourceType;
+                    console.log(resType);
+                    }
+                    }); 
                 $scope.rowWiseAllocation = {
                     resource: res,
                     project: '',
@@ -180,7 +185,7 @@
 
                 angular.forEach($scope.resourceWiseAllocaiton, function (item) {
                     if (item.rowSelect) {
-                        if (item.project === undefined || item.resourcetype === undefined || item.project === undefined) {
+                        if (item.project === undefined || item.resourcetype === undefined || item.project === "") {
                             $scope.errorMsg = "Please enter valid data for all the input field.";
                             $scope.errvalue = true;
                             return;
@@ -294,8 +299,8 @@
         $scope.clearFields = function () {
             $('#resource-select').multiselect('rebuild');
             $scope.clearMessages();
-            $scope.startDate = "";
-            $scope.endDate = "";
+           // $scope.startDate = "";
+           // $scope.endDate = "";
             $scope.months = [];
             $scope.resourceWiseAllocaiton = [];
             app.loading = false;
