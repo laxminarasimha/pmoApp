@@ -31,38 +31,6 @@ var region = req.params.region;
     }
 
 
-}).get("/eb", function(req, res) {
- resourceEBDAO.find({},null, {sort:{CEN: 1}}, function(err, data) {
- if (err) {
- res.send("error");
- return;
- }
- res.send(data);
- });
- }).get("/hc", function(req, res) {
- resourceHCDAO.find({},null, {sort:{KIN: 1}}, function(err, data) {
- if (err) {
- res.send("error");
- return;
- }
- res.send(data);
- });
- }).get("/sla", function(req, res) {
- projectSLADAO.find({},null, {sort:{Roadmap: 1}}, function(err, data) {
- if (err) {
- res.send("error");
- return;
- }
- res.send(data);
- });
- }).get("/eses", function(req, res) {
- resourceESESDAO.find({},null, {sort:{CEN: 1}}, function(err, data) {
- if (err) {
- res.send("error");
- return;
- }
- res.send(data);
- });
 }).get("/excel/", function(req, res) {
  resourceDAO.find({},null, {sort:{resourcename: 1}}, function(err, data) {
  if (err) {
