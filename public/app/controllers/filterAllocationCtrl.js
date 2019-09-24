@@ -39,9 +39,9 @@
         };
     })
 
-    Controller.$inject = ['$rootScope', '$scope', '$window', '$compile', 'DTOptionsBuilder', 'DTColumnBuilder', 'resourceService', 'projectService', 'allocationService', 'resourceTypeService', 'leaveService', 'resourceMappingService', '$filter', 'availableDaysService', 'holidayListService'];
+    Controller.$inject = ['$rootScope', '$scope', '$window', '$compile', 'DTOptionsBuilder', 'DTColumnBuilder', 'resourceService', 'projectService', 'allocationService', 'resourceTypeService', 'leaveService',  '$filter', 'availableDaysService', 'holidayListService'];
 
-    function Controller($rootScope, $scope, $window, $compile, DTOptionsBuilder, DTColumnBuilder, resourceService, projectService, allocationService, resourceTypeService, leaveService, resourceMappingService, $filter, availableDaysService, holidayListService) {
+    function Controller($rootScope, $scope, $window, $compile, DTOptionsBuilder, DTColumnBuilder, resourceService, projectService, allocationService, resourceTypeService, leaveService, $filter, availableDaysService, holidayListService) {
 
         $scope.projectSelect = "ALL";
 
@@ -60,7 +60,6 @@
         $scope.resourceType = [];
         $scope.region = $window.localStorage.getItem("region");
 
-        // getMappedResourceData(resourceMappingService, $scope);
         intialize(projectService, resourceService, resourceTypeService, allocationService, $scope);
 
         function allocObject(object) {

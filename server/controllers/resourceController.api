@@ -1,10 +1,6 @@
 var express = require("express"),
  router = express.Router(),
  resourceDAO = require("../models/resourceDAO.js");
- resourceEBDAO = require("../models/resourceEBDAO.js");
- resourceHCDAO = require("../models/resourceHCDAO.js");
- resourceESESDAO=require("../models/resourceESESDAO.js")
- projectSLADAO=require("../models/projectSLADAO.js")
  var nodeExcel=require("excel-export");
  //var nodemailer = require('nodemailer');
  

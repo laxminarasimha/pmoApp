@@ -331,9 +331,9 @@
 
     }
 
-    Controller.$inject = ['$rootScope', '$scope', '$window', 'DTOptionsBuilder', 'DTColumnBuilder', '$compile', 'resourceService', 'projectService', 'resourceTypeService', 'ecrService', 'allocationService', 'leaveService', 'resourceMappingService', '$filter', 'availableDaysService', 'holidayListService', 'resourceInfoSharingService'];
+    Controller.$inject = ['$rootScope', '$scope', '$window', 'DTOptionsBuilder', 'DTColumnBuilder', '$compile', 'resourceService', 'projectService', 'resourceTypeService', 'ecrService', 'allocationService', 'leaveService', '$filter', 'availableDaysService', 'holidayListService', 'resourceInfoSharingService'];
 
-    function Controller($rootScope, $scope, $window, DTOptionsBuilder, DTColumnBuilder, $compile, resourceService, projectService, resourceTypeService, ecrService, allocationService, leaveService, resourceMappingService, $filter, availableDaysService, holidayListService, resourceInfoSharingService) {
+    function Controller($rootScope, $scope, $window, DTOptionsBuilder, DTColumnBuilder, $compile, resourceService, projectService, resourceTypeService, ecrService, allocationService, leaveService, $filter, availableDaysService, holidayListService, resourceInfoSharingService) {
 
         $scope.resource = [];
         //$scope.resourceWiseAllocaiton = [];
@@ -372,7 +372,7 @@
         getAlloctionData(allocationService, resourceInfoSharingService.resourceSelect, $scope);
         getResourceTypeData(resourceTypeService, $scope);
         getProjectData(projectService,resourceInfoSharingService, $scope);
-        getEcrData(ecrService, $scope);
+        getEcrData(ecrService,resourceInfoSharingService, $scope);
         //getMappedResourceData($scope, resourceMappingService, holidayListService);
         //getResourceData($scope, resourceService);
         getLeaveData(leaveService, $scope);
@@ -437,17 +437,63 @@ console.log(resourceInfoSharingService);
         $scope.saveNewRow = function (event) {
             
             $scope.clearMessages();
-            allocationService.createAllocation($scope.rowWiseAllocation).then(function (res) {
-                if (res.data !== "created") {
-                    $scope.errorMsg = "Allocaiton creation failed,Please try  again";
-                }
-            })
+            // allocationService.createAllocation($scope.rowWiseAllocation).then(function (res) {
+            //     if (res.data !== "created") {
+            //         $scope.errorMsg = "Allocaiton creation failed,Please try  again";
+            //     }
+            // })
 
             allocationService.getAlloctionForResource($scope.rowWiseAllocation.resource).then(function (res) {
                 $scope.allocationList = res.data;
+                if($scope.rowWiseAllocation.project==""||$scope.rowWiseAllocation.project==undefined){
+                    //window.alert("please select project");
+                    $scope.errorMsg="please select project";
+                }else{
+                var project=$scope.rowWiseAllocation.project;
+                var year=$scope.rowWiseAllocation.year;  
+                var ecr = $scope.rowWiseAllocation.ecr
+                var filter= $filter('filter')($scope.allocationList,{project:project});
+                if(ecr !=null && ecr.length > 0){
+                      filter = $filter('filter')(filter, { ecr: ecr });
+                 }
+                var filter2 = $filter('filter')(filter,{year:year});
+                console.log(filter2);
+                if (filter2 !== null && filter2.length > 0) {
+                    var existingObject = filter2[0];
+                    console.log(existingObject);
+                    var allocation = $scope.rowWiseAllocation.allocation;
+                    for (var count = 0; count < allocation.length; count++) {
+                        if (allocation[count].value > 0) {
+                            existingObject.allocation[count].value = allocation[count].value;
+                        }
+                    }
 
-                $scope.childInfo($scope.yearSelect, $scope.newRowIndex, $scope.newRowEvent, true);
-               // $scope.childInfo($scope.rowWiseAllocation.resource, $scope.rowWiseAllocation.year, $scope.newResourceType, $scope.newRowIndex, $scope.newRowEvent, false);
+                    allocationService.updateAllocation(existingObject).then(function (res) {
+                        if (res.data === "updated") {
+                            $scope.successMsg = "Allocaiton created successfully";
+                        }
+                    }).catch(function (err) {
+                        console.log(err);
+                    });
+                    $scope.childInfo($scope.yearSelect, $scope.newRowIndex, $scope.newRowEvent, true);
+                } else {
+                    allocationService.createAllocation($scope.rowWiseAllocation).then(function (res) {
+                        if (res.data === "created") {
+                            $scope.successMsg = "new Allocaiton created successfully";
+                        }
+                    }).catch(function (err) {
+                        console.log(err);
+                    });
+                   allocationService.getAlloctionForResource($scope.rowWiseAllocation.resource).then(function (res) {
+                    $scope.allocationList = res.data;
+                       $scope.childInfo($scope.yearSelect, $scope.newRowIndex, $scope.newRowEvent, true);
+                    })
+                    //$scope.childInfo($scope.yearSelect, $scope.newRowIndex, $scope.newRowEvent, true);
+                }
+             
+            }
+               
+                //$scope.childInfo($scope.rowWiseAllocation.resource, $scope.rowWiseAllocation.year, $scope.newResourceType, $scope.newRowIndex, $scope.newRowEvent, false);
             });
         }
 
@@ -623,8 +669,8 @@ console.log(resourceInfoSharingService);
         });
 
     }
-    function getEcrData(ecrService, $scope) {
-        ecrService.getEcr($scope.region).then(function (res) {
+    function getEcrData(ecrService,resourceInfoSharingService, $scope) {
+        ecrService.getEcr(resourceInfoSharingService.regionSelect).then(function (res) {
             $scope.ecr = res.data;
         }).catch(function (err) {
             console.log(err);

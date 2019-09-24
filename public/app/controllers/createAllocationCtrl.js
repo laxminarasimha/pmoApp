@@ -91,9 +91,10 @@
                 $scope.errorMsg = "Please select a resource."
                 return;
             }
-
+            console.log($scope.startDate);
             if ($scope.startDate == null || $scope.endDate == null) {
-                $scope.errorMsg = "Please select a valid date range."
+                console.log("date testing");
+                $scope.errorMsg = "Please select date ."
                 return;
             }
 
@@ -123,25 +124,31 @@
                 $scope.months.push($scope.monthWiseAllocation);
             });
 
-           // console.log($scope.mappedResourceData);
+            console.log($scope.mappedResourceData);
             var resType = '';
-            angular.forEach($scope.mappedResourceData, function (mapped) {
-                angular.forEach($scope.resource,function(item){
-                    console.log(item);
-                    if (mapped.resourcename === item ) {
+            // angular.forEach($scope.mappedResourceData, function (mapped) {
+            //     angular.forEach($scope.resource,function(item){
+            //         console.log(item);
+            //         if (mapped.resourcename === item ) {
                    
-                        resType = mapped.resourceType;
-                        console.log(resType);
-                    }
-                })
+            //             resType = mapped.resourceType;
+            //             console.log(resType);
+            //         }
+            //     })
                 
-            });
+            // });
 
-            console.log(resType);
+            //console.log(resType);
 
 
             angular.forEach($scope.resource, function (res) {
-
+               
+                angular.forEach($scope.mappedResourceData, function (mapped) {
+                    if(mapped.resourcename === res){
+                        resType = mapped.resourceType;
+                        console.log(resType);
+                    }
+                });
                 $scope.rowWiseAllocation = {
                     resource: res,
                     project: '',
@@ -173,14 +180,14 @@
         }
 
         $scope.saveAllocation = function () {
-            // console.log($scope.resourceWiseAllocaiton);
+             console.log($scope.resourceWiseAllocaiton);
             $scope.errvalue = false;
             angular.forEach($scope.resourceWiseAllocaiton, function (it) {
 
 
                 angular.forEach($scope.resourceWiseAllocaiton, function (item) {
                     if (item.rowSelect) {
-                        if (item.project === undefined || item.resourcetype === undefined || item.project === undefined) {
+                        if (item.project === undefined || item.project == '') {
                             $scope.errorMsg = "Please enter valid data for all the input field.";
                             $scope.errvalue = true;
                             return;
@@ -203,7 +210,7 @@
 
                 allocationService.getAllAllocationByYear(fromYear, toYear, $scope.regionname).then(function (res) {
                     $scope.allAlocation = res.data;
-
+                    console.log($scope.allAlocation);
                     angular.forEach(allocationYearWise, function (item) {
                         item.region = $scope.regionname;
                         if (item.rowSelect) {// if row delete in screen,then it should not save
@@ -217,7 +224,13 @@
 
                             var filter_1 = $filter('filter')($scope.allAlocation, { resource: item.resource });
                             var filter_2 = $filter('filter')(filter_1, { project: item.project });
+                            //console.log(filter_2[0].project);
+                            if(item.ecr !=null && item.ecr.length > 0){
+                                filter_2 = $filter('filter')(filter_2, { ecr: item.ecr });
+                            }
                             var filter_3 = $filter('filter')(filter_2, { year: item.year });
+                            console.log(filter_3);
+                        
 
                             if (filter_3 !== null && filter_3.length > 0) {
                                 var existingObject = filter_3[0];
@@ -292,10 +305,11 @@
         }
 
         $scope.clearFields = function () {
+            console.log($scope.selectRegion);
             $('#resource-select').multiselect('rebuild');
             $scope.clearMessages();
-            $scope.startDate = "";
-            $scope.endDate = "";
+            //$scope.startDate = "";
+           // $scope.endDate = "";
             $scope.months = [];
             $scope.resourceWiseAllocaiton = [];
             app.loading = false;
@@ -303,6 +317,8 @@
             app.errorMsg = false;
             $scope.hidden = "none";
             $scope.selectRegion="";
+            $scope.resource=null;
+            
             //$scope.getregiondata="";
             // $scope.vishnu="none";
             $('#projectBtn').attr('disabled', false);
@@ -311,6 +327,7 @@
         $scope.clearMessages = function () {
             $scope.successMsg = "";
             $scope.errorMsg = "";
+           
             //$scope.hidden = "none";
         }
 

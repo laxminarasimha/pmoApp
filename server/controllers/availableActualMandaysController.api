@@ -1,6 +1,6 @@
 var express = require("express"),
  router = express.Router(),
- resourceMappingDAO = require("../models/resourceMappingDAO.js");
+resourceMappingDAO = require("../models/resourceMappingDAO.js");
  
 router.post("/", function(req, res) {
 var obj = req.body;

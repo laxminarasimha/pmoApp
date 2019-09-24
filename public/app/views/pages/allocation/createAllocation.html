@@ -99,6 +99,7 @@
                     {{ allocRows.resource }}
                   </span>
                 </div>
+              
                 <div class="col-sm-3">
                   <label for="resourcetype">Resource Type</label>
                   <span id="resourcetype" class="form-control"
@@ -122,8 +123,9 @@
 
                         </span>
                       </td>
-                      <td ng-if="allocRows.project =='Maintenance(Sweden)'||allocRows.project =='Maintainance(Finland)'" style="padding-left: 10px">
+                      <td ng-if="allocRows.project =='Maintenance(Sweden)'||allocRows.project =='Maintenance(Finland)'" style="padding-left: 10px">
                         <label for="ecr">ECR</label>
+                        {{jhii}}
                         <span id="ecr" editable-select="allocRows.ecr" e-name="ecr" e-form="rowform"></span>
                         <select class="form-control" style="padding: 1px" ng-model="allocRows.ecr"
                           ng-options="item.ecrname as item.ecrname for item in ecr" ng-change="dataChanged();" />

@@ -117,19 +117,19 @@ router.use("/leave", require("../controllers/leaveController.api"));
 
 router.use("/resourceType", require("../controllers/resourceTypeController.api"));
 
-router.use("/mappedresource", require("../controllers/resourceMappingController.api"));
+//router.use("/mappedresource", require("../controllers/resourceMappingController.api"));
 
 router.use("/allocation", require("../controllers/allocationController.api"));
 
-router.use("/avaactmandays", require("../controllers/availableActualMandaysController.api"));
+//router.use("/avaactmandays", require("../controllers/availableActualMandaysController.api"));
 
 router.use("/upload", require("../controllers/profileController.api"));
 
-router.use("/uploadDataFile", require("../controllers/uploadDataFileController.api"));
+//router.use("/uploadDataFile", require("../controllers/uploadDataFileController.api"));
 
 router.use("/ecr", require("../controllers/ecrController.api"));
 
-router.use("/sla", require("../controllers/projectSLAController.api"));
+//router.use("/sla", require("../controllers/projectSLAController.api"));
 
 return router;
 }

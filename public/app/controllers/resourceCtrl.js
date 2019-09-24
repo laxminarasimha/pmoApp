@@ -3,9 +3,9 @@
 
     angular.module('pmoApp').controller('resourceCtrl', Controller);
 
-    Controller.$inject = ['$scope', '$rootScope','$window', 'resourceService', 'designationService', 'resourceMappingService', 'allocationService', 'DTOptionsBuilder', 'DTColumnBuilder', 'skillSetService', 'locationService', 'roleService','regionService','resourceTypeService'];
+    Controller.$inject = ['$scope', '$rootScope','$window', 'resourceService', 'designationService',  'allocationService', 'DTOptionsBuilder', 'DTColumnBuilder', 'skillSetService', 'locationService', 'roleService','regionService','resourceTypeService'];
 
-    function Controller($scope, $rootScope,$window, resourceService, designationService, resourceMappingService, allocationService, DTOptionsBuilder, DTColumnBuilder, skillSetService, locationService, roleService, regionService, resourceTypeService ) {
+    function Controller($scope, $rootScope,$window, resourceService, designationService,  allocationService, DTOptionsBuilder, DTColumnBuilder, skillSetService, locationService, roleService, regionService, resourceTypeService ) {
         $scope.mongoResourceData = [];
         $scope.startDate;
         $scope.endDate;
@@ -102,21 +102,6 @@
                 console.log($scope.deletedID);
                 if (res.data == "deleted") {
                     console.log($scope.kinID);
-                    resourceMappingService.getMappedResourceForKinIDtoDelete($scope.kinID).then(function (res) {
-                        
-                        angular.forEach(res.data, function (item) {
-                            $scope.deleteId = item._id;
-                            resourceMappingService.deleteResourceMapping($scope.deleteId).then(function (res) {
-                                if (res.data == "deleted") {
-                                    allocationService.deleteAllocationByName($scope.rName).then(function (res) {
-                                        if (res.data == "deleted") {
-                                            console.log("Record Deleted Successfully");
-                                        }
-                                    })
-                                }
-                            })
-                        })
-                    });
                     getResourceData(resourceService, $scope);
                     app.loading = false;
                     app.successMsg = "Resource Deleted successfully";
@@ -130,8 +115,6 @@
 
 
         }
-
-        //  resourceMappingService.deleteResourceMapping($scope.deletedID);
 
 
         $scope.editResource = function (id) {
