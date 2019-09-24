@@ -34,7 +34,7 @@
               <select class="form-control"  ng-model="selectRegion" ng-options="x.regionname for x in regionData"
                  ng-change="getregiondata(selectRegion.regionname)">
               </select>
-              {{selectRegion.regionname}}
+              
             </span>
               <span ng-show="region != 'All'" id="region" editable-select="allocRows.region" e-name="region"
               e-form="rowform">
