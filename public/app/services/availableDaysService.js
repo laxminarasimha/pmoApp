@@ -29,6 +29,7 @@
     var leaves = [];
 
     this.intialize = function (allocation, resoruceM, leave) {
+      console.log("Inside AvailableDaysService************");
       this.allocation = allocation;
       this.resourceMapped = resoruceM;
       this.leaves = leave;

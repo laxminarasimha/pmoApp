@@ -6,12 +6,12 @@
 
     Controller.$inject = ['$scope', '$rootScope', '$window', 'DTOptionsBuilder', 'DTColumnBuilder', '$compile', 'idleTimeService',
         'resourceService', 'roleService', 'regionService', 'projectService', 'resourceTypeService',
-        'allocationService', 'leaveService', 'resourceMappingService', 'availableDaysService',
+        'allocationService', 'leaveService', 'availableDaysService',
         'monthlyHeaderListService', 'locationService', 'skillSetService', '$filter'];
 
     function Controller($scope, $rootScope, $window, DTOptionsBuilder, DTColumnBuilder, $compile, idleTimeService,
         resourceService, roleService, regionService, projectService, resourceTypeService,
-        allocationService, leaveService, resourceMappingService, availableDaysService,
+        allocationService, leaveService,  availableDaysService,
         monthlyHeaderListService, locationService, skillSetService, $filter) {
 
 
@@ -64,7 +64,7 @@
             app.errorMsg = false;
             app.errorClass = "";
             //getIdleTimeData(idleTimeService,$scope);
-            getGraphData($scope, allocationService, leaveService, resourceMappingService, availableDaysService, monthlyHeaderListService);
+            getGraphData($scope, allocationService, leaveService, availableDaysService, monthlyHeaderListService);
         }
 
         $scope.getIdleTimes = function (idleTimeDTO) {
@@ -75,9 +75,8 @@
             var emptyObject = angular.equals({}, idleTimeDTO);
             console.log(emptyObject);
             if (typeof idleTimeDTO == "undefined" || emptyObject) {
-                getGraphData($scope, allocationService, leaveService, resourceMappingService, availableDaysService, monthlyHeaderListService);
+                getGraphData($scope, allocationService, leaveService, availableDaysService, monthlyHeaderListService);
             } else {
-                console.log("HIIIIIIIIII TO ***&&&&&&^&*");
                 var idleTimeFilteredDataList = [];
                 idleTimeFilteredDataList = $scope.originalData;
                 var resource = idleTimeDTO.resource.trim();
@@ -126,7 +125,7 @@
         $scope.vm.dtOptions.withOption('buttons', ['copy', 'print', 'pdf', 'excel']);
         //=============================================================//
 
-        getGraphData($scope, allocationService, leaveService, resourceMappingService, availableDaysService, monthlyHeaderListService);
+        getGraphData($scope, allocationService, leaveService, availableDaysService, monthlyHeaderListService);
 
         $scope.prepareIdleTimeData = function ($scope, availableDaysService, monthlyHeaderListService) {
 
@@ -230,7 +229,7 @@
 
 
 
-    function getGraphData($scope, allocationService, leaveService, resourceMappingService, availableDaysService, monthlyHeaderListService) {
+    function getGraphData($scope, allocationService, leaveService,  availableDaysService, monthlyHeaderListService) {
         var allocation = [];
         var resoruceM = [];
         var leave = [];
@@ -238,13 +237,13 @@
             allocation = res.data;
             leaveService.getLeave().then(function (res) {
                 leave = res.data;
-                resourceMappingService.getMappedResources($scope.region).then(function (res) {
+               // resourceMappingService.getMappedResources($scope.region).then(function (res) {
                     resoruceM = res.data;
-                    availableDaysService.intialize(allocation, resoruceM, leave);
+                   // availableDaysService.intialize(allocation, resoruceM, leave);
                     $scope.prepareIdleTimeData($scope, availableDaysService, monthlyHeaderListService);
-                }).catch(function (err) {
-                    console.log(err);
-                });
+               // }).catch(function (err) {
+                   // console.log(err);
+               // });
             }).catch(function (err) {
                 console.log(err);
             });
