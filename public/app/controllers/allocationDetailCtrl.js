@@ -88,20 +88,18 @@
             monthyearLabel.set(getMonth(holidayList[i]._id.month - 1) + '-' + (holidayList[i]._id.year.toString()).substring(2, 4), holidayList[i].number);
         }
 
-
-
         var mappedToResource = [];
-
         for (var user = 0; user < mappedResourceData.length; user++) {
 
             // if (mappedResourceData[user].resourcename === resource && mappedResourceData[user].year === year) {
 
             if (typeof mappedResourceData[user].holidaydeduct === 'undefined') {  // if it is first time open, then holidays should not delte from the actually availablemanday.It is already dedcuted during load time
                 for (var k = 0; k < mappedResourceData[user].monthlyAvailableActualMandays.length; k++) {
-                    var key = mappedResourceData[user].monthlyAvailableActualMandays[k].key;
+                    //console.log(mappedResourceData[user].monthlyAvailableActualMandays[k]);
+                    var key = mappedResourceData[user].monthlyAvailableActualMandays[k].key.month;
                     if (monthyearLabel.has(key)) {
                         var holidays = monthyearLabel.get(key);
-                        var percent = mappedResourceData[user].taggToEuroclear[k].value;
+                        var percent = mappedResourceData[user].taggedPercent;
                         var actualHDays = (holidays * percent) / 100;
                         actualHDays = getRoundNumber(actualHDays, 1);
                         mappedResourceData[user].monthlyAvailableActualMandays[k].value = getRoundNumber((mappedResourceData[user].monthlyAvailableActualMandays[k].value - actualHDays), 1);
@@ -585,7 +583,7 @@
 
             $scope.yearSelect = year;
 
-            holidayListService.getAggegrateLocationHolidays(resourceInfoSharingService.regionSelect).then(function (res) {
+            holidayListService.getAggegrateLocationHolidays(resourceInfoSharingService.resource.baseentity).then(function (res) {
                 scope.allocCollection = filter(scope, $scope.allocationList, resourceInfoSharingService, year, $scope.resourceLocation, leaves, res.data, childShown, $filter);
 
                 if (typeof scope.allocCollection !== "undefined") {
