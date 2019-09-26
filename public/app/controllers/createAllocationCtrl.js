@@ -124,7 +124,7 @@
                 $scope.months.push($scope.monthWiseAllocation);
             });
 
-            console.log($scope.mappedResourceData);
+            
             var resType = '';
             // angular.forEach($scope.mappedResourceData, function (mapped) {
             //     angular.forEach($scope.resource,function(item){
@@ -144,6 +144,7 @@
             angular.forEach($scope.resource, function (res) {
                
                 angular.forEach($scope.mappedResourceData, function (mapped) {
+                   
                     if(mapped.resourcename === res){
                         resType = mapped.resourceType;
                         console.log(resType);
@@ -307,6 +308,7 @@
         $scope.clearFields = function () {
             console.log($scope.selectRegion);
             $('#resource-select').multiselect('rebuild');
+
             $scope.clearMessages();
             //$scope.startDate = "";
            // $scope.endDate = "";

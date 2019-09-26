@@ -84,14 +84,14 @@
 
         // create the hoilidays with month-year fromat and store in a map
         var monthyearLabel = new Map();
+      
         for (var i = 0; i < holidayList.length; i++) {
             monthyearLabel.set(getMonth(holidayList[i]._id.month - 1) + '-' + (holidayList[i]._id.year.toString()).substring(2, 4), holidayList[i].number);
         }
 
-
+        console.log(monthyearLabel);
 
         var mappedToResource = [];
-
         for (var user = 0; user < mappedResourceData.length; user++) {
 
             // if (mappedResourceData[user].resourcename === resource && mappedResourceData[user].year === year) {
@@ -584,8 +584,9 @@
             //console.log(allocationSharingService.resourceSelect + "--" + year + "--" + allocationSharingService.regionSelect);
 
             $scope.yearSelect = year;
-
-            holidayListService.getAggegrateLocationHolidays(resourceInfoSharingService.regionSelect).then(function (res) {
+            console.log(resourceInfoSharingService.location);
+            holidayListService.getAggegrateLocationHolidays(resourceInfoSharingService.location).then(function (res) {
+                console.log(res.data);
                 scope.allocCollection = filter(scope, $scope.allocationList, resourceInfoSharingService, year, $scope.resourceLocation, leaves, res.data, childShown, $filter);
 
                 if (typeof scope.allocCollection !== "undefined") {
