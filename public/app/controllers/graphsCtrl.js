@@ -112,7 +112,7 @@
         $scope.ShowSpinnerStatus = true;
 
         switch ($scope.graphid) {
-            // case "ProjectMDS":
+            case "ProjectMDS":
             //     document.getElementById("skill").style.display = "none";
             //     document.getElementById("project").style.display = "block";
             //     projectManDaysGraph($scope, $filter, allocationService, projectService, $scope.regionname);
@@ -260,9 +260,9 @@
                             var value = ftCapacity[indx];
                             var percent = resource.taggedP;
 
-                           /* angular.forEach(mapping.taggToEuroclear, function (tagged) {
-                                if (tagged.key === leave.month) percent = tagged.value;
-                            });*/
+                            /* angular.forEach(mapping.taggToEuroclear, function (tagged) {
+                                 if (tagged.key === leave.month) percent = tagged.value;
+                             });*/
 
                             if (!isNaN(leave.value)) {
                                 var percentV = (leave.value * percent) / 100;
@@ -282,13 +282,13 @@
                             if (monthCol.indexOf(lmonth) >= 0) { // check if months equal to the predefined month array(user selected)
                                 var indx = monthCol.indexOf(lmonth);
                                 var value = ftCapacity[indx];
-                               // angular.forEach(mapping.taggToEuroclear, function (data) { // if allocation is not done for the resource or he is not active
-                                   // if (data.key === lmonth) {
-                                        var percent = parseFloat(resource.taggedP);
-                                        var actualHDays = (1 * percent) / 100;
-                                        ftCapacity[indx] = value - actualHDays;
-                                   // }
-                               // });
+                                // angular.forEach(mapping.taggToEuroclear, function (data) { // if allocation is not done for the resource or he is not active
+                                // if (data.key === lmonth) {
+                                var percent = parseFloat(resource.taggedP);
+                                var actualHDays = (1 * percent) / 100;
+                                ftCapacity[indx] = value - actualHDays;
+                                // }
+                                // });
                             }
                         }
                     });
@@ -1122,15 +1122,15 @@
                                 var indx = monthCol.indexOf(leave.month);
                                 var monthValue = monthWise[indx];
 
-                                angular.forEach(mappedRes.taggToEuroclear, function (data) { // if allocation is not done for the resource or he is not active
-                                    if (data.key === leave.month) {
-                                        var percent = parseFloat(data.value);
-                                        var actualLeave = (leave.value * percent) / 100;
-                                        var value = round((parseFloat(monthValue) - actualLeave), 1);
-                                        monthWise[indx] = value;
+                                //angular.forEach(mappedRes.taggToEuroclear, function (data) { // if allocation is not done for the resource or he is not active
+                                // if (data.key === leave.month) {
+                                var percent = mappedRes.taggedP;
+                                var actualLeave = (leave.value * percent) / 100;
+                                var value = round((parseFloat(monthValue) - actualLeave), 1);
+                                monthWise[indx] = value;
 
-                                    }
-                                });
+                                // }
+                                //});
                             }
                         });
                     });
@@ -1144,14 +1144,14 @@
                                 if (monthCol.indexOf(lmonth) >= 0) { // check if months equal to the predefined month array(user selected)
                                     var indx = monthCol.indexOf(lmonth);
                                     var value = monthWise[indx];
-                                    angular.forEach(mappedRes.taggToEuroclear, function (data) { // if allocation is not done for the resource or he is not active
-                                        if (data.key === lmonth) {
-                                            var percent = parseFloat(data.value);
+                                    //angular.forEach(mappedRes.taggToEuroclear, function (data) { // if allocation is not done for the resource or he is not active
+                                        //if (data.key === lmonth) {
+                                            var percent = mappedRes.taggedP;
                                             var actualHDays = (1 * percent) / 100;
                                             monthWise[indx] = value - actualHDays;
 
-                                        }
-                                    });
+                                       // }
+                                    //});
                                 }
                             }
                         });
