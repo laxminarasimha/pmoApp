@@ -5,22 +5,60 @@
 <div class="panel panel-info" >  
   <div class="panel-heading">  
       <div class='row'>
-        <div class='col-sm-3'>
+          <div class='col-sm-2'>
+              <div class="form-group">
+                <label for="startDate">Allocation Start Month:</label>
+                <div class="input-group date form_date " data-date-format="dd MM yyyy" data-link-format="yyyy-mm-dd">
+                  <input class="form-control" type="text" ng-model="startDate" class="form-control" readonly>
+                  <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class='col-sm-2'>
+                <div class="form-group">
+                  <label for="startDate">Allocation End Month:</label>
+                  <div class="input-group date form_date " data-date-format="dd MM yyyy" data-link-format="yyyy-mm-dd">
+                    <input class="form-control" type="text" ng-model="endDate" class="form-control" readonly>
+                    <span class="input-group-addon">
+                      <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+        <div class='col-sm-2'>
              <div  class=form-group>
-                  <label for="resourcename">Resource Name</label>                  
-                  <select ng-model="idleTimeDTO.resource" id="resource"  class="form-control input-sm {{errorClass}}">
-                    <option ng-repeat="x in resourceList track by $index" value="{{x.resourcename}} ">{{x.resourcename }}</option>
+                  <label for="resourcename">Resource Name</label><br>                 
+                  <select ng-model="idleTimeDTO.resource" id="resource-select"required multiple="multiple" multi-select class="form-control">
+                    <!-- <option ng-repeat="x in resourceList track by $index" value="{{x.resourcename}} ">{{x.resourcename }}</option> -->
                  </select>
               </div>   
          </div>
 
-         <div class='col-sm-3'>        
+         <div class='col-sm-2'>        
            <div  class=form-group>
             <label for="resourceType">Resource Type</label>
             <select ng-model="idleTimeDTO.resourceType" id="resourceType"  class="form-control input-sm {{errorClass}}">
               <option ng-repeat="x in resourceTypeList" value="{{x.resourceTypename}}">{{x.resourceTypename}}</option>
            </select>
            </div>
+        </div>
+        <div class='col-sm-2'>
+          <div class=form-group>
+            <label for="region">Region</label>
+             <span  id="region" ng-if="region == 'All'"  >
+            <select class="form-control"  ng-model="selectRegion" ng-options="x.regionname for x in regionData"
+               ng-change="getregiondata(selectRegion.regionname)">
+            </select>
+            
+          </span>
+            <span ng-show="region != 'All'" id="region" editable-select="allocRows.region" e-name="region"
+            e-form="rowform">
+            <input ng-if="region != 'All'" class="form-control" type="text" value={{region}} class="form-control"
+              readonly>
+          </span>
+          </div>
         </div> 
       </div>
         <!-- <div class='col-sm-3'>
@@ -150,7 +188,16 @@
   </div>
 </form>
 </div>
+<script>
+  $('.form_date').datetimepicker({
+    format: "mm/yyyy",
+    startView: "year",
+    minView: "year",
+    autoclose: 1,
+    startDate: '0m'
+  });
 
+</script>
 <style>
   .loader {
 				border: 16px solid #f3f3f3; /* Light grey */
