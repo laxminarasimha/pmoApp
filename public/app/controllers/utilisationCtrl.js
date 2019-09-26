@@ -6,12 +6,12 @@
 
     Controller.$inject = ['$scope', '$rootScope','$window', 'DTOptionsBuilder', 'DTColumnBuilder', '$compile', 'utilisationService',
         'resourceService', 'roleService', 'regionService', 'projectService', 'resourceTypeService',
-        'allocationService', 'leaveService', 'resourceMappingService', 'availableDaysService',
+        'allocationService', 'leaveService',  'availableDaysService',
         'monthlyHeaderListService', 'skillSetService', 'locationService', '$filter'];
 
     function Controller($scope, $rootScope, $window, DTOptionsBuilder, DTColumnBuilder, $compile, utilisationService,
         resourceService, roleService, regionService, projectService, resourceTypeService,
-        allocationService, leaveService, resourceMappingService, availableDaysService,
+        allocationService, leaveService,  availableDaysService,
         monthlyHeaderListService, skillSetService, locationService, $filter) {
 
 
@@ -56,7 +56,7 @@
             app.successMsg = false;
             app.errorMsg = false;
             app.errorClass = "";
-            getGraphData($scope, allocationService, leaveService, resourceMappingService, availableDaysService, monthlyHeaderListService);
+            getGraphData($scope, allocationService, leaveService, availableDaysService, monthlyHeaderListService);
         };
 
 
@@ -91,7 +91,7 @@
             //  //if (false) {
             var emptyObject = angular.equals({}, utilisationDTO);
             if (typeof utilisationDTO == "undefined" || emptyObject) {
-                getGraphData($scope, allocationService, leaveService, resourceMappingService, availableDaysService, monthlyHeaderListService);
+                getGraphData($scope, allocationService, leaveService, availableDaysService, monthlyHeaderListService);
             } else {
                 var utilisationTimeFilteredDataList = [];
                 utilisationTimeFilteredDataList = $scope.originalData;
@@ -131,7 +131,7 @@
 
 
 
-        getGraphData($scope, allocationService, leaveService, resourceMappingService, availableDaysService, monthlyHeaderListService);
+        getGraphData($scope, allocationService, leaveService,  availableDaysService, monthlyHeaderListService);
 
         $scope.prepareUtilisationData = function (availableDaysService, monthlyHeaderListService) {
 
@@ -245,7 +245,7 @@
 
 
 
-    function getGraphData($scope, allocationService, leaveService, resourceMappingService, availableDaysService, monthlyHeaderListService) {
+    function getGraphData($scope, allocationService, leaveService,  availableDaysService, monthlyHeaderListService) {
         var allocation = [];
         var resoruceM = [];
         var leave = [];
@@ -253,13 +253,13 @@
             allocation = res.data;
             leaveService.getLeave().then(function (res) {
                 leave = res.data;               
-                resourceMappingService.getMappedResources($scope.region).then(function (res) {
-                    resoruceM = res.data;
-                    availableDaysService.intialize(allocation, resoruceM, leave);
+               // resourceMappingService.getMappedResources($scope.region).then(function (res) {
+                    //resoruceM = res.data;
+                   // availableDaysService.intialize(allocation, resoruceM, leave);
                     $scope.prepareUtilisationData(availableDaysService, monthlyHeaderListService);
-                }).catch(function (err) {
-                    console.log(err);
-                });
+                //}).catch(function (err) {
+                   // console.log(err);
+               // });
             }).catch(function (err) {
                 console.log(err);
             });
