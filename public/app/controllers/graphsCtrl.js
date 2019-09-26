@@ -80,6 +80,8 @@
             var strDt = $scope.startDate.split("/");
             var endDt = $scope.endDate.split("/");
 
+            console.log(strDt + "--" + endDt);
+
             var date_1 = new Date(strDt[1], parseInt(strDt[0]) - 1);
             var date_2 = new Date(endDt[1], parseInt(endDt[0]) - 1);
             var monthCol = "";
@@ -155,6 +157,7 @@
                 $scope.leaveList = res.data;
                 var monthCol = months($scope.startDate, $scope.endDate);
                 allocationService.getAllAllocationByYear(strDt[1], endDt[1], regionname).then(function (allocation) {
+
                     holidayListService.getLocationHolidaysYearRange(strDt[1], endDt[1]).then(function (holidayData) {
                         drawDeamndAndCapcityGraphFYF($scope, $filter, resource.data, monthCol, $scope.leaveList, allocation.data, holidayData.data);
                     });
@@ -1137,27 +1140,29 @@
 
                     var holidayFilter = $filter('filter')(holidayList, { locationname: resourceMappBySkill.baseentity });
                     angular.forEach(holidayFilter, function (holiday) {
-                        var lmonth = getMonthAndYear(new Date(holiday.holidayDate).getMonth(), new Date(holiday.holidayDate).getFullYear());
+                        if (holiday.locationname === mappedRes.baseentity) {
+                            var lmonth = getMonthAndYear(new Date(holiday.holidayDate).getMonth(), new Date(holiday.holidayDate).getFullYear());
 
-                        angular.forEach(mappedRes.monthlyAvailableActualMandays, function (data) { // if allocation is not done for the resource or he is not active
-                            if (data.key === lmonth && data.value > 0) {
-                                if (monthCol.indexOf(lmonth) >= 0) { // check if months equal to the predefined month array(user selected)
-                                    var indx = monthCol.indexOf(lmonth);
-                                    var value = monthWise[indx];
-                                    //angular.forEach(mappedRes.taggToEuroclear, function (data) { // if allocation is not done for the resource or he is not active
+                            angular.forEach(mappedRes.monthlyAvailableActualMandays, function (data) { // if allocation is not done for the resource or he is not active
+                                if (data.key === lmonth && data.value > 0) {
+                                    if (monthCol.indexOf(lmonth) >= 0) { // check if months equal to the predefined month array(user selected)
+                                        var indx = monthCol.indexOf(lmonth);
+                                        var value = monthWise[indx];
+                                        //angular.forEach(mappedRes.taggToEuroclear, function (data) { // if allocation is not done for the resource or he is not active
                                         //if (data.key === lmonth) {
-                                            var percent = mappedRes.taggedP;
-                                            var actualHDays = (1 * percent) / 100;
-                                            monthWise[indx] = value - actualHDays;
+                                        var percent = mappedRes.taggedP;
+                                        var actualHDays = (1 * percent) / 100;
+                                        monthWise[indx] = value - actualHDays;
 
-                                       // }
-                                    //});
+                                        // }
+                                        //});
+                                    }
                                 }
-                            }
-                        });
-
+                            });
+                        }
                     });
                     duplicateCheck.push(vDcheck);
+
                 }
             });
 
