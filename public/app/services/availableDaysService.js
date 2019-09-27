@@ -24,26 +24,27 @@
   Service.$inject = ['$filter'];
 
   function Service($filter) {
-    var allocation = [];
-    var resourceMapped = [];
-    var leaves = [];
+    // var allocation = [];
+    // var resourceMapped = [];
+    // var leaves = [];
 
-    this.intialize = function (allocation, resoruceM, leave) {
-      console.log("Inside AvailableDaysService************");
+    this.intialize = function (allocation, resoruceM, leave, holidayData) {
       this.allocation = allocation;
       this.resourceMapped = resoruceM;
       this.leaves = leave;
+      this.holidays = holidayData;
     }
 
     this.getData = function (startDt, EndDt) {
+      
       var month = months(startDt, EndDt);
       var uniqueResource = $filter('resourceunique')(this.allocation, 'resource');
-      var list = filter(this.allocation, uniqueResource, this.resourceMapped, this.leaves, month, $filter);
+      var list = filter(this.allocation, uniqueResource, this.resourceMapped, this.leaves, this.holidays, month, $filter);
       return list;
 
     }
 
-    this.getAllocationStatus = function (resourceList) {
+    /*this.getAllocationStatus = function (resourceList) {
 
       var uniqueResource = [];
       var allocationList = this.allocation;
@@ -108,20 +109,22 @@
 
       return resourceList;
 
-    }
+    }*/
   }
 
-  function filter(allocationList, resource, mappedResourceData, leaves, months, $filter) {
+  function filter(allocationList, uniqueAllocation, mappedResourceData, leaves, holidays, months, $filter) {
 
-    var resourceDetails = [];
-    var sMonth = [];
-    var eMonth = [];
+    //mappedResourceData - This is Resource Object
 
-    angular.forEach(allocationList, function (item) {
-      if (item.resource === resource) {
-        resourceDetails.push(item);
-      }
-    });
+    //var resourceDetails = [];
+    //var sMonth = [];
+    //var eMonth = [];
+
+    /* angular.forEach(allocationList, function (item) {
+       if (item.resource === resource) {
+         resourceDetails.push(item);
+       }
+     });*/
 
     function Object() {
       this.month;
@@ -141,21 +144,24 @@
     }
 
     var allocationObj = new Array();
-    var allocatonWithBufferTime = new Array();
-    var projA = new Array();
-    var allocA = new Array();
-    var rLoop = false;
+    // var allocatonWithBufferTime = new Array();
+    // var projA = new Array();
+    // var allocA = new Array();
+    // var rLoop = false;
     var leavesFilter = null;
     var allocationFilter = null;
 
-    angular.forEach(resource, function (rname) {
+    //allocationFilter = $filter('filter')(allocationFilter, { resource: 'Ashish Agarwal' });
+    //uniqueAllocation = $filter('filter')(uniqueAllocation, { resource: 'Ashish Agarwal' });
+
+    angular.forEach(uniqueAllocation, function (allocation) {
 
       var nResource = new Resource();
-      nResource.resource = rname.resource;
-      nResource.kinid = rname.kinId;
+      nResource.resource = allocation.resource;
+      nResource.kinid = allocation.kinId;
 
-      leavesFilter = $filter('filter')(leaves, { resourcename: rname.resource });
-      allocationFilter = $filter('filter')(allocationList, { resource: rname.resource });
+      leavesFilter = $filter('filter')(leaves, { resourcename: allocation.resource });
+      allocationFilter = $filter('filter')(allocationList, { resource: allocation.resource });
 
       var duplicateCheck = [];
 
@@ -165,11 +171,10 @@
         if (duplicateCheck.indexOf(vRecord) === -1) {
           var object = new Object();
           object.type = allocFilter.resourcetype;
-          object.allocation = mapAllocation(nResource.resource, months, allocationFilter, leavesFilter, mappedResourceData, object.type, allocFilter.year);
+          object.allocation = mapAllocation(nResource.resource, months, allocationFilter, leavesFilter, mappedResourceData, object.type, allocFilter.year, holidays, $filter);
           nResource.maps.push(object);
           duplicateCheck.push(vRecord);
         }
-
       });
 
       mapResoruceDetails(nResource, mappedResourceData);
@@ -179,7 +184,7 @@
     return allocationObj;
   }
 
-  function mapAllocation(resource, months, allocationFilter, leaves, mappedResourceData, resourcetype, year) {
+  function mapAllocation(resource, months, allocationFilter, leaves, mappedResourceData, resourcetype, year, holidays, $filter) {
 
     var allocation = [];
 
@@ -190,6 +195,7 @@
       this.leave;
       this.buffertime;
     }
+
 
     angular.forEach(months, function (month) {
 
@@ -210,16 +216,13 @@
       });
 
       for (var user = 0; user < mappedResourceData.length; user++) {
-        if (mappedResourceData[user].mappedResource.resourcename === resource
-          && mappedResourceData[user].resourceType === resourcetype
-          && mappedResourceData[user].year == year) {
-
-          filterMappedResource = mappedResourceData[user];
+        if (mappedResourceData[user].resourcename === resource && mappedResourceData[user].resourceType === resourcetype) {
+          filterMappedResource = mappedResourceData[user];   // filter mappedResource is Resource Object
+          break;
         }
       }
-
       setLeave(vAlloc, leaves, filterMappedResource);
-      setBufferTime(vAlloc, resource, filterMappedResource);
+      setBufferTime(vAlloc, resource, filterMappedResource, months, holidays, $filter);
       allocation.push(vAlloc);
 
     });
@@ -231,7 +234,6 @@
   function setLeave(object, leaves, mappedResourceData) {
 
     object.leave = 0;
-
     angular.forEach(leaves, function (leave) {
       angular.forEach(leave.leavedaysinmonth, function (monthD) {
         if (monthD.month === object.month) {
@@ -240,39 +242,41 @@
         }
       });
     });
-
-    if (mappedResourceData != null) {
-
-      for (var adj = 0; adj < mappedResourceData.taggToEuroclear.length; adj++) {
-        if (mappedResourceData.taggToEuroclear[adj].key === object.month) {
-          var percent = mappedResourceData.taggToEuroclear[adj].value;
-          var percentV = (object.leave * percent) / 100;
-          object.leave = round(percentV, 1);
-        }
-      }
-    }
+    // for (var adj = 0; adj < mappedResourceData.taggToEuroclear.length; adj++) {
+    //if (mappedResourceData.taggToEuroclear[adj].key === object.month) {
+    var percent = mappedResourceData.taggedP;
+    var percentV = (object.leave * percent) / 100;
+    object.leave = round(percentV, 1);
+    // }
+    // }
 
   }
 
-  function setBufferTime(object, resource, mappedResourceData) {
+  function setBufferTime(object, resource, mappedResourceData, months, holidays, $filter) {
 
     object.buffertime = 0;
-    var actualMandays = [];
     var mappedDays = 0;
+    var holidayFilter = $filter('filter')(holidays, { locationname: resource.baseentity });
+    //console.log(holidayFilter);
+
     if (mappedResourceData != null) {
+      monthlyAvailableDays(mappedResourceData, months);
+
       for (var user = 0; user < mappedResourceData.monthlyAvailableActualMandays.length; user++) {
         if (mappedResourceData.monthlyAvailableActualMandays[user].key === object.month) {
-          mappedDays = mappedResourceData.monthlyAvailableActualMandays[user].value;
+
+          var holiday = countHolidayInTheMonth(mappedResourceData.baseentity, holidayFilter, object.month);
+          mappedDays = mappedResourceData.monthlyAvailableActualMandays[user].value - holiday;
           break;
         }
       }
+      //console.log(mappedResourceData);
     }
+
     var vBuffer = 0;
-
     for (var k = 0; k < object.allocation.length; k++) {
-      vBuffer = vBuffer + parseInt(object.allocation[k]);
+      vBuffer = vBuffer + parseFloat(object.allocation[k]);
     }
-
     vBuffer = vBuffer + object.leave;
     object.buffertime = round((mappedDays - vBuffer), 1);
 
@@ -280,31 +284,51 @@
 
   function mapResoruceDetails(nResource, mappedResourceData) {
     for (var user = 0; user < mappedResourceData.length; user++) {
-      //console.log(mappedResourceData);  
-      if (mappedResourceData[user].mappedResource.resourcename === nResource.resource) {
+      if (mappedResourceData[user].resourcename === nResource.resource) {
         nResource.location = mappedResourceData[user].location;
-        nResource.region = mappedResourceData[user].mappedResource.region;
+        nResource.region = mappedResourceData[user].region;
         nResource.status = mappedResourceData[user].status;
         nResource.skill = mappedResourceData[user].skill;
-        nResource.kinid = mappedResourceData[user].mappedResource.kinId;
+        nResource.kinid = mappedResourceData[user].kinId;
         break;
       }
     };
+  }
+
+  function countHolidayInTheMonth(baseentity, holidayFilter, month) {
+    var holidayInMonth = 0;
+
+    angular.forEach(holidayFilter, function (holiday) {
+      if (holiday.locationname === baseentity) {
+        var lmonth = getMonthAndYear(new Date(holiday.holidayDate).getMonth(), new Date(holiday.holidayDate).getFullYear());
+        if (lmonth === month) {
+          holidayInMonth++;
+          //console.log("Day " + selectMonth[j] + "  holiday " + holidayInMonth)
+        }
+      }
+    });
+    return holidayInMonth;
+
   }
 
   function months(from, to) {
     var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
       "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     var arr = [];
-    var datFrom = new Date(from);
-    var datTo = new Date(to);
-    var fromYear = datFrom.getFullYear();
-    var toYear = datTo.getFullYear();
-    var diffYear = (12 * (toYear - fromYear)) + datTo.getMonth();
+    var datFrom = from.split("/");
+    var datTo = to.split("/");
 
-    for (var i = datFrom.getMonth(); i <= diffYear; i++) {
+    var fromYear = parseInt(datFrom[1]);
+    var toYear = parseInt(datTo[1]);
+
+    var monthFrom = parseInt(datFrom[0]) - 1;
+    var monthTo = parseInt(datTo[0]) - 1;
+
+    var diffYear = (12 * (toYear - fromYear)) + monthTo;
+    for (var i = monthFrom; i <= diffYear; i++) {
       arr.push(monthNames[i % 12] + "-" + Math.floor(fromYear + (i / 12)).toString().substr(-2));
     }
+
     return arr;
   }
 
@@ -329,5 +353,67 @@
 
     return arr;
   }
+
+  function monthlyAvailableDays(resourceMappBySkill, selectMonth) {
+
+
+    var monthlyAvailableActualMandaysArray = [];
+
+    for (var j = 0; j < selectMonth.length; j++) {
+
+      var yearAndMonth = selectMonth[j].split('-');
+      var month = getIndex(yearAndMonth[0]);
+      var year = yearAndMonth[1];
+
+      var workdays = getWorkDays(month, year);
+      var actualWorkingDays = workdays * (resourceMappBySkill.taggedP / 100);
+      var actualWorkingDaysWithRound = getRoundNumber((actualWorkingDays), 1);
+
+      var monthlyAvailableActualMandaysObject = {
+        "key": selectMonth[j],
+        "value": actualWorkingDaysWithRound
+      };
+
+      monthlyAvailableActualMandaysArray.push(monthlyAvailableActualMandaysObject);
+
+    }
+    resourceMappBySkill.monthlyAvailableActualMandays = monthlyAvailableActualMandaysArray;
+  }
+
+  function getIndex(month) {
+    var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+      "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    return monthNames.indexOf(month);
+  }
+
+  function getMonthAndYear(month, year) {
+    var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+      "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    return monthNames[month] + "-" + String(year).substr(-2);
+  }
+
+  function getWorkDays(month, year) {
+    var yr = "20" + year;
+    var days = daysInMonth(month, yr);
+    var weekdays = 0;
+    for (var i = 0; i < days; i++) {
+      if (isWeekday(yr, month, i + 1)) weekdays++;
+    }
+    return weekdays;
+  }
+
+  function getRoundNumber(value, precision) {
+    var multiplier = Math.pow(10, precision || 0);
+    return Math.round(value * multiplier) / multiplier;
+  }
+  function daysInMonth(month, year) {
+    return 32 - new Date(year, month, 32).getDate();
+  }
+  function isWeekday(year, month, day) {
+    var day = new Date(year, month, day).getDay();
+    return day != 0 && day != 6;
+  }
+
+
 
 })();
