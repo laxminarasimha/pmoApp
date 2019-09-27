@@ -11,7 +11,7 @@
 
     function Controller($scope, $rootScope, $window, DTOptionsBuilder, DTColumnBuilder, $compile, idleTimeService,
         resourceService, roleService, regionService, projectService, resourceTypeService,
-        allocationService, leaveService,  availableDaysService,
+        allocationService, leaveService, availableDaysService,
         monthlyHeaderListService, locationService, skillSetService, $filter) {
 
 

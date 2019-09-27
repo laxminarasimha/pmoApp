@@ -1,41 +1,79 @@
-
 <div ng-controller="availableActualMandaysCtrl">
-<form name="availableActualMandaysForm" ng-submit="getAvailableActualMandays(availableActualMandaysDTO)" novalidate >
-<legend>Available Actual Mandays</legend>
-<div class="panel panel-info" >  
-  <div class="panel-heading">  
-      <div class='row'>
-        <div class='col-sm-3'>
-             <div  class=form-group>
-                  <label for="resourcename">Resource Name</label>                  
-                  <select ng-model="availableActualMandaysDTO.resourcename" id="resourcename"  class="form-control">
-                    <option ng-repeat="x in resourceList" value="{{x.resourcename}}">{{x.resourcename }}</option>
-                 </select>
-              </div>   
-         </div>
+  <form name="availableActualMandaysForm" ng-submit="getAvailableActualMandays(availableActualMandaysDTO)" novalidate>
+    <legend>Available Actual Mandays</legend>
+    <div class="panel panel-info">
+      <div class="panel-heading">
+        <div class='row'>
+          <div class='col-sm-2'>
+            <div class="form-group">
+              <label for="startDate">Allocation Start Month:</label>
+              <div class="input-group date form_date " data-date-format="dd MM yyyy" data-link-format="yyyy-mm-dd">
+                <input class="form-control" type="text" ng-model="startDate" class="form-control" readonly>
+                <span class="input-group-addon">
+                  <span class="glyphicon glyphicon-calendar"></span>
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class='col-sm-2'>
+            <div class="form-group">
+              <label for="startDate">Allocation End Month:</label>
+              <div class="input-group date form_date " data-date-format="dd MM yyyy" data-link-format="yyyy-mm-dd">
+                <input class="form-control" type="text" ng-model="endDate" class="form-control" readonly>
+                <span class="input-group-addon">
+                  <span class="glyphicon glyphicon-calendar"></span>
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class='col-sm-2'>
+            <div class=form-group>
+              <label for="resourcename">Resource Name</label>
+              <select ng-model="availableActualMandaysDTO.resourcename" id="resource-select" required multiple="multiple"
+                class="form-control">
+                <!-- <option ng-repeat="x in resourceList" value="{{x.resourcename}}">{{x.resourcename }}</option> -->
+              </select>
+            </div>
+          </div>
+          <div class='col-sm-2'>
+            <div class=form-group>
+              <label for="region">Region</label>
+              <span id="region" ng-if="region == 'All'">
+                <select class="form-control" ng-model="selectRegion" ng-options="x.regionname for x in regionData"
+                  ng-change="getregiondata(selectRegion.regionname)">
+                </select>
 
-         <div class='col-sm-3'>        
-           <div  class=form-group>
-            <label for="resourceType">Resource Type</label>
-            <select ng-model="availableActualMandaysDTO.resourceType" id="resourceType"  class="form-control">
-              <option ng-repeat="x in resourceTypeList" value="{{x.resourceTypename}}">{{x.resourceTypename}}</option>
-           </select>
-           </div>
-        </div> 
+              </span>
+              <span ng-show="region != 'All'" id="region" editable-select="availableActualMandaysDTO.region" e-name="region" e-form="rowform">
+                <input ng-if="region != 'All'" class="form-control" type="text" value={{region}} class="form-control"
+                  readonly>
+              </span>
+            </div>
+          </div>
+          <div class='col-sm-2'>
+            <div class=form-group>
+              <label for="resourceType">Resource Type</label>
+              <select ng-model="availableActualMandaysDTO.resourceType" id="resourceType" class="form-control">
+                <option ng-repeat="x in resourceTypeList" value="{{x.resourceTypename}}">{{x.resourceTypename}}</option>
+              </select>
+            </div>
+          </div>
+          <div class='col-sm-2'>
+              <div class="form-group">
+                <label for="rangeSelect">Select Range:</label>
+                <select class="form-control input-sm {{errorClass}}" ng-model="rangeSelect" ng-init="rangeSelect='six'"
+                  id="rangeSelect">
+                  <option value="one">1 month</option>
+                  <option value="six">6 months</option>
+                  <option value="twelve">12 months</option>
+                </select>
+              </div>
+            </div>
+         
+        </div>
 
-        <!-- <div class='col-sm-3'>
-            <div  class=form-group>
-            <label for="region">Region</label>
-            <select ng-model="availableActualMandaysDTO.region" id="region"  class="form-control">
-              <option ng-repeat="x in regionList" value="{{x.regionname}}">{{x.regionname}}</option>
-           </select>
-           </div>
-         </div> -->
 
-      </div>
-   
-
-      <!--<div class='row'>
+        <!--<div class='row'>
          
          <div class='col-sm-3'>
              <div  class=form-group>
@@ -83,91 +121,116 @@
 
 
       </div>-->
-      
+
         <div class='row'>
           <div class='col-sm-12'>
-             <div align="right">
-                    
-                    <input type="submit" value="Search" class="btn btn-primary"/>             
-                    <button class="btn btn-warning" ng-click="clearFields()" type="button">Clear</button>                   
-              </div>
+            <div align="right">
+
+              <input type="submit" value="Search" class="btn btn-primary" />
+              <button class="btn btn-warning" ng-click="clearFields()" type="button">Clear</button>
+            </div>
           </div>
         </div>
-    
-      
-  </div>
 
-   <div class="panel-body" ng-show="loading || successMsg || errorMsg">
-        <div class="row" >
+
+      </div>
+
+      <div class="panel-body" ng-show="loading || successMsg || errorMsg">
+        <div class="row">
           <div class='col-sm-12'>
-                <div class="jumbotron text-center" ng-show="loading">
-                  <span class="glyphicon glyphicon-repeat spinner"></span>
-                  <p>Loading...</p>
-                </div>
-                <div class="row show-hide-message" ng-show="successMsg">
-                  <div class="alert alert-success">{{successMsg}}</div>
-                </div>
-                <div class="row show-hide-message" ng-show="errorMsg">
-                  <div class="alert alert-danger">{{errorMsg}}</div>
-                </div>
+            <div class="jumbotron text-center" ng-show="loading">
+              <span class="glyphicon glyphicon-repeat spinner"></span>
+              <p>Loading...</p>
             </div>
+            <div class="row show-hide-message" ng-show="successMsg">
+              <div class="alert alert-success">{{successMsg}}</div>
+            </div>
+            <div class="row show-hide-message" ng-show="errorMsg">
+              <div class="alert alert-danger">{{errorMsg}}</div>
+            </div>
+          </div>
         </div>
       </div>
       <div class="panel-footer">
-              <div class="panel-body">
-                  <table class="table table-striped table-curved" cellspacing="0" width="100%"
-                     datatable="ng" dt-options="vm.dtOptions" dt-instance="vm.dtInstance">
-                    <thead class="bg-primary">
-                      <tr>
-                        <th>Resource name</th>
-                        <th>Resource type</th>
-                        <th>Region</th>
-                         <th ng-repeat="column in headingList">{{column}}</th>  
-                      </tr>
-                    </thead>
-                    <tbody>                           
-                        <tr ng-repeat="resourceVar in mappedResourceList">
-                            <td>{{ resourceVar.mappedResource.resourcename +' ('+resourceVar.mappedResource.alias+')'}}</td>
-                            <td>{{ resourceVar.resourceType}}</td>
-                            <td>{{ resourceVar.mappedResource.region}}</td>
-                            <td ng-repeat="column in headingList">
-                              <div ng-repeat="mandays in resourceVar.monthlyAvailableActualMandays">
-                                  <div ng-if="mandays.key==column">
-                                    <span class="label label-default">{{mandays.value}}</span></td>
-                                  </div>
-                             </div>
-
-                            </td>
-                        </tr>
-                    </tbody>
-                  </table>
-                  <div class="container" id="spinner">
-                    <div ng-if="ShowSpinnerStatus" class="loader"></div>
-                  </div>
-              </div>
+        <div class="panel-body">
+          <table class="table table-striped table-curved" cellspacing="0" width="100%" datatable="ng" dt-options="vm.dtOptions"
+            dt-instance="vm.dtInstance">
+            <thead class="bg-primary">
+              <tr>
+                <th>Resource name</th>
+                <th>Resource type</th>
+                <th>Region</th>
+                <th ng-repeat="column in headingList">{{column}}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="resourceVar in mappedResourceList">
+                <td>{{ resourceVar.mappedResource.resourcename +' ('+resourceVar.mappedResource.alias+')'}}</td>
+                <td>{{ resourceVar.resourceType}}</td>
+                <td>{{ resourceVar.mappedResource.region}}</td>
+                <td ng-repeat="column in headingList">
+                  <div ng-repeat="mandays in resourceVar.monthlyAvailableActualMandays">
+                    <div ng-if="mandays.key==column">
+                      <span class="label label-default">{{mandays.value}}</span>
+                </td>
+        </div>
       </div>
-  </div>
+
+      </td>
+      </tr>
+      </tbody>
+      </table>
+      <div class="container" id="spinner">
+        <div ng-if="ShowSpinnerStatus" class="loader"></div>
+      </div>
+    </div>
+</div>
+</div>
 </form>
 </div>
+<script>
+  $('#resource-select').multiselect({
+    includeSelectAllOption: true,
+    nonSelectedText: 'Select Resource',
+  });
 
+  $('.form_date').datetimepicker({
+    format: "mm/yyyy",
+    startView: "year",
+    minView: "year",
+    autoclose: 1,
+    startDate: '0m'
+  });
+
+</script>
 <style>
   .loader {
-				border: 16px solid #f3f3f3; /* Light grey */
-				border-top: 16px solid #3498db; /* Blue */
-				border-radius: 50%;
-				width: 120px;
-				height: 120px;
-				animation: spin 2s linear infinite;
-				margin: 0 auto;
-			}
+    border: 16px solid #f3f3f3;
+    /* Light grey */
+    border-top: 16px solid #3498db;
+    /* Blue */
+    border-radius: 50%;
+    width: 120px;
+    height: 120px;
+    animation: spin 2s linear infinite;
+    margin: 0 auto;
+  }
 
-			@keyframes spin {
-				0% { transform: rotate(0deg); }
-				100% { transform: rotate(360deg); }
-			}
-			html, body, container {
-				height: 100%;
-				width: 100%;
-				margin: 0;
-			}
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  html,
+  body,
+  container {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+  }
 </style>

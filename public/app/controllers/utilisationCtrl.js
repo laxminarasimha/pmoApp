@@ -18,13 +18,13 @@
         var app = $scope;
 
         $scope.region = $window.localStorage.getItem("region");
-
+        $scope.regionname = $window.localStorage.getItem("region");
         $scope.utilisationData = [];
         $scope.originalData = [];
         //getuUilisationData(utilisationService,$scope);
-
+        $scope.regionData = [];
         $scope.resourceList = [];
-        getResourceData(resourceService, $scope);
+        getResources(resourceService, $scope);
 
         $scope.roleList = [];
         getRoleData(roleService, $scope);
@@ -36,7 +36,8 @@
         getSkillData(skillSetService, $scope);
 
         $scope.regionList = [];
-        getRegionData(regionService, $scope);
+        getRegion(regionService, $scope);
+
 
 
         $scope.resourceTypeList = [];
@@ -129,7 +130,12 @@
         $scope.vm.dtOptions.withOption('buttons', ['copy', 'print', 'pdf', 'excel']);
         //=============================================================//
 
-
+        $scope.getregiondata = function (region) {
+            // console.log(region);
+            $scope.regionname = region;
+            // console.log($scope.regionname);
+            getResources(resourceService, $scope);
+        }
 
         getGraphData($scope, allocationService, leaveService,  availableDaysService, monthlyHeaderListService);
 
@@ -281,9 +287,17 @@
         });
     }
 
-    function getResourceData(resourceService, $scope) {
-        resourceService.getResources($scope.region).then(function (res) {
+    function getResources(resourceService, $scope) {
+        console.log($scope.regionname);
+        resourceService.getResources($scope.regionname).then(function (res) {
             $scope.resourceList = res.data;
+            var htm = '';
+            angular.forEach($scope.resourceList, function (item) {
+                htm += '<option>' + item.resourcename + '</option>';
+            });
+            $('#resource-select').empty();
+            $('#resource-select').append(htm);
+            $('#resource-select').multiselect('rebuild');
         }).catch(function (err) {
             console.log(err);
         });
@@ -299,11 +313,13 @@
 
 
 
-    function getRegionData(regionService, $scope) {
+    function getRegion(regionService, $scope) {
         regionService.getRegion().then(function (res) {
-            $scope.regionList = res.data;
-        }).catch(function (err) {
-            console.log(err);
+            angular.forEach(res.data, function (item) {
+                if (item.regionname !== 'All') {
+                    $scope.regionData.push(item);
+                }
+            });
         });
     }
 
