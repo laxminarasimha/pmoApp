@@ -9,7 +9,7 @@
               <div class="form-group">
                 <label for="startDate">Allocation Start Month:</label>
                 <div class="input-group date form_date " data-date-format="dd MM yyyy" data-link-format="yyyy-mm-dd">
-                  <input class="form-control" type="text" ng-model="startDate" class="form-control" readonly>
+                  <input class="form-control" type="text" ng-model="startDate" ng-change="dateChange();" readonly>
                   <span class="input-group-addon">
                     <span class="glyphicon glyphicon-calendar"></span>
                   </span>
@@ -20,7 +20,7 @@
                 <div class="form-group">
                   <label for="startDate">Allocation End Month:</label>
                   <div class="input-group date form_date " data-date-format="dd MM yyyy" data-link-format="yyyy-mm-dd">
-                    <input class="form-control" type="text" ng-model="endDate" class="form-control" readonly>
+                    <input class="form-control" type="text" ng-model="endDate" ng-change="dateChange();" readonly>
                     <span class="input-group-addon">
                       <span class="glyphicon glyphicon-calendar"></span>
                     </span>
