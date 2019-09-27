@@ -115,10 +115,10 @@
 
         switch ($scope.graphid) {
             case "ProjectMDS":
-            //     document.getElementById("skill").style.display = "none";
-            //     document.getElementById("project").style.display = "block";
-            //     projectManDaysGraph($scope, $filter, allocationService, projectService, $scope.regionname);
-            //     break;
+                 document.getElementById("skill").style.display = "none";
+                 document.getElementById("project").style.display = "block";
+                 projectManDaysGraph($scope, $filter, allocationService, projectService, $scope.regionname);
+                 break;
             case "AvlCapcitySkill":
                 document.getElementById("project").style.display = "none";
                 document.getElementById("skill").style.display = "block";
@@ -157,7 +157,6 @@
                 $scope.leaveList = res.data;
                 var monthCol = months($scope.startDate, $scope.endDate);
                 allocationService.getAllAllocationByYear(strDt[1], endDt[1], regionname).then(function (allocation) {
-
                     holidayListService.getLocationHolidaysYearRange(strDt[1], endDt[1]).then(function (holidayData) {
                         drawDeamndAndCapcityGraphFYF($scope, $filter, resource.data, monthCol, $scope.leaveList, allocation.data, holidayData.data);
                     });
@@ -1035,6 +1034,7 @@
 
                 leaveService.getLeave().then(function (res) {
                     $scope.leaveList = res.data;
+
                     holidayListService.getLocationHolidaysYearRange(strDt[1], endDt[1]).then(function (holdata) {
                         drawAvailCapacityGraph($scope, $filter, resource.data, $scope.skillSetList, allocation.data, monthCol, $scope.leaveList, holdata.data);
                     });
@@ -1152,7 +1152,7 @@
                                         //if (data.key === lmonth) {
                                         var percent = mappedRes.taggedP;
                                         var actualHDays = (1 * percent) / 100;
-                                        monthWise[indx] = value - actualHDays;
+                                        monthWise[indx] =round((parseFloat(value) - actualHDays), 1);
 
                                         // }
                                         //});
