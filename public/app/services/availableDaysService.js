@@ -36,10 +36,11 @@
     }
 
     this.getData = function (startDt, EndDt) {
-      
+
       var month = months(startDt, EndDt);
       var uniqueResource = $filter('resourceunique')(this.allocation, 'resource');
       var list = filter(this.allocation, uniqueResource, this.resourceMapped, this.leaves, this.holidays, month, $filter);
+      console.log(list);
       return list;
 
     }
@@ -114,6 +115,8 @@
 
   function filter(allocationList, uniqueAllocation, mappedResourceData, leaves, holidays, months, $filter) {
 
+    //allocationList = $filter('filter')(allocationList, { resource: 'Bhise Vikrant' });
+
     //mappedResourceData - This is Resource Object
 
     //var resourceDetails = [];
@@ -161,7 +164,9 @@
       nResource.kinid = allocation.kinId;
 
       leavesFilter = $filter('filter')(leaves, { resourcename: allocation.resource });
+
       allocationFilter = $filter('filter')(allocationList, { resource: allocation.resource });
+
 
       var duplicateCheck = [];
 

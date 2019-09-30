@@ -221,7 +221,9 @@
                         } else if (allocationOBJ.buffertime == 0.0) {
                             idleTime = 0;
                         } else {
-                            idleTime = monthlyHeaderListService.getRoundNumber((parseFloat(allocationOBJ.buffertime) / sum) * 100, 1);
+                             //var multiplier = Math.pow(10, precision || 0);
+                            idleTime = Math.ceil((parseFloat(allocationOBJ.buffertime) / sum) * 100, 2);
+                            //idleTime = monthlyHeaderListService.getRoundNumber((parseFloat(allocationOBJ.buffertime) / sum) * 100, 1);
                 
                         }
 
