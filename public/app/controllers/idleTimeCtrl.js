@@ -23,7 +23,7 @@
 
         $scope.idleTimeData = [];
         $scope.originalData = [];
-
+        $scope.regionData = [];
         $scope.startDate = '';
         $scope.endDate = '';
         //getIdleTimeData(idleTimeService,$scope);
