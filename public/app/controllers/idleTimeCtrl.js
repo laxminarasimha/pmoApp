@@ -20,52 +20,74 @@
         $scope.region = $window.localStorage.getItem("region");
 
         $scope.regionname = $window.localStorage.getItem("region");
-
+        getRegion(regionService, $scope);
+        getResources(resourceService, $scope);
         $scope.idleTimeData = [];
         $scope.originalData = [];
         $scope.regionData = [];
         $scope.startDate = '';
         $scope.endDate = '';
-        //getIdleTimeData(idleTimeService,$scope);
-
-        // $scope.locationList = [];
-        // getLocationData(locationService, $scope);
-
-        // $scope.skillDataList = [];
-        // getSkillData(skillSetService, $scope);
-
         $scope.resourceList = [];
-        getResources(resourceService, $scope);
-
-        // $scope.roleList = [];
-        // getRoleData(roleService, $scope);
-
-        $scope.ShowSpinnerStatus = true;
-
-        // $scope.regionList = [];
-        // getRegionData(regionService, $scope);
-
-
-        // $scope.resourceTypeList = [];
-        // getResourceTypeData(resourceTypeService, $scope);
-
-
-        // $scope.projectList = [];
-        // getProjectData(projectService, $scope);
-
+        $scope.resources=[];
         $scope.headingList = [];
-        //prepareTableHeading($scope, monthlyHeaderListService);
-
         $scope.ShowSpinnerStatus = true;
-
+        $scope.regionList = [];
+        $scope.ShowSpinnerStatus = true;
+        initialize($scope, allocationService, leaveService, availableDaysService, holidayListService,monthlyHeaderListService);
+        $scope.selectDate = function () {
+            $scope.rangeSelect = "";
+            $('#rangeSelect').prop('disabled', true);
+        }
         $scope.dateChange = function () {
 
-            if ($scope.startDate === '' || $scope.endDate === '' || $scope.startDate === undefined || $scope.endDate === undefined) {
-                return;
+            switch ($scope.rangeSelect) {
+                case "one":
+                    var fromDate = new Date();
+                    var fyear = fromDate.getFullYear();
+                    var fDate = (fromDate.getMonth() + 1) + '/' + fyear;
+                   // console.log(fDate)
+                    var preDate = new Date(fromDate);
+                    preDate.setMonth(fromDate.getMonth());
+                    var pyear = preDate.getFullYear();
+                    var pDate = (preDate.getMonth() + 1) + '/' + pyear;
+                    $scope.startDate = pDate;
+                    $scope.endDate = fDate;
+                    break;
+                case "six":
+                    var fromDate = new Date();
+                    var fyear = fromDate.getFullYear();
+                    var fDate = (fromDate.getMonth() + 1) + '/' + fyear;
+                  //  console.log(fDate)
+                    var preDate = new Date(fromDate);
+                    preDate.setMonth(fromDate.getMonth() - 5);
+                    var pyear = preDate.getFullYear();
+                    var pDate = (preDate.getMonth() + 1) + '/' + pyear;
+                    $scope.startDate = pDate;
+                    $scope.endDate = fDate;
+                    break;
+                case "twelve":
+                    var fromDate = new Date();
+                    var fyear = fromDate.getFullYear();
+                    var fDate = (fromDate.getMonth() + 1) + '/' + fyear;
+                    console.log(fDate)
+                    var preDate = new Date(fromDate);
+                    preDate.setMonth(fromDate.getMonth() - 11);
+                    var pyear = preDate.getFullYear();
+                    var pDate = (preDate.getMonth() + 1) + '/' + pyear;
+                    $scope.startDate = pDate;
+                    $scope.endDate = fDate;
+                    break;
+                default:
+                    break;
             }
+
+            $scope.clearMessages();
 
             var strDt = $scope.startDate.split("/");
             var endDt = $scope.endDate.split("/");
+            //console.log(strDt);
+
+            //console.log(endDt);
 
             var date_1 = new Date(strDt[1], parseInt(strDt[0]) - 1);
             var date_2 = new Date(endDt[1], parseInt(endDt[0]) - 1);
@@ -74,8 +96,11 @@
             if (date_1 != "Invalid Date" && date_2 != "Invalid Date") {
                 if (date_2 >= date_1) {
                     monthCol = months($scope.startDate, $scope.endDate);
+                   // console.log(monthCol);
                     app.errorMsg = false;
                     $scope.headingList = monthCol;
+                    getRegion(regionService, $scope);
+                    getResources(resourceService, $scope);
                     getGraphData($scope, allocationService, leaveService, availableDaysService, holidayListService, monthlyHeaderListService);
                 } else {
                     if (date_2 != null && date_1 != null) {
@@ -91,68 +116,65 @@
             }
 
         }
+        $scope.clearMessages = function () {
+            $scope.successMsg = "";
+            $scope.errorMsg = "";
+            //$scope.hidden = "none";
+            $scope.idleTimeData = [];
 
 
+        }
+        function getResources(resourceService, $scope) {
+            resourceService.getResources($scope.regionname).then(function (res) {
+               // $scope.resourceList = filterUniqueResource(res.data);
+              
+               $scope.resourceList= res.data;
+              
+                var htm = '';
+                angular.forEach($scope.resourceList, function (item) {
+                    htm += '<option>' + item.resourcename + '</option>';
+                    $scope.resourceList.push(item.resourcename);
+                   // console.log($scope.resourceList);
+                });
+                $('#resource-select').empty();
+                    $('#resource-select').append(htm);
+                    console.log($('#resource-select'));
+                    $('#resource-select').multiselect('rebuild');
+                    $('#resource-select').multiselect('selectAll',true );
+                    $('#resource-select').multiselect('updateButtonText');
+            }).catch(function (err) {
+                console.log(err);
+            });
+        }
+        function getRegion(regionService, $scope) {
+            regionService.getRegion().then(function (res) {
+                angular.forEach(res.data, function (item) {
+                    if (item.regionname !== 'All') {
+                        $scope.regionData.push(item);
+                    }
+                });
+            });
+        }
         $scope.clearFields = function () {
-            $scope.idleTimeDTO = {};
+            $('#resource-select').multiselect('clearSelection');
+            $('#resource-select').multiselect('refresh');
+            $('#rangeSelect').prop('disabled', false);
+            $('#resource-select').multiselect('selectAll', true);
+            $('#resource-select').multiselect('updateButtonText');
+            $scope.clearMessages();
+            $scope.resourceList = [];
+            $scope.resourceList = '';
+            $scope.rangeSelect = 'six';
+            $scope.startDate = '';
+            $scope.endDate = '';
+
             app.loading = false;
             app.successMsg = false;
             app.errorMsg = false;
             app.errorClass = "";
             //getIdleTimeData(idleTimeService,$scope);
-            // getGraphData($scope, allocationService, leaveService, availableDaysService, holidayListService, monthlyHeaderListService);
+          
         }
-
-        /* $scope.getIdleTimes = function (idleTimeDTO) {
-             $scope.IsSubmit = true;
-             console.log(idleTimeDTO);
- 
-             //if (false) {
-             var emptyObject = angular.equals({}, idleTimeDTO);
-             console.log(emptyObject);
-             if (typeof idleTimeDTO == "undefined" || emptyObject) {
-                 getGraphData($scope, allocationService, leaveService, availableDaysService, monthlyHeaderListService);
-             } else {
-                 var idleTimeFilteredDataList = [];
-                 idleTimeFilteredDataList = $scope.originalData;
-                 var resource = idleTimeDTO.resource.trim();
- 
-                 if (idleTimeDTO.resource) {
-                     console.log(idleTimeFilteredDataList);
-                     idleTimeFilteredDataList = $filter('filter')(idleTimeFilteredDataList, { name: resource });
-                     console.log(idleTimeFilteredDataList);
-                 }
-                 if (idleTimeDTO.resourceType) {
-                     idleTimeFilteredDataList = $filter('filter')(idleTimeFilteredDataList, { 'resourcetype': idleTimeDTO.resourceType });
-                     console.log(idleTimeFilteredDataList);
-                 }
-                 if (idleTimeDTO.region) {
-                     idleTimeFilteredDataList = $filter('filter')(idleTimeFilteredDataList, { 'region': idleTimeDTO.region });
-                     //console.log(idleTimeFilteredDataList);
-                 }
-                 if (idleTimeDTO.skillname) {
-                     idleTimeFilteredDataList = $filter('filter')(idleTimeFilteredDataList, { 'skill': idleTimeDTO.skillname });
-                     //console.log(idleTimeFilteredDataList);
-                 }
-                 if (idleTimeDTO.region) {
-                     idleTimeFilteredDataList = $filter('filter')(idleTimeFilteredDataList, { 'location': idleTimeDTO.locationname });
-                     //console.log(idleTimeFilteredDataList);
-                 }
-                 $scope.idleTimeData = idleTimeFilteredDataList;
-             }
- 
- 
-             //}else
-             // {
-             //      app.loading =false;
-             //    app.successMsg = false;
-             //  app.errorMsg = "Please Enter Required value";
-             //app.errorClass = "error"
-             //   }
- 
-         }*/
-
-
         //=========================Data table==========================//
         $scope.vm = {};
         $scope.vm.dtInstance = null;
@@ -171,12 +193,9 @@
             getResources(resourceService, $scope);
         }
 
-
-
         $scope.prepareIdleTimeData = function ($scope, availableDaysService) {
-
             var list = availableDaysService.getData($scope.startDate, $scope.endDate);
-              var resourceIdleTimeArray = [];
+            var resourceIdleTimeArray = [];
             for (var i = 0; i < list.length; i++) {
 
                 //console.log("list[i].resource=================="+list[i].resource);
@@ -191,7 +210,9 @@
                     resourceObj.skill = list[i].skill;
                     resourceObj.status = list[i].status;
                     var monthlyIdleTimeArray = [];
+                  //  console.log(resourceObj);
                     //console.log("Allocation111=================="+list[i].maps[l].allocation);
+                    //console.log(list);
                     for (var j = 0; j < list[i].maps[l].allocation.length; j++) {
                         var allocationOBJ = list[i].maps[l].allocation[j];
                         //console.log("Allocation=================="+allocationOBJ);
@@ -222,15 +243,15 @@
                             idleTime = 0;
                         } else {
                             idleTime = monthlyHeaderListService.getRoundNumber((parseFloat(allocationOBJ.buffertime) / sum) * 100, 1);
-                
-                        }
 
+                        }
+                      
                         var monthlyIdleTimeObject = {
                             "key": allocationOBJ.month,
                             "value": idleTime
                         };
 
-
+            // console.log(monthlyIdleTimeArray);
                         monthlyIdleTimeArray.push(monthlyIdleTimeObject);
                     }
                     resourceObj.idleTimeArray = monthlyIdleTimeArray;
@@ -239,7 +260,7 @@
 
                 }
             }
-            //console.log(resourceIdleTimeArray);
+          
             $scope.idleTimeData = resourceIdleTimeArray;
             $scope.originalData = resourceIdleTimeArray;
             $scope.ShowSpinnerStatus = false;
@@ -249,7 +270,89 @@
 
             }
         }
+        $scope.prepareIdleData = function ($scope, availableDaysService,pDate,fDate) {
+           
+            var list = availableDaysService.getData(pDate, fDate);
+            var resourceIdleTimeArray = [];
+            var monthCol = "";
+            monthCol = months(pDate,fDate);
+            $scope.headingList = monthCol;
+            for (var i = 0; i < list.length; i++) {
 
+                //console.log("list[i].resource=================="+list[i].resource);
+
+                for (var l = 0; l < list[i].maps.length; l++) {
+                    var resourceObj = new Resource();
+                    
+                    resourceObj.name = list[i].resource;
+                    resourceObj.kinid = list[i].kinid;
+                    resourceObj.location = list[i].location;
+                    resourceObj.region = list[i].region;
+                    resourceObj.resourcetype = list[i].maps[l].type;
+                    resourceObj.skill = list[i].skill;
+                    resourceObj.status = list[i].status;
+                    var monthlyIdleTimeArray = [];
+                    
+                    //console.log("Allocation111=================="+list[i].maps[l].allocation);
+                 
+                    for (var j = 0; j < list[i].maps[l].allocation.length; j++) {
+                        var allocationOBJ = list[i].maps[l].allocation[j];
+                        //console.log("Allocation=================="+allocationOBJ);
+                        var sum = 0;
+                        for (var k = 0; k < allocationOBJ.allocation.length; k++) {
+                            if (isNaN(allocationOBJ.allocation[k])) {
+                                allocationOBJ.allocation[k] = 0;
+                            }
+                            //console.log("Allocation=================="+allocationOBJ.allocation[k]);
+                            sum = sum + parseFloat(allocationOBJ.allocation[k]);
+                        }
+
+                        if (isNaN(allocationOBJ.leave)) {
+                            allocationOBJ.leave = 0.0;
+                        }
+
+                        //console.log("Leave=================="+allocationOBJ.leave);
+                        if (isNaN(allocationOBJ.buffertime)) {
+                            allocationOBJ.buffertime = 0.0;
+                        }
+                        //console.log("buffertime=================="+allocationOBJ.buffertime);
+                        sum = sum + parseFloat(allocationOBJ.leave);
+                        sum = sum + parseFloat(allocationOBJ.buffertime);
+                        var idleTime = 0;
+                        if (sum == 0.0) {
+                            idleTime = 0;
+                        } else if (allocationOBJ.buffertime == 0.0) {
+                            idleTime = 0;
+                        } else {
+                            idleTime = monthlyHeaderListService.getRoundNumber((parseFloat(allocationOBJ.buffertime) / sum) * 100, 1);
+
+                        }
+                 
+                        var monthlyIdleTimeObject = {
+                            "key": allocationOBJ.month,
+                            "value": idleTime
+                        };
+
+                  // console.log(monthlyIdleTimeArray);
+                        monthlyIdleTimeArray.push(monthlyIdleTimeObject);
+                    }
+                    resourceObj.idleTimeArray = monthlyIdleTimeArray;
+                    //console.log(resourceObj.idleTimeArray);
+                    resourceIdleTimeArray.push(resourceObj);
+
+                }
+            }
+           // console.log(resourceIdleTimeArray);
+           // console.log($scope.idleTimeData);
+            $scope.idleTimeData = resourceIdleTimeArray;
+            $scope.originalData = resourceIdleTimeArray;
+            $scope.ShowSpinnerStatus = false;
+            var spinner = document.getElementById("spinner");
+            if (spinner.style.display != "none") {
+                spinner.style.display = "none";
+
+            }
+        }
     }
 
 
@@ -274,7 +377,9 @@
                 var strDt = $scope.startDate.split("/");
                 var endDt = $scope.endDate.split("/");
                 holidayListService.getLocationHolidaysYearRange(strDt[1], endDt[1]).then(function (holidayData) {
-                     availableDaysService.intialize(allocation.data, $scope.resourceList, leave.data, holidayData.data);
+                   // console.log(allocation.data);
+                  // console.log($scope.resourceList);
+                    availableDaysService.intialize(allocation.data, $scope.resourceList, leave.data, holidayData.data);
                     $scope.prepareIdleTimeData($scope, availableDaysService);
                 });
 
@@ -288,7 +393,33 @@
 
     //====================================================//
 
+    function initialize($scope, allocationService, leaveService, availableDaysService, holidayListService) {
+        allocationService.getAllAllocation().then(function (allocation) {
+            leaveService.getLeave().then(function (leave) {
+            var fromDate = new Date();
+            var fyear = fromDate.getFullYear();
+            var fDate = (fromDate.getMonth() + 1) + '/' + fyear;
+           // console.log(fDate);
+            var preDate = new Date(fromDate);
+            preDate.setMonth(fromDate.getMonth() - 5);
+            var pyear = preDate.getFullYear();
+            var pDate = (preDate.getMonth() + 1) + '/' + pyear;
+          
+           
+            holidayListService.getLocationHolidaysYearRange(pDate[1],fDate[1]).then(function (holidayData) {
+               // console.log($scope.resourceList);
+                availableDaysService.intialize(allocation.data, $scope.resourceList, leave.data, holidayData.data);
 
+                $scope.prepareIdleData($scope, availableDaysService,pDate,fDate);
+            });
+        }).catch(function (err) {
+            console.log(err);
+        });
+            }).catch(function (err) {
+                console.log(err);
+            });
+       
+    }
 
 
     // function getIdleTimeData(idleTimeService, $scope) {
@@ -299,63 +430,8 @@
     //     });
     // }
 
-    function getResources(resourceService, $scope) {
-        resourceService.getResources($scope.regionname).then(function (res) {
-            //$scope.resourceList = filterUniqueResource(res.data);
-            // console.log( res.data);
-            $scope.resourceList = res.data;
-            var htm = '';
-            angular.forEach($scope.resourceList, function (item) {
-                htm += '<option>' + item.resourcename + '</option>';
-            });
-            $('#resource-select').empty();
-            $('#resource-select').append(htm);
-            $('#resource-select').multiselect('rebuild');
-        }).catch(function (err) {
-            console.log(err);
-        });
-    }
-
-    // function getRoleData(roleService, $scope) {
-    //     roleService.getRole().then(function (res) {
-    //         $scope.roleList = res.data;
-    //     }).catch(function (err) {
-    //         console.log(err);
-    //     });
-    // }
-
-
-
-    function getRegion(regionService, $scope) {
-        regionService.getRegion().then(function (res) {
-            angular.forEach(res.data, function (item) {
-                if (item.regionname !== 'All') {
-                    $scope.regionData.push(item);
-                }
-            });
-        });
-    }
-
-
-    // function getResourceTypeData(resourceTypeService, $scope) {
-    //     resourceTypeService.getResourceType().then(function (res) {
-    //         $scope.resourceTypeList = res.data;
-    //     }).catch(function (err) {
-    //         console.log(err);
-    //     });
-    // }
-
-    // function getProjectData(projectService, $scope) {
-    //     projectService.getProject($scope.region).then(function (res) {
-    //         $scope.projectList = res.data;
-    //     }).catch(function (err) {
-    //         console.log(err);
-    //     });
-    // }
-
-    // function prepareTableHeading($scope, monthlyHeaderListService) {
-    //     $scope.headingList = monthlyHeaderListService.getHeaderList();
-    // }
+   
+   
 
     function months(from, to) {
         var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
@@ -377,22 +453,5 @@
 
         return arr;
     }
-
-
-    // function getLocationData(locationService, $scope) {
-    //     locationService.getLocation().then(function (res) {
-    //         $scope.locationList = res.data;
-    //     }).catch(function (err) {
-    //         console.log(err);
-    //     });
-    // }
-
-    // function getSkillData(skillSetService, $scope) {
-    //     skillSetService.getSkillSets().then(function (res) {
-    //         $scope.skillDataList = res.data;
-    //     }).catch(function (err) {
-    //         console.log(err);
-    //     });
-    // }
 
 })();

@@ -4,7 +4,7 @@ angular.module('userController',['userServices'])
 	this.regUser = function(regData){
 		app.loading =true;
 		app.errorMsg = false;	
-
+console.log(app.regData);
 
 		User.create(app.regData).then(function(data){
 			if(data.data.success){				
