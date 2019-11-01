@@ -5,50 +5,51 @@
     angular.module('pmoApp').controller('utilisationCtrl', Controller);
 
     Controller.$inject = ['$scope', '$rootScope','$window', 'DTOptionsBuilder', 'DTColumnBuilder', '$compile', 'utilisationService',
-        'resourceService', 'roleService', 'regionService', 'projectService', 'resourceTypeService',
+        'resourceService', 'regionService',
         'allocationService', 'leaveService',  'availableDaysService',
-        'monthlyHeaderListService', 'skillSetService', 'locationService', '$filter'];
+        'monthlyHeaderListService', 'locationService','holidayListService', '$filter'];
 
     function Controller($scope, $rootScope, $window, DTOptionsBuilder, DTColumnBuilder, $compile, utilisationService,
-        resourceService, roleService, regionService, projectService, resourceTypeService,
+        resourceService, regionService,
         allocationService, leaveService,  availableDaysService,
-        monthlyHeaderListService, skillSetService, locationService, $filter) {
+        monthlyHeaderListService, locationService,holidayListService ,$filter) {
 
 
         var app = $scope;
 
         $scope.region = $window.localStorage.getItem("region");
-
+        $scope.regionname = $window.localStorage.getItem("region");
         $scope.utilisationData = [];
         $scope.originalData = [];
         //getuUilisationData(utilisationService,$scope);
-
+        $scope.regionData = [];
         $scope.resourceList = [];
-        getResourceData(resourceService, $scope);
+        getResources(resourceService, $scope);
 
-        $scope.roleList = [];
-        getRoleData(roleService, $scope);
+       // $scope.roleList = [];
+       // getRoleData(roleService, $scope);
 
-        $scope.locationList = [];
-        getLocationData(locationService, $scope);
+        //$scope.locationList = [];
+       // getLocationData(locationService, $scope);
 
-        $scope.skillDataList = [];
-        getSkillData(skillSetService, $scope);
+       // $scope.skillDataList = [];
+       // getSkillData(skillSetService, $scope);
 
         $scope.regionList = [];
-        getRegionData(regionService, $scope);
+        getRegion(regionService, $scope);
 
 
-        $scope.resourceTypeList = [];
-        getResourceTypeData(resourceTypeService, $scope);
+
+       // $scope.resourceTypeList = [];
+       // getResourceTypeData(resourceTypeService, $scope);
 
         $scope.ShowSpinnerStatus = true;
 
-        $scope.projectList = [];
-        getProjectData(projectService, $scope);
+       // $scope.projectList = [];
+        //getProjectData(projectService, $scope);
 
         $scope.headingList = [];
-        prepareTableHeading($scope, monthlyHeaderListService);
+       // prepareTableHeading($scope, monthlyHeaderListService);
 
         $scope.clearFields = function () {
             $scope.utilisationDTO = {};
@@ -59,6 +60,40 @@
             getGraphData($scope, allocationService, leaveService, availableDaysService, monthlyHeaderListService);
         };
 
+
+        $scope.dateChange = function () {
+
+            if ($scope.startDate === '' || $scope.endDate === '' || $scope.startDate === undefined || $scope.endDate === undefined) {
+                return;
+            }
+
+            var strDt = $scope.startDate.split("/");
+            var endDt = $scope.endDate.split("/");
+
+            var date_1 = new Date(strDt[1], parseInt(strDt[0]) - 1);
+            var date_2 = new Date(endDt[1], parseInt(endDt[0]) - 1);
+            var monthCol = "";
+
+            if (date_1 != "Invalid Date" && date_2 != "Invalid Date") {
+                if (date_2 >= date_1) {
+                    monthCol = months($scope.startDate, $scope.endDate);
+                    app.errorMsg = false;
+                    $scope.headingList = monthCol;
+                    getGraphData($scope, allocationService, leaveService,  availableDaysService,holidayListService, monthlyHeaderListService);
+                } else {
+                    if (date_2 != null && date_1 != null) {
+                        if (new Date(date_1) > new Date(date_2)) {
+                            console.log("Start Date should be less than End date");
+                            app.loading = false;
+                            app.successMsg = false;
+                            app.errorMsg = "Start Date should be less than End date";
+                            app.errorClass = "error"
+                        }
+                    }
+                }
+            }
+
+        }
 
 
 
@@ -129,17 +164,20 @@
         $scope.vm.dtOptions.withOption('buttons', ['copy', 'print', 'pdf', 'excel']);
         //=============================================================//
 
+        $scope.getregiondata = function (region) {
+            // console.log(region);
+            $scope.regionname = region;
+            // console.log($scope.regionname);
+            getResources(resourceService, $scope);
+        }
 
-
-        getGraphData($scope, allocationService, leaveService,  availableDaysService, monthlyHeaderListService);
+        //getGraphData($scope, allocationService, leaveService,  availableDaysService, monthlyHeaderListService);
 
         $scope.prepareUtilisationData = function (availableDaysService, monthlyHeaderListService) {
 
-            var fromDate = new Date();
-            var toDate = new Date().setMonth(fromDate.getMonth()+11);
-            var list = availableDaysService.getData(fromDate, toDate);
+            var list = availableDaysService.getData($scope.startDate, $scope.endDate);
             //console.log("List====");
-            //console.log(list);
+            console.log(list);
             var resourceUtilisationArray = [];
             for (var i = 0; i < list.length; i++) {
 
@@ -245,21 +283,26 @@
 
 
 
-    function getGraphData($scope, allocationService, leaveService,  availableDaysService, monthlyHeaderListService) {
+    function getGraphData($scope, allocationService, leaveService,  availableDaysService,holidayListService, monthlyHeaderListService) {
         var allocation = [];
         var resoruceM = [];
         var leave = [];
-        allocationService.getAllAllocation().then(function (res) {
-            allocation = res.data;
-            leaveService.getLeave().then(function (res) {
-                leave = res.data;               
+        allocationService.getAllAllocation().then(function (allocation) {
+            leaveService.getLeave().then(function (leave) {
                // resourceMappingService.getMappedResources($scope.region).then(function (res) {
                     //resoruceM = res.data;
                    // availableDaysService.intialize(allocation, resoruceM, leave);
-                    $scope.prepareUtilisationData(availableDaysService, monthlyHeaderListService);
+                   // $scope.prepareUtilisationData(availableDaysService, monthlyHeaderListService);
                 //}).catch(function (err) {
                    // console.log(err);
                // });
+               var strDt = $scope.startDate.split("/");
+               var endDt = $scope.endDate.split("/");
+               holidayListService.getLocationHolidaysYearRange(strDt[1], endDt[1]).then(function (holidayData) {
+                    availableDaysService.intialize(allocation.data, $scope.resourceList, leave.data, holidayData.data);
+                    $scope.prepareUtilisationData(availableDaysService, monthlyHeaderListService);
+               });
+
             }).catch(function (err) {
                 console.log(err);
             });
@@ -272,77 +315,108 @@
     //====================================================//
 
 
-    function getuUilisationData(utilisationService, $scope) {
+   /* function getuUilisationData(utilisationService, $scope) {
         utilisationService.getMappedResources().then(function (res) {
             $scope.utilisationData = res.data;
             
         }).catch(function (err) {
             console.log(err);
         });
-    }
+    }*/
 
-    function getResourceData(resourceService, $scope) {
-        resourceService.getResources($scope.region).then(function (res) {
+    function getResources(resourceService, $scope) {
+        console.log($scope.regionname);
+        resourceService.getResources($scope.regionname).then(function (res) {
             $scope.resourceList = res.data;
+            var htm = '';
+            angular.forEach($scope.resourceList, function (item) {
+                htm += '<option>' + item.resourcename + '</option>';
+            });
+            $('#resource-select').empty();
+            $('#resource-select').append(htm);
+            $('#resource-select').multiselect('rebuild');
         }).catch(function (err) {
             console.log(err);
         });
     }
 
-    function getRoleData(roleService, $scope) {
+    /*function getRoleData(roleService, $scope) {
         roleService.getRole().then(function (res) {
             $scope.roleList = res.data;
         }).catch(function (err) {
             console.log(err);
         });
-    }
+    }*/
 
 
 
-    function getRegionData(regionService, $scope) {
+    function getRegion(regionService, $scope) {
         regionService.getRegion().then(function (res) {
-            $scope.regionList = res.data;
-        }).catch(function (err) {
-            console.log(err);
+            angular.forEach(res.data, function (item) {
+                if (item.regionname !== 'All') {
+                    $scope.regionData.push(item);
+                }
+            });
         });
     }
 
 
-    function getResourceTypeData(resourceTypeService, $scope) {
+    /*function getResourceTypeData(resourceTypeService, $scope) {
         resourceTypeService.getResourceType().then(function (res) {
             $scope.resourceTypeList = res.data;
         }).catch(function (err) {
             console.log(err);
         });
-    }
+    }*/
 
-    function getProjectData(projectService, $scope) {
+    /*function getProjectData(projectService, $scope) {
         projectService.getProject($scope.region).then(function (res) {
             $scope.projectList = res.data;
         }).catch(function (err) {
             console.log(err);
         });
-    }
+    }*/
 
 
-    function prepareTableHeading($scope, monthlyHeaderListService) {
+   /* function prepareTableHeading($scope, monthlyHeaderListService) {
         $scope.headingList = monthlyHeaderListService.getHeaderList();
-    }
+    }*/
 
-    function getLocationData(locationService, $scope) {
+   /* function getLocationData(locationService, $scope) {
         locationService.getLocation().then(function (res) {
             $scope.locationList = res.data;
         }).catch(function (err) {
             console.log(err);
         });
-    }
+    }*/
 
-    function getSkillData(skillSetService, $scope) {
+    /*function getSkillData(skillSetService, $scope) {
         skillSetService.getSkillSets().then(function (res) {
             $scope.skillDataList = res.data;
         }).catch(function (err) {
             console.log(err);
         });
+    }*/
+
+    function months(from, to) {
+        var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+            "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        var arr = [];
+        var datFrom = from.split("/");
+        var datTo = to.split("/");
+
+        var fromYear = parseInt(datFrom[1]);
+        var toYear = parseInt(datTo[1]);
+
+        var monthFrom = parseInt(datFrom[0]) - 1;
+        var monthTo = parseInt(datTo[0]) - 1;
+
+        var diffYear = (12 * (toYear - fromYear)) + monthTo;
+        for (var i = monthFrom; i <= diffYear; i++) {
+            arr.push(monthNames[i % 12] + "-" + Math.floor(fromYear + (i / 12)).toString().substr(-2));
+        }
+
+        return arr;
     }
 
 

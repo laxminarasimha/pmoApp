@@ -63,6 +63,7 @@
         // $scope.save=false;
         // $scope.vishnu="none";
         $scope.region = $window.localStorage.getItem("region");
+        console.log($scope.region);
         $scope.regionname = $window.localStorage.getItem("region");
 
         // console.log("region from window" + $scope.region);
@@ -79,7 +80,7 @@
 
         // getDisabledData();
         //getMappedResourceData(resourceMappingService, $scope);
-        getResources(resourceService,$scope);
+        getResources(resourceService, $scope);
         getProjectData(projectService, $scope);
         getResourceTypeData(resourceTypeService, $scope);
         getEcrData(ecrService, $scope);
@@ -130,22 +131,21 @@
             //     angular.forEach($scope.resource,function(item){
             //         console.log(item);
             //         if (mapped.resourcename === item ) {
-                   
+
             //             resType = mapped.resourceType;
             //             console.log(resType);
             //         }
             //     })
-                
+
             // });
 
             //console.log(resType);
-
-
+           // console.log($scope.resource);
+           // console.log($scope.mappedResourceData);
             angular.forEach($scope.resource, function (res) {
-               
+
                 angular.forEach($scope.mappedResourceData, function (mapped) {
-                   
-                    if(mapped.resourcename === res){
+                    if (mapped.resourcename === res) {
                         resType = mapped.resourceType;
                         console.log(resType);
                     }
@@ -181,7 +181,7 @@
         }
 
         $scope.saveAllocation = function () {
-             console.log($scope.resourceWiseAllocaiton);
+            console.log($scope.resourceWiseAllocaiton);
             $scope.errvalue = false;
             angular.forEach($scope.resourceWiseAllocaiton, function (it) {
 
@@ -226,12 +226,12 @@
                             var filter_1 = $filter('filter')($scope.allAlocation, { resource: item.resource });
                             var filter_2 = $filter('filter')(filter_1, { project: item.project });
                             //console.log(filter_2[0].project);
-                            if(item.ecr !=null && item.ecr.length > 0){
-                                filter_2 = $filter('filter')(filter_2, { ecr: item.ecr });
-                            }
+                                                        if (item.ecr  != null  &&  item.ecr.length  >  0) {
+                                                                filter_2  =  $filter('filter')(filter_2,  {  ecr:  item.ecr  });
+                                                        }
                             var filter_3 = $filter('filter')(filter_2, { year: item.year });
                             console.log(filter_3);
-                        
+
 
                             if (filter_3 !== null && filter_3.length > 0) {
                                 var existingObject = filter_3[0];
@@ -311,16 +311,16 @@
 
             $scope.clearMessages();
             //$scope.startDate = "";
-           // $scope.endDate = "";
+            // $scope.endDate = "";
             $scope.months = [];
             $scope.resourceWiseAllocaiton = [];
             app.loading = false;
             app.successMsg = false;
             app.errorMsg = false;
             $scope.hidden = "none";
-            $scope.selectRegion="";
-            $scope.resource=null;
-            
+            $scope.selectRegion = "";
+            $scope.resource = null;
+
             //$scope.getregiondata="";
             // $scope.vishnu="none";
             $('#projectBtn').attr('disabled', false);
@@ -329,7 +329,7 @@
         $scope.clearMessages = function () {
             $scope.successMsg = "";
             $scope.errorMsg = "";
-           
+
             //$scope.hidden = "none";
         }
 
@@ -358,21 +358,22 @@
         function getResourceTypeData(resourceTypeService, $scope) {
             resourceTypeService.getResourceType().then(function (res) {
                 $scope.resourceTypeList = res.data;
+                //console.log( $scope.resourceTypeList);
             }).catch(function (err) {
                 console.log(err);
             });
         }
 
-         $scope.getregiondata = function (region) {
-             console.log(region);
-             $scope.regionname = region;
-             console.log($scope.regionname);
-             getResources(resourceService, $scope);
-            getProjectData(projectService,$scope);
-            getEcrData(ecrService,$scope);
-            
-        
-         }
+        $scope.getregiondata = function (region) {
+            console.log(region);
+            $scope.regionname = region;
+            console.log($scope.regionname);
+            getResources(resourceService, $scope);
+            getProjectData(projectService, $scope);
+            getEcrData(ecrService, $scope);
+
+
+        }
         /* function getMappedResourceData(resourceMappingService, $scope) {
              resourceMappingService.getMappedResources($scope.regionname).then(function (res) {
                  $scope.mappedResourceData = filterUniqueResource(res.data);
@@ -389,10 +390,10 @@
          }*/
 
 
-        function getResources(resourceService,$scope) {
+        function getResources(resourceService, $scope) {
             resourceService.getResources($scope.regionname).then(function (res) {
                 $scope.mappedResourceData = filterUniqueResource(res.data);
-               
+
                 var htm = '';
                 angular.forEach($scope.mappedResourceData, function (item) {
                     htm += '<option>' + item.resourcename + '</option>';
@@ -404,8 +405,8 @@
                 console.log(err);
             });
         }
-        
-       
+
+
 
         function filterUniqueResource(collection) {
 
@@ -441,12 +442,12 @@
                 for (var allocRec = 0; allocRec < entryAllocaiton.length; allocRec++) {
                     //resourcePercent = 0;
 
-                   /* angular.forEach(mappedResourceData, function (data) {
-                        if (data.resourcename === entryAllocaiton[allocRec].resource &&
-                            data.resourceType === entryAllocaiton[allocRec].resourcetype) {
-                            resourcePercent = data.taggedP;
-                        }
-                    });*/
+                    /* angular.forEach(mappedResourceData, function (data) {
+                         if (data.resourcename === entryAllocaiton[allocRec].resource &&
+                             data.resourceType === entryAllocaiton[allocRec].resourcetype) {
+                             resourcePercent = data.taggedP;
+                         }
+                     });*/
 
                     allocLength = entryAllocaiton[allocRec].allocation.length;
                     entryAlloc = entryAllocaiton[allocRec].allocation;

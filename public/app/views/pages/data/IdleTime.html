@@ -1,15 +1,14 @@
-
 <div ng-controller="idleTimeCtrl">
-<form name="idleTimeForm" ng-submit="getIdleTimes(idleTimeDTO)" novalidate >
-<legend>Idle Time</legend>
-<div class="panel panel-info" >  
-  <div class="panel-heading">  
-      <div class='row'>
+  <form name="idleTimeForm" ng-submit="getIdleTimes(idleTimeDTO)" novalidate>
+    <legend>Idle Time</legend>
+    <div class="panel panel-info">
+      <div class="panel-heading">
+        <div class='row'>
           <div class='col-sm-2'>
               <div class="form-group">
                 <label for="startDate">Allocation Start Month:</label>
                 <div class="input-group date form_date " data-date-format="dd MM yyyy" data-link-format="yyyy-mm-dd">
-                  <input class="form-control" type="text" ng-model="startDate" ng-change="dateChange();" readonly>
+                  <input class="form-control" type="text" ng-model="startDate" ng-change="selectDate();" readonly>
                   <span class="input-group-addon">
                     <span class="glyphicon glyphicon-calendar"></span>
                   </span>
@@ -20,7 +19,7 @@
                 <div class="form-group">
                   <label for="startDate">Allocation End Month:</label>
                   <div class="input-group date form_date " data-date-format="dd MM yyyy" data-link-format="yyyy-mm-dd">
-                    <input class="form-control" type="text" ng-model="endDate" ng-change="dateChange();" readonly>
+                    <input class="form-control" type="text" ng-model="endDate" ng-change="selectDate();" readonly>
                     <span class="input-group-addon">
                       <span class="glyphicon glyphicon-calendar"></span>
                     </span>
@@ -31,19 +30,19 @@
              <div  class=form-group>
                   <label for="resourcename">Resource Name</label><br>                 
                   <select ng-model="idleTimeDTO.resource" id="resource-select"required multiple="multiple" multi-select class="form-control">
-                    <!-- <option ng-repeat="x in resourceList track by $index" value="{{x.resourcename}} ">{{x.resourcename }}</option> -->
+                   <!-- <option ng-repeat="x in resourceList track by $index" value="{{x.resourcename}} ">{{x.resourcename }}</option> -->
                  </select>
               </div>   
          </div>
 
-         <div class='col-sm-2'>        
+         <!-- <div class='col-sm-2'>        
            <div  class=form-group>
             <label for="resourceType">Resource Type</label>
             <select ng-model="idleTimeDTO.resourceType" id="resourceType"  class="form-control input-sm {{errorClass}}">
               <option ng-repeat="x in resourceTypeList" value="{{x.resourceTypename}}">{{x.resourceTypename}}</option>
            </select>
            </div>
-        </div>
+        </div> -->
         <div class='col-sm-2'>
           <div class=form-group>
             <label for="region">Region</label>
@@ -53,117 +52,73 @@
             </select>
             
           </span>
-            <span ng-show="region != 'All'" id="region" editable-select="allocRows.region" e-name="region"
+            <span ng-show="region != 'All'" id="region" editable-select="idleTimeDTO.region" e-name="region"
             e-form="rowform">
             <input ng-if="region != 'All'" class="form-control" type="text" value={{region}} class="form-control"
               readonly>
           </span>
           </div>
         </div> 
+         <div class='col-sm-2'>
+              <div class="form-group">
+                <label for="rangeSelect">Select Range:</label>
+                <select class="form-control input-sm {{errorClass}}" ng-model="rangeSelect" ng-init="rangeSelect='six'"
+                  id="rangeSelect">
+                  <option value="one">1 month</option>
+                  <option value="six">6 months</option>
+                  <option value="twelve">12 months</option>
+                </select>
+              </div>
+            </div>
       </div>
-        <!-- <div class='col-sm-3'>
-            <div  class=form-group>
-            <label for="region">Region</label>
-            <select ng-model="idleTimeDTO.region" id="region"  class="form-control input-sm {{errorClass}}">
-              <option ng-repeat="x in regionList" value="{{x.regionname}}  track by $index">{{x.regionname}}</option>
-           </select>
-           </div>
-         </div> -->
-
-     
-   
-
-     <!-- <div class='row'>
-         <div class='col-sm-3'>
-             <div  class=form-group>
-              <label for="currentProject">Current Project</label>
-              <select ng-model="idleTimeDTO.project" id="project"  class="form-control input-sm {{errorClass}}">
-              <option ng-repeat="x in projectList" value="{{x.projectname}}">{{x.projectname}}</option>
-              </select>
-             </div>
-         </div> 
-
-         <div class='col-sm-3'>
-             <div  class=form-group>
-              <label for="currentProject">Role</label>
-              <select ng-model="idleTimeDTO.role" id="role"  class="form-control input-sm {{errorClass}}">
-              <option ng-repeat="x in roleList" value="{{x.rolename}}">{{x.rolename}}</option>
-              </select>
-             </div>
-         </div>  
-
-         <div class='col-sm-3'>
-             <div  class=form-group>
-               <label>Start  Date:</label>
-             <input type="text" ng-model="idleTimeDTO.startDate" id = "startDateID" name="startDate" ng-required="true" class="form-control input-sm {{errorClass}}"/>
-             </div>
-          </div>
-          
-          <div class='col-sm-3'>
-             <div  class=form-group>
-              <label for="skillname">Skill</label>
-              <select ng-model="idleTimeDTO.skillname" id="skillname"  class="form-control">
-              <option ng-repeat="x in skillDataList" value="{{x.skillname}}">{{x.skillname}}</option>
-              </select>
-             </div>
-         </div> 
-
-         <div class='col-sm-3'>
-             <div  class=form-group>
-              <label for="locationname">Location</label>
-              <select ng-model="idleTimeDTO.locationname" id="locationname"  class="form-control">
-              <option ng-repeat="x in locationList" value="{{x.locationname}}">{{x.locationname}}</option>
-              </select>
-             </div>
-         </div>  
-      </div>-->
+       
       
         <div class='row'>
           <div class='col-sm-12'>
              <div align="right">
                     
-                    <input type="submit" value="Search" class="btn btn-primary"/>             
+                    <input type="submit" value="Search" ng-click="dateChange()" class="btn btn-primary"/>             
                     <button class="btn btn-warning" ng-click="clearFields()" type="button">Clear</button>                   
               </div>
           </div>
         </div>
-    
-      
-  </div>
 
-   <div class="panel-body" ng-show="loading || successMsg || errorMsg">
-        <div class="row" >
+
+      </div>
+
+      <div class="panel-body" ng-show="loading || successMsg || errorMsg">
+        <div class="row">
           <div class='col-sm-12'>
-                <div class="jumbotron text-center" ng-show="loading">
-                  <span class="glyphicon glyphicon-repeat spinner"></span>
-                  <p>Loading...</p>
-                </div>
-                <div class="row show-hide-message" ng-show="successMsg">
-                  <div class="alert alert-success">{{successMsg}}</div>
-                </div>
-                <div class="row show-hide-message" ng-show="errorMsg">
-                  <div class="alert alert-danger">{{errorMsg}}</div>
-                </div>
+            <div class="jumbotron text-center" ng-show="loading">
+              <span class="glyphicon glyphicon-repeat spinner"></span>
+              <p>Loading...</p>
             </div>
+            <div class="row show-hide-message" ng-show="successMsg">
+              <div class="alert alert-success">{{successMsg}}</div>
+            </div>
+            <div class="row show-hide-message" ng-show="errorMsg">
+              <div class="alert alert-danger">{{errorMsg}}</div>
+            </div>
+          </div>
         </div>
       </div>
 
-      
+
       <div class="panel-footer">
               <div class="panel-body">
                   <table class="table table-striped table-curved" cellspacing="0" width="100%" datatable="ng" dt-options="vm.dtOptions" dt-instance="vm.dtInstance">
                     <thead class="bg-primary">
                       <tr>
                         <th>Resource name</th>
-                        <th>Resource type</th>
+                        <!-- <th>Resource type</th> -->
                         <th>Region</th>
                          <th ng-repeat="column in headingList  track by $index">{{column}}</th>  
                       </tr>
                     </thead>
                     <tbody>
-                        <tr ng-repeat="resourceVar in idleTimeData  track by $index">                       
+                           <tr ng-repeat="resourceVar in idleTimeData  track by $index">                       
                             <td>{{ resourceVar.name }}</td>
-                            <td>{{ resourceVar.resourcetype}}</td>
+                            <!-- <td>{{ resourceVar.resourcetype}}</td> -->
                             <td>{{ resourceVar.region}}</td>
                             <td ng-repeat="column in headingList  track by $index">                              
                               <div ng-repeat="idleTime in resourceVar.idleTimeArray track by $index">
@@ -183,12 +138,30 @@
                   <div class="container" id="spinner">
                     <div ng-if="ShowSpinnerStatus" class="loader"></div>
                   </div>
-              </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="container" id="spinner">
+            <div ng-if="ShowSpinnerStatus" class="loader"></div>
+          </div>
+        </div>
       </div>
-  </div>
-</form>
+    </div>
+  </form>
 </div>
 <script>
+
+  $(function() {
+        $('#resource-select')
+        .multiselect({
+            includeSelectAllOption: true,
+            nonSelectedText: 'Select Resource',
+           
+        })
+    
+    });
+
   $('.form_date').datetimepicker({
     format: "mm/yyyy",
     startView: "year",
@@ -200,22 +173,32 @@
 </script>
 <style>
   .loader {
-				border: 16px solid #f3f3f3; /* Light grey */
-				border-top: 16px solid #3498db; /* Blue */
-				border-radius: 50%;
-				width: 120px;
-				height: 120px;
-				animation: spin 2s linear infinite;
-				margin: 0 auto;
-			}
+    border: 16px solid #f3f3f3;
+    /* Light grey */
+    border-top: 16px solid #3498db;
+    /* Blue */
+    border-radius: 50%;
+    width: 120px;
+    height: 120px;
+    animation: spin 2s linear infinite;
+    margin: 0 auto;
+  }
 
-			@keyframes spin {
-				0% { transform: rotate(0deg); }
-				100% { transform: rotate(360deg); }
-			}
-			html, body, container {
-				height: 100%;
-				width: 100%;
-				margin: 0;
-			}
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  html,
+  body,
+  container {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+  }
 </style>

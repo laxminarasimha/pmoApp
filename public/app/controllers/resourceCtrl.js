@@ -101,13 +101,13 @@
             resourceService.deleteResource($scope.deletedID).then(function (res) {
                 console.log($scope.deletedID);
                 if (res.data == "deleted") {
-                    console.log($scope.rName);
+                    console.log($scope.kinID);
                     allocationService.deleteAllocationByName($scope.rName).then(function(res){
                         console.log(res.data);
                         if(res.data=="deleted"){
-                            console.log("Allocation deleted");
+                        console.log("Allocation deleted");
                         }
-                    });
+                        }); 
                     getResourceData(resourceService, $scope);
                     app.loading = false;
                     app.successMsg = "Resource Deleted successfully";
