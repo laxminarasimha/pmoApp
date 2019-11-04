@@ -84,6 +84,7 @@
 
         // create the hoilidays with month-year fromat and store in a map
         var monthyearLabel = new Map();
+      
         for (var i = 0; i < holidayList.length; i++) {
             monthyearLabel.set(getMonth(holidayList[i]._id.month - 1) + '-' + (holidayList[i]._id.year.toString()).substring(2, 4), holidayList[i].number);
         }

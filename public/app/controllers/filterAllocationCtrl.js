@@ -62,7 +62,6 @@
 
         intialize(allocationService, $scope);
 
-
         $scope.vm = {};
         $scope.vm.dtInstance = null;
         $scope.vm.dtOptions = DTOptionsBuilder.newOptions().withOption('order', [0, 'asc']);
@@ -74,7 +73,6 @@
         getResources(resourceService, $scope);
         getResourceTypeData(resourceTypeService, $scope);
         // getProjectData(projectService, resourceService, resourceTypeService);
-
 
         $scope.selectDate = function () {
             $scope.rangeSelect = "";
@@ -157,7 +155,6 @@
             }).catch(function (err) {
                 console.log(err);
             });
-
 
         }
 
@@ -253,8 +250,6 @@
             $scope.totalMonthWise = new Array(len);
             $scope.totalMonthWise.fill(0, 0, len);
 
-
-
             angular.forEach($scope.resource, function (resource) {
 
                 angular.forEach(allocationList, function (alloc) {
@@ -274,7 +269,6 @@
                 allocFilter = $filter('filter')(allocFilter, { resource: resource });
 
                 //console.log(allocFilter);
-
 
                 angular.forEach(allocFilter, function (allocation) {
                     var totalResourceWise = 0;
@@ -350,15 +344,12 @@
 
         //  console.log(preDate + pyear + pDate);
 
-
         $scope.monthCol = months(pDate, fDate);
         //   console.log(monthCol);
         allocationService.getAllAllocationByYear(pyear, fyear, $scope.region).then(function (allocation) {
             console.log(allocation.data);
             listRecord($scope, $filter, allocation.data, $scope.monthCol);
         })
-
-
 
 
     }
@@ -407,7 +398,6 @@
 
     }
 
-
     function months(from, to) {
         var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
             "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
@@ -429,11 +419,10 @@
         return arr;
     }
 
-
-
     function round(value, precision) {
         var multiplier = Math.pow(10, precision || 0);
         return Math.round(value * multiplier) / multiplier;
     }
 
 })();
+
