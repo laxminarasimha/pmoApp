@@ -4,18 +4,20 @@
 
   var app = angular.module('pmoApp');
   app.filter('resourceunique', function () {
+    
     return function (collection, keyname) {
       var output = [],
         keys = [];
-
+       
       angular.forEach(collection, function (item) {
+        
         var key = item[keyname];
         if (keys.indexOf(key) === -1) {
           keys.push(key);
           output.push(item);
         }
       });
-
+      console.log(output);
       return output;
     };
   })
@@ -24,10 +26,10 @@
   Service.$inject = ['$filter'];
 
   function Service($filter) {
-   
+
 
     this.intialize = function (allocation, resoruceM, leave, holidayData) {
-     
+
       this.allocation = allocation;
       this.resourceMapped = resoruceM;
       this.leaves = leave;
@@ -35,13 +37,16 @@
     }
 
     this.getData = function (startDt, EndDt) {
-    
+
       var month = months(startDt, EndDt);
-      
+
       var uniqueResource = $filter('resourceunique')(this.allocation, 'resource');
-    
+
+      console.log(uniqueResource)
+      console.log(this.resourceMapped);
+
       var list = filter(this.allocation, uniqueResource, this.resourceMapped, this.leaves, this.holidays, month, $filter);
-     
+
       return list;
 
     }
@@ -115,7 +120,7 @@
   }
 
   function filter(allocationList, uniqueAllocation, mappedResourceData, leaves, holidays, months, $filter) {
-
+      console.log(mappedResourceData);
     //allocationList = $filter('filter')(allocationList, { resource: 'Bhise Vikrant' });
 
     //mappedResourceData - This is Resource Object
@@ -135,7 +140,7 @@
       this.year;
       this.allocation;
       this.type;
-     
+
     }
 
     function Resource() {
@@ -164,12 +169,12 @@
       var nResource = new Resource();
       nResource.resource = allocation.resource;
       nResource.kinid = allocation.kinId;
-
+      console.log(allocationList.length);
       leavesFilter = $filter('filter')(leaves, { resourcename: allocation.resource });
 
       allocationFilter = $filter('filter')(allocationList, { resource: allocation.resource });
 
-
+      console.log(allocationFilter.length);
       var duplicateCheck = [];
 
       angular.forEach(allocationFilter, function (allocFilter) {
@@ -177,7 +182,7 @@
         var vRecord = allocFilter.resourcetype + '-' + allocFilter.resource;
         if (duplicateCheck.indexOf(vRecord) === -1) {
           var object = new Object();
-         object.type = allocFilter.resourcetype;
+          object.type = allocFilter.resourcetype;
           object.allocation = mapAllocation(nResource.resource, months, allocationFilter, leavesFilter, mappedResourceData, object.type, allocFilter.year, holidays, $filter);
 
           //console.log(object);
@@ -203,12 +208,12 @@
       this.allocation = [];
       this.leave;
       this.buffertime;
-      
+
     }
 
 
     angular.forEach(months, function (month) {
-//console.log(months);
+      //console.log(months);
       var vAlloc = new Allocation();
       vAlloc.month = month;
       var filterMappedResource;
@@ -224,19 +229,24 @@
           }
         }
       });
-
-      for (var user = 0; user < mappedResourceData.length; user++) {
+    // console.log(mappedResourceData[0].resourcename);
+     for (var user = 0; user < mappedResourceData.length; user++) {
+        //console.log(mappedResourceData[user].resourcename + "--" + mappedResourceData[user].resourceType + "--" + resourcetype + "--" + resource);
         if (mappedResourceData[user].resourcename === resource && mappedResourceData[user].resourceType === resourcetype) {
           filterMappedResource = mappedResourceData[user];   // filter mappedResource is Resource Object
+          setLeave(vAlloc, leaves, filterMappedResource);
+          setBufferTime(vAlloc, resource, filterMappedResource, months, holidays, $filter);
+          allocation.push(vAlloc);
           break;
         }
       }
-      setLeave(vAlloc, leaves, filterMappedResource);
-      setBufferTime(vAlloc, resource, filterMappedResource, months, holidays, $filter);
-      allocation.push(vAlloc);
+      //console.log(filterMappedResource);
+      // setLeave(vAlloc, leaves, filterMappedResource);
+      // setBufferTime(vAlloc, resource, filterMappedResource, months, holidays, $filter);
+      // allocation.push(vAlloc);
 
     });
-
+    console.log(allocation);
     return allocation;
 
   }
@@ -330,15 +340,15 @@
 
     var fromYear = parseInt(datFrom[1]);
     var toYear = parseInt(datTo[1]);
-   // console.log(fromYear+""+toYear);
+    // console.log(fromYear+""+toYear);
     var monthFrom = parseInt(datFrom[0]) - 1;
     var monthTo = parseInt(datTo[0]) - 1;
-//console.log(monthFrom+""+monthTo);
+    //console.log(monthFrom+""+monthTo);
     var diffYear = (12 * (toYear - fromYear)) + monthTo;
     for (var i = monthFrom; i <= diffYear; i++) {
       arr.push(monthNames[i % 12] + "-" + Math.floor(fromYear + (i / 12)).toString().substr(-2));
     }
-//console.log(arr);
+    //console.log(arr);
     return arr;
   }
 

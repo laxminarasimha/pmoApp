@@ -29,7 +29,7 @@
         <div class='col-sm-2'>
              <div  class=form-group>
                   <label for="resourcename">Resource Name</label><br>                 
-                  <select ng-model="idleTimeDTO.resource" id="resource-select"required multiple="multiple" multi-select class="form-control">
+                  <select ng-model="resourceselect" id="resource-select"required multiple="multiple" multi-select class="form-control">
                    <!-- <option ng-repeat="x in resourceList track by $index" value="{{x.resourcename}} ">{{x.resourcename }}</option> -->
                  </select>
               </div>   
@@ -116,7 +116,7 @@
                       </tr>
                     </thead>
                     <tbody>
-                           <tr ng-repeat="resourceVar in idleTimeData  track by $index">                       
+                           <tr ng-repeat="resourceVar in idleTimeData track by $index">                       
                             <td>{{ resourceVar.name }}</td>
                             <!-- <td>{{ resourceVar.resourcetype}}</td> -->
                             <td>{{ resourceVar.region}}</td>
@@ -142,9 +142,9 @@
               </tr>
             </tbody>
           </table>
-          <div class="container" id="spinner">
+          <!-- <div class="container" id="spinner">
             <div ng-if="ShowSpinnerStatus" class="loader"></div>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>
