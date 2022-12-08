@@ -18,7 +18,7 @@
     "es6-promise-polyfill": "^1.2.0",
     "es6-promise-promise": "^1.0.0",
     "excel-export": "^0.5.1",
-    "express": "^4.15.3",
+    "express": "^4.17.3",
     "express-fileupload": "^0.3.0",
     "jsonwebtoken": "^7.4.1",
     "log4js": "^2.3.3",
